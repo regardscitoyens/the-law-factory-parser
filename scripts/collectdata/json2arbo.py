@@ -54,9 +54,6 @@ except:
   sys.stderr.write("ERROR: Cannot open json file %s\n" % FILE)
   sys.exit()
 
-mkdirs("data") 
-os.chdir("data")
-
 def log_err(txt, arg=None):
     txt = "ERROR: %s" % txt
     if arg:
