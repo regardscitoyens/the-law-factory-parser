@@ -25,7 +25,6 @@ if (len(sys.argv) > 2) :
 else:
     ORDER = ''
 
-
 url = re.sub(r"^.*/http", "http", FILE)
 url = re.sub(r"%3A", ":", re.sub(r"%2F", "/", url))
 texte = {"type": "texte", "source": url}

@@ -3,7 +3,6 @@
 
 import sys, re
 import simplejson as json
-from difflib import SequenceMatcher
 
 with open(sys.argv[1], 'r') as source:
     data = json.loads(source.read())
@@ -44,7 +43,6 @@ def get_mark_from_last(text, start, last=""):
             log("    copy alinea")
             res.append(i)
     return res
-
 
 for art in data['articles']:
     for i, step in enumerate(data['articles'][art]['steps']):

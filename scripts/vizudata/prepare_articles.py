@@ -13,8 +13,6 @@ if not sourcedir:
     sys.stderr.write('Error could not find directory at %s' % sourcedir)
     exit(1)
 
-#laws = [ f for f in os.listdir(path) if not os.path.isfile(os.path.join(path,f)) ]
-
 def getParentFolder(root, f):
     abs = os.path.abspath(os.path.join(root, f))
     return os.path.basename(os.path.abspath(os.path.join(abs, os.pardir)))
@@ -138,4 +136,4 @@ for step in steps:
     except Exception as e:
         sys.stderr.write("ERROR parsing step %s:\n%s: %s\n" % (step, type(e), e))
         exit(1)
-print json.dumps(out, indent=4, ensure_ascii=False).encode('utf8')
+print json.dumps(out, ensure_ascii=False).encode('utf8')
