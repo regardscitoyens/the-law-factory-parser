@@ -50,15 +50,12 @@ cat $1 | while read line ; do
 
     #Amendements export
     mkdir -p "$projectdir/amendements"
-    cd "$projectdir/amendements"
-    download "$urlchambre/amendements/$amdidtext/csv" > amendements.csv
-    if grep [a-z] amendements.csv > /dev/null; then 
-    	download "$urlchambre/amendements/$amdidtext/json" > amendements.json
-    	download "$urlchambre/amendements/$amdidtext/xml" > amendements.xml
-    	cd - > /dev/null
+    download "$urlchambre/amendements/$amdidtext/csv" | perl sort_amendements.pl $data/.tmp/json/$escape csv >  "$projectdir/amendements/amendements.csv"
+    if grep [a-z] "$projectdir/amendements/amendements.csv" > /dev/null; then
+    	download "$urlchambre/amendements/$amdidtext/json" | sed 's/},/\n/g' | perl sort_amendements.pl $data/.tmp/json/$escape json | tr '\n' '},' > "$projectdir/amendements/amendements.json"
+    	download "$urlchambre/amendements/$amdidtext/xml"  | perl sort_amendements.pl $data/.tmp/json/$escape xml > "$projectdir/amendements/amendements.xml"
     else
-    	rm amendements.csv
-    	cd - > /dev/null
+    	rm "$projectdir/amendements/amendements.csv"
     	rmdir $projectdir/amendements
     fi
 
@@ -68,9 +65,9 @@ cat $1 | while read line ; do
     if echo $etape | grep commission > /dev/null; then
       is_commission='?commission=1'
     fi
-    dossier_instit=$(echo $line | awk -F ';' '{print $2}')
+    dossier_instit=$(echo $line | awk -F ';' '{print $4}')
     if test "$chambre" = "senat"; then
-	dossier_instit=$(echo $line | awk -F ';' '{print $3}')
+	dossier_instit=$(echo $line | awk -F ';' '{print $5}')
     fi
     download "$urlchambre/seances/$amdidtext/csv$is_commission" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
       tmpseancecsv="."$id_seance".csv"
@@ -88,7 +85,7 @@ cat $1 | while read line ; do
   fi
 
   #End
-  amdidtext=$(echo $line | awk -F ';' '{print $10}')
+  amdidtext=$(echo $line | awk -F ';' '{print $12}')
   oldchambre=$chambre
   olddossier=$dossier
   echo "INFO: data exported in $projectdir"
