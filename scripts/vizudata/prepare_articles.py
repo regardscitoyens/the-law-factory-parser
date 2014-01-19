@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re, csv, os, sys
-import difflib
+from difflib import ndiff, SequenceMatcher
 try:
     import json
 except:
@@ -34,11 +34,27 @@ def unifyStatus(status):
     "supprimé par la commission mixte paritaire" : "sup"
     }[status.strip()]
 
+def create_step(step_id, article):
+    s = {}
+    s['id_step'] = step_id
+    if article.get('statut'):
+        s['status'] = unifyStatus(article['statut'].encode('utf8'))
+    else:
+        s['status'] = 'none'
+    s['text'] = []
+    for key in sorted(article['alineas'].keys()):
+        if article['alineas'][key] != '':
+            s['text'].append(article['alineas'][key])
+    s['order'] = article['order']
+    return s
+
 with open(os.path.join(sourcedir, 'procedure.json'), "r") as properties:
     properties = json.load(properties)
-out = {"law_title": properties.get("title", "Missing title")}
-out['articles'] = {}
+title = properties.get("long_title", "Missing title").replace(properties.get("short_title", "").lower(), properties.get("short_title", ""))
+title = title[0].upper()+title[1:]
+out = {'law_title': title, 'articles': {}, 'short_title': properties.get("short_title", "")}
 
+step_id = ''
 steps = properties['steps']
 for step in steps:
     if not 'resulting_text_directory' in step:
@@ -46,9 +62,9 @@ for step in steps:
         continue
     try:
         path = os.path.join(sourcedir, step['resulting_text_directory'])
-        step_name = step['step']
-        step_stage = step['stage']
-        step_institution = step['institution']
+        if step_id:
+            old_step_id = step_id
+        step_id = '_'.join([step['stage'], step['institution'], step['step']]).strip()
 
         for root, dirs, files in os.walk(path):
             articleFiles = [os.path.abspath(os.path.join(root,f)) for f in files if re.search(r'^A.*', getParentFolder(root, f)) and re.search(r'^.*?json', f)]
@@ -57,61 +73,49 @@ for step in steps:
                     with open(articleFile,"r") as article:
                          article = json.load(article)
 
-                    if article.get('section'):
-                        id = 'id_' + str(article['titre']) + '_' + str(article['section'])
-                    else:
-                        id = 'id_' + str(article['titre'])
-
+                    id = str(article['titre']).replace(' ', '_')
                     if out['articles'].get(id):
-                        s = {}
-
-                        s['step'] = step_name
-                        s['stage'] = step_stage
-                        if article.get('statut'):
-                            s['status'] = unifyStatus(article['statut'].encode('utf8'))
+                        s = create_step(step_id, article)
+                        txt = " ".join(s['text'])
+                        oldtext = None
+                        for st in out['articles'][id]['steps']:
+                            if st['id_step'] == old_step_id:
+                                oldtext = st['text']
+                                break
+                        if not oldtext:
+                            s['status'] = 'new'
+                            s['diff'] = 'add'
+                            s['n_diff'] = 1
+                        elif s['status'] == "sup":
+                            s['diff'] = 'rem'
+                            s['n_diff'] = 0
                         else:
+                            oldtxt = " ".join(oldtext)
                             s['status'] = 'none'
-
-                        text = []
-                        for key in sorted(article['alineas'].keys()):
-                            if article['alineas'][key] != '':
-                                text.append(article['alineas'][key])
-
-                        s['length'] = len(' '.join(text))
-                        s['text'] = text
-                        pos = len(out['articles'][id]['steps']) -1
-
-                        if s['status'] == 'sup':
-                            out['articles'][id]['steps'][pos]['last_s'] = 'true'
-
-                        s['first_s'] = 'false'
-                        if out['articles'][id]['steps'][pos]['first_s'] == 'true':
-                            s['status'] = 'none'
-                            s['first_s'] = 'true'
-
-                        text2 = out['articles'][id]['steps'][pos]['text']
-                        compare = list(difflib.ndiff(text, text2))
-
-                        mods = []
-                        for line in compare:
-                            mods.append(line[0].encode("utf8"))
-
-                        if '+' in mods and '-' in mods:
-                            s['diff'] = 'both'
-                        elif '+' in mods and '-' not in mods :
-                            s['diff'] = "add"
-                        elif '-' in mods and '+' not in mods :
-                            s['diff'] = "rem"
-                        else:
-                            s['diff'] = "none"
-
-                        s['id_step'] = step_stage + '_' + step_institution + '_' + step_name
-                        s['id_step'] = s['id_step'].strip()
-                        s['last_s'] = 'false'
-                        out['articles'][id]['steps'].append(s)
+                            if txt == oldtxt:
+                                s['diff'] = 'none'
+                                s['n_diff'] = 0
+                            else:
+                                compare = list(ndiff(s['text'], oldtext))
+                                mods = {'+': 0, '-': 0}
+                                for line in compare:
+                                    mod = line.encode("utf8")[0]
+                                    if mod not in mods:
+                                        mods[mod] = 0
+                                    mods[mod] += 1
+                                if mods['+'] > mods['-']:
+                                    s['diff'] = 'add'
+                                elif mods['+'] < mods['-']:
+                                    s['diff'] = 'rem'
+                                elif mods['+'] * mods['-']:
+                                    s['diff'] = 'both'
+                                else:
+                                    s['diff'] = 'none'
+                                a = SequenceMatcher(None, oldtxt, txt).ratio()
+                                b = SequenceMatcher(None, txt, oldtxt).ratio()
+                                s['n_diff'] = 1 - (a + b)/2
                     else:
                         out['articles'][id] = {}
-                        out['articles'][id]['num'] = article['num']
                         out['articles'][id]['id'] = id
                         out['articles'][id]['titre'] = article['titre']
                         if article.get('section'):
@@ -119,33 +123,19 @@ for step in steps:
                         else:
                             out['articles'][id]['section'] = 'none'
                         out['articles'][id]['steps'] = []
-                        s = {}
-                        s['step'] = step_name
-                        s['stage'] = step_stage
-                        if article.get('statut'):
-                            s['status'] = unifyStatus(article['statut'].encode('utf8'))
-                        else:
-                            s['status'] = 'none'
+                        s = create_step(step_id, article)
+                        s['n_diff'] = 1
+                        s['diff'] = 'add'
+                        s['status'] = 'new'
+                        txt = " ".join(s['text'])
+                    if s['status'] == 'sup':
+                        s['length'] = 50
+                        s['n_diff'] = 0
+                    else:
+                        s['length'] = len(txt)
+                    out['articles'][id]['steps'].append(s)
 
-                        if s['status'] == 'new':
-                            s['first_s'] = 'true'
-                        else:
-                            s['first_s'] = 'false'
-
-                        text = []
-                        for key in sorted(article['alineas'].keys()):
-                            if article['alineas'][key] != '':
-                                text.append(article['alineas'][key])
-
-                        s['length'] = len(' '.join(text))
-                        s['diff'] = 'none'
-                        s['last_s'] = 'false'
-                        s['text'] = text
-                        s['id_step'] = step_stage + '_' + step_institution + '_' + step_name
-                        s['id_step'] = s['id_step'].strip()
-                        out['articles'][id]['steps'].append(s)
-
-    except Exception, e:
-        sys.stderr.write("ERROR parsing step %s:\n%s\n" % (step, e))
+    except Exception as e:
+        sys.stderr.write("ERROR parsing step %s:\n%s: %s\n" % (step, type(e), e))
         exit(1)
 print json.dumps(out, indent=4, ensure_ascii=False).encode('utf8')

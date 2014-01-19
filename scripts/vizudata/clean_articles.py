@@ -84,24 +84,6 @@ for art in data['articles']:
                 gd_text.append(text.decode('utf-8'))
         step['text'] = gd_text
 
-        txt = " ".join(step['text'])
-        step['length'] = len(txt)
-        step['n_diff'] = 0
-    # Regenerate comparison elements with previous version and add a text distance
-        if i:
-            if not data['articles'][art]['steps'][i-1]['text']:
-                step['status'] = 'new'
-            else:
-                oldtxt = " ".join(data['articles'][art]['steps'][i-1]['text'])
-                if txt == oldtxt:
-                    step['diff'] = 'none'
-                else:
-                    step['diff'] = 'both'
-                    a = SequenceMatcher(None, oldtxt, txt).ratio()
-                    b = SequenceMatcher(None, txt, oldtxt).ratio()
-                    step['n_diff'] = 1 - (a + b)/2
-
-
 with open(sys.argv[1], 'w') as output:
     json.dump(data, output, indent=4, encoding='utf-8')
 
