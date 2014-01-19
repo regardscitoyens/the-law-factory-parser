@@ -52,5 +52,8 @@ with open(csvpath, 'rb') as csvfile:
         prevrow = row
     procedure['steps'] = steps
     procedure['beginning'] = steps[0]['date']
+    procedure['long_title'] = row[1];
+    procedure['short_title'] = row[2];
+
     print json.dumps(procedure, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
