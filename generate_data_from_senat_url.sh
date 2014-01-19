@@ -13,7 +13,7 @@ fi
 
 datadir=$(pwd)/data/$(echo $1 | sed 's/.*dossier-legislatif.//' | sed 's/.html$//');
 
-mkdir $datadir
+mkdir -p $datadir
 
 cd scripts
 
