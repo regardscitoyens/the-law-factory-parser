@@ -34,12 +34,12 @@ cat $1 | while read line ; do
 	continue;
   fi
  
-  mkdir -p $data/html $data/json
+  mkdir -p $data/.tmp/html $data/.tmp/json
   #Text export
-  download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/html/$escape;
-  if file -i $data/html/$escape | grep -i iso > /dev/null; then recode ISO88591..UTF8 $data/html/$escape; fi
-  python parse_texte.py $data/html/$escape $order > $data/json/$escape
-  python json2arbo.py $data/json/$escape "$projectdir/texte"
+  download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape;
+  if file -i $data/.tmp/html/$escape | grep -i iso > /dev/null; then recode ISO88591..UTF8 $data/.tmp/html/$escape; fi
+  python parse_texte.py $data/.tmp/html/$escape $order > $data/.tmp/json/$escape
+  python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"
   
   if test "$amdidtext" && test "$oldchambre" = "$chambre" && test "$olddossier" = "$dossier"; then
     urlchambre="http://www.nosdeputes.fr/14"

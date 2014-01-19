@@ -5,6 +5,8 @@ datadir=$2
 
 cd collectdata
 
-perl parse_dossier.pl $url > $datadir/dossier.csv
+mkdir -p "$datadir/.tmp"
 
-bash generate_data.sh $datadir/dossier.csv $datadir
+perl parse_dossier.pl $url > $datadir/.tmp/dossier.csv
+
+bash generate_data.sh $datadir/.tmp/dossier.csv $datadir
