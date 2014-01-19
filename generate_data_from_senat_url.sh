@@ -11,11 +11,11 @@ if ! echo $1 | grep '^http://www.senat.fr/dossier-legislatif/p[plfj]*[0-9\-]*.ht
 	exit 2;
 fi
 
+datadir=$(pwd)/data/$(echo $1 | sed 's/.*dossier-legislatif.//' | sed 's/.html$//');
+
+mkdir $datadir
+
 cd scripts
-
-datadir=$(echo $1 | sed 's/.*dossier-legislatif.//' | sed 's/.html$//');
-
-mkdir data/$datadir
 
 bash generate_collectdata.sh $1 $datadir
 bash generate_vizudata.sh $datadir
