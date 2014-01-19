@@ -10,7 +10,10 @@ Dependencies :
 simplejson"""
 
 import os, sys, re
-import simplejson as json
+try:
+    import json
+except:
+    import simplejson as json
 
 def mkdirs(d):
   if not os.path.exists(d):
