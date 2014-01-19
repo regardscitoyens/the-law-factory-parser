@@ -86,8 +86,11 @@ def clean_html(t):
 
 def pr_js(a):
     # Clean empty articles with only "Supprimé" as text
-    if 'alineas' in a and len(a['alineas']) == 1 and a['alineas']['001'].startswith("(Supprimé)"):
-        a['alineas'] = {'001': ''}
+    if 'alineas' in a:
+        if len(a['alineas']) == 1 and a['alineas']['001'].startswith("(Supprimé)"):
+            a['alineas'] = {'001': ''}
+        elif a['statut'].startswith('conforme') and not len(a['alineas']):
+            a['alineas'] = {'001': '(Non modifié)'}
     print json.dumps(a, sort_keys=True, ensure_ascii=False).encode("utf-8")
 #  print json.dumps(a, sort_keys=True, indent=1, ensure_ascii=False).encode("utf-8")
 
@@ -100,12 +103,12 @@ re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
 re_mat_exp = re.compile(r"(<b>)?expos", re.I)
 re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le)", re.I)
 re_mat_dots = re.compile(r"^[.…]+$")
-re_mat_st  = re.compile(r"<i>\(?(non\s?-?)?(conform|modif|suppr|nouveau)", re.I)
+re_mat_st  = re.compile(r"<i>\(?(non\s?-?)?(conform|modif|nouveau)", re.I)
 re_mat_new = re.compile(r"\s*\(no(n[\-\s]modifié|uveau)\s*\)\s*", re.I)
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
 re_clean_conf = re.compile(r"^\s*\((confome|non-?modifi..?)s?\)\s*$", re.I)
-re_clean_supr = re.compile(r'\(suppr(ession|im..?s?)\s*(conforme|maintenue)?\)["\s]*$', re.I)
+re_clean_supr = re.compile(r'\(suppr(ession|im..?s?)\s*(conforme|maintenue|par la commission mixte paritaire)?\)["\s]*$', re.I)
 read = art_num = ali_num = 0
 section_id = ""
 article = None
@@ -146,7 +149,7 @@ for text in soup.find_all("p"):
             read = 2 # Activate alineas lecture
             art_num += 1
             ali_num = 0
-            article = {"type": "article", "order": art_num, "alineas": {}}
+            article = {"type": "article", "order": art_num, "alineas": {}, "statut": "none"}
             m = re_mat_art.match(line)
             article["titre"] = re_cl_uno.sub("1er", m.group(1).strip())
             if m.group(2) is not None:

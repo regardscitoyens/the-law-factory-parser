@@ -20,15 +20,14 @@ def getParentFolder(root, f):
 def unifyStatus(status):
     return {
     "none" : "none",
+    "conforme" : "none",
+    "conformes" : "none",
+    "non modifié" : "none",
     "nouveau" : "new",
     "supprimé" : "sup",
+    "supprimés" : "sup",
     "suppression maintenue" : "sup",
     "suppression conforme" : "sup",
-    "non modifié" : "sup",
-    "conforme" : "none",
-    "supprimés" : "sup",
-    "non modifié" : "none",
-    "conformes" : "none",
     "supprimé par la commission mixte paritaire" : "sup"
     }[status.strip()]
 

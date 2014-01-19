@@ -48,7 +48,7 @@ for art in data['articles']:
     for i, step in enumerate(data['articles'][art]['steps']):
         if len(step['text']) == 1:
             text = step['text'][0].encode('utf-8')
-    # Clean empty articles with only "Non-modifié" and einclude text from previous step
+    # Clean empty articles with only "Non modifié" and einclude text from previous step
             if i and text.startswith("(Non modifié)"):
                 step['text'].pop(0)
                 step['text'].extend(data['articles'][art]['steps'][i-1]['text'])
