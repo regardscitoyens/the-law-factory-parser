@@ -10,15 +10,15 @@ csvpath = sys.argv[1]
 projectdir = csvpath.replace('/procedure.csv', '')
 
 def row2dir(row):
-    return row[3]+'_'+row[5].replace(' ', '')+'_'+row[6]+'_'+row[7]
+    return row[5]+'_'+row[7].replace(' ', '')+'_'+row[8]+'_'+row[9]
 
 procedure = {'type': 'Normale'}
 steps = []
 with open(csvpath, 'rb') as csvfile:
     csvproc = csv.reader(csvfile, delimiter=';')
     for row in csvproc:
-        step = {'date': row[10], 'stage': row[5], 'institution': row[6], 'source_url': row[8]}
-        if (row[4] != 'EXTRA'):
+        step = {'date': row[12], 'stage': row[7], 'institution': row[8], 'source_url': row[10]}
+        if (row[6] != 'EXTRA'):
             step['directory'] = row2dir(row)
             try:
                 if (os.stat(projectdir+'/'+step['directory']+'/amendements/amendements.csv')):
@@ -39,18 +39,21 @@ with open(csvpath, 'rb') as csvfile:
                         files.append(f.replace('.json', ''))
                 step['intervention_files'] = files
                 step['intervention_directory'] = step['directory']+'/interventions'
-            step['step'] = row[7]
+            step['step'] = row[9]
             step['resulting_text_directory'] =  row2dir(row)+'/texte'
-            if ((row[3] != 'XX') and (int(row[3]) > 0)):
+            if ((row[5] != 'XX') and (int(row[5]) > 0)):
                 step['working_text_directory'] = row2dir(prevrow)+'/texte'
             steps.append(step)
         else:
-            if (row[5] == 'URGENCE'):
+            if (row[7] == 'URGENCE'):
                 procedure['type'] = 'urgence'
             else:
                 steps.append(step)
         prevrow = row
     procedure['steps'] = steps
     procedure['beginning'] = steps[0]['date']
+    procedure['long_title'] = row[1];
+    procedure['short_title'] = row[2];
+
     print json.dumps(procedure, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
