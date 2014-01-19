@@ -3,6 +3,7 @@
 use WWW::Mechanize;
 use HTML::TokeParser;
 use Data::Dumper;
+use utf8;
 
 $dossier_url = shift;
 if ($dossier_url =~ /\/([^\/]+)\.html$/) {
@@ -19,6 +20,18 @@ if (!$dossier_url) {
 $a = WWW::Mechanize->new();
 $a->get($dossier_url);
 $content = $a->content;
+
+$titrecourt = '';
+$titrelong = '';
+
+if ($content =~ /title>([^<\-]+) -/) {
+    $titrecourt = $1;
+    utf8::encode($titrecourt);
+}
+if ($content =~ /Description" content="([^"]+)"/) {
+    $titrelong = $1;
+    utf8::encode($titrelong);
+}
 
 $p = HTML::TokeParser->new(\$content);
 
@@ -91,6 +104,7 @@ while ($ok) {
 	    }elsif ($url =~ /conseil-constitutionnel/) {
 		$url =~ s/#.*//;
 		$etape = "constitutionnalité";
+		utf8::encode($etape);
 		$chambre = 'conseil constitutionnel';
 		$stade = 'conforme';
 		if ($p->get_text('/li') =~ /\((.*)\)/) {
@@ -125,10 +139,10 @@ while ($ok) {
 }
 
 $cpt = 0;
-print "dossier begining ; an's dossier id ; senat's dossier id ; line id ; senat's step id ; stage ; chamber ; step ; bill url ; bill id ; date depot text; text date\n" if (shift);
+print "dossier begining ; dossier title ; dossier title summarised ; an's dossier id ; senat's dossier id ; line id ; senat's step id ; stage ; chamber ; step ; bill url ; bill id ; date depot text; text date\n" if (shift);
 foreach $l (@lines) {
         $idline = sprintf("%02d", $cpt);
-	print "$date;$dossieran;$dossiersenat;$idline;$l\n";
+	print "$date;$titrelong;$titrecourt;$dossiername;$dossiersenat;$idline;$l\n";
 	$cpt++;
 }
 
@@ -136,7 +150,7 @@ if ($content =~ /Proc\S+dure acc\S+l\S+r\S+e/) {
     %mois = ('janvier'=>'01', 'février'=>'02', 'mars'=>'03', 'avril'=>'04', 'mai'=>'05', 'juin'=>'06', 'juillet'=>'07', 'août'=>'08', 'septembre'=>'09','octobre'=>'10','novembre'=>'11','décembre'=>'12');
     if ($content =~ /engag\S+e par le Gouvernement le (\d+) (\w+) (\d+)/) {
 	$mois = $2;utf8::encode($mois);
-	print "$date;$dossieran;$dossiersenat;XX;EXTRA;URGENCE;Gouvernement;URGENCE;;;$3-".$mois{$mois}."-$1\n";
+	print "$date;$titrelong;$titrecourt;$dossieran;$dossiersenat;XX;EXTRA;URGENCE;Gouvernement;URGENCE;;;$3-".$mois{$mois}."-$1\n";
     }
 }
 exit;

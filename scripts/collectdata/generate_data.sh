@@ -14,14 +14,14 @@ function download { cache=$cachedir"/"$(escapeit $1) ; if ! test -e $cache ; the
 oldchambre=""
 cat $1 | while read line ; do 
   #Variables
-#  dossier=$(echo $line | awk -F ';' '{print $1"_"$2"_"$3}' | sed 's/-\([0-9]*\)-/\1/')
+#  dossier=$(echo $line | awk -F ';' '{print $1"_"$4"_"$5}' | sed 's/-\([0-9]*\)-/\1/')
   dossier="procedure"
-  etape=$(echo $line | sed 's/ //g' | awk -F ';' '{print $4"_"$6"_"$7"_"$8}')
+  etape=$(echo $line | sed 's/ //g' | awk -F ';' '{print $6"_"$8"_"$9"_"$10}')
   projectdir=$data"/"$dossier"/"$etape
-  order=$(echo $line | awk -F ';' '{print $4}')
-  url=$(echo $line | awk -F ';' '{print $9}')
+  order=$(echo $line | awk -F ';' '{print $6}')
+  url=$(echo $line | awk -F ';' '{print $11}')
   escape=$(escapeit $url)
-  chambre=$(echo $line | awk -F ';' '{print $7}')
+  chambre=$(echo $line | awk -F ';' '{print $9}')
   
   mkdir -p "$data/$dossier"
   if test "$dossier" = "$olddossier"; then
