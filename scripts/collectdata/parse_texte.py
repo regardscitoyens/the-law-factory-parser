@@ -147,7 +147,7 @@ for text in soup.find_all("p"):
       read = 2 # Activate alineas lecture
       art_num += 1
       ali_num = 0
-      article = {"type": "article", "num": art_num, "alineas": {}}
+      article = {"type": "article", "order": art_num, "alineas": {}}
       m = re_mat_art.match(line)
       article["titre"] = re_cl_uno.sub("1er", m.group(1).strip())
       if m.group(2) is not None:
