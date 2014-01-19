@@ -94,7 +94,7 @@ def pr_js(a):
 
 re_cl_html = re.compile(r"<[^>]+>")
 re_cl_par  = re.compile(r"(\(|\))")
-re_cl_uno  = re.compile(r"(premi|unique?)", re.I)
+re_cl_uno  = re.compile(r"(premier|unique?)", re.I)
 re_mat_sec = re.compile(r"((chap|t)itre|volume|livre|tome|(sous-)?section)\s+(.+)e?r?", re.I)
 re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
@@ -149,7 +149,7 @@ for text in soup.find_all("p"):
       ali_num = 0
       article = {"type": "article", "num": art_num, "alineas": {}}
       m = re_mat_art.match(line)
-      article["titre"] = re_cl_uno.sub("1", m.group(1).strip())
+      article["titre"] = re_cl_uno.sub("1er", m.group(1).strip())
       if m.group(2) is not None:
         article["statut"] = re_cl_par.sub("", str(m.group(2)).lower()).strip()
       if section["id"] != "":
