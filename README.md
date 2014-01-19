@@ -15,7 +15,8 @@ The data are generated in the "*data*" directory.
 
 For example, to generate data about the "*Enseignement supérieur et recherche*" bill:
 
-`bash generate_data_from_senat_url.sh http://www.senat.fr/dossier-legislatif/pjl12-614.html`
-
-`ls data/pjl12-614/`
+```
+bash generate_data_from_senat_url.sh http://www.senat.fr/dossier-legislatif/pjl12-614.html
+ls data/pjl12-614/
+```
 
