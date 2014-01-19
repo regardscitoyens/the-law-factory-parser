@@ -36,12 +36,13 @@ def unifyStatus(status):
 
 with open(os.path.join(sourcedir, 'procedure.json'), "r") as properties:
     properties = json.load(properties)
-out = {}
+out = {"law_title": properties.get("title", "Missing title")}
 out['articles'] = {}
 
 steps = properties['steps']
 for step in steps:
     if not 'resulting_text_directory' in step:
+        sys.stderr.write("WARNING no directory found for step %s" % step)
         continue
     try:
         path = os.path.join(sourcedir, step['resulting_text_directory'])
@@ -81,12 +82,12 @@ for step in steps:
                         pos = len(out['articles'][id]['steps']) -1
 
                         if s['status'] == 'sup':
-                            out['articles'][id]['steps'][pos]['last'] = 'true'
+                            out['articles'][id]['steps'][pos]['last_s'] = 'true'
 
-                        s['first'] = 'false'
-                        if out['articles'][id]['steps'][pos]['first'] == 'true':
+                        s['first_s'] = 'false'
+                        if out['articles'][id]['steps'][pos]['first_s'] == 'true':
                             s['status'] = 'none'
-                            s['first'] = 'true'
+                            s['first_s'] = 'true'
 
                         text2 = out['articles'][id]['steps'][pos]['text']
                         compare = list(difflib.ndiff(text, text2))
@@ -106,7 +107,7 @@ for step in steps:
 
                         s['id_step'] = step_stage + '_' + step_institution + '_' + step_name
                         s['id_step'] = s['id_step'].strip()
-                        s['last'] = 'false'
+                        s['last_s'] = 'false'
                         out['articles'][id]['steps'].append(s)
                     else:
                         out['articles'][id] = {}
@@ -127,9 +128,9 @@ for step in steps:
                             s['status'] = 'none'
 
                         if s['status'] == 'new':
-                            s['first'] = 'true'
+                            s['first_s'] = 'true'
                         else:
-                            s['first'] = 'false'
+                            s['first_s'] = 'false'
 
                         text = []
                         for key in sorted(article['alineas'].keys()):
@@ -138,7 +139,7 @@ for step in steps:
 
                         s['length'] = len(' '.join(text))
                         s['diff'] = 'none'
-                        s['last'] = 'false'
+                        s['last_s'] = 'false'
                         s['text'] = text
                         s['id_step'] = step_stage + '_' + step_institution + '_' + step_name
                         s['id_step'] = s['id_step'].strip()
