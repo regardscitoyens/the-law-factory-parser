@@ -14,7 +14,8 @@ function download { cache=$cachedir"/"$(escapeit $1) ; if ! test -e $cache ; the
 oldchambre=""
 cat $1 | while read line ; do 
   #Variables
-  dossier=$(echo $line | awk -F ';' '{print $1"_"$2"_"$3}' | sed 's/-\([0-9]*\)-/\1/')
+#  dossier=$(echo $line | awk -F ';' '{print $1"_"$2"_"$3}' | sed 's/-\([0-9]*\)-/\1/')
+  dossier="procedure"
   etape=$(echo $line | sed 's/ //g' | awk -F ';' '{print $4"_"$6"_"$7"_"$8}')
   projectdir=$data"/"$dossier"/"$etape
   order=$(echo $line | awk -F ';' '{print $4}')
