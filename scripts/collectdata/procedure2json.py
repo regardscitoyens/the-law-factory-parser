@@ -46,11 +46,11 @@ with open(csvpath, 'rb') as csvfile:
             steps.append(step)
         else:
             if (row[5] == 'URGENCE'):
-                procedure['type'] = 'Accelerée'
+                procedure['type'] = 'urgence'
             else:
                 steps.append(step)
         prevrow = row
     procedure['steps'] = steps
     procedure['beginning'] = steps[0]['date']
     print json.dumps(procedure, sort_keys=True, ensure_ascii=False).encode("utf-8")
-                         
+
