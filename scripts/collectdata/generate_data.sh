@@ -48,8 +48,8 @@ cat $1 | while read line ; do
     fi
 
     #Amendements export
-    mkdir -p "$data/$projectdir/amendements"
-    cd "$data/$projectdir/amendements"
+    mkdir -p "$projectdir/amendements"
+    cd "$projectdir/amendements"
     download "$urlchambre/amendements/$amdidtext/csv" > amendements.csv
     if grep [a-z] amendements.csv > /dev/null; then 
     	download "$urlchambre/amendements/$amdidtext/json" > amendements.json
@@ -58,11 +58,11 @@ cat $1 | while read line ; do
     else
     	rm amendements.csv
     	cd - > /dev/null
-    	rmdir $data/$projectdir/amendements
+    	rmdir $projectdir/amendements
     fi
 
     #Interventions export
-    inter_dir="$data/$projectdir/interventions"
+    inter_dir="$projectdir/interventions"
     is_commission=''
     if echo $etape | grep commission > /dev/null; then
       is_commission='?commission=1'
@@ -90,5 +90,5 @@ cat $1 | while read line ; do
   amdidtext=$(echo $line | awk -F ';' '{print $10}')
   oldchambre=$chambre
   olddossier=$dossier
-  echo "INFO: data exported in $data/$projectdir"
+  echo "INFO: data exported in $projectdir"
 done 
