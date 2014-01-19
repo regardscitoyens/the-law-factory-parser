@@ -45,29 +45,18 @@ def get_mark_from_last(text, start, last=""):
             res.append(i)
     return res
 
-re_clean_bister = re.compile(r'(un|duo|tre|bis|qua|quint|quinqu|sex|oct|nov|non|dec|ter|ies)+|pr..?liminaire', re.I)
 
 for art in data['articles']:
     for i, step in enumerate(data['articles'][art]['steps']):
-    # Clean comments (Texte du Sénat), 5texte de la Commissiohn), ...
-        if step['text'] and step['text'][0].startswith('(Texte d'):
-            step['text'].pop(0)
         if len(step['text']) == 1:
             text = step['text'][0].encode('utf-8')
-    # Clean empty articles with only "Supprimé" as text
-            if text.startswith("(Supprimé)"):
-                step['text'].pop(0)
     # Clean empty articles with only "Non-modifié" and einclude text from previous step
-            elif i and text.startswith("(Non modifié)"):
+            if i and text.startswith("(Non modifié)"):
                 step['text'].pop(0)
                 step['text'].extend(data['articles'][art]['steps'][i-1]['text'])
         gd_text = []
         for j, text in enumerate(step['text']):
             text = text.encode('utf-8')
-    # Clean low/upcase issues with BIS TER etc.
-            text = re_clean_bister.sub(lambda m: m.group(0).lower(), text)
-    # Clean different versions of same comment.
-            text = text.replace('(Suppression maintenue)', '(Supprimé)')
             if i and "(non modifié" in text:
                 part = re.split("\s*([\)\.°\-]+\s*)+", text)
                 if not part:

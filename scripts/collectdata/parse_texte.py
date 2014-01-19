@@ -14,11 +14,11 @@ import simplejson as json
 from bs4 import BeautifulSoup
 
 try:
-  FILE = sys.argv[1] 
+  FILE = sys.argv[1]
   soup = BeautifulSoup(open(FILE,"r"), "html5lib")
-except: 
+except:
   print "ERROR: Cannot open file", FILE
-  sys.exit() 
+  sys.exit()
 
 if (len(sys.argv) > 2) :
   ORDER = "%02d_" % int(sys.argv[2])
@@ -59,6 +59,8 @@ def romans(n):
       i += len(r)
   return res
 
+re_clean_bister = re.compile(r'(un|duo|tre|bis|qua|quint|quinqu|sex|oct|nov|non|dec|ter|ies)+|pr..?liminaire', re.I)
+
 # Clean html and special chars
 lower_inner_title = lambda x: x.group(1)+x.group(3).lower()
 html_replace = [
@@ -84,6 +86,9 @@ def clean_html(t):
   return t.strip()
 
 def pr_js(a):
+  # Clean empty articles with only "Supprimé" as text
+  if 'alineas' in a and len(a['alineas']) == 1 and a['alineas']['001'].startswith("(Supprimé)"):
+    a['alineas'] = {'001': ''}
   print json.dumps(a, sort_keys=True, ensure_ascii=False).encode("utf-8")
 #  print json.dumps(a, sort_keys=True, indent=1, ensure_ascii=False).encode("utf-8")
 
@@ -100,7 +105,8 @@ re_mat_st  = re.compile(r"<i>\(?(non\s?-?)?(conform|modif|suppr|nouveau)", re.I)
 re_mat_new = re.compile(r"\s*\(no(n[\-\s]modifié|uveau)\s*\)\s*", re.I)
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
-
+re_clean_conf = re.compile(r"^\s*\((confome|non-?modifi..?)s?\)\s*$", re.I)
+re_clean_supr = re.compile(r'\(suppr(ession|im..?s?)\s*(conforme|maintenue)?\)["\s]*$', re.I)
 read = art_num = ali_num = 0
 section_id = ""
 article = None
@@ -167,6 +173,14 @@ for text in soup.find_all("p"):
     if re_mat_dots.match(line):
       continue
     line = re_clean_art_spaces.sub('', re_clean_idx_spaces.sub(r'\1. ', re_mat_new.sub(" ", re_cl_html.sub("", line)).strip()))
+    # Clean low/upcase issues with BIS TER etc.
+    line = re_clean_bister.sub(lambda m: m.group(0).lower(), line)
+    # Clean different versions of same comment.
+    line = re_clean_supr.sub('(Supprimé)', line)
+    line = re_clean_conf.sub('(Non modifié)', line)
+    # Clean comments (Texte du Sénat), (Texte de la Commission), ...
+    if ali_num == 0 and line.startswith('(Texte d'):
+        continue
     ali_num += 1
     article["alineas"]["%03d" % ali_num] = line
   else:

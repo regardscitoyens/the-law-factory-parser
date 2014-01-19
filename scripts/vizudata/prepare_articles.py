@@ -42,7 +42,7 @@ out['articles'] = {}
 steps = properties['steps']
 for step in steps:
     if not 'resulting_text_directory' in step:
-        sys.stderr.write("WARNING no directory found for step %s" % step)
+        sys.stderr.write("WARNING no directory found for step %s\n" % step['stage'])
         continue
     try:
         path = os.path.join(sourcedir, step['resulting_text_directory'])
@@ -146,6 +146,6 @@ for step in steps:
                         out['articles'][id]['steps'].append(s)
 
     except Exception, e:
-        sys.stderr.write("ERROR parsing step %s: %s" % (step, e))
+        sys.stderr.write("ERROR parsing step %s:\n%s\n" % (step, e))
         exit(1)
 print json.dumps(out, indent=4, ensure_ascii=False).encode('utf8')
