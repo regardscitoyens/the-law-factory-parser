@@ -6,7 +6,7 @@ if ! test "$1"; then
 	exit 1;
 fi
 
-if ! echo $1 | grep '^http://www.senat.fr/dossier-legislatif/p[plfj]*[0-9\-]*.html' > /dev/null ; then
+if ! echo $1 | grep '^http://www.senat.fr/dossier-legislatif/\S\+.html' > /dev/null ; then
 	echo "$1 is not a senat.fr url describing the legislative process of the bill";
 	exit 2;
 fi
