@@ -84,7 +84,7 @@ for l in f:
         continue
     line = json.loads(l)
     if not line or not "type" in line:
-        sys.stderr.write("JSON %s badly formatted, missing field type: %s" % (source, line))
+        sys.stderr.write("JSON %s badly formatted, missing field type: %s" % (FILE, line))
         sys.exit()
     if line["type"] != "article":
         write_json(line)
@@ -108,7 +108,7 @@ for l in f:
         # Clean empty articles with only "Non modifié" and include text from previous step
             if text.startswith("(Non modifié)"):
                 if not line['titre'] in oldstep:
-                    sys.stderr.write("WARNING: found repeated article missing from previous step: %s @ %s\n" % (line['titre'], FILE))
+                    sys.stderr.write("WARNING: found repeated article %s missing from previous step %s: %s\n" % (line['titre'], FILE, line['alineas']))
                 else:
                     log("DEBUG: get back Art %s" % line['titre'])
                     alineas.pop(0)
