@@ -54,7 +54,7 @@ out = {'law_title': title, 'articles': {}, 'short_title': properties.get("short_
 step_id = ''
 old_step_id = ''
 steps = properties['steps']
-for step in steps:
+for nstep, step in enumerate(steps):
     if not 'resulting_text_directory' in step:
         sys.stderr.write("WARNING no directory found for step %s\n" % step['stage'])
         continue
@@ -124,7 +124,10 @@ for step in steps:
                         s = create_step(step_id, article)
                         s['n_diff'] = 1
                         s['diff'] = 'add'
-                        s['status'] = 'new'
+                        if nstep:
+                            s['status'] = 'new'
+                        else:
+                            s['status'] = 'none'
                         txt = " ".join(s['text'])
                     if s['status'] == 'sup':
                         s['length'] = 50
