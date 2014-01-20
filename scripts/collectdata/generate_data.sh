@@ -11,6 +11,8 @@ function escapeit { perl -e 'use URI::Escape; print uri_escape shift();print"\n"
 #function download { curl -s $1 }
 function download { cache=$cachedir"/"$(escapeit $1) ; if ! test -e $cache ; then curl -s $1 > $cache ; fi ; cat $cache ; } ; mkdir -p $data"/../.cache/web" ; cachedir=$data"/../.cache/web"
 
+mkdir -p $data/.tmp/html $data/.tmp/json
+rm -f $data/.tmp/json/articles_laststep.json
 oldchambre=""
 cat $1 | while read line ; do 
   #Variables
@@ -35,11 +37,16 @@ cat $1 | while read line ; do
 	continue;
   fi
  
-  mkdir -p $data/.tmp/html $data/.tmp/json
   #Text export
   download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape;
   if file -i $data/.tmp/html/$escape | grep -i iso > /dev/null; then recode ISO88591..UTF8 $data/.tmp/html/$escape; fi
   python parse_texte.py $data/.tmp/html/$escape $order > $data/.tmp/json/$escape
+  # Complete articles with missing "conforme" or "non-modifié" text
+  if test -s $data/.tmp/json/articles_laststep.json; then
+    python complete_articles.py $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json > $data/.tmp/json/$escape.tmp
+    mv $data/.tmp/json/$escape{.tmp,}
+  fi
+  cp $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
   python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"
   
   if test "$amdidtext" && test "$oldchambre" = "$chambre" && test "$olddossier" = "$dossier"; then
@@ -89,4 +96,5 @@ cat $1 | while read line ; do
   oldchambre=$chambre
   olddossier=$dossier
   echo "INFO: data exported in $projectdir"
-done 
+done
+

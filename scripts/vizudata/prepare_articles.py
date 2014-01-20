@@ -48,10 +48,11 @@ def create_step(step_id, article):
 with open(os.path.join(sourcedir, 'procedure.json'), "r") as properties:
     properties = json.load(properties)
 title = properties.get("long_title", "Missing title").replace(properties.get("short_title", "").lower(), properties.get("short_title", ""))
-title = title[0].upper()+title[1:]
+title = title[0].upper() + title[1:]
 out = {'law_title': title, 'articles': {}, 'short_title': properties.get("short_title", "")}
 
 step_id = ''
+old_step_id = ''
 steps = properties['steps']
 for step in steps:
     if not 'resulting_text_directory' in step:
