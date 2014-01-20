@@ -84,15 +84,22 @@ def clean_html(t):
         t = regex.sub(repl, t)
     return t.strip()
 
-def pr_js(a):
+re_clean_et = re.compile(r'(,|\s+et)\s+', re.I)
+def pr_js(dic):
     # Clean empty articles with only "Supprimé" as text
-    if 'alineas' in a:
-        if len(a['alineas']) == 1 and a['alineas']['001'].startswith("(Supprimé)"):
-            a['alineas'] = {'001': ''}
-        elif a['statut'].startswith('conforme') and not len(a['alineas']):
-            a['alineas'] = {'001': '(Non modifié)'}
-    print json.dumps(a, sort_keys=True, ensure_ascii=False).encode("utf-8")
-#  print json.dumps(a, sort_keys=True, indent=1, ensure_ascii=False).encode("utf-8")
+    if 'alineas' in dic:
+        if len(dic['alineas']) == 1 and dic['alineas']['001'].startswith("(Supprimé)"):
+            dic['alineas'] = {'001': ''}
+        elif dic['statut'].startswith('conforme') and not len(dic['alineas']):
+            dic['alineas'] = {'001': '(Non modifié)'}
+        multiples = re_clean_et.sub(',', dic['titre']).split(',')
+        if len(multiples) > 1:
+            for d in multiples:
+                new = dict(dic)
+                new['titre'] = d
+                print json.dumps(new, sort_keys=True, ensure_ascii=False).encode("utf-8")
+            return
+    print json.dumps(dic, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
 re_cl_html = re.compile(r"<[^>]+>")
 re_cl_par  = re.compile(r"(\(|\))")
