@@ -141,9 +141,6 @@ while ($ok) {
 $cpt = 0;
 print "dossier begining ; dossier title ; dossier title summarised ; an's dossier id ; senat's dossier id ; line id ; senat's step id ; stage ; chamber ; step ; bill url ; bill id ; date depot text; text date\n" if (shift);
 foreach $l (@lines) {
-    if ($cpt && $l =~ /;depot;/) {
-      next;
-    }
         $idline = sprintf("%02d", $cpt);
 	print "$date;$titrelong;$titrecourt;$dossiername;$dossiersenat;$idline;$l\n";
 	$cpt++;

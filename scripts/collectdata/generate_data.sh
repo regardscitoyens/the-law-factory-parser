@@ -27,7 +27,9 @@ cat $1 | while read line ; do
   
   mkdir -p "$data/$dossier"
   if test "$dossier" = "$olddossier"; then
-      echo $line >>  "$data/$dossier/procedure.csv"
+      if echo $line | grep -v ';depot;' > /dev/null ; then 
+	  echo $line >>  "$data/$dossier/procedure.csv"
+      fi
   else
       echo $line >  "$data/$dossier/procedure.csv"
   fi
