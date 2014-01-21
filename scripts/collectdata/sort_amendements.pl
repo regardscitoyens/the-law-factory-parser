@@ -16,6 +16,8 @@ sub clean_subject {
     $subj = shift;
     $subj =~ s/art(\.|icle|\s)*(\d+)/article \2/i;
     $subj =~ s/\(.*//;
+    $subj =~ s/\s*$//;
+    $subj =~ s/^\s*//;
     $subj = lc($subj);
     return $subj;
 }
