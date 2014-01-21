@@ -18,3 +18,4 @@ mkdir -p $datadir
 cd scripts
 
 bash generate_collectdata.sh $1 $datadir && bash generate_vizudata.sh $datadir
+exit $?
