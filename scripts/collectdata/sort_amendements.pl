@@ -16,6 +16,7 @@ sub clean_subject {
     $subj = shift;
     $subj =~ s/art(\.|icle|\s)*(\d+)/article \2/i;
     $subj =~ s/\(.*//;
+    $subj =~ s/(apr\S+s|avant)\s+article/\1 l'article/i;
     $subj =~ s/\s*$//;
     $subj =~ s/^\s*//;
     $subj = lc($subj);
@@ -29,7 +30,7 @@ sub solveorder {
         $order = $articles{$1};
         if ($art =~ /avant/) {
             $order--;
-        } elsif ($art =~ /apr[eè]s/) {
+        } elsif ($art =~ /apr\S+s/) {
             $order++;
         }
     }
