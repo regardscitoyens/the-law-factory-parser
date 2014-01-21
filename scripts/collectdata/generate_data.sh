@@ -61,7 +61,7 @@ cat $1 | while read line ; do
     mkdir -p "$projectdir/amendements"
     download "$urlchambre/amendements/$amdidtext/csv" | perl sort_amendements.pl $data/.tmp/json/$escape csv >  "$projectdir/amendements/amendements.csv"
     if grep [a-z] "$projectdir/amendements/amendements.csv" > /dev/null; then
-    	download "$urlchambre/amendements/$amdidtext/json" | sed 's/},/\n/g' | perl sort_amendements.pl $data/.tmp/json/$escape json | tr '\n' '},' > "$projectdir/amendements/amendements.json"
+    	download "$urlchambre/amendements/$amdidtext/json" | perl sort_amendements.pl $data/.tmp/json/$escape json > "$projectdir/amendements/amendements.json"
     	download "$urlchambre/amendements/$amdidtext/xml"  | perl sort_amendements.pl $data/.tmp/json/$escape xml > "$projectdir/amendements/amendements.xml"
     else
     	rm "$projectdir/amendements/amendements.csv"
