@@ -9,7 +9,7 @@ data=$(if test "$2" ; then echo $2 ; else echo "data" ; fi)
 
 function escapeit { perl -e 'use URI::Escape; print uri_escape shift();print"\n"' $1 ; }
 #function download { curl -s $1 }
-function download { cache=$cachedir"/"$(escapeit $1) ; if ! test -e $cache ; then curl -s $1 > $cache.tmp ; rm $cache.tmp $cache ; fi ; cat $cache ; } ; mkdir -p $data"/../.cache/web" ; cachedir=$data"/../.cache/web"
+function download { cache=$cachedir"/"$(escapeit $1) ; if ! test -e $cache ; then curl -s $1 > $cache.tmp ; mv $cache.tmp $cache ; fi ; cat $cache ; } ; mkdir -p $data"/../.cache/web" ; cachedir=$data"/../.cache/web"
 
 mkdir -p $data/.tmp/html $data/.tmp/json
 rm -f $data/.tmp/json/articles_laststep.json
