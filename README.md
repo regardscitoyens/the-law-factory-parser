@@ -20,3 +20,12 @@ bash generate_data_from_senat_url.sh http://www.senat.fr/dossier-legislatif/pjl1
 ls data/pjl12-614/
 ```
 
+### Dependencies ###
+
+A few perl and python dependencies are required. You can install them with the following:
+
+ ```bash
+ sudo apt-get install recode libwww-mechanize-perl
+ sudo pip install -r requirements.txt
+ ```
+
