@@ -87,6 +87,8 @@ def clean_html(t):
 re_clean_et = re.compile(r'(,|\s+et)\s+', re.I)
 def pr_js(dic):
     # Clean empty articles with only "Supprimé" as text
+    if not dic:
+        return
     if 'alineas' in dic:
         if len(dic['alineas']) == 1 and dic['alineas']['001'].startswith("(Supprimé)"):
             dic['alineas'] = {'001': ''}
