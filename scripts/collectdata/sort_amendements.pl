@@ -13,12 +13,16 @@ while(<JSON>) {
 close JSON;
 
 sub clean_subject {
-    $subj = shift;
-    $subj =~ s/art(\.|icle|\s)*(\d+)/Article \2/i;
+    $subj = lc(shift);
+    $subj =~ s/\s*\(((avant|apr).*)\)/ \1/;
     $subj =~ s/\(.*//;
-    $subj =~ s/(apr\S+s|avant)\s+Article/\1 l'article/i;
     $subj =~ s/\s*$//;
     $subj =~ s/^\s*//;
+    $subj =~ s/^(\d)/Article \1/;
+    $subj =~ s/articles/Article/i;
+    $subj =~ s/art(\.|icle|\s)*(\d+)/Article \2/i;
+    $subj =~ s/^(apr\S+s|avant)\s*/Article additionnel \1 /;
+    $subj =~ s/(apr\S+s|avant)\s+Article/\1 l'article/i;
     $subj =~ s/^(.)/\U\1/;
     $subj =~ s/(\d+e?r? )([a-z]{1,2})$/\1\U\2/i;
     $subj =~ s/(\d+e?r? \S+ )([a-z]+)$/\1\U\2/i;
@@ -26,6 +30,13 @@ sub clean_subject {
 }
 sub solveorder {
     $art = shift;
+    if ($art =~ /^motion/i) {
+        return 0;
+    } elsif ($art =~ /^(pro(jet|position)|texte)/i) {
+        return 1;
+    } elsif ($art =~ /^titre$/i || $art =~ /^intitul/i) {
+        return -5;
+    }
     $art =~ s/premier/1er/i;
     $art =~ s/unique/1er/i;
     if ($art =~ /article (\d.*)/i) {
