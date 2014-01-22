@@ -18,7 +18,11 @@ def getParentFolder(root, f):
     return os.path.basename(os.path.abspath(os.path.join(abs, os.pardir)))
 
 def unifyStatus(status):
-    status = status.lstrip().rstrip('s. ').encode('utf-8')
+    try:
+        status = status.encode('utf-8')
+    except:
+        pass
+    status = status.lstrip().rstrip('s. ')
     if status.endswith('constitution'):
         return "sup"
     return {
@@ -75,7 +79,7 @@ for nstep, step in enumerate(steps):
                     with open(articleFile,"r") as article:
                          article = json.load(article)
 
-                    id = str(article['titre']).replace(' ', '_')
+                    id = article['titre'].replace(' ', '_')
                     if out['articles'].get(id):
                         s = create_step(step_id, article)
                         txt = " ".join(s['text'])
