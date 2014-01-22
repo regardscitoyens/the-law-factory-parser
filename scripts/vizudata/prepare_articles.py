@@ -19,6 +19,8 @@ def getParentFolder(root, f):
 
 def unifyStatus(status):
     status = status.lstrip().rstrip('s. ').encode('utf-8')
+    if status.endswith('constitution'):
+        return "sup"
     return {
     "none" : "none",
     "conforme" : "none",
