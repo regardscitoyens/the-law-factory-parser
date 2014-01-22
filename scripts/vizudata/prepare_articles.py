@@ -18,14 +18,15 @@ def getParentFolder(root, f):
     return os.path.basename(os.path.abspath(os.path.join(abs, os.pardir)))
 
 def unifyStatus(status):
+    status = status.lstrip().rstrip('s. ').encode('utf-8')
     return {
     "none" : "none",
     "conforme" : "none",
-    "conformes" : "none",
+    "conforme" : "none",
     "non modifié" : "none",
     "nouveau" : "new",
     "supprimé" : "sup",
-    "supprimés" : "sup",
+    "supprimé" : "sup",
     "suppression maintenue" : "sup",
     "suppression conforme" : "sup",
     "supprimé par la commission mixte paritaire" : "sup"
@@ -35,7 +36,7 @@ def create_step(step_id, article):
     s = {}
     s['id_step'] = step_id
     if article.get('statut'):
-        s['status'] = unifyStatus(article['statut'].encode('utf8'))
+        s['status'] = unifyStatus(article['statut'])
     else:
         s['status'] = 'none'
     s['text'] = []
@@ -98,7 +99,7 @@ for nstep, step in enumerate(steps):
                                 compare = list(ndiff(s['text'], oldtext))
                                 mods = {'+': 0, '-': 0}
                                 for line in compare:
-                                    mod = line.encode("utf8")[0]
+                                    mod = line[0]
                                     if mod not in mods:
                                         mods[mod] = 0
                                     mods[mod] += 1
