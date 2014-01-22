@@ -56,7 +56,8 @@ old_step_id = ''
 steps = properties['steps']
 for nstep, step in enumerate(steps):
     if not 'resulting_text_directory' in step:
-        sys.stderr.write("WARNING no directory found for step %s\n" % step['stage'])
+        if step['stage'] not in ["promulgation", "constitutionnalité"]:
+            sys.stderr.write("WARNING no directory found for step %s\n" % step['stage'])
         continue
     try:
         path = os.path.join(sourcedir, step['resulting_text_directory'])
