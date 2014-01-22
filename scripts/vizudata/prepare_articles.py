@@ -18,10 +18,7 @@ def getParentFolder(root, f):
     return os.path.basename(os.path.abspath(os.path.join(abs, os.pardir)))
 
 def unifyStatus(status):
-    try:
-        status = status.encode('utf-8')
-    except:
-        pass
+    status = status.encode('utf-8')
     status = status.lstrip().rstrip('s. ')
     if status.endswith('constitution'):
         return "sup"
