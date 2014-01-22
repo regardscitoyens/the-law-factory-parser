@@ -57,7 +57,7 @@ old_step_id = ''
 steps = properties['steps']
 for nstep, step in enumerate(steps):
     if not 'resulting_text_directory' in step:
-        if step['stage'] not in ["promulgation", "constitutionnalité"]:
+        if step['stage'] not in [u"promulgation", u"constitutionnalité"]:
             sys.stderr.write("WARNING no directory found for step %s\n" % step['stage'])
         continue
     try:
