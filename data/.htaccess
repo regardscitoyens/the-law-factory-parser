@@ -1,0 +1,3 @@
+IndexIgnore .cache
+AddDefaultCharset utf-8
+Header set Access-Control-Allow-Origin *

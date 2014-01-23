@@ -18,14 +18,18 @@ def getParentFolder(root, f):
     return os.path.basename(os.path.abspath(os.path.join(abs, os.pardir)))
 
 def unifyStatus(status):
+    status = status.encode('utf-8')
+    status = status.lstrip().rstrip('s. ')
+    if status.endswith('constitution'):
+        return "sup"
     return {
     "none" : "none",
     "conforme" : "none",
-    "conformes" : "none",
+    "conforme" : "none",
     "non modifié" : "none",
     "nouveau" : "new",
     "supprimé" : "sup",
-    "supprimés" : "sup",
+    "supprimé" : "sup",
     "suppression maintenue" : "sup",
     "suppression conforme" : "sup",
     "supprimé par la commission mixte paritaire" : "sup"
@@ -35,7 +39,7 @@ def create_step(step_id, article):
     s = {}
     s['id_step'] = step_id
     if article.get('statut'):
-        s['status'] = unifyStatus(article['statut'].encode('utf8'))
+        s['status'] = unifyStatus(article['statut'])
     else:
         s['status'] = 'none'
     s['text'] = []
@@ -56,7 +60,8 @@ old_step_id = ''
 steps = properties['steps']
 for nstep, step in enumerate(steps):
     if not 'resulting_text_directory' in step:
-        sys.stderr.write("WARNING no directory found for step %s\n" % step['stage'])
+        if step['stage'] not in [u"promulgation", u"constitutionnalité"]:
+            sys.stderr.write("WARNING no directory found for step %s\n" % step['stage'])
         continue
     try:
         path = os.path.join(sourcedir, step['resulting_text_directory'])
@@ -71,7 +76,7 @@ for nstep, step in enumerate(steps):
                     with open(articleFile,"r") as article:
                          article = json.load(article)
 
-                    id = str(article['titre']).replace(' ', '_')
+                    id = article['titre'].replace(' ', '_')
                     if out['articles'].get(id):
                         s = create_step(step_id, article)
                         txt = " ".join(s['text'])
@@ -97,7 +102,7 @@ for nstep, step in enumerate(steps):
                                 compare = list(ndiff(s['text'], oldtext))
                                 mods = {'+': 0, '-': 0}
                                 for line in compare:
-                                    mod = line.encode("utf8")[0]
+                                    mod = line[0]
                                     if mod not in mods:
                                         mods[mod] = 0
                                     mods[mod] += 1

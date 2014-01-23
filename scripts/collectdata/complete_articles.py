@@ -117,7 +117,7 @@ for l in f:
         for j, text in enumerate(alineas):
             text = text.encode('utf-8')
             if "(non modifié" in text and not line['titre'] in oldstep:
-                sys.stderr.write("WARNING: found repeated article missing from previous step: %s @ %s\n" % (line['titre'], FILE))
+                sys.stderr.write("WARNING: found repeated article missing %s from previous step %s: %s\n" % (line['titre'], FILE, line['alineas']))
             elif "(non modifié" in text:
                 part = re.split("\s*([\)\.°\-]+\s*)+", text)
                 if not part:
