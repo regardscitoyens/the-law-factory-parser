@@ -97,6 +97,9 @@ for l in f:
     elif line["type"] != "article":
         write_json(line)
     else:
+        mult = line['titre'].split(u' à ')
+        if len(mult) > 1:
+            line['titre'] = mult[0].strip()
         if line['titre'] in oldartids:
             cur = ""
             while cur != line['titre'] and oldarts:
@@ -106,6 +109,20 @@ for l in f:
                     a["order"] = order
                     order += 1
                     write_json(a)
+        if len(mult) > 1:
+            cur = ""
+            end = mult[1].strip
+            run = True
+            while run and oldarts:
+                cur, a = oldarts.pop(0)
+                a["statut"] = "conforme"
+                log("DEBUG: Recovering art conforme %s\n" % line['titre'])
+                a["order"] = order
+                order += 1
+                write_json(a)
+                if cur == end:
+                    run = False
+            continue
         if line["statut"].startswith("suppr") and (line['titre'] not in oldstatus or oldstatus[line['titre']].startswith("suppr")):
            continue
         keys = line['alineas'].keys()
