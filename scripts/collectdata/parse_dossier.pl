@@ -128,6 +128,7 @@ while ($ok) {
 		if ($url =~ /[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$/) {
 			$idtext = $1;
 		}
+		$date[$id] = '';
             }elsif ($url =~ /senat.fr/) {
 		$chambre = 'senat' if ($stade eq 'hemicycle');
 		if ($url =~ /(\d{2})-(\d+)\.html$/) {
