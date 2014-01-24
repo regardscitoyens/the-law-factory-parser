@@ -31,16 +31,18 @@ texte = {"type": "texte", "source": url}
 # Generate Senat or AN ID from URL
 if re.search(r"assemblee-?nationale", url):
     m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url)
+    numero = int(m.group(3))
     texte["id"] = ORDER+"A" + m.group(1) + "-"
     if m.group(2) is not None:
         texte["id"] += m.group(2)
-    texte["id"] += m.group(3)
+    texte["id"] += str(numero)
 else:
     m = re.search(r"(ta)?s?(\d\d)-(\d{1,3})\.", url)
+    numero = int(m.group(3))
     texte["id"] = ORDER+"S" + m.group(2) + "-"
     if m.group(1) is not None:
         texte["id"] += m.group(1)
-    texte["id"] += "%03d" % int(m.group(3))
+    texte["id"] += "%03d" % numero
 
 texte["titre"] = soup.title.string
 texte["expose"] = ""
@@ -77,6 +79,7 @@ html_replace = [
     (re.compile(r"\s+"), " "),
     (re.compile(r"<[^>]*></[^>]*>"), ""),
     (re.compile(r"^<b><i>", re.I), "<i><b>"),
+    (re.compile(r"</?sup>", re.I), ""),
     (re.compile(r'^((<[^>]*>)*"[A-Z])([A-ZÉ]+ )'), lower_inner_title)
 ]
 def clean_html(t):
@@ -109,7 +112,7 @@ re_cl_uno  = re.compile(r"(premier|unique?)", re.I)
 re_mat_sec = re.compile(r"((chap|t)itre|volume|livre|tome|(sous-)?section)\s+(.+)e?r?", re.I)
 re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
-re_mat_tco = re.compile(r"\s*<b>\s*TEXTE\s*DE\s*LA\s*COMMISSION")
+re_mat_tco = re.compile(r"\s*<b>\s*TEXTES?\s*DE\s*LA\s*COMMISSION")
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
 re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le|\s*©|\s*N.?B.?\s*:)", re.I)
 re_mat_dots = re.compile(r"^[.…]+$")
@@ -121,21 +124,37 @@ re_clean_conf = re.compile(r"^\s*\((conforme|non-?modifi..?)s?\)\s*$", re.I)
 re_clean_supr = re.compile(r'\(suppr(ession|im..?s?)\s*(conforme|maintenue|par la commission mixte paritaire)?\)["\s]*$', re.I)
 re_echec_com = re.compile(r" la commission n'a pas adopté de texte ", re.I)
 re_echec_cmp = re.compile(r' ne .* parvenir à élaborer un texte commun', re.I)
+re_rap_mult = re.compile(r'[\s<>/aimg]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
+re_clean_mult_1 = re.compile(r'\s*et\s*', re.I)
+re_clean_mult_2 = re.compile(r'[^,\d]', re.I)
+re_sep_text = re.compile(r'\*+$', re.I)
 read = art_num = ali_num = 0
 section_id = ""
 article = None
+indextext = -1
+curtext = -1
 section = {"type": "section", "id": ""}
 for text in soup.find_all("p"):
     line = clean_html(str(text))
-    #print read, line
-    if re_mat_ppl.match(line) or re_mat_tco.match(line):
+    #print read, curtext, indextext, line
+    if re_rap_mult.match(line):
+        line = re_cl_html.sub("", line)
+        line = re_clean_mult_1.sub(",", line)
+        line = re_clean_mult_2.sub("", line)
+        for n_t in line.split(','):
+            indextext += 1
+            if int(n_t) == numero:
+                break
+    elif indextext != -1 and re_sep_text.match(line):
+        curtext += 1
+    elif re_mat_ppl.match(line) or re_mat_tco.match(line):
         read = 0
         if "done" not in texte:
             pr_js(texte)
         texte["done"] = True
     elif re_mat_exp.match(line):
         read = -1 # Deactivate description lecture
-    elif read == -1:
+    elif read == -1 or (indextext != -1 and curtext != indextext):
         continue
     # Identify section zones
     elif read != 0 and re_mat_sec.match(line):
