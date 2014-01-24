@@ -17,7 +17,7 @@ steps = []
 with open(csvpath, 'rb') as csvfile:
     csvproc = csv.reader(csvfile, delimiter=';')
     for row in csvproc:
-        step = {'date': row[12], 'stage': row[7], 'institution': row[8], 'source_url': row[10]}
+        step = {'date': row[12], 'enddate': row[13], 'stage': row[7], 'institution': row[8], 'source_url': row[10]}
         if (row[6] != 'EXTRA'):
             step['directory'] = row2dir(row)
             try:
@@ -52,8 +52,9 @@ with open(csvpath, 'rb') as csvfile:
         prevrow = row
     procedure['steps'] = steps
     procedure['beginning'] = steps[0]['date']
-    procedure['long_title'] = row[1];
-    procedure['short_title'] = row[2];
+    procedure['end'] = row[13]
+    procedure['long_title'] = row[1]
+    procedure['short_title'] = row[2]
 
     print json.dumps(procedure, sort_keys=True, ensure_ascii=False).encode("utf-8")
 

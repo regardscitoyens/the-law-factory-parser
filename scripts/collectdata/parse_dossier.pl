@@ -17,6 +17,7 @@ if (!$dossier_url) {
 	exit 1;
 }
 
+%mois = ('janvier'=>'01', 'fvrier'=>'02', 'mars'=>'03', 'avril'=>'04', 'mai'=>'05', 'juin'=>'06', 'juillet'=>'07', 'aot'=>'08', 'septembre'=>'09','octobre'=>'10','novembre'=>'11','dcembre'=>'12');
 $a = WWW::Mechanize->new();
 $a->get($dossier_url);
 $content = $a->content;
@@ -92,6 +93,17 @@ while ($ok) {
       	if ($t->[1]{href} =~ /\/leg\/p/ || $p->get_text('/a') =~ /Texte/ || $t->[1]{href} =~ /conseil-constitutionnel/ || $t->[1]{href} =~ /legifrance/) {
 	    $url = $t->[1]{href};
 	    $url = "http://www.senat.fr".$url if ($url =~ /^\//) ;
+
+	    $texte = $p->get_text('/li');
+	    utf8::encode($texte);
+	    $enddate='';
+	    if ($texte =~ / (\d+)e?r? (janvier|f..vrier|mars|avril|mai|juin|juillet|ao..t|septembre|octobre|novembre|d..cembre) (\d{4})/) {
+		$jour=$1;$mois = $2;$annee=$3;$mois=~s/[^a-z]//g;
+		$enddate = sprintf('%04d-%02d-%02d', $annee, $mois{$mois}, $jour);
+		$enddate = '' if ($enddate !~ /^[12]\d{3}-[01]\d-[0123]\d/);
+	    }
+	    print STDERR "$dossier_url : ENDDATE NOT FOUND : $texte\n" unless($enddate);
+
             $idtext = '';
 	    $printid = $id;
 	    if ($url =~ /legifrance/) {
@@ -122,7 +134,7 @@ while ($ok) {
 			$idtext='20'.$1.'20'.($1+1).'-'.$2;
 		}
             }
-	    $lines[$#lines+1] =  "$printid;$etape;$chambre;$stade;$url;$idtext;".$date[$id];
+	    $lines[$#lines+1] =  "$printid;$etape;$chambre;$stade;$url;$idtext;".$date[$id].";".$enddate;
 	    $url = '';
 	}
 	if ($t->[1]{href} =~ /^mailto:/) {
@@ -147,10 +159,10 @@ foreach $l (@lines) {
 }
 
 if ($content =~ /Proc\S+dure acc\S+l\S+r\S+e/) {
-    %mois = ('janvier'=>'01', 'février'=>'02', 'mars'=>'03', 'avril'=>'04', 'mai'=>'05', 'juin'=>'06', 'juillet'=>'07', 'août'=>'08', 'septembre'=>'09','octobre'=>'10','novembre'=>'11','décembre'=>'12');
     if ($content =~ /engag\S+e par le Gouvernement le (\d+) (\w+) (\d+)/) {
-	$mois = $2;utf8::encode($mois);
-	print "$date;$titrelong;$titrecourt;$dossieran;$dossiersenat;XX;EXTRA;URGENCE;Gouvernement;URGENCE;;;$3-".$mois{$mois}."-$1\n";
+	$annee = $3 ; $jour = $1 ; $mois = $2;
+	$mois=~s/[^a-z]//g;
+	print "$date;$titrelong;$titrecourt;$dossieran;$dossiersenat;XX;EXTRA;URGENCE;Gouvernement;URGENCE;;;$annee-".$mois{$mois}."-$jour\n";
     }
 }
 exit;
