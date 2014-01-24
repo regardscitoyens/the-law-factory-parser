@@ -127,7 +127,7 @@ re_echec_cmp = re.compile(r' ne .* parvenir à élaborer un texte commun', re.I)
 re_rap_mult = re.compile(r'[\s<>/aimg]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
 re_clean_mult_1 = re.compile(r'\s*et\s*', re.I)
 re_clean_mult_2 = re.compile(r'[^,\d]', re.I)
-re_sep_text = re.compile(r'\*+$', re.I)
+re_sep_text = re.compile(r'\s*(\*+|<b>\s*(article|titre|chapitre|tome|volume|livre)\s*(I|unique|liminaire|(1|prem)i?e?r?)\s*</b>)\s*$', re.I)
 read = art_num = ali_num = 0
 section_id = ""
 article = None
@@ -137,6 +137,8 @@ section = {"type": "section", "id": ""}
 for text in soup.find_all("p"):
     line = clean_html(str(text))
     #print read, curtext, indextext, line
+    if indextext != -1 and re_sep_text.match(line):
+        curtext += 1
     if re_rap_mult.match(line):
         line = re_cl_html.sub("", line)
         line = re_clean_mult_1.sub(",", line)
@@ -145,8 +147,6 @@ for text in soup.find_all("p"):
             indextext += 1
             if int(n_t) == numero:
                 break
-    elif indextext != -1 and re_sep_text.match(line):
-        curtext += 1
     elif re_mat_ppl.match(line) or re_mat_tco.match(line):
         read = 0
         if "done" not in texte:
