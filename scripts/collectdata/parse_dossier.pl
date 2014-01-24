@@ -127,7 +127,13 @@ while ($ok) {
 	    }elsif ($url =~ /assemblee-nationale/) {
 		$chambre = 'assemblee' if ($stade eq 'hemicycle');
         if ($url =~ /\/rapports\/r/ && $enddate gt "2009-05-28") {
-            $url =~ s/rapports(\/r\d+)\./ta-commission\1-a0\./
+            $a2 = WWW::Mechanize->new(autocheck => 0);
+            $url2 = $url;
+            $url2 =~ s/rapports(\/r\d+)\./ta-commission\1-a0\./;
+            $a2->get($url2);
+            if ($a2->success()) {
+                $url = $url2;
+            }
         }
 		if ($url =~ /[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$/) {
 			$idtext = $1;

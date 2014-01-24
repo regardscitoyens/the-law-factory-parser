@@ -109,6 +109,7 @@ re_cl_uno  = re.compile(r"(premier|unique?)", re.I)
 re_mat_sec = re.compile(r"((chap|t)itre|volume|livre|tome|(sous-)?section)\s+(.+)e?r?", re.I)
 re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
+re_mat_tco = re.compile(r"\s*<b>\s*TEXTE\s*DE\s*LA\s*COMMISSION")
 re_mat_exp = re.compile(r"(<b>)?expos", re.I)
 re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le)", re.I)
 re_mat_dots = re.compile(r"^[.…]+$")
@@ -126,7 +127,7 @@ section = {"type": "section", "id": ""}
 for text in soup.find_all("p"):
     line = clean_html(str(text))
     #print read, line
-    if re_mat_ppl.match(line):
+    if re_mat_ppl.match(line) or re_mat_tco.match(line):
         read = 0
         if "done" not in texte:
             pr_js(texte)
