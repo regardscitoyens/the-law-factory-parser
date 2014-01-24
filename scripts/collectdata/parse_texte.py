@@ -110,7 +110,7 @@ re_mat_sec = re.compile(r"((chap|t)itre|volume|livre|tome|(sous-)?section)\s+(.+
 re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
 re_mat_tco = re.compile(r"\s*<b>\s*TEXTE\s*DE\s*LA\s*COMMISSION")
-re_mat_exp = re.compile(r"(<b>)?expos", re.I)
+re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
 re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le)", re.I)
 re_mat_dots = re.compile(r"^[.…]+$")
 re_mat_st  = re.compile(r"<i>\(?(non\s?-?)?(conform|modif|suppr|nouveau)", re.I)
@@ -154,7 +154,7 @@ for text in soup.find_all("p"):
     elif re_echec_cmp.search(line):
         pr_js({"type": "echec CMP"})
         break
-    elif re.match(r"<b>", line):
+    elif re.match(r"(<i>)?<b>", line):
         line = re_cl_html.sub("", line).strip()
         # Read a new article
         if re_mat_art.match(line):
