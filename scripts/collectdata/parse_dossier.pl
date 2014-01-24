@@ -130,25 +130,6 @@ while ($ok) {
 		$enddate = $date[$id];
 	    }elsif ($url =~ /assemblee-nationale/) {
 		$chambre = 'assemblee' if ($stade eq 'hemicycle');
-        $a2 = WWW::Mechanize->new(autocheck => 0);
-        if ($url =~ /\/rapports\/r/ && $enddate gt "2009-05-28") {
-            $url2 = $url;
-            $url2 =~ s/rapports(\/r\d+)\./ta-commission\1-a0\./;
-            $a2->get($url2);
-            if ($a2->success()) {
-                $url = $url2;
-            }
-        } elsif ($url =~ /\/ta-commission\/r/) {
-            $a2->get($url);
-            if (!$a2->success() || $a2->content =~ />Cette division n'est pas encore distribuée</) {
-                $url2 = $url;
-                $url2 =~ s/ta-commission(\/r\d+)-a0/rapports\1/;
-                $a2->get($url2);
-                if ($a2->success()) {
-                    $url = $url2;
-                }
-            }
-        }
 		if ($url =~ /[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$/) {
 			$idtext = $1;
 		}
@@ -161,7 +142,7 @@ while ($ok) {
 		if ($texte =~ /n..\s*(\d+) / && $chambre eq 'assemblee') {
 		    $num = $1;
 		    if ($stade eq 'commission') {
-			$url = sprintf('http://www.assemblee-nationale.fr/14/rapport/r%04d-a0.asp', $num);
+			$url = sprintf('http://www.assemblee-nationale.fr/14/ta-commission/r%04d-a0.asp', $num);
 		    }elsif($stade eq 'depot'){
 			$type = ppl;
 			$type = pl if ($dossier_url =~ /pjl/);
@@ -171,9 +152,29 @@ while ($ok) {
 		    }
 		}
 	    }
-	    $date[$id] = '' if ($chambre eq 'assemblee') ;
+	    if ($chambre eq 'assemblee') {
+		$date[$id] = '';
+		$a2 = WWW::Mechanize->new(autocheck => 0);
+		if ($url =~ /\/rapports\/r/ && $enddate gt "2009-05-28") {
+		    $url2 = $url;
+		    $url2 =~ s/rapports(\/r\d+)\./ta-commission$1-a0\./;
+		    $a2->get($url2);
+		    if ($a2->success()) {
+			$url = $url2;
+		    }
+		} elsif ($url =~ /\/ta-commission\/r/) {
+		    $a2->get($url);
+		    if (!$a2->success() || $a2->content =~ />Cette division n'est pas encore distribuée</) {
+			$url2 = $url;
+			$url2 =~ s/ta-commission(\/r\d+)-a0/rapports$1/;
+			$a2->get($url2);
+			if ($a2->success()) {
+			    $url = $url2;
+			}
+		    }
+		}
+	    }
 	    $lines[$#lines+1] =  "$printid;$etape;$chambre;$stade;$url;$idtext;".$date[$id].";".$enddate;
-	    print STDERR "$printid;$etape;$chambre;$stade;$url;$idtext;".$date[$id].";".$enddate."\n";
 	    $url = '';
 	}
 	if ($t->[1]{href} =~ /^mailto:/) {
