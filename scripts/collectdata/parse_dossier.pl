@@ -108,6 +108,9 @@ while ($ok) {
 	    }
 	    print STDERR "$dossier_url : ENDDATE NOT FOUND in $url : '$texte'\n" if (!$enddate && $texte);
 
+        if ($texte =~ /par l'Assembl..?e nationale/) {
+            $chambre = "assemblee";
+        }
             $idtext = '';
 	    $printid = $id;
 	    if ($url =~ /legifrance/) {
