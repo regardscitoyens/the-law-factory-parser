@@ -66,7 +66,7 @@ while ($t = $p->get_tag('div')) {
 }
 
 $date = $date[1];
-
+$oldstade = "";
 $ok = 1;
 @lines = ();
 while ($ok) {
@@ -94,7 +94,8 @@ while ($ok) {
 			$dossieran = $1;
 		}
 	}
-      	if ($t->[1]{href} =~ /\/leg\/p/ || $p->get_text('/a') =~ /Texte/ || $t->[1]{href} =~ /conseil-constitutionnel/ || $t->[1]{href} =~ /legifrance/) {
+    $name = $p->get_text('/a');
+      	if ($t->[1]{href} =~ /\/leg\/p/ || $name =~ /Texte/ || ($name =~ /Rapport/ && $t->[1]{href} =~ /le.fr\/\d+\/rapports\/r\d+(-a0)?\./) || $t->[1]{href} =~ /(conseil-constitutionnel|legifrance)/) {
 	    $url = $t->[1]{href};
 	    $url = "http://www.senat.fr".$url if ($url =~ /^\//);
 	    $texte = $p->get_text('/li');
@@ -174,6 +175,10 @@ while ($ok) {
 		    }
 		}
 	    }
+        if ($stade eq "commission" && $stade eq $oldstade && $chambre eq "assemblee") {
+            pop(@lines);
+        }
+        $oldstade = $stade;
 	    $lines[$#lines+1] =  "$printid;$etape;$chambre;$stade;$url;$idtext;".$date[$id].";".$enddate;
 	    $url = '';
 	}
