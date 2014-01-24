@@ -95,8 +95,8 @@ while ($ok) {
 		}
 	}
     $name = $p->get_text('/a');
-      	if ($t->[1]{href} =~ /\/leg\/p/ || $name =~ /Texte/ || ($name =~ /Rapport/ && $t->[1]{href} =~ /le.fr\/\d+\/rapports\/r\d+(-a0)?\./) || $t->[1]{href} =~ /(conseil-constitutionnel|legifrance)/) {
-	    $url = $t->[1]{href};
+    $url = $t->[1]{href};
+    if ($url !~ /\/motion/ && ($url =~ /\/leg\/p/ || $name =~ /Texte/ || ($name =~ /Rapport/ && $url =~ /le.fr\/\d+\/rapports\/r\d+(-a0)?\./) || $url =~ /(conseil-constitutionnel|legifrance)/)) {
 	    $url = "http://www.senat.fr".$url if ($url =~ /^\//);
 	    $texte = $p->get_text('/li');
 	    utf8::encode($texte);
@@ -154,7 +154,9 @@ while ($ok) {
 		    }else{
 			$url = sprintf('http://www.assemblee-nationale.fr/14/ta/ta%04d.asp', $num);
 		    }
-		}
+		} else {
+            next;
+        }
 	    }
 	    if ($chambre eq 'assemblee') {
 		$date[$id] = '';
