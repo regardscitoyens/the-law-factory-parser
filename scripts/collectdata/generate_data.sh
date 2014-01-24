@@ -41,7 +41,7 @@ cat $1 | while read line ; do
  
   #Text export
   download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape;
-  if file -i $data/.tmp/html/$escape | grep -i iso > /dev/null; then recode ISO88591..UTF8 $data/.tmp/html/$escape; fi
+  #if file -i $data/.tmp/html/$escape | grep -i iso > /dev/null; then recode ISO885915..UTF8 $data/.tmp/html/$escape; fi
   python parse_texte.py $data/.tmp/html/$escape $order > $data/.tmp/json/$escape
   # Complete articles with missing "conforme" or "non-modifié" text
   if test -s $data/.tmp/json/articles_laststep.json; then
