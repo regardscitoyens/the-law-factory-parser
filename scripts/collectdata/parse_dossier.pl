@@ -34,12 +34,16 @@ if ($content =~ /Description" content="([^"]+)"/) {
     utf8::encode($titrelong);
 }
 
-$p = HTML::TokeParser->new(\$content);
+#If no link to the texte or rapport provided, fake one
+$content =~ s/<li>Texte/<li><a href="UNKNOWN">Texte<\/a>/g;
+$content =~ s/<li>Rapport/<li><a href="UNKNOWN">Texte<\/a>/g;
+
 
 if ($content =~ /timeline-1[^>]*<em>(\d{2})\/(\d{2})\/(\d{2})<\/em>/) {
 	print "date : $1/$2/$3\n";
 }
 @date=();
+$p = HTML::TokeParser->new(\$content);
 while ($t = $p->get_tag('div')) {
     if ($t->[1]{id} =~ /block-timeline/) {
         $p->get_tag('ul');
@@ -129,14 +133,28 @@ while ($ok) {
 		if ($url =~ /[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$/) {
 			$idtext = $1;
 		}
-		$date[$id] = '';
             }elsif ($url =~ /senat.fr/) {
 		$chambre = 'senat' if ($stade eq 'hemicycle');
 		if ($url =~ /(\d{2})-(\d+)\.html$/) {
 			$idtext='20'.$1.'20'.($1+1).'-'.$2;
 		}
-            }
+            }elsif ($url eq 'UNKNOWN') {
+		if ($texte =~ /n..\s*(\d+) / && $chambre eq 'assemblee') {
+		    $num = $1;
+		    if ($stade eq 'commission') {
+			$url = sprintf('http://www.assemblee-nationale.fr/14/rapport/r%04d-a0.asp', $num);
+		    }elsif($stade eq 'depot'){
+			$type = ppl;
+			$type = pl if ($dossier_url =~ /pjl/);
+			$url = sprintf('http://www.assemblee-nationale.fr/14/projets/%s%04d.asp', $type, $num);
+		    }else{
+			$url = sprintf('http://www.assemblee-nationale.fr/14/ta/ta%04d.asp', $num);
+		    }
+		}
+	    }
+	    $date[$id] = '' if ($chambre eq 'assemblee') ;
 	    $lines[$#lines+1] =  "$printid;$etape;$chambre;$stade;$url;$idtext;".$date[$id].";".$enddate;
+	    print STDERR "$printid;$etape;$chambre;$stade;$url;$idtext;".$date[$id].";".$enddate."\n";
 	    $url = '';
 	}
 	if ($t->[1]{href} =~ /^mailto:/) {
