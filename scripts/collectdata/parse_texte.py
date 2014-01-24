@@ -127,7 +127,8 @@ re_echec_cmp = re.compile(r' ne .* parvenir à élaborer un texte commun', re.I)
 re_rap_mult = re.compile(r'[\s<>/aimg]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
 re_clean_mult_1 = re.compile(r'\s*et\s*', re.I)
 re_clean_mult_2 = re.compile(r'[^,\d]', re.I)
-re_sep_text = re.compile(r'\s*(\*+|<b>\s*(article|titre|chapitre|tome|volume|livre)\s*(I|unique|liminaire|(1|prem)i?e?r?)\s*</b>)\s*$', re.I)
+re_sep_text = re.compile(r'\s*<b>\s*(article|titre|chapitre|tome|volume|livre)\s*(I|unique|liminaire|(1|prem)i?e?r?)\s*</b>\s*$', re.I)
+re_art_uni = re.compile(r'\s*article\s*unique\s*$', re.I)
 read = art_num = ali_num = 0
 section_id = ""
 article = None
@@ -174,7 +175,7 @@ for text in soup.find_all("p"):
     elif re_echec_cmp.search(line) or re_echec_com.search(line):
         pr_js({"type": "echec", "texte": re_cl_html.sub("", line).strip()})
         break
-    elif re.match(r"(<i>)?<b>", line):
+    elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line):
         line = re_cl_html.sub("", line).strip()
         # Read a new article
         if re_mat_art.match(line):
