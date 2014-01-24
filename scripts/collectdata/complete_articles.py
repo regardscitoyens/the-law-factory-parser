@@ -18,7 +18,7 @@ except:
 
 try:
     oldstep = {}
-    oldjson = {}
+    oldjson =  []
     oldstatus = {}
     oldarts = []
     oldartids = []
