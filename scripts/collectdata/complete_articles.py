@@ -83,6 +83,7 @@ def get_mark_from_last(text, start, last=""):
     return res
 
 order = 1
+done_titre = False
 for l in f:
     if not l.strip():
         continue
@@ -90,13 +91,22 @@ for l in f:
     if not line or not "type" in line:
         sys.stderr.write("JSON %s badly formatted, missing field type: %s" % (FILE, line))
         sys.exit()
-    if line["type"] == "echec CMP":
+    if line["type"] == "echec":
+        texte["echec"] = True
+        texte["expose"] = line["texte"]
+        write_json(texte)
         for a in oldjson:
             write_json(a)
         break
-    elif line["type"] != "article":
-        write_json(line)
+    elif line["type"] == "texte":
+        texte = dict(line)
     else:
+      if not done_titre:
+        write_json(texte)
+        done_titre = True
+      if line["type"] != "article":
+        write_json(line)
+      else:
         mult = line['titre'].split(u' à ')
         if len(mult) > 1:
             line['titre'] = mult[0].strip()
