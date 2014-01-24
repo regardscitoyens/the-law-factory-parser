@@ -20,20 +20,11 @@ def getParentFolder(root, f):
 def unifyStatus(status):
     status = status.encode('utf-8')
     status = status.lstrip().rstrip('s. ')
-    if status.endswith('constitution'):
+    if status.endswith('constitution') or status.startswith('sup'):
         return "sup"
-    return {
-    "none" : "none",
-    "conforme" : "none",
-    "conforme" : "none",
-    "non modifié" : "none",
-    "nouveau" : "new",
-    "supprimé" : "sup",
-    "supprimé" : "sup",
-    "suppression maintenue" : "sup",
-    "suppression conforme" : "sup",
-    "supprimé par la commission mixte paritaire" : "sup"
-    }[status.strip()]
+    if status.startswith("nouveau"):
+        return "new"
+    return "none"
 
 def create_step(step_id, article):
     s = {}
