@@ -105,7 +105,7 @@ for l in f:
             while cur != line['titre'] and oldarts:
                 cur, a = oldarts.pop(0)
                 if a["statut"].startswith("conforme"):
-                    log("DEBUG: Recovering art conforme %s\n" % line['titre'])
+                    log("DEBUG: Recovering art conforme %s\n" % cur)
                     a["order"] = order
                     order += 1
                     write_json(a)
@@ -116,7 +116,7 @@ for l in f:
             while run and oldarts:
                 cur, a = oldarts.pop(0)
                 a["statut"] = "conforme"
-                log("DEBUG: Recovering art conforme %s\n" % line['titre'])
+                log("DEBUG: Recovering art conforme %s\n" % cur)
                 a["order"] = order
                 order += 1
                 write_json(a)
