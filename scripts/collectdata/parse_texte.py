@@ -109,8 +109,9 @@ re_cl_uno  = re.compile(r"(premier|unique?)", re.I)
 re_mat_sec = re.compile(r"((chap|t)itre|volume|livre|tome|(sous-)?section)\s+(.+)e?r?", re.I)
 re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
-re_mat_exp = re.compile(r"(<b>)?expos", re.I)
-re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le)", re.I)
+re_mat_tco = re.compile(r"\s*<b>\s*TEXTE\s*DE\s*LA\s*COMMISSION")
+re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
+re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le|\s*©|\s*N.?B.?\s*:)", re.I)
 re_mat_dots = re.compile(r"^[.…]+$")
 re_mat_st  = re.compile(r"<i>\(?(non\s?-?)?(conform|modif|suppr|nouveau)", re.I)
 re_mat_new = re.compile(r"\s*\(no(n[\-\s]modifié|uveau)\s*\)\s*", re.I)
@@ -118,6 +119,7 @@ re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
 re_clean_conf = re.compile(r"^\s*\((conforme|non-?modifi..?)s?\)\s*$", re.I)
 re_clean_supr = re.compile(r'\(suppr(ession|im..?s?)\s*(conforme|maintenue|par la commission mixte paritaire)?\)["\s]*$', re.I)
+re_echec_com = re.compile(r" la commission n'a pas adopté de texte ", re.I)
 re_echec_cmp = re.compile(r' ne .* parvenir à élaborer un texte commun', re.I)
 read = art_num = ali_num = 0
 section_id = ""
@@ -126,7 +128,7 @@ section = {"type": "section", "id": ""}
 for text in soup.find_all("p"):
     line = clean_html(str(text))
     #print read, line
-    if re_mat_ppl.match(line):
+    if re_mat_ppl.match(line) or re_mat_tco.match(line):
         read = 0
         if "done" not in texte:
             pr_js(texte)
@@ -136,7 +138,7 @@ for text in soup.find_all("p"):
     elif read == -1:
         continue
     # Identify section zones
-    elif re_mat_sec.match(line):
+    elif read != 0 and re_mat_sec.match(line):
         read = 1 # Activate titles lecture
         m = re_mat_sec.match(line)
         section["type_section"] = m.group(1).lower()
@@ -150,10 +152,10 @@ for text in soup.find_all("p"):
         section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"])
         section["id"] = section_par + section_typ + str(section_num)
     # Identify titles and new article zones
-    elif re_echec_cmp.search(line):
-        pr_js({"type": "echec CMP"})
+    elif re_echec_cmp.search(line) or re_echec_com.search(line):
+        pr_js({"type": "echec", "texte": re_cl_html.sub("", line).strip()})
         break
-    elif re.match(r"<b>", line):
+    elif re.match(r"(<i>)?<b>", line):
         line = re_cl_html.sub("", line).strip()
         # Read a new article
         if re_mat_art.match(line):

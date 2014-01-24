@@ -96,7 +96,7 @@ while ($ok) {
 	}
       	if ($t->[1]{href} =~ /\/leg\/p/ || $p->get_text('/a') =~ /Texte/ || $t->[1]{href} =~ /conseil-constitutionnel/ || $t->[1]{href} =~ /legifrance/) {
 	    $url = $t->[1]{href};
-	    $url = "http://www.senat.fr".$url if ($url =~ /^\//) ;
+	    $url = "http://www.senat.fr".$url if ($url =~ /^\//);
 	    $texte = $p->get_text('/li');
 	    utf8::encode($texte);
 	    $enddate='';
@@ -130,6 +130,25 @@ while ($ok) {
 		$enddate = $date[$id];
 	    }elsif ($url =~ /assemblee-nationale/) {
 		$chambre = 'assemblee' if ($stade eq 'hemicycle');
+        $a2 = WWW::Mechanize->new(autocheck => 0);
+        if ($url =~ /\/rapports\/r/ && $enddate gt "2009-05-28") {
+            $url2 = $url;
+            $url2 =~ s/rapports(\/r\d+)\./ta-commission\1-a0\./;
+            $a2->get($url2);
+            if ($a2->success()) {
+                $url = $url2;
+            }
+        } elsif ($url =~ /\/ta-commission\/r/) {
+            $a2->get($url);
+            if (!$a2->success() || $a2->content =~ />Cette division n'est pas encore distribuée</) {
+                $url2 = $url;
+                $url2 =~ s/ta-commission(\/r\d+)-a0/rapports\1/;
+                $a2->get($url2);
+                if ($a2->success()) {
+                    $url = $url2;
+                }
+            }
+        }
 		if ($url =~ /[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$/) {
 			$idtext = $1;
 		}
