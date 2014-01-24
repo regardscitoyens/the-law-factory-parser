@@ -102,7 +102,7 @@ while ($ok) {
 		$enddate = sprintf('%04d-%02d-%02d', $annee, $mois{$mois}, $jour);
 		$enddate = '' if ($enddate !~ /^[12]\d{3}-[01]\d-[0123]\d/);
 	    }
-	    print STDERR "$dossier_url : ENDDATE NOT FOUND : $texte\n" unless($enddate);
+	    print STDERR "$dossier_url : ENDDATE NOT FOUND : '$texte'\n" if (!$enddate && $texte);
 
             $idtext = '';
 	    $printid = $id;
@@ -113,6 +113,7 @@ while ($ok) {
 		$chambre = 'gouvernement';
 		$stade = 'JO';
 		$printid = 'EXTRA';
+		$enddate = $date[$id];
 	    }elsif ($url =~ /conseil-constitutionnel/) {
 		$url =~ s/#.*//;
 		$etape = "constitutionnalité";
@@ -123,11 +124,13 @@ while ($ok) {
 		    $stade = $1;
 		}
 		$printid = 'EXTRA';
+		$enddate = $date[$id];
 	    }elsif ($url =~ /assemblee-nationale/) {
 		$chambre = 'assemblee' if ($stade eq 'hemicycle');
 		if ($url =~ /[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$/) {
 			$idtext = $1;
 		}
+		$date[$id] = '';
             }elsif ($url =~ /senat.fr/) {
 		$chambre = 'senat' if ($stade eq 'hemicycle');
 		if ($url =~ /(\d{2})-(\d+)\.html$/) {
@@ -162,7 +165,7 @@ if ($content =~ /Proc\S+dure acc\S+l\S+r\S+e/) {
     if ($content =~ /engag\S+e par le Gouvernement le (\d+) (\w+) (\d+)/) {
 	$annee = $3 ; $jour = $1 ; $mois = $2;
 	$mois=~s/[^a-z]//g;
-	print "$date;$titrelong;$titrecourt;$dossieran;$dossiersenat;XX;EXTRA;URGENCE;Gouvernement;URGENCE;;;$annee-".$mois{$mois}."-$jour\n";
+	print "$date;$titrelong;$titrecourt;$dossieran;$dossiersenat;XX;EXTRA;URGENCE;Gouvernement;URGENCE;;;$annee-".$mois{$mois}."-$jour;$annee-".$mois{$mois}."-$jour;\n";
     }
 }
 exit;
