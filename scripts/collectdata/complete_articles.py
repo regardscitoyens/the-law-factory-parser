@@ -18,6 +18,7 @@ except:
 
 try:
     oldstep = {}
+    oldjson = {}
     oldstatus = {}
     oldarts = []
     oldartids = []
@@ -29,6 +30,8 @@ try:
             if not line or not "type" in line:
                 log("JSON %s badly formatted, missing field type: %s" % (source, line))
                 sys.exit()
+            if line["type"] != "texte":
+                oldjson.append(line)
             if line["type"] == "article":
                 keys = line['alineas'].keys()
                 keys.sort()
@@ -88,7 +91,7 @@ for l in f:
         sys.stderr.write("JSON %s badly formatted, missing field type: %s" % (FILE, line))
         sys.exit()
     if line["type"] == "echec CMP":
-        for _, a in oldarts:
+        for a in oldjson:
             write_json(a)
         break
     elif line["type"] != "article":
