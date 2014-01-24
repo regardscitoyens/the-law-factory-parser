@@ -17,6 +17,8 @@ steps = []
 with open(csvpath, 'rb') as csvfile:
     csvproc = csv.reader(csvfile, delimiter=';')
     for row in csvproc:
+        if len(row) < 14:
+            row.append("")
         step = {'date': row[12], 'enddate': row[13], 'stage': row[7], 'institution': row[8], 'source_url': row[10]}
         if (row[6] != 'EXTRA'):
             step['directory'] = row2dir(row)

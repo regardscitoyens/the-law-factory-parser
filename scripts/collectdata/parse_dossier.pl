@@ -93,7 +93,6 @@ while ($ok) {
       	if ($t->[1]{href} =~ /\/leg\/p/ || $p->get_text('/a') =~ /Texte/ || $t->[1]{href} =~ /conseil-constitutionnel/ || $t->[1]{href} =~ /legifrance/) {
 	    $url = $t->[1]{href};
 	    $url = "http://www.senat.fr".$url if ($url =~ /^\//) ;
-
 	    $texte = $p->get_text('/li');
 	    utf8::encode($texte);
 	    $enddate='';
@@ -102,7 +101,7 @@ while ($ok) {
 		$enddate = sprintf('%04d-%02d-%02d', $annee, $mois{$mois}, $jour);
 		$enddate = '' if ($enddate !~ /^[12]\d{3}-[01]\d-[0123]\d/);
 	    }
-	    print STDERR "$dossier_url : ENDDATE NOT FOUND : '$texte'\n" if (!$enddate && $texte);
+	    print STDERR "$dossier_url : ENDDATE NOT FOUND in $url : '$texte'\n" if (!$enddate && $texte);
 
             $idtext = '';
 	    $printid = $id;
