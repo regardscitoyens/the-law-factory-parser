@@ -118,6 +118,7 @@ re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
 re_clean_conf = re.compile(r"^\s*\((conforme|non-?modifi..?)s?\)\s*$", re.I)
 re_clean_supr = re.compile(r'\(suppr(ession|im..?s?)\s*(conforme|maintenue|par la commission mixte paritaire)?\)["\s]*$', re.I)
+re_echec_cmp = re.compile(r' ne .*parvenir .*laborer un texte commun', re.I)
 read = art_num = ali_num = 0
 section_id = ""
 article = None
@@ -149,6 +150,9 @@ for text in soup.find_all("p"):
         section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"])
         section["id"] = section_par + section_typ + str(section_num)
     # Identify titles and new article zones
+    elif re_echec_cmp.search(line):
+        pr_js({"type": "echec CMP"})
+        break
     elif re.match(r"<b>", line):
         line = re_cl_html.sub("", line).strip()
         # Read a new article

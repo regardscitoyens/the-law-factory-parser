@@ -38,6 +38,7 @@ try:
                 oldartids.append(line["titre"])
                 oldarts.append((line["titre"], line))
 
+
 except Exception as e:
     print type(e), e
     log("No previous step found at %s" % sys.argv[2])
@@ -86,7 +87,11 @@ for l in f:
     if not line or not "type" in line:
         sys.stderr.write("JSON %s badly formatted, missing field type: %s" % (FILE, line))
         sys.exit()
-    if line["type"] != "article":
+    if line["type"] == "echec CMP":
+        for _, a in oldarts:
+            write_json(a)
+        break
+    elif line["type"] != "article":
         write_json(line)
     else:
         if line['titre'] in oldartids:
