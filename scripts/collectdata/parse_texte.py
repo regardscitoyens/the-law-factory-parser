@@ -111,7 +111,7 @@ re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
 re_mat_tco = re.compile(r"\s*<b>\s*TEXTE\s*DE\s*LA\s*COMMISSION")
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
-re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le)", re.I)
+re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le|\s*©|\s*N.?B.?\s*:)", re.I)
 re_mat_dots = re.compile(r"^[.…]+$")
 re_mat_st  = re.compile(r"<i>\(?(non\s?-?)?(conform|modif|suppr|nouveau)", re.I)
 re_mat_new = re.compile(r"\s*\(no(n[\-\s]modifié|uveau)\s*\)\s*", re.I)
@@ -137,7 +137,7 @@ for text in soup.find_all("p"):
     elif read == -1:
         continue
     # Identify section zones
-    elif re_mat_sec.match(line):
+    elif read != 0 and re_mat_sec.match(line):
         read = 1 # Activate titles lecture
         m = re_mat_sec.match(line)
         section["type_section"] = m.group(1).lower()
