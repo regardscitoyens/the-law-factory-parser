@@ -179,9 +179,9 @@ for text in soup.find_all("p"):
     elif read == -1 or (indextext != -1 and curtext != indextext):
         continue
     # Identify section zones
-    elif read != 0 and re_mat_sec.match(line):
+    m = re_mat_sec.match(line)
+    if m:
         read = 1 # Activate titles lecture
-        m = re_mat_sec.match(line)
         section["type_section"] = m.group(1).lower()
         section_typ = m.group(1).upper()[0]
         if m.group(3) is not None:
