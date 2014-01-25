@@ -86,7 +86,7 @@ def get_mark_from_last(text, start, last=""):
             res.append(i)
     return res
 
-re_modif_with_txt = re.compile(r'\s*\(\s*non[\s\-]*modifié\s*\)\s*(.*\w)', re.I)
+re_modif_with_txt = re.compile(r'\s*\(\s*non[\s\-]*modifié\s*\)\s*([\W]*\w+)', re.I)
 order = 1
 done_titre = False
 for l in f:
@@ -176,7 +176,7 @@ for l in f:
             if "(non modifié" in text and not line['titre'] in oldstep:
                 sys.stderr.write("WARNING: found repeated article missing %s from previous step %s: %s\n" % (line['titre'], FILE, line['alineas']))
             elif re_modif_with_txt.search(text):
-                text = re_modif_with_txt.sub(' \2', text)
+                text = re_modif_with_txt.sub(r' \1', text)
                 gd_text.append(text)
             elif "(non modifié" in text:
                 part = re.split("\s*([\.°\-]+\s*)+", text)
