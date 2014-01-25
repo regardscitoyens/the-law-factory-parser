@@ -53,9 +53,13 @@ def write_json(data):
 def get_mark_from_last(text, start, last=""):
     log("- GET Extract from " + start + " to " + last)
     res = []
-    start = re.compile(r'^%s([\)\.°\-\s]+)' % start)
+    try:
+        start = re.compile(r'^%s\s*(([\.°\-]+\s*)+)' % start)
+    except:
+        print >> sys.stderr, 'ERROR', start, text, last
+        exit(1)
     if last:
-        last = re.compile(r'^%s([\)\.°\-\s]+)' % last)
+        last = re.compile(r'^%s\s*(([\.°\-]+\s*)+)' % last)
     re_end = None
     record = False
     for i in text:
@@ -64,24 +68,25 @@ def get_mark_from_last(text, start, last=""):
         if re_end and re_end.match(i):
             log("  --> END FOUND")
             if last:
-                re_end = re.compile(r'^[IVX0-9]{1,4}%s' % sep)
+                re_end = re.compile(r'^[IVX0-9]{1,4}[%s]{1,4}' % sep)
                 last = ""
             else:
                 record = False
                 break
         elif sep:
-            sep = sep.group(1)
+            sep = sep.group(1).strip()
             log("  --> START FOUND " + sep)
             record = True
             if last:
                 re_end = last
             else:
-                re_end = re.compile(r'^[IVX0-9]{1,4}%s' % sep)
+                re_end = re.compile(r'^[IVX0-9]{1,4}[%s]{1,4}' % sep)
         if record:
             log("    copy alinea")
             res.append(i)
     return res
 
+re_modif_with_txt = re.compile(r'\s*\(\s*non[\s\-]*modifié\s*\)\s*(.*\w)', re.I)
 order = 1
 done_titre = False
 for l in f:
@@ -109,23 +114,33 @@ for l in f:
       else:
         mult = line['titre'].split(u' à ')
         if len(mult) > 1:
+            log("DEBUG: Recovering art conformes %s à %s\n" % (mult[0], mult[1]))
             line['titre'] = mult[0].strip()
         if line['titre'] in oldartids and oldarts:
-            cur, a = oldarts.pop(0)
-            while cur != line['titre'] and oldarts:
+            run = True
+            skipline = False
+            while run and oldarts:
+                cur, a = oldarts.pop(0)
+                oldartids.remove(cur)
                 #print >> sys.stderr, cur, line['titre'], a["statut"]
                 if a["statut"].startswith("conforme"):
                     log("DEBUG: Recovering art conforme %s\n" % cur)
                     a["order"] = order
                     order += 1
                     write_json(a)
-                elif not a["statut"].startswith("sup"):
+                    if cur == line['titre']:
+                        skipline = True
+                elif cur != line['titre'] and not a["statut"].startswith("sup"):
+                    log("DEBUG: Marking art %s as supprimé\n" % cur)
                     a["statut"] = "supprimé"
                     a["alineas"] = dict()
                     a["order"] = order
                     order += 1
                     write_json(a)
-                cur, a = oldarts.pop(0)
+                if cur == line['titre']:
+                    run = False
+            if skipline:
+                continue
         if len(mult) > 1:
             cur = ""
             end = mult[1].strip
@@ -160,13 +175,16 @@ for l in f:
             text = text.encode('utf-8')
             if "(non modifié" in text and not line['titre'] in oldstep:
                 sys.stderr.write("WARNING: found repeated article missing %s from previous step %s: %s\n" % (line['titre'], FILE, line['alineas']))
+            elif re_modif_with_txt.search(text):
+                text = re_modif_with_txt.sub(' \2', text)
+                gd_text.append(text)
             elif "(non modifié" in text:
-                part = re.split("\s*([\)\.°\-]+\s*)+", text)
+                part = re.split("\s*([\.°\-]+\s*)+", text)
                 if not part:
                     log("ERROR trying to get non-modifiés")
                     exit(1)
                 todo = part[0]
-                log("EXTRACT non-modifiés: " + todo)
+                log("EXTRACT non-modifiés: " + str(part))
     # Extract series of non-modified subsections of articles from previous version.
                 if " à " in todo:
                     start = re.split(" à ", todo)[0]

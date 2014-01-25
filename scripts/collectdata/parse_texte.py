@@ -61,6 +61,7 @@ def romans(n):
     return res
 
 re_clean_bister = re.compile(r'(un|duo|tre|bis|qua|quint|quinqu|sex|oct|nov|non|dec|ter|ies)+|pr..?liminaire', re.I)
+re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]*)', re.I)
 
 # Clean html and special chars
 lower_inner_title = lambda x: x.group(1)+x.group(3).lower()
@@ -118,8 +119,9 @@ def save_text(txt):
     txt["done"] = True
     return txt
 
+blank_none = lambda x: x if x else ""
 re_cl_html = re.compile(r"<[^>]+>")
-re_cl_par  = re.compile(r"(\(|\))")
+re_cl_par  = re.compile(r"[()]")
 re_cl_uno  = re.compile(r"(premier|unique?)", re.I)
 re_mat_sec = re.compile(r"((chap|t)itre|volume|livre|tome|(sous-)?section)\s+(.+)e?r?", re.I)
 re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
@@ -129,10 +131,10 @@ re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
 re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*)", re.I)
 re_mat_dots = re.compile(r"^[.…]+$")
 re_mat_st  = re.compile(r"<i>\(?(non\s?-?)?(conform|modif|suppr|nouveau)", re.I)
-re_mat_new = re.compile(r"\s*\(no(n[\-\s]modifié|uveau)\s*\)\s*", re.I)
+re_mat_new = re.compile(r"\s*\(\s*nouveau\s*\)\s*", re.I)
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
-re_clean_conf = re.compile(r"^\s*\((conforme|non-?modifi..?)s?\)\s*$", re.I)
+re_clean_conf = re.compile(r"\((conforme|non-?modifi..?)s?\)", re.I)
 re_clean_supr = re.compile(r'\(suppr(ession|im..?s?)\s*(conforme|maintenue|par la commission mixte paritaire)?\)["\s]*$', re.I)
 re_echec_hemi = re.compile(r"<i>L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
 re_echec_hemi2 = re.compile(r"de loi a été rejetée par l('Assemblée nationale|e Sénat)\.$", re.I)
@@ -235,6 +237,7 @@ for text in soup.find_all("p"):
         # Clean different versions of same comment.
         line = re_clean_supr.sub('(Supprimé)', line)
         line = re_clean_conf.sub('(Non modifié)', line)
+        line = re_clean_subsec_space.sub(r'\1\4', line)
         # Clean comments (Texte du Sénat), (Texte de la Commission), ...
         if ali_num == 0 and line.startswith('(Texte d'):
             continue
