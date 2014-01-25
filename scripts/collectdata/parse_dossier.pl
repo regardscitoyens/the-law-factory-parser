@@ -100,6 +100,7 @@ while ($ok) {
     $url = $t->[1]{href};
     if ($url !~ /\/motion/ && ($url =~ /\/leg\/p/ || $name =~ /Texte/ || ($name =~ /Rapport/ && ($url =~ /^\/rap\// || $url =~ /le.fr\/\d+\/rapports\/r\d+(-a0)?\./)) || $url =~ /(conseil-constitutionnel|legifrance)/)) {
 	    $url = "http://www.senat.fr".$url if ($url =~ /^\//);
+	    $url = "UNKNOWN" if ($url !~ /^http/);
 	    $texte = $p->get_text('/li');
 	    utf8::encode($texte);
         if ($name =~ /Rapport/ && $url =~ /\/rap\// && $texte !~ /commission mixte paritaire/i) {
