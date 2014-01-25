@@ -12,6 +12,7 @@ if (!$id) {
 
 @data = ('INIT');
 @stages = ();
+@etapes = ();
 $errors = 0;
 while(<STDIN>) {
     chomp;
@@ -19,6 +20,7 @@ while(<STDIN>) {
     if (!$data[$csv[6]]) {
 	$data[$csv[6]] = $csv[8];
     $stages[$csv[6]] = $csv[9];
+    $etapes[$csv[6]] = $csv[7];
     }elsif ($data[$csv[6]-1] ne 'CMP' && $csv[6] ne 'EXTRA') {
 	print STDERR "WARNING: $id: duplicated entry ".$csv[6]."\n";
     }
@@ -33,7 +35,7 @@ while(<STDIN>) {
 
 for ($i = 0 ; $i < $#data ; $i++) {
     unless($data[$i]) {
-	if ($data[$i+1] ne 'CMP' && $stages[$i+1] ne 'texte retire') {
+	if ($data[$i+1] ne 'CMP' && !($etapes[$i+1] eq 'nouv. lect.' && $data[$i-1] eq "CMP") && $stages[$i+1] ne 'texte retire') {
 	    print "$id: missing step $i\n" ;
 	    $errors++;
 	}

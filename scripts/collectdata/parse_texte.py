@@ -37,7 +37,7 @@ if re.search(r"assemblee-?nationale", url):
         texte["id"] += m.group(2)
     texte["id"] += str(numero)
 else:
-    m = re.search(r"(ta)?s?(\d\d)-(\d{1,3})\.", url)
+    m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})\d?\.", url)
     numero = int(m.group(3))
     texte["id"] = ORDER+"S" + m.group(2) + "-"
     if m.group(1) is not None:
@@ -106,6 +106,12 @@ def pr_js(dic):
             return
     print json.dumps(dic, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
+def save_text(txt):
+    if "done" not in txt:
+        pr_js(txt)
+    txt["done"] = True
+    return txt
+
 re_cl_html = re.compile(r"<[^>]+>")
 re_cl_par  = re.compile(r"(\(|\))")
 re_cl_uno  = re.compile(r"(premier|unique?)", re.I)
@@ -122,8 +128,9 @@ re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
 re_clean_conf = re.compile(r"^\s*\((conforme|non-?modifi..?)s?\)\s*$", re.I)
 re_clean_supr = re.compile(r'\(suppr(ession|im..?s?)\s*(conforme|maintenue|par la commission mixte paritaire)?\)["\s]*$', re.I)
+re_echec_hemi = re.compile(r"<i>L('Assemblée nationale|e Sénat) a rejeté[, ]+", re.I)
 re_echec_com = re.compile(r" la commission .*(a rejeté l|n'a pas adopté [ld])e texte ", re.I)
-re_echec_cmp = re.compile(r' ne .* parvenir à élaborer un texte commun', re.I)
+re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*parven(u[es]?|ir) à (élaborer )?un texte commun)", re.I)
 re_rap_mult = re.compile(r'[\s<>/aimg]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
 re_clean_mult_1 = re.compile(r'\s*et\s*', re.I)
 re_clean_mult_2 = re.compile(r'[^,\d]', re.I)
@@ -138,7 +145,7 @@ section = {"type": "section", "id": ""}
 for text in soup.find_all("p"):
 
     line = clean_html(str(text))
-    #print read, curtext, indextext, line
+    #print >> sys.stderr, read, curtext, indextext, line
     if line == "<b>RAPPORT</b>":
         read = -1
     if indextext != -1 and re_sep_text.match(line):
@@ -153,11 +160,13 @@ for text in soup.find_all("p"):
                 break
     elif re_mat_ppl.match(line) or re_mat_tco.match(line):
         read = 0
-        if "done" not in texte:
-            pr_js(texte)
-        texte["done"] = True
+        texte = save_text(texte)
     elif re_mat_exp.match(line):
         read = -1 # Deactivate description lecture
+    elif re_echec_cmp.search(line) or re_echec_com.search(line) or re_echec_hemi.match(line):
+        texte = save_text(texte)
+        pr_js({"type": "echec", "texte": re_cl_html.sub("", line).strip()})
+        break
     elif read == -1 or (indextext != -1 and curtext != indextext):
         continue
     # Identify section zones
@@ -175,14 +184,12 @@ for text in soup.find_all("p"):
         section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"])
         section["id"] = section_par + section_typ + str(section_num)
     # Identify titles and new article zones
-    elif re_echec_cmp.search(line) or re_echec_com.search(line):
-        pr_js({"type": "echec", "texte": re_cl_html.sub("", line).strip()})
-        break
     elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line):
         line = re_cl_html.sub("", line).strip()
         # Read a new article
         if re_mat_art.match(line):
             if article is not None:
+                texte = save_text(texte)
                 pr_js(article)
             read = 2 # Activate alineas lecture
             art_num += 1
@@ -196,6 +203,7 @@ for text in soup.find_all("p"):
                 article["section"] = section["id"]
         # Read a section's title
         elif read == 1:
+            texte = save_text(texte)
             section["titre"] = line
             if article is not None:
                 pr_js(article)
@@ -227,6 +235,5 @@ for text in soup.find_all("p"):
         #metas
         continue
 
-if "done" not in texte:
-    pr_js(texte)
+save_text(texte)
 pr_js(article)

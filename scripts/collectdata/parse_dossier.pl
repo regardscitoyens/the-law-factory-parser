@@ -21,6 +21,7 @@ if (!$dossier_url) {
 $a = WWW::Mechanize->new();
 $a->get($dossier_url);
 $content = $a->content;
+$a2 = WWW::Mechanize->new(autocheck => 0);
 
 $titrecourt = '';
 $titrelong = '';
@@ -97,10 +98,13 @@ while ($ok) {
 	}
     $name = $p->get_text('/a');
     $url = $t->[1]{href};
-    if ($url !~ /\/motion/ && ($url =~ /\/leg\/p/ || $name =~ /Texte/ || ($name =~ /Rapport/ && $url =~ /le.fr\/\d+\/rapports\/r\d+(-a0)?\./) || $url =~ /(conseil-constitutionnel|legifrance)/)) {
+    if ($url !~ /\/motion/ && ($url =~ /\/leg\/p/ || $name =~ /Texte/ || ($name =~ /Rapport/ && ($url =~ /^\/rap\// || $url =~ /le.fr\/\d+\/rapports\/r\d+(-a0)?\./)) || $url =~ /(conseil-constitutionnel|legifrance)/)) {
 	    $url = "http://www.senat.fr".$url if ($url =~ /^\//);
 	    $texte = $p->get_text('/li');
 	    utf8::encode($texte);
+        if ($name =~ /Rapport/ && $url =~ /\/rap\// && $texte !~ /commission mixte paritaire/i) {
+            next;
+        }
 	    $enddate='';
 	    if ($texte =~ / (\d+)e?r? (janvier|f..vrier|mars|avril|mai|juin|juillet|ao..t|septembre|octobre|novembre|d..cembre) (\d{4})/) {
 		$jour=$1;$mois = $2;$annee=$3;$mois=~s/[^a-z]//g;
@@ -146,6 +150,19 @@ while ($ok) {
 		$chambre = 'senat' if ($stade eq 'hemicycle');
 		if ($url =~ /(\d{2})-(\d+)\.html$/) {
 			$idtext='20'.$1.'20'.($1+1).'-'.$2;
+            if ($url =~ /\/rap\// && $texte =~ /commission mixte paritaire/i) {
+                $ct = 3;
+                while ($ct > 0) {
+                    $url2 = $url;
+                    $url2 =~ s/\.htm/$ct.htm/;
+                    $a2->get($url2);
+                    if ($a2->success()) {
+                        $url = $url2;
+                        $ct = 0;
+                    }
+                    $ct--;
+                }
+            }
 		}
             }
             if ($url eq 'UNKNOWN') {
@@ -168,7 +185,6 @@ while ($ok) {
 	    }
 	    if ($chambre eq 'assemblee') {
 		$date[$id] = '';
-		$a2 = WWW::Mechanize->new(autocheck => 0);
 		if ($url =~ /\/rapports\/r/ && $enddate gt "2009-05-28") {
 		    $url2 = $url;
 		    $url2 =~ s/rapports(\/r\d+)\./ta-commission$1-a0\./;
@@ -188,7 +204,7 @@ while ($ok) {
 		    }
 		}
 	    }
-        if ($stade eq "commission" && $stade eq $oldstade && $chambre eq "assemblee") {
+        if ($stade eq "commission" && $stade eq $oldstade) {
             pop(@lines);
         }
         $oldstade = $stade;
