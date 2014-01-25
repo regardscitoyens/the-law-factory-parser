@@ -35,6 +35,7 @@ if ($content =~ /Description" content="([^"]+)"/) {
 }
 
 #If no link to the texte or rapport provided, fake one
+$content =~ s/<a name="[^"]*"><\/a>//g;
 $content =~ s/<li>Texte/<li><a href="UNKNOWN">Texte<\/a>/g;
 $content =~ s/<li>Rapport/<li><a href="UNKNOWN">Texte<\/a>/g;
 
