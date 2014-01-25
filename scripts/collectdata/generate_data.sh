@@ -44,7 +44,6 @@ cat $1 | while read line ; do
     exit 1
   fi
   etapid=$(echo $etape | sed 's/^\([0-9]\+\)_.*$/\1/')
-  echo "INFO HANDLE RENVOI EN COMMISSION" $etapid
   head -n 1 $data/.tmp/json/articles_antelaststep.json | sed 's/^\({"expose": "\).*"\(, "id": "\)\([0-9]\+\)\(_[^"]*", \)/\1Le texte est renvoyé en commission.", "echec": true\2'"$etapid"'\4/' $data/.tmp/json/articles_antelaststep.json > $data/.tmp/json/$escape
   tail -n $(($(cat $data/.tmp/json/articles_antelaststep.json | wc -l) - 1)) $data/.tmp/json/articles_antelaststep.json >> $data/.tmp/json/$escape
  else 

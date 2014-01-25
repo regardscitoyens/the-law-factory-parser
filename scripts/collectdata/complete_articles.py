@@ -111,14 +111,21 @@ for l in f:
         if len(mult) > 1:
             line['titre'] = mult[0].strip()
         if line['titre'] in oldartids:
-            cur = ""
+            cur, a = oldarts.pop(0)
             while cur != line['titre'] and oldarts:
-                cur, a = oldarts.pop(0)
+                #print >> sys.stderr, cur, line['titre']
                 if a["statut"].startswith("conforme"):
                     log("DEBUG: Recovering art conforme %s\n" % cur)
                     a["order"] = order
                     order += 1
                     write_json(a)
+                elif not a["statut"].startswith("sup"):
+                    a["statut"] = "supprimé"
+                    a["texte"] = []
+                    a["order"] = order
+                    order += 1
+                    write_json(a)
+                cur, a = oldarts.pop(0)
         if len(mult) > 1:
             cur = ""
             end = mult[1].strip
@@ -133,7 +140,7 @@ for l in f:
                 if cur == end:
                     run = False
             continue
-        if line["statut"].startswith("suppr") and (line['titre'] not in oldstatus or oldstatus[line['titre']].startswith("suppr")):
+        if line["statut"].startswith("sup") and (line['titre'] not in oldstatus or oldstatus[line['titre']].startswith("sup")):
            continue
         keys = line['alineas'].keys()
         keys.sort()
