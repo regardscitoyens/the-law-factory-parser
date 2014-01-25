@@ -138,13 +138,16 @@ while ($ok) {
 		if ($url =~ /fr\/(\d+)\/.*[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$/) {
 			$legislature = $1;
 			$idtext = $2;
-		}
+		} elsif ($url =~ /\/dossiers\//) {
+            $url = "UNKNOWN";
+        }
             }elsif ($url =~ /senat.fr/) {
 		$chambre = 'senat' if ($stade eq 'hemicycle');
 		if ($url =~ /(\d{2})-(\d+)\.html$/) {
 			$idtext='20'.$1.'20'.($1+1).'-'.$2;
 		}
-            }elsif ($url eq 'UNKNOWN') {
+            }
+            if ($url eq 'UNKNOWN') {
 		if ($texte =~ /n..\s*(\d+) / && $chambre eq 'assemblee') {
 		    $num = $1;
 		    if ($stade eq 'commission') {
