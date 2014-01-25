@@ -49,11 +49,12 @@ $i = 0;
 while ($#row > 9) {
     if ($steps[$i] =~ /$row[8];$row[9]/) {
 	@step = split(/;/, $steps[$i]);
-	print STDERR "WARNING: an url differs on $chambre $stade ($url)\n" if ($row[10] ne $step[3]);
+	print STDERR "WARNING: AN url differs on $chambre $stade (original: $row[10] ; new: $step[3])\n" if ($row[10] ne $step[3]);
 	$row[10] = $step[3];
 	$row[12] = $step[2];
 	$i++;
     }
+    print STDERR "WARNING: begining date missing $row[7];$row[8];$row[9]\n" unless ($row[12]);
     print join(';', @row);
     @row = split(/;/, <STDIN>);
 }
