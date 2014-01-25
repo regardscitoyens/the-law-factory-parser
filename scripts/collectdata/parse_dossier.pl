@@ -192,6 +192,9 @@ while ($ok) {
 		    if ($a2->success()) {
 			$url = $url2;
 		    }
+            if ($etape =~ /l\.\s*d..?finitive/) {
+                next;
+            }
 		} elsif ($url =~ /\/ta-commission\/r/) {
 		    $a2->get($url);
 		    if (!$a2->success() || $a2->content =~ />Cette division n'est pas encore distribuée</ || length($a2->content) < 15500) {

@@ -35,7 +35,10 @@ while(<STDIN>) {
 
 for ($i = 0 ; $i < $#data ; $i++) {
     unless($data[$i]) {
-	if ($data[$i+1] ne 'CMP' && !($etapes[$i+1] eq 'nouv. lect.' && $data[$i-1] eq "CMP") && $stages[$i+1] ne 'texte retire') {
+	if ($data[$i+1] ne 'CMP' &&
+     $etapes[$i-1] ne "l. définitive" &&
+     !($etapes[$i+1] eq 'nouv. lect.' && $data[$i-1] eq "CMP") &&
+     $stages[$i+1] ne 'texte retire') {
 	    print "$id: missing step $i\n" ;
 	    $errors++;
 	}
