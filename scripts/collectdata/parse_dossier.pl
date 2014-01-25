@@ -11,9 +11,9 @@ if ($dossier_url =~ /\/([^\/]+)\.html$/) {
 }
 
 if (!$dossier_url) {
-	print "USAGE: perl parse_dossier.pl <url dossier senat> <include header>\n";
-	print "\n";
-	print "Transforme les dossiers du sénat en un CSV qui contient les url des textes aux différentes étapes\n";
+	print STDERR "USAGE: perl parse_dossier.pl <url dossier senat> <include header>\n";
+	print STDERR "\n";
+	print STDERR "Transforme les dossiers du sénat en un CSV qui contient les url des textes aux différentes étapes\n";
 	exit 1;
 }
 
@@ -24,7 +24,7 @@ $content = $a->content;
 
 $titrecourt = '';
 $titrelong = '';
-
+$legislature = 14;
 if ($content =~ /title>([^<\-]+) -/) {
     $titrecourt = $1;
     utf8::encode($titrecourt);
@@ -133,9 +133,11 @@ while ($ok) {
 		$printid = 'EXTRA';
 		$enddate = $date[$id];
 	    }elsif ($url =~ /assemblee-nationale/) {
+
 		$chambre = 'assemblee' if ($stade eq 'hemicycle');
-		if ($url =~ /[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$/) {
-			$idtext = $1;
+		if ($url =~ /fr\/(\d+)\/.*[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$/) {
+			$legislature = $1;
+			$idtext = $2;
 		}
             }elsif ($url =~ /senat.fr/) {
 		$chambre = 'senat' if ($stade eq 'hemicycle');
@@ -146,13 +148,13 @@ while ($ok) {
 		if ($texte =~ /n..\s*(\d+) / && $chambre eq 'assemblee') {
 		    $num = $1;
 		    if ($stade eq 'commission') {
-			$url = sprintf('http://www.assemblee-nationale.fr/14/ta-commission/r%04d-a0.asp', $num);
+			$url = sprintf("http://www.assemblee-nationale.fr/$legislature/ta-commission/r%04d-a0.asp", $num);
 		    }elsif($stade eq 'depot'){
 			$type = ppl;
 			$type = pl if ($dossier_url =~ /pjl/);
-			$url = sprintf('http://www.assemblee-nationale.fr/14/projets/%s%04d.asp', $type, $num);
+			$url = sprintf("http://www.assemblee-nationale.fr/$legislature/projets/%s%04d.asp", $type, $num);
 		    }else{
-			$url = sprintf('http://www.assemblee-nationale.fr/14/ta/ta%04d.asp', $num);
+			$url = sprintf("http://www.assemblee-nationale.fr/$legislature/ta/ta%04d.asp", $num);
 		    }
 		} else {
             next;
@@ -170,7 +172,7 @@ while ($ok) {
 		    }
 		} elsif ($url =~ /\/ta-commission\/r/) {
 		    $a2->get($url);
-		    if (!$a2->success() || $a2->content =~ />Cette division n'est pas encore distribuée</) {
+		    if (!$a2->success() || $a2->content =~ />Cette division n'est pas encore distribuée</ || length($a2->content) < 15500) {
 			$url2 = $url;
 			$url2 =~ s/ta-commission(\/r\d+)-a0/rapports$1/;
 			$a2->get($url2);
