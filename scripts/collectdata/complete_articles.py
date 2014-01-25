@@ -43,7 +43,7 @@ try:
 
 
 except Exception as e:
-    print type(e), e
+    print >> sys.stderr, type(e), e
     log("No previous step found at %s" % sys.argv[2])
     sys.exit()
 

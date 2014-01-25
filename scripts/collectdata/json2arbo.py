@@ -57,7 +57,7 @@ try:
     f = open(FILE, "r")
 except:
     sys.stderr.write("ERROR: Cannot open json file %s\n" % FILE)
-    sys.exit()
+    sys.exit(1)
 
 def log_err(txt, arg=None):
     txt = "ERROR: %s" % txt
@@ -81,7 +81,7 @@ try:
     os.chdir(project)
 except:
     log_err("Cannot create dir for project %s" % project)
-    sys.exit()
+    sys.exit(1)
 
 textid = ""
 for l in f:
@@ -90,17 +90,17 @@ for l in f:
     data = json.loads(l)
     if not data or not "type" in data:
         log_err("JSON %s badly formatted, missing field type: %s" % (f, data))
-        sys.exit()
+        sys.exit(1)
     if data["type"] == "texte":
         textid = data["id"]
 #   textid = date_formatted+"_"+data["id"]
         write_text(clean_text(data["titre"]), textid+".titre")
-        alldata = data
+        alldata = dict(data)
         alldata['sections'] = []
         alldata['articles'] = []
     elif textid == "":
         log_err("JSON missing first line with text infos")
-        sys.exit()
+        sys.exit(1)
     elif data["type"] == "section":
         path = sec_path(data["id"])
         mkdirs(path)

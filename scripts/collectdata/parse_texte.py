@@ -17,8 +17,8 @@ try:
     FILE = sys.argv[1]
     soup = BeautifulSoup(open(FILE,"r"), "html5lib")
 except:
-    print "ERROR: Cannot open file", FILE
-    sys.exit()
+    sys.stderr.write("ERROR: Cannot open file", FILE)
+    sys.exit(1)
 
 if (len(sys.argv) > 2) :
     ORDER = "%02d_" % int(sys.argv[2])

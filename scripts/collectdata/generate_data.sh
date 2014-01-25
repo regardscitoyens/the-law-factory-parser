@@ -42,14 +42,23 @@ cat $1 | while read line ; do
   #Text export
   download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape;
   #if file -i $data/.tmp/html/$escape | grep -i iso > /dev/null; then recode ISO885915..UTF8 $data/.tmp/html/$escape; fi
-  python parse_texte.py $data/.tmp/html/$escape $order > $data/.tmp/json/$escape
+  if ! python parse_texte.py $data/.tmp/html/$escape $order > $data/.tmp/json/$escape; then
+    echo "ERROR parsing $data/.tmp/html/$escape"
+    exit 1
+  fi
   # Complete articles with missing "conforme" or "non-modifié" text
   if test -s $data/.tmp/json/articles_laststep.json; then
-    python complete_articles.py $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json > $data/.tmp/json/$escape.tmp
+    if ! python complete_articles.py $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json > $data/.tmp/json/$escape.tmp; then
+      echo "ERROR completing $data/.tmp/html/$escape"
+      exit 1
+    fi
     mv $data/.tmp/json/$escape{.tmp,}
   fi
   cp $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
-  python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"
+  if ! python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"; then
+    echo "ERROR creating arbo from $data/.tmp/json/$escape"
+    exit 1
+  fi
   
   if test "$amdidtext" && test "$oldchambre" = "$chambre" && test "$olddossier" = "$dossier"; then
     urlchambre="http://www.nosdeputes.fr/14"
