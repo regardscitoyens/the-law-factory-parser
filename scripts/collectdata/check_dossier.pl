@@ -11,19 +11,21 @@ if (!$id) {
 }
 
 @data = ('INIT');
+@stages = ();
 $errors = 0;
 while(<STDIN>) {
     chomp;
     @csv = split(/;/);
     if (!$data[$csv[6]]) {
 	$data[$csv[6]] = $csv[8];
+    $stages[$csv[6]] = $csv[9];
     }elsif ($data[$csv[6]-1] ne 'CMP' && $csv[6] ne 'EXTRA') {
 	print STDERR "WARNING: $id: duplicated entry ".$csv[6]."\n";
     }
-    if ($csv[10] !~ /^http/ && $csv[6] ne 'EXTRA') {
+    if ($csv[10] !~ /^http/ && $csv[6] ne 'EXTRA' && $csv[9] ne "texte retire") {
 	print "$id: not valid url ".$csv[10]."\n" ;
 	$errors++;
-    }elsif($csv[8] =~ /assemblee|senat/ && $csv[10] !~ /$csv[8]/) {
+    }elsif($csv[8] =~ /assemblee|senat/ && $csv[10] !~ /$csv[8]/ && $csv[9] ne "texte retire") {
 	print "$id: not a chambre url ".$csv[10]."\n";
 	$errors++;
     }
@@ -31,7 +33,7 @@ while(<STDIN>) {
 
 for ($i = 0 ; $i < $#data ; $i++) {
     unless($data[$i]) {
-	if ($data[$i+1] ne 'CMP') {
+	if ($data[$i+1] ne 'CMP' && $stages[$i+1] ne 'texte retire') {
 	    print "$id: missing step $i\n" ;
 	    $errors++;
 	}

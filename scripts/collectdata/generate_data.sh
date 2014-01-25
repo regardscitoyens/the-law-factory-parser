@@ -35,7 +35,7 @@ cat $1 | while read line ; do
   fi
   python procedure2json.py "$data/$dossier/procedure.csv" > "$data/$dossier/procedure.json"
   olddossier=$dossier
-  if echo $line | grep ';EXTRA;' > /dev/null ; then
+  if echo $line | grep ';\(EXTRA\|texte retire\);' > /dev/null ; then
 	continue;
   fi
  

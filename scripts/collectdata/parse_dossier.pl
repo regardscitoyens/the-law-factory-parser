@@ -159,7 +159,9 @@ while ($ok) {
 		    }else{
 			$url = sprintf("http://www.assemblee-nationale.fr/$legislature/ta/ta%04d.asp", $num);
 		    }
-		} else {
+		} elsif ($texte =~ / retir..? par le/) {
+            $stade = "texte retire";
+        } else {
             next;
         }
 	    }
