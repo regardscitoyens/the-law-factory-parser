@@ -17,7 +17,7 @@ try:
     FILE = sys.argv[1]
     soup = BeautifulSoup(open(FILE,"r"), "html5lib")
 except:
-    sys.stderr.write("ERROR: Cannot open file", FILE)
+    sys.stderr.write("ERROR: Cannot open file %s", FILE)
     sys.exit(1)
 
 if (len(sys.argv) > 2) :
@@ -118,9 +118,9 @@ re_cl_uno  = re.compile(r"(premier|unique?)", re.I)
 re_mat_sec = re.compile(r"((chap|t)itre|volume|livre|tome|(sous-)?section)\s+(.+)e?r?", re.I)
 re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
-re_mat_tco = re.compile(r"\s*<b>\s*TEXTES?\s*DE\s*LA\s*COMMISSION")
+re_mat_tco = re.compile(r"\s*<b>\s*TEXTES?\s*(ADOPTÉ\s*PAR|DE)\s*LA\s*COMMISSION.*</b>\s*$")
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
-re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le|\s*©|\s*N.?B.?\s*:)", re.I)
+re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le|\s*©|\s*N.?B.?\s*:|<a>[1*]</a>\s*<i>\(\))", re.I)
 re_mat_dots = re.compile(r"^[.…]+$")
 re_mat_st  = re.compile(r"<i>\(?(non\s?-?)?(conform|modif|suppr|nouveau)", re.I)
 re_mat_new = re.compile(r"\s*\(no(n[\-\s]modifié|uveau)\s*\)\s*", re.I)
@@ -128,8 +128,9 @@ re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
 re_clean_conf = re.compile(r"^\s*\((conforme|non-?modifi..?)s?\)\s*$", re.I)
 re_clean_supr = re.compile(r'\(suppr(ession|im..?s?)\s*(conforme|maintenue|par la commission mixte paritaire)?\)["\s]*$', re.I)
-re_echec_hemi = re.compile(r"<i>L('Assemblée nationale|e Sénat) a rejeté[, ]+", re.I)
-re_echec_com = re.compile(r" la commission .*(a rejeté l|n'a pas adopté [ld])e texte ", re.I)
+re_echec_hemi = re.compile(r"<i>L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
+re_echec_hemi2 = re.compile(r"de loi a été rejetée par l('Assemblée nationale|e Sénat)\.$", re.I)
+re_echec_com = re.compile(r" la commission .*(effet est d'entraîner le rejet du|a rejeté le|n'a pas adopté [ld]e) texte[.\s]", re.I)
 re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*parven(u[es]?|ir) à (élaborer )?un texte commun)", re.I)
 re_rap_mult = re.compile(r'[\s<>/aimg]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
 re_clean_mult_1 = re.compile(r'\s*et\s*', re.I)
@@ -163,7 +164,7 @@ for text in soup.find_all("p"):
         texte = save_text(texte)
     elif re_mat_exp.match(line):
         read = -1 # Deactivate description lecture
-    elif re_echec_cmp.search(line) or re_echec_com.search(line) or re_echec_hemi.match(line):
+    elif re_echec_cmp.search(line) or re_echec_com.search(line) or re_echec_hemi.match(line) or re_echec_hemi2.search(line):
         texte = save_text(texte)
         pr_js({"type": "echec", "texte": re_cl_html.sub("", line).strip()})
         break
