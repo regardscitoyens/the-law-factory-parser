@@ -58,7 +58,8 @@ for nstep, step in enumerate(steps):
         path = os.path.join(sourcedir, step['resulting_text_directory'])
         if step_id:
             old_step_id = step_id
-        step_id = '_'.join([step['stage'], step['institution'], step['step']]).strip()
+        #step_id = '_'.join([step['stage'], step['institution'], step['step']]).strip()
+        step_id = step['directory']
 
         for root, dirs, files in os.walk(path):
             articleFiles = [os.path.abspath(os.path.join(root,f)) for f in files if re.search(r'^A.*', getParentFolder(root, f)) and re.search(r'^.*?json', f)]
