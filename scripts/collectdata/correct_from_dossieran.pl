@@ -4,7 +4,11 @@ use WWW::Mechanize;
 use utf8;
 
 @row = split(/;/, <STDIN>);
-$url = "http://www.assemblee-nationale.fr/14/dossiers/".$row[3].".asp";
+$legislature = 14;
+if ($row[0] lt "2012-06-29") {
+  $legislature = 13;
+}
+$url = "http://www.assemblee-nationale.fr/$legislature/dossiers/".$row[3].".asp";
 $a = WWW::Mechanize->new();
 $a->get($url);
 $content = $a->content;
