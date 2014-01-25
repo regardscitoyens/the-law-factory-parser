@@ -54,6 +54,7 @@ cat $1 | while read line ; do
     echo "ERROR parsing $data/.tmp/html/$escape"
     exit 1
   fi
+ fi
   # Complete articles with missing "conforme" or "non-modifié" text
   if test -s $data/.tmp/json/articles_laststep.json; then
     if ! python complete_articles.py $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json > $data/.tmp/json/$escape.tmp; then
@@ -62,7 +63,6 @@ cat $1 | while read line ; do
     fi
     mv $data/.tmp/json/$escape{.tmp,}
   fi
- fi
   if test -s $data/.tmp/json/articles_laststep.json; then
     cp -f $data/.tmp/json/articles_laststep.json $data/.tmp/json/articles_antelaststep.json
   fi
