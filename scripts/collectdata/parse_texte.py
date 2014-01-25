@@ -17,7 +17,7 @@ try:
     FILE = sys.argv[1]
     soup = BeautifulSoup(open(FILE,"r"), "html5lib")
 except:
-    sys.stderr.write("ERROR: Cannot open file %s", FILE)
+    sys.stderr.write("ERROR: Cannot open file %s" % FILE)
     sys.exit(1)
 
 if (len(sys.argv) > 2) :
@@ -79,6 +79,7 @@ html_replace = [
     (re.compile(r"\s+"), " "),
     (re.compile(r"<[^>]*></[^>]*>"), ""),
     (re.compile(r"^<b><i>", re.I), "<i><b>"),
+    (re.compile(r"\s*</b>\s*<b>\s*", re.I), " "),
     (re.compile(r"</?sup>", re.I), ""),
     (re.compile(r"^((<[bi]>)*)\((S|AN)[12]\)\s*", re.I), r"\1"),
     (re.compile(r"^(<b>Article )\d+\s*<s>\s*", re.I), r"\1"),
