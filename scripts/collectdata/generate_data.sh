@@ -7,7 +7,7 @@ if ! test "$1"; then
 fi
 data=$(if test "$2" ; then echo $2 ; else echo "data" ; fi)
 
-function escapeit { perl -e 'use URI::Escape; print uri_escape shift();print"\n"' $1 ; }
+function escapeit { perl -e 'use URI::Escape; print uri_escape shift();print"\n"' $1 | sed 's/\s/_/g'; }
 #function download { curl -s $1 }
 function download { cache=$cachedir"/"$(escapeit $1) ; if ! test -e $cache ; then curl -s $1 > $cache.tmp ; mv $cache.tmp $cache ; fi ; cat $cache ; } ; mkdir -p $data"/../.cache/web" ; cachedir=$data"/../.cache/web"
 
@@ -38,7 +38,16 @@ cat $1 | while read line ; do
   if echo $line | grep ';\(EXTRA\|texte retire\);' > /dev/null ; then
 	continue;
   fi
- 
+ if echo $line | grep ';renvoi en commission;' > /dev/null ; then
+  if ! test -s $data/.tmp/json/articles_antelaststep.json; then
+    echo "ERROR retrieving texte renvoyé en commission $data/.tmp/json/articles_antelaststep.json empty"
+    exit 1
+  fi
+  etapid=$(echo $etape | sed 's/^\([0-9]\+\)_.*$/\1/')
+  echo "INFO HANDLE RENVOI EN COMMISSION" $etapid
+  head -n 1 $data/.tmp/json/articles_antelaststep.json | sed 's/^\({"expose": "\).*"\(, "id": "\)\([0-9]\+\)\(_[^"]*", \)/\1Le texte est renvoyé en commission.", "echec": true\2'"$etapid"'\4/' $data/.tmp/json/articles_antelaststep.json > $data/.tmp/json/$escape
+  tail -n $(($(cat $data/.tmp/json/articles_antelaststep.json | wc -l) - 1)) $data/.tmp/json/articles_antelaststep.json >> $data/.tmp/json/$escape
+ else 
   #Text export
   download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape;
   #if file -i $data/.tmp/html/$escape | grep -i iso > /dev/null; then recode ISO885915..UTF8 $data/.tmp/html/$escape; fi
@@ -54,7 +63,11 @@ cat $1 | while read line ; do
     fi
     mv $data/.tmp/json/$escape{.tmp,}
   fi
-  cp $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
+ fi
+  if test -s $data/.tmp/json/articles_laststep.json; then
+    cp -f $data/.tmp/json/articles_laststep.json $data/.tmp/json/articles_antelaststep.json
+  fi
+  cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
   if ! python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"; then
     echo "ERROR creating arbo from $data/.tmp/json/$escape"
     exit 1

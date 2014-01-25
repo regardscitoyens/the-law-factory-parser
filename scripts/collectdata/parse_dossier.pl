@@ -178,8 +178,10 @@ while ($ok) {
 		    }else{
 			$url = sprintf("http://www.assemblee-nationale.fr/$legislature/ta/ta%04d.asp", $num);
 		    }
+		} elsif ($texte =~ / renvo[iy].?.? en commission/) {
+            $url = "renvoi en commission";
 		} elsif ($texte =~ / retir..? par le/) {
-            $stade = "texte retire";
+            $url = "texte retire";
         } else {
             next;
         }
