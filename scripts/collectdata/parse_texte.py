@@ -220,11 +220,11 @@ for text in soup.find_all("p"):
             pr_js(section)
             read = 0
     # Read articles with alineas
-    elif read == 2:
+    if read == 2 and not m:
         if re_mat_end.match(line):
             break
         # Find extra status information
-        elif re_mat_st.match(line):
+        if re_mat_st.match(line):
             article["statut"] = re_cl_html.sub("", re_cl_par.sub("", line.lower()).strip())
             continue
         if re_mat_dots.match(line):
