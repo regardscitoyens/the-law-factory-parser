@@ -80,6 +80,11 @@ html_replace = [
     (re.compile(r"<[^>]*></[^>]*>"), ""),
     (re.compile(r"^<b><i>", re.I), "<i><b>"),
     (re.compile(r"</?sup>", re.I), ""),
+    (re.compile(r"^((<[bi]>)*)\((S|AN)[12]\)\s*", re.I), r"\1"),
+    (re.compile(r"^(<b>Article )\d+\s*<s>\s*", re.I), r"\1"),
+    (re.compile(r"\s*<s>(.*)</s>\s*", re.I), " "),
+    (re.compile(r"</?s>", re.I), ""),
+    (re.compile(r"\s+", re.I), " "),
     (re.compile(r'^((<[^>]*>)*"[A-Z])([A-ZÉ]+ )'), lower_inner_title)
 ]
 def clean_html(t):
