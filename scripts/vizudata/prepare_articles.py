@@ -49,7 +49,13 @@ out = {'law_title': title, 'articles': {}, 'short_title': properties.get("short_
 step_id = ''
 old_step_id = ''
 steps = properties['steps']
+nsteps = len(["" for a in steps if a['stage'] not in ['promulgation',u'constitutionnalité']]) - 1
 for nstep, step in enumerate(steps):
+    last_step = (nstep == nsteps and
+      step['institution'] == 'assemblee' and
+      step.get('step', '') == 'hemicycle' and
+      not step['stage'].endswith('lecture'))
+
     if not 'resulting_text_directory' in step:
         if step['stage'] not in [u"promulgation", u"constitutionnalité"]:
             sys.stderr.write("WARNING no directory found for step %s\n" % step['stage'])
@@ -58,11 +64,13 @@ for nstep, step in enumerate(steps):
         path = os.path.join(sourcedir, step['resulting_text_directory'])
         if step_id:
             old_step_id = step_id
-        #step_id = '_'.join([step['stage'], step['institution'], step['step']]).strip()
         step_id = step['directory']
 
         for root, dirs, files in os.walk(path):
             articleFiles = [os.path.abspath(os.path.join(root,f)) for f in files if re.search(r'^A.*', getParentFolder(root, f)) and re.search(r'^.*?json', f)]
+            if last_step and len(articleFiles) != 1:
+                print >> sys.stderr, "INFO: skipping final text adopté renuméroté AN", step['directory']
+                break
             if len(articleFiles) > 0:
                 for articleFile in articleFiles:
                     with open(articleFile,"r") as article:
