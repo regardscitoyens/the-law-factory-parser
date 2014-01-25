@@ -136,8 +136,11 @@ indextext = -1
 curtext = -1
 section = {"type": "section", "id": ""}
 for text in soup.find_all("p"):
+
     line = clean_html(str(text))
     #print read, curtext, indextext, line
+    if line == "<b>RAPPORT</b>":
+        read = -1
     if indextext != -1 and re_sep_text.match(line):
         curtext += 1
     if re_rap_mult.match(line):
@@ -223,6 +226,7 @@ for text in soup.find_all("p"):
     else:
         #metas
         continue
+
+if "done" not in texte:
+    pr_js(texte)
 pr_js(article)
-
-
