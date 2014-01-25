@@ -18,8 +18,7 @@ while(<STDIN>) {
     if (!$data[$csv[6]]) {
 	$data[$csv[6]] = $csv[8];
     }elsif ($data[$csv[6]-1] ne 'CMP' && $csv[6] ne 'EXTRA') {
-	print "$id: duplicated entry ".$csv[6]."\n";
-	$errors++;
+	print STDERR "WARNING: $id: duplicated entry ".$csv[6]."\n";
     }
     if ($csv[10] !~ /^http/ && $csv[6] ne 'EXTRA') {
 	print "$id: not valid url ".$csv[10]."\n" ;
