@@ -61,7 +61,7 @@ def romans(n):
     return res
 
 re_clean_bister = re.compile(r'(un|duo|tre|bis|qua|quint|quinqu|sex|oct|nov|non|dec|ter|ies)+', re.I)
-re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]*)', re.I)
+re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]+)', re.I)
 
 # Clean html and special chars
 lower_inner_title = lambda x: x.group(1)+x.group(3).lower()
@@ -88,12 +88,13 @@ html_replace = [
     (re.compile(r"</?s>", re.I), ""),
     (re.compile(r"\s*</?img>\s*", re.I), ""),
     (re.compile(r"\s+", re.I), " "),
-    (re.compile(r'^((<[^>]*>)*"[A-Z])([A-ZÉ]+ )'), lower_inner_title)
+    (re.compile(r'^((<[^>]*>)*"[A-Z])([A-ZÉ]+ )'), lower_inner_title),
+    (re.compile(r' pr..?liminaire', re.I), ' préliminaire')
 ]
 def clean_html(t):
     for regex, repl in html_replace:
         t = regex.sub(repl, t)
-    return t.strip().replace('PRÉLIMINAIRE', 'préliminaire')
+    return t.strip()
 
 re_clean_et = re.compile(r'(,|\s+et)\s+', re.I)
 def pr_js(dic):
@@ -102,6 +103,7 @@ def pr_js(dic):
         return
     if 'alineas' in dic:
         if len(dic['alineas']) == 1 and dic['alineas']['001'].startswith("(Supprimé)"):
+            dic['statut'] = "supprimé"
             dic['alineas'] = {'001': ''}
         elif dic['statut'].startswith('conforme') and not len(dic['alineas']):
             dic['alineas'] = {'001': '(Non modifié)'}
@@ -131,11 +133,11 @@ re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉ
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
 re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*)", re.I)
 re_mat_dots = re.compile(r"^[.…]+$")
-re_mat_st  = re.compile(r"<i>\(?(non\s?-?)?(conform|modif|suppr|nouveau)", re.I)
+re_mat_st  = re.compile(r"(<i>|\()+\s*(non\s?-?)?(conform|modif|suppr|nouveau).{0,10}$", re.I)
 re_mat_new = re.compile(r"\s*\(\s*nouveau\s*\)\s*", re.I)
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
-re_clean_conf = re.compile(r"\((conforme|non-?modifi..?)s?\)", re.I)
+re_clean_conf = re.compile(r"\((conforme|non[\s-]*modifi..?)s?\)", re.I)
 re_clean_supr = re.compile(r'\(suppr(ession|im..?s?)\s*(conforme|maintenue|par la commission mixte paritaire)?\)["\s]*$', re.I)
 re_echec_hemi = re.compile(r"<i>L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
 re_echec_hemi2 = re.compile(r"de loi a été rejetée par l('Assemblée nationale|e Sénat)\.$", re.I)
@@ -227,7 +229,7 @@ for text in soup.find_all("p"):
         if re_mat_end.match(line):
             break
         # Find extra status information
-        if re_mat_st.match(line):
+        if ali_num == 0 and re_mat_st.match(line):
             article["statut"] = re_cl_html.sub("", re_cl_par.sub("", line.lower()).strip())
             continue
         if re_mat_dots.match(line):
@@ -242,8 +244,10 @@ for text in soup.find_all("p"):
         # Clean comments (Texte du Sénat), (Texte de la Commission), ...
         if ali_num == 0 and line.startswith('(Texte d'):
             continue
-        ali_num += 1
-        article["alineas"]["%03d" % ali_num] = line
+        line = line.strip()
+        if line:
+            ali_num += 1
+            article["alineas"]["%03d" % ali_num] = line
     else:
         #metas
         continue

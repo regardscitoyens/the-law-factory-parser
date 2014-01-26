@@ -7,7 +7,7 @@ import simplejson as json
 FILE = sys.argv[1]
 DEBUG = True if len(sys.argv) > 3 else False
 def log(text):
-    if DEBUG or True:
+    if DEBUG:
         print >> sys.stderr, text
 
 try:
@@ -192,12 +192,12 @@ for l in f:
         gd_text = []
         for j, text in enumerate(alineas):
             text = text.encode('utf-8')
-            if "(non modifi" in text and not line['titre'] in oldstep:
+            if "(Non modifi" in text and not line['titre'] in oldstep:
                 sys.stderr.write("WARNING: found repeated article missing %s from previous step %s: %s" % (line['titre'], FILE, line['alineas']))
             elif re_confo_with_txt.search(text):
                 text = re_confo_with_txt.sub(r' \2', text)
                 gd_text.append(text)
-            elif "(non modifi" in text:
+            elif "(Non modifi" in text:
                 part = re.split("\s*([\.°\-]+\s*)+", text)
                 if not part:
                     log("ERROR trying to get non-modifiés")
