@@ -86,6 +86,7 @@ html_replace = [
     (re.compile(r"^(<b>Article )\d+\s*<s>\s*", re.I), r"\1"),
     (re.compile(r"\s*<s>(.*)</s>\s*", re.I), " "),
     (re.compile(r"</?s>", re.I), ""),
+    (re.compile(r"\s*</?img>\s*", re.I), ""),
     (re.compile(r"\s+", re.I), " "),
     (re.compile(r'^((<[^>]*>)*"[A-Z])([A-ZÉ]+ )'), lower_inner_title)
 ]
@@ -140,7 +141,7 @@ re_echec_hemi = re.compile(r"<i>L('Assemblée nationale|e Sénat) (a rejeté|n'a
 re_echec_hemi2 = re.compile(r"de loi a été rejetée par l('Assemblée nationale|e Sénat)\.$", re.I)
 re_echec_com = re.compile(r" la commission .*(effet est d'entraîner le rejet du|a rejeté le|n'a pas adopté [ld]e) texte[.\s]", re.I)
 re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*parven(u[es]?|ir) à (élaborer )?un texte commun)", re.I)
-re_rap_mult = re.compile(r'[\s<>/aimg]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
+re_rap_mult = re.compile(r'[\s<>/ai]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
 re_clean_mult_1 = re.compile(r'\s*et\s*', re.I)
 re_clean_mult_2 = re.compile(r'[^,\d]', re.I)
 re_sep_text = re.compile(r'\s*<b>\s*(article|titre|chapitre|tome|volume|livre)\s*(I|unique|liminaire|(1|prem)i?e?r?)\s*</b>\s*$', re.I)
