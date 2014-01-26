@@ -5,8 +5,17 @@ use utf8;
 
 @row = split(/;/, <STDIN>);
 $legislature = 14;
-if ($row[0] lt "2012-06-29") {
-  $legislature = 13;
+if($row[10] =~ /assemblee-?nationale\.fr\/(\d+)\//) {
+  $legislature = $1;
+}else {
+  $date = $row[13] || $row[12] || $row[0];
+  if($date lt "2012-06-29") {
+    $legislature = 13;
+  }elsif($date lt "2007-06-29") {
+    $legislature = 12;
+  }elsif($date gt "2017-06-29") {
+    $legislature = 15;
+  }
 }
 $url = "http://www.assemblee-nationale.fr/$legislature/dossiers/".$row[3].".asp";
 $a = WWW::Mechanize->new();
