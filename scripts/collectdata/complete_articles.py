@@ -7,7 +7,7 @@ import simplejson as json
 FILE = sys.argv[1]
 DEBUG = True if len(sys.argv) > 3 else False
 def log(text):
-    if DEBUG:
+    if DEBUG or True:
         print >> sys.stderr, text
 
 try:
@@ -35,7 +35,6 @@ try:
             if line["type"] == "article":
                 keys = line['alineas'].keys()
                 keys.sort()
-                alineas = [line['alineas'][k] for k in keys]
                 oldstep[line["titre"]] = [line['alineas'][k] for k in keys]
                 oldstatus[line["titre"]] = line['statut']
                 oldartids.append(line["titre"])
@@ -64,7 +63,7 @@ def get_mark_from_last(text, start, last=""):
     record = False
     for i in text:
         sep = start.match(i)
-        log("   TEST: " + i[:15])
+        log("    TEST: " + i[:25])
         if re_end and re_end.match(i):
             log("  --> END FOUND")
             if last:
@@ -86,7 +85,10 @@ def get_mark_from_last(text, start, last=""):
             res.append(i)
     return res
 
-re_modif_with_txt = re.compile(r'\s*\(\s*non[\s\-]*modifié\s*\)\s*([\W]*\w+)', re.I)
+re_clean_virg = re.compile(r'\s*,\s*')
+re_suppr = re.compile(r'\W*suppr(ess|im)', re.I)
+re_confo = re.compile(r'\W*(conforme|non[\s\-]*modifi)', re.I)
+re_confo_with_txt = re.compile(r'\s*\(\s*(conforme|non[\s\-]*modifié)\s*\)\s*([\W]*\w+)', re.I)
 order = 1
 done_titre = False
 for l in f:
@@ -112,60 +114,77 @@ for l in f:
       if line["type"] != "article":
         write_json(line)
       else:
+        keys = line['alineas'].keys()
+        keys.sort()
+        alineas = [line['alineas'][k] for k in keys]
         mult = line['titre'].split(u' à ')
-        if len(mult) > 1:
-            log("DEBUG: Recovering art conformes %s à %s\n" % (mult[0], mult[1]))
-            line['titre'] = mult[0].strip()
+        is_mult = (len(mult) > 1)
+        if is_mult:
+            st = mult[0].strip()
+            ed = mult[1].strip()
+            if re_suppr.match(line['statut']) or (len(alineas) == 1 and re_suppr.match(alineas[0])):
+                if (st not in oldartids and ed not in oldartids) or (re_suppr.match(oldstatus[st]) and re_suppr.match(oldstatus[ed])):
+                    continue
+                log("DEBUG: Marking as deleted articles %s à %s" % (st.encode('utf-8'), ed.encode('utf-8')))
+                mult_type = "sup"
+            elif re_confo.match(line['statut']) or (len(alineas) == 1 and re_confo.match(alineas[0])):
+                log("DEBUG: Recovering art conformes %s à %s" % (st.encode('utf-8'), ed.encode('utf-8')))
+                mult_type = "conf"
+            else:
+                print >> sys.stderr, "ERROR: Found multiple article which I don't knwo what to do with", line['titre'], line
+                exit(1)
+            line['titre'] = st
+        cur = ""
         if line['titre'] in oldartids and oldarts:
-            run = True
-            skipline = False
-            while run and oldarts:
+            while oldarts:
                 cur, a = oldarts.pop(0)
                 oldartids.remove(cur)
+                if cur == line['titre']:
+                    break
                 #print >> sys.stderr, cur, line['titre'], a["statut"]
                 if a["statut"].startswith("conforme"):
-                    log("DEBUG: Recovering art conforme %s\n" % cur)
+                    log("DEBUG: Recovering art conforme %s" % cur.encode('utf-8'))
+                    a["statut"] = "conforme"
                     a["order"] = order
                     order += 1
                     write_json(a)
-                    if cur == line['titre']:
-                        skipline = True
-                elif cur != line['titre'] and not a["statut"].startswith("sup"):
-                    log("DEBUG: Marking art %s as supprimé\n" % cur)
+                elif not re_suppr.match(a["statut"]):
+                    log("DEBUG: Marking art %s as supprimé" % cur.encode('utf-8'))
                     a["statut"] = "supprimé"
                     a["alineas"] = dict()
                     a["order"] = order
                     order += 1
                     write_json(a)
-                if cur == line['titre']:
-                    run = False
-            if skipline:
-                continue
-        if len(mult) > 1:
-            cur = ""
-            end = mult[1].strip
-            run = True
-            while run and oldarts:
+        if is_mult:
+            if ed not in oldartids or cur != line['titre']:
+                print >> sys.stderr, "ERROR: dealing with multiple article ", line['titre'], "Could not find first or last part in last step"
+                exit(1)
+            while oldarts:
+                if mult_type == "sup" and not re_suppr.match(a["statut"]):
+                    log("DEBUG: Marking art %s as supprimé" % cur.encode('utf-8'))
+                    a["statut"] = "supprimé"
+                    a["alineas"] = dict()
+                    a["order"] = order
+                    order += 1
+                    write_json(a)
+                elif mult_type == "conf":
+                    log("DEBUG: Recovering art conforme %s" % cur)
+                    a["statut"] = "conforme"
+                    a["order"] = order
+                    order += 1
+                    write_json(a)
+                if cur == ed:
+                    break
                 cur, a = oldarts.pop(0)
-                a["statut"] = "conforme"
-                log("DEBUG: Recovering art conforme %s\n" % cur)
-                a["order"] = order
-                order += 1
-                write_json(a)
-                if cur == end:
-                    run = False
             continue
-        if line["statut"].startswith("sup") and (line['titre'] not in oldstatus or oldstatus[line['titre']].startswith("sup")):
+        if (re_suppr.match(line["statut"]) or (len(alineas) == 1 and re_suppr.match(alineas[0]))) and (line['titre'] not in oldstatus or re_suppr.match(oldstatus[line['titre']])):
            continue
-        keys = line['alineas'].keys()
-        keys.sort()
-        alineas = [line['alineas'][k] for k in keys]
         if len(alineas) == 1:
             text = alineas[0].encode('utf-8')
         # Clean empty articles with only "Non modifié" and include text from previous step
-            if text.startswith("(Non modifié)"):
+            if re_confo.match(text):
                 if not line['titre'] in oldstep:
-                    sys.stderr.write("WARNING: found repeated article %s missing from previous step %s: %s\n" % (line['titre'], FILE, line['alineas']))
+                    sys.stderr.write("WARNING: found repeated article %s missing from previous step %s: %s" % (line['titre'], FILE, line['alineas']))
                 else:
                     log("DEBUG: get back Art %s" % line['titre'])
                     alineas.pop(0)
@@ -173,12 +192,12 @@ for l in f:
         gd_text = []
         for j, text in enumerate(alineas):
             text = text.encode('utf-8')
-            if "(non modifié" in text and not line['titre'] in oldstep:
-                sys.stderr.write("WARNING: found repeated article missing %s from previous step %s: %s\n" % (line['titre'], FILE, line['alineas']))
-            elif re_modif_with_txt.search(text):
-                text = re_modif_with_txt.sub(r' \1', text)
+            if "(non modifi" in text and not line['titre'] in oldstep:
+                sys.stderr.write("WARNING: found repeated article missing %s from previous step %s: %s" % (line['titre'], FILE, line['alineas']))
+            elif re_confo_with_txt.search(text):
+                text = re_confo_with_txt.sub(r' \2', text)
                 gd_text.append(text)
-            elif "(non modifié" in text:
+            elif "(non modifi" in text:
                 part = re.split("\s*([\.°\-]+\s*)+", text)
                 if not part:
                     log("ERROR trying to get non-modifiés")
