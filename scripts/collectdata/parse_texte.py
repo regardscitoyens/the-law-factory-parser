@@ -60,7 +60,7 @@ def romans(n):
             i += len(r)
     return res
 
-re_clean_bister = re.compile(r'(un|duo|tre|bis|qua|quint|quinqu|sex|oct|nov|non|dec|ter|ies)+|pr..?liminaire', re.I)
+re_clean_bister = re.compile(r'(un|duo|tre|bis|qua|quint|quinqu|sex|oct|nov|non|dec|ter|ies)+', re.I)
 re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]*)', re.I)
 
 # Clean html and special chars
@@ -93,7 +93,7 @@ html_replace = [
 def clean_html(t):
     for regex, repl in html_replace:
         t = regex.sub(repl, t)
-    return t.strip()
+    return t.strip().replace('PRÉLIMINAIRE', 'préliminaire')
 
 re_clean_et = re.compile(r'(,|\s+et)\s+', re.I)
 def pr_js(dic):
@@ -144,7 +144,7 @@ re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*par
 re_rap_mult = re.compile(r'[\s<>/ai]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
 re_clean_mult_1 = re.compile(r'\s*et\s*', re.I)
 re_clean_mult_2 = re.compile(r'[^,\d]', re.I)
-re_sep_text = re.compile(r'\s*<b>\s*(article|titre|chapitre|tome|volume|livre)\s*(I|unique|liminaire|(1|prem)i?e?r?)\s*</b>\s*$', re.I)
+re_sep_text = re.compile(r'\s*<b>\s*(article|titre|chapitre|tome|volume|livre)\s*(I|unique|pr..?liminaire|(1|prem)i?e?r?)\s*</b>\s*$', re.I)
 re_stars = re.compile(r'^[\s*_]+$')
 re_art_uni = re.compile(r'\s*article\s*unique\s*$', re.I)
 read = art_num = ali_num = 0
