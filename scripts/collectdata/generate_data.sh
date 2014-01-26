@@ -67,6 +67,7 @@ cat $1 | while read line ; do
     cp -f $data/.tmp/json/articles_laststep.json $data/.tmp/json/articles_antelaststep.json
   fi
   cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
+  rm -rf "$projectdir/texte"
   if ! python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"; then
     echo "ERROR creating arbo from $data/.tmp/json/$escape"
     exit 1
