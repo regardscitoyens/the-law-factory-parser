@@ -213,10 +213,12 @@ while ($ok) {
 		    }
 		}
 	    }
-        if ($stade eq "commission" && $stade eq $oldstade) {
+        if ($stade eq $oldstade and ($stade eq "commission" or ($idtext eq $oldidtext && $url eq $oldurl))) {
             pop(@lines);
         }
         $oldstade = $stade;
+        $oldidtext = $idtext;
+        $oldurl = $url;
 	    $lines[$#lines+1] =  "$printid;$etape;$chambre;$stade;$url;$idtext;".$date[$id].";".$enddate;
 	    $url = '';
 	}
