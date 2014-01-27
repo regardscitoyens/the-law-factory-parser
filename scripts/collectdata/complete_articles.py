@@ -126,7 +126,7 @@ for l in f:
             st = mult[0].strip()
             ed = mult[1].strip()
             if re_suppr.match(line['statut']) or (len(alineas) == 1 and re_suppr.match(alineas[0])):
-                if (st not in oldartids and ed not in oldartids) or (re_suppr.match(oldstatus[st]) and re_suppr.match(oldstatus[ed])):
+                if (st not in oldartids and ed not in oldartids) or (st in oldstatus and re_suppr.match(oldstatus[st]) and ed in oldstatus and re_suppr.match(oldstatus[ed])):
                     continue
                 log("DEBUG: Marking as deleted articles %s à %s" % (st.encode('utf-8'), ed.encode('utf-8')))
                 mult_type = "sup"
@@ -160,7 +160,9 @@ for l in f:
                     write_json(a)
         if is_mult:
             if ed not in oldartids or cur != line['titre']:
-                print >> sys.stderr, "ERROR: dealing with multiple article ", line['titre'].encode('utf-8'), "Could not find first or last part in last step"
+                if mult_type == "sup":
+                    continue
+                print >> sys.stderr, "ERROR: dealing with multiple article", line['titre'].encode('utf-8'), "to", ed.encode('utf-8'), "Could not find first or last part in last step (last found:", cur, ")"
                 exit(1)
             while oldarts:
                 if mult_type == "sup" and not re_suppr.match(a["statut"]):
