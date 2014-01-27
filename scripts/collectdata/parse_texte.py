@@ -249,7 +249,14 @@ for text in soup.find_all("p"):
         line = re_clean_coord.sub('', line)
         line = re_clean_subsec_space.sub(r'\1\4 \5', line)
         line = re_clean_subsec_space2.sub(r'\1 \2 \3\4', line)
-        line = re_clean_punc_space.sub(r'\1 \2', line.decode('utf-8')).encode('utf-8')
+        try:
+            tmp = line.decode('utf-8')
+        except:
+            try:
+                tmp = line.decode('iso-8859-1')
+            except:
+                tmp = line
+        line = re_clean_punc_space.sub(r'\1 \2', tmp).encode('utf-8')
         line = re_clean_spaces.sub(' ', line)
         line = re_mat_sec.sub(lambda x: x.group(1)[0].upper()+x.group(1)[1:].lower()+x.group(4) if re_mat_n.match(x.group(4)) else x.group(0), line)
         # Clean comments (Texte du Sénat), (Texte de la Commission), ...
