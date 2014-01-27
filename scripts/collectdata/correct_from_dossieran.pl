@@ -17,6 +17,14 @@ if($row[10] =~ /assemblee-?nationale\.fr\/(\d+)\//) {
     $legislature = 15;
   }
 }
+if (!$row[3]) {
+  while ($#row > 9) {
+    print join(';', @row);
+    @row = split(/;/, <STDIN>);
+  }
+  exit(0)
+}
+
 $url = "http://www.assemblee-nationale.fr/$legislature/dossiers/".$row[3].".asp";
 $a = WWW::Mechanize->new();
 $a->get($url);
