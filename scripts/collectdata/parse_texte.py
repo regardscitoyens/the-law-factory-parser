@@ -60,14 +60,16 @@ def romans(n):
             i += len(r)
     return res
 
-re_clean_bister = re.compile(r'(un|duo|tre|bis|qua|quint|quinqu|sex|oct|nov|non|dec|ter|ies)+', re.I)
-re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]+)', re.I)
-
+re_clean_premier = re.compile(r'((PREM)?)(1|I)ER?')
+re_clean_bister = re.compile(r'([IXV\d]+e?r?)\s+((un|duo|tre|bis|qua|quint|quinqu|sex|sept|oct|nov|non|dec|ter|ies)+)', re.I)
+re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]+)\s*([^\s\)])', re.I)
+re_clean_subsec_space2 = re.compile(r'^("?[IVX0-9]{1,4})\s*([a-z]*)\s*([A-H]{1,4})([\.°\-])', re.I)
+re_clean_punc_space = re.compile(u'([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])')
+re_clean_spaces = re.compile(r'\s+')
 # Clean html and special chars
 lower_inner_title = lambda x: x.group(1)+x.group(3).lower()
 html_replace = [
     (re.compile(r" "), " "),
-    (re.compile(r"œ", re.I), "oe"),
     (re.compile(r'(«\s+|\s+»)'), '"'),
     (re.compile(r'(«|»|“|”|„|‟|❝|❞|＂|〟|〞|〝)'), '"'),
     (re.compile(r"(’|＇|’|ߴ|՚|ʼ|❛|❜)"), "'"),
@@ -75,19 +77,20 @@ html_replace = [
     (re.compile(r"(</?\w+)[^>]*>"), r"\1>"),
     (re.compile(r"(</?)em>", re.I), r"\1i>"),
     (re.compile(r"(</?)strong>", re.I), r"\1b>"),
-    (re.compile(r"<(![^>]*|/?(p|br/?|span))>", re.I), ""),
+    (re.compile(r"<(![^>]*|/?(p|span))>", re.I), ""),
+    (re.compile(r"</?br>", re.I), " "),
     (re.compile(r"\s*\n+\s*"), " "),
-    (re.compile(r"\s+"), " "),
     (re.compile(r"<[^>]*></[^>]*>"), ""),
     (re.compile(r"^<b><i>", re.I), "<i><b>"),
-    (re.compile(r"\s*</b>\s*<b>\s*", re.I), " "),
+    (re.compile(r"</b>(\s*)<b>", re.I), r"\1"),
     (re.compile(r"</?sup>", re.I), ""),
     (re.compile(r"^((<[bi]>)*)\((S|AN)[12]\)\s*", re.I), r"\1"),
     (re.compile(r"^(<b>Article )\d+\s*<s>\s*", re.I), r"\1"),
-    (re.compile(r"\s*<s>(.*)</s>\s*", re.I), " "),
+    (re.compile(r"<s>(.*)</s>", re.I), ""),
     (re.compile(r"</?s>", re.I), ""),
     (re.compile(r"\s*</?img>\s*", re.I), ""),
-    (re.compile(r"\s+", re.I), " "),
+    (re.compile(r"œ\s*", re.I), "oe"),
+    (re_clean_spaces, " "),
     (re.compile(r'^((<[^>]*>)*"[A-Z])([A-ZÉ]+ )'), lower_inner_title),
     (re.compile(r' pr..?liminaire', re.I), ' préliminaire')
 ]
@@ -125,15 +128,16 @@ def save_text(txt):
 blank_none = lambda x: x if x else ""
 re_cl_html = re.compile(r"<[^>]+>")
 re_cl_par  = re.compile(r"[()]")
-re_cl_uno  = re.compile(r"(premier|unique?)", re.I)
-re_mat_sec = re.compile(r"((chap|t)itre|volume|livre|tome|(sous-)?section)\s+(.+)e?r?", re.I)
+re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
+re_mat_sec = re.compile(r"((chap|t)itre|volume|livre|tome|(sous-)?section)(\s+(.+)e?r?)", re.I)
+re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
 re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
 re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*</b>\s*$")
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
 re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*)", re.I)
 re_mat_dots = re.compile(r"^[.…]+$")
-re_mat_st  = re.compile(r"(<i>|\()+\s*(non\s?-?)?(conform|modif|suppr|nouveau).{0,10}$", re.I)
+re_mat_st  = re.compile(r"(<i>|\()+\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,10}$", re.I)
 re_mat_new = re.compile(r"\s*\(\s*nouveau\s*\)\s*", re.I)
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
@@ -146,7 +150,7 @@ re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*par
 re_rap_mult = re.compile(r'[\s<>/ai]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
 re_clean_mult_1 = re.compile(r'\s*et\s*', re.I)
 re_clean_mult_2 = re.compile(r'[^,\d]', re.I)
-re_sep_text = re.compile(r'\s*<b>\s*(article|titre|chapitre|tome|volume|livre)\s*(I|unique|pr..?liminaire|(1|prem)i?e?r?)\s*</b>\s*$', re.I)
+re_sep_text = re.compile(r'\s*<b>\s*(article|titre|chapitre|tome|volume|livre)\s*(I|uniqu|pr..?limina|1|prem)[ier]*\s*</b>\s*$', re.I)
 re_stars = re.compile(r'^[\s*_]+$')
 re_art_uni = re.compile(r'\s*article\s*unique\s*$', re.I)
 read = art_num = ali_num = 0
@@ -191,8 +195,8 @@ for text in soup.find_all("p"):
         section_typ = m.group(1).upper()[0]
         if m.group(3) is not None:
             section_typ += "S"
-        section_num = re_cl_uno.sub("1", m.group(4).strip())
-        if re.match(r"\D", m.group(4)):
+        section_num = re_cl_uno.sub("1", m.group(5).strip())
+        if re.match(r"\D", m.group(5)):
             section_num = romans(section_num)
         # Get parent section id to build current section id
         section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"])
@@ -236,11 +240,16 @@ for text in soup.find_all("p"):
             continue
         line = re_clean_art_spaces.sub('', re_clean_idx_spaces.sub(r'\1. ', re_mat_new.sub(" ", re_cl_html.sub("", line)).strip()))
         # Clean low/upcase issues with BIS TER etc.
-        line = re_clean_bister.sub(lambda m: m.group(0).lower(), line)
+        line = re_clean_premier.sub(lambda m: (m.group(0).lower() if m.group(1) else "")+m.group(3)+"er", line)
+        line = re_clean_bister.sub(lambda m: m.group(1)+" "+m.group(2).lower(), line)
         # Clean different versions of same comment.
         line = re_clean_supr.sub('(Supprimé)', line)
         line = re_clean_conf.sub('(Non modifié)', line)
-        line = re_clean_subsec_space.sub(r'\1\4', line)
+        line = re_clean_subsec_space.sub(r'\1\4 \5', line)
+        line = re_clean_subsec_space2.sub(r'\1 \2 \3\4', line)
+        line = re_clean_punc_space.sub(r'\1 \2', line.decode('utf-8')).encode('utf-8')
+        line = re_clean_spaces.sub(' ', line)
+        line = re_mat_sec.sub(lambda x: x.group(1)[0].upper()+x.group(1)[1:].lower()+x.group(4) if re_mat_n.match(x.group(4)) else x.group(0), line)
         # Clean comments (Texte du Sénat), (Texte de la Commission), ...
         if ali_num == 0 and line.startswith('(Texte d'):
             continue
