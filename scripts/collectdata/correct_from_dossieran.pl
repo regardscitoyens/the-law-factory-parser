@@ -5,7 +5,7 @@ use utf8;
 
 @row = split(/;/, <STDIN>);
 if (!$row[4] || !$row[3]) {
-  print STDERR "WARNING: no dossier AN found, skipping corrector";
+  print STDERR "WARNING: no dossier AN found, skipping corrector\n";
   while ($#row > 10) {
     print join(';', @row);
     @row = split(/;/, <STDIN>);
