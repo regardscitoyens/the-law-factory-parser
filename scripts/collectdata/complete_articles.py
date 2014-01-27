@@ -58,7 +58,7 @@ def get_mark_from_last(text, start, last=""):
     try:
         start = make_sta_reg(start)
     except:
-        print >> sys.stderr, 'ERROR', start, text, last
+        print >> sys.stderr, 'ERROR', start.encode('utf-8'), text.encode('utf-8'), last.encode('utf-8')
         exit(1)
     if last:
         last = make_sta_reg(last)
@@ -134,7 +134,7 @@ for l in f:
                 log("DEBUG: Recovering art conformes %s à %s" % (st.encode('utf-8'), ed.encode('utf-8')))
                 mult_type = "conf"
             else:
-                print >> sys.stderr, "ERROR: Found multiple article which I don't knwo what to do with", line['titre'], line
+                print >> sys.stderr, "ERROR: Found multiple article which I don't knwo what to do with", line['titre'].encode('utf-8'), line
                 exit(1)
             line['titre'] = st
         cur = ""
@@ -160,7 +160,7 @@ for l in f:
                     write_json(a)
         if is_mult:
             if ed not in oldartids or cur != line['titre']:
-                print >> sys.stderr, "ERROR: dealing with multiple article ", line['titre'], "Could not find first or last part in last step"
+                print >> sys.stderr, "ERROR: dealing with multiple article ", line['titre'].encode('utf-8'), "Could not find first or last part in last step"
                 exit(1)
             while oldarts:
                 if mult_type == "sup" and not re_suppr.match(a["statut"]):
