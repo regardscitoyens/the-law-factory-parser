@@ -25,7 +25,6 @@ $a2 = WWW::Mechanize->new(autocheck => 0);
 
 $titrecourt = '';
 $titrelong = '';
-$legislature = 14;
 if ($content =~ /title>([^<\-]+) -/) {
     $titrecourt = $1;
     utf8::encode($titrecourt);
@@ -40,7 +39,10 @@ $content =~ s/<a name="[^"]*"><\/a>//g;
 $content =~ s/<li>Texte/<li><a href="UNKNOWN">Texte<\/a>/g;
 $content =~ s/<li>Rapport/<li><a href="UNKNOWN">Texte<\/a>/g;
 
-
+$legislature = "";
+if ($content =~ /nationale\.fr\/(\d+)\/dossier/) {
+    $legislature = $1;
+}
 if ($content =~ /timeline-1[^>]*<em>(\d{2})\/(\d{2})\/(\d{2})<\/em>/) {
 	print "date : $1/$2/$3\n";
 }
@@ -91,9 +93,10 @@ while ($ok) {
 	    $stade = 'depot';
 	}
     }elsif($t->[0] eq 'a' && $t->[1]{href} !~ /^\#/) {
-	if ($t->[1]{href} =~ /\/dossiers\/([^\.]+)\./) {
+	if ($t->[1]{href} =~ /\/(\d+)\/dossiers\/([^\.]+)\./) {
 		if ($1 !~ /_scr$/) {
-			$dossieran = $1;
+			$dossieran = $2;
+			$legislature = $1;
 		}
 	}
     $name = $p->get_text('/a');
@@ -231,10 +234,10 @@ while ($ok) {
 }
 
 $cpt = 0;
-print "dossier begining ; dossier title ; dossier title summarised ; an's dossier id ; senat's dossier id ; line id ; senat's step id ; stage ; chamber ; step ; bill url ; bill id ; date depot text; text date\n" if (shift);
+print "dossier begining ; dossier title ; dossier title summarised ; an's legislature ; an's dossier id ; senat's dossier id ; line id ; senat's step id ; stage ; chamber ; step ; bill url ; bill id ; date depot text; text date\n" if (shift);
 foreach $l (@lines) {
         $idline = sprintf("%02d", $cpt);
-	print "$date;$titrelong;$titrecourt;$dossieran;$dossiersenat;$idline;$l\n";
+	print "$date;$titrelong;$titrecourt;$legislature;$dossieran;$dossiersenat;$idline;$l\n";
 	$cpt++;
 }
 
@@ -242,7 +245,7 @@ if ($content =~ /Proc\S+dure acc\S+l\S+r\S+e/) {
     if ($content =~ /engag\S+e par le Gouvernement le (\d+) (\w+) (\d+)/) {
 	$annee = $3 ; $jour = $1 ; $mois = $2;
 	$mois=~s/[^a-z]//g;
-	print "$date;$titrelong;$titrecourt;$dossieran;$dossiersenat;XX;EXTRA;URGENCE;Gouvernement;URGENCE;;;$annee-".$mois{$mois}."-$jour;$annee-".$mois{$mois}."-$jour;\n";
+	print "$date;$titrelong;$titrecourt;$legislature;$dossieran;$dossiersenat;XX;EXTRA;URGENCE;Gouvernement;URGENCE;;;$annee-".$mois{$mois}."-$jour;$annee-".$mois{$mois}."-$jour;\n";
     }
 }
 exit;

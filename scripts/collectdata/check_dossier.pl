@@ -17,19 +17,19 @@ $errors = 0;
 while(<STDIN>) {
     chomp;
     @csv = split(/;/);
-    if (!$data[$csv[6]]) {
-	$data[$csv[6]] = $csv[8];
-    $extra[$csv[6]] = $csv[10];
-    $etapes[$csv[6]] = $csv[7];
-    }elsif ($data[$csv[6]-1] ne 'CMP' && $csv[6] ne 'EXTRA') {
-	print STDERR "WARNING: $id: duplicated entry ".$csv[6]."\n";
+    if (!$data[$csv[7]]) {
+	$data[$csv[7]] = $csv[9];
+    $extra[$csv[7]] = $csv[11];
+    $etapes[$csv[7]] = $csv[8];
+    }elsif ($data[$csv[7]-1] ne 'CMP' && $csv[7] ne 'EXTRA') {
+	print STDERR "WARNING: $id: duplicated entry ".$csv[7]."\n";
     }
-  if ($csv[10] ne "texte retire" && $csv[10] ne "renvoi en commission") {
-    if ($csv[10] !~ /^http/ && $csv[6] ne 'EXTRA') {
-	print "$id: not valid url ".$csv[10]."\n";
+  if ($csv[11] ne "texte retire" && $csv[11] ne "renvoi en commission") {
+    if ($csv[11] !~ /^http/ && $csv[7] ne 'EXTRA') {
+	print "$id: not valid url ".$csv[11]."\n";
 	$errors++;
-    }elsif($csv[8] =~ /assemblee|senat/ && $csv[10] !~ /$csv[8]/) {
-	print "$id: not a chambre url ".$csv[10]."\n";
+    }elsif($csv[9] =~ /assemblee|senat/ && $csv[11] !~ /$csv[9]/) {
+	print "$id: not a chambre url ".$csv[11]."\n";
 	$errors++;
     }
   }

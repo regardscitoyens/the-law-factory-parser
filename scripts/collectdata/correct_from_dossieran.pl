@@ -4,28 +4,16 @@ use WWW::Mechanize;
 use utf8;
 
 @row = split(/;/, <STDIN>);
-$legislature = 14;
-if($row[10] =~ /assemblee-?nationale\.fr\/(\d+)\//) {
-  $legislature = $1;
-}else {
-  $date = $row[13] || $row[12] || $row[0];
-  if($date lt "2012-06-29") {
-    $legislature = 13;
-  }elsif($date lt "2007-06-29") {
-    $legislature = 12;
-  }elsif($date gt "2017-06-29") {
-    $legislature = 15;
-  }
-}
-if (!$row[3]) {
-  while ($#row > 9) {
+if (!$row[4] || !$row[3]) {
+  print STDERR "WARNING: no dossier AN found, skipping corrector";
+  while ($#row > 10) {
     print join(';', @row);
     @row = split(/;/, <STDIN>);
   }
-  exit(0)
+  exit(0);
 }
 
-$url = "http://www.assemblee-nationale.fr/$legislature/dossiers/".$row[3].".asp";
+$url = "http://www.assemblee-nationale.fr/$row[3]/dossiers/".$row[4].".asp";
 $a = WWW::Mechanize->new();
 $a->get($url);
 $content = $a->content;
@@ -67,15 +55,15 @@ foreach (split(/\n/, $content)) {
     }
 }
 $i = 0;
-while ($#row > 9) {
-    if ($steps[$i] =~ /$row[8];$row[9]/) {
+while ($#row > 10) {
+    if ($steps[$i] =~ /$row[9];$row[10]/) {
 	@step = split(/;/, $steps[$i]);
-	print STDERR "WARNING: AN url differs on $chambre $stade (original: $row[10] ; new: $step[3])\n" if ($row[10] ne $step[3]);
-	$row[10] = $step[3];
-	$row[12] = $step[2];
+	print STDERR "WARNING: AN url differs on $chambre $stade (original: $row[11] ; new: $step[3])\n" if ($row[11] ne $step[3]);
+	$row[11] = $step[3];
+	$row[13] = $step[2];
 	$i++;
     }
-    print STDERR "WARNING: begining date missing $row[7];$row[8];$row[9]\n" unless ($row[12]);
+    print STDERR "WARNING: begining date missing $row[8];$row[9];$row[10]\n" unless ($row[13]);
     print join(';', @row);
     @row = split(/;/, <STDIN>);
 }

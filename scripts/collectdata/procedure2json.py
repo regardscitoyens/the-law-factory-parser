@@ -10,17 +10,17 @@ csvpath = sys.argv[1]
 projectdir = csvpath.replace('/procedure.csv', '')
 
 def row2dir(row):
-    return row[5]+'_'+row[7].replace(' ', '')+'_'+row[8]+'_'+row[9]
+    return row[6]+'_'+row[8].replace(' ', '')+'_'+row[9]+'_'+row[10]
 
 procedure = {'type': 'Normale'}
 steps = []
 with open(csvpath, 'rb') as csvfile:
     csvproc = csv.reader(csvfile, delimiter=';')
     for row in csvproc:
-        if len(row) < 14:
+        if len(row) < 15:
             row.append("")
-        step = {'date': row[12], 'enddate': row[13], 'stage': row[7], 'institution': row[8], 'source_url': row[10]}
-        if (row[6] != 'EXTRA'):
+        step = {'date': row[13], 'enddate': row[14], 'stage': row[8], 'institution': row[9], 'source_url': row[11]}
+        if (row[7] != 'EXTRA'):
             step['directory'] = row2dir(row)
             try:
                 if (os.stat(projectdir+'/'+step['directory']+'/amendements/amendements.csv')):
@@ -41,20 +41,20 @@ with open(csvpath, 'rb') as csvfile:
                         files.append(f.replace('.json', ''))
                 step['intervention_files'] = files
                 step['intervention_directory'] = step['directory']+'/interventions'
-            step['step'] = row[9]
+            step['step'] = row[10]
             step['resulting_text_directory'] =  row2dir(row)+'/texte'
-            if ((row[5] != 'XX') and (int(row[5]) > 0)):
+            if ((row[6] != 'XX') and (int(row[6]) > 0)):
                 step['working_text_directory'] = row2dir(prevrow)+'/texte'
             steps.append(step)
         else:
-            if (row[7] == 'URGENCE'):
+            if (row[8] == 'URGENCE'):
                 procedure['type'] = 'urgence'
             else:
                 steps.append(step)
         prevrow = row
     procedure['steps'] = steps
     procedure['beginning'] = steps[0]['date']
-    procedure['end'] = row[13]
+    procedure['end'] = row[14]
     procedure['long_title'] = row[1]
     procedure['short_title'] = row[2]
 

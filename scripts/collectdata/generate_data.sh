@@ -16,17 +16,17 @@ rm -f $data/.tmp/json/articles_laststep.json
 oldchambre=""
 cat $1 | while read line ; do 
   #Variables
-#  dossier=$(echo $line | awk -F ';' '{print $1"_"$4"_"$5}' | sed 's/-\([0-9]*\)-/\1/')
+#  dossier=$(echo $line | awk -F ';' '{print $1"_"$5"_"$6}' | sed 's/-\([0-9]*\)-/\1/')
   dossier="procedure"
-  etape=$(echo $line | sed 's/ //g' | awk -F ';' '{print $6"_"$8"_"$9"_"$10}')
+  etape=$(echo $line | sed 's/ //g' | awk -F ';' '{print $7"_"$9"_"$10"_"$11}')
   etapid=$(echo $etape | sed 's/^\([0-9]\+\)_.*$/\1/')
   projectdir=$data"/"$dossier"/"$etape
-  norder=$(echo $line | awk -F ';' '{print $7}')
-  order=$(echo $line | awk -F ';' '{print $6}')
-  url=$(echo $line | awk -F ';' '{print $11}')
+  norder=$(echo $line | awk -F ';' '{print $8}')
+  order=$(echo $line | awk -F ';' '{print $7}')
+  url=$(echo $line | awk -F ';' '{print $12}')
   escape=$(escapeit $url)
-  chambre=$(echo $line | awk -F ';' '{print $9}')
-  stage=$(echo $line | awk -F ';' '{print $10}')
+  chambre=$(echo $line | awk -F ';' '{print $10}')
+  stage=$(echo $line | awk -F ';' '{print $11}')
   
   mkdir -p "$data/$dossier"
   rm -rf "$projectdir"
@@ -90,9 +90,13 @@ cat $1 | while read line ; do
    cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_nouvlect.json
   fi
   if test "$amdidtext" && test "$oldchambre" = "$chambre" && test "$olddossier" = "$dossier"; then
-    urlchambre="http://www.nosdeputes.fr/14"
     if test "$chambre" = "senat"; then
-    	urlchambre="http://www.nossenateurs.fr"
+	  dossier_instit=$(echo $line | awk -F ';' '{print $6}')
+      urlchambre="http://www.nossenateurs.fr"
+    else
+      dossier_instit=$(echo $line | awk -F ';' '{print $5}')
+      legislature=$(echo $line | awk -F ';' '{print $4}')
+      urlchambre="http://www.nosdeputes.fr/$legislature"
     fi
 
     #Amendements export
@@ -112,10 +116,6 @@ cat $1 | while read line ; do
     if echo $etape | grep commission > /dev/null; then
       is_commission='?commission=1'
     fi
-    dossier_instit=$(echo $line | awk -F ';' '{print $4}')
-    if test "$chambre" = "senat"; then
-	dossier_instit=$(echo $line | awk -F ';' '{print $5}')
-    fi
     download "$urlchambre/seances/$amdidtext/csv$is_commission" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
       tmpseancecsv="."$id_seance".csv"
       download "$urlchambre/seance/$id_seance/$dossier_instit/csv" > $tmpseancecsv
@@ -132,7 +132,7 @@ cat $1 | while read line ; do
   fi
 
   #End
-  amdidtext=$(echo $line | awk -F ';' '{print $12}')
+  amdidtext=$(echo $line | awk -F ';' '{print $13}')
   oldchambre=$chambre
   olddossier=$dossier
   echo "INFO: data exported in $projectdir"
