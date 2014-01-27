@@ -87,7 +87,7 @@ for nstep, step in enumerate(steps):
         for root, dirs, files in os.walk(path):
             articleFiles = [os.path.abspath(os.path.join(root,f)) for f in files if re.search(r'^A.*', getParentFolder(root, f)) and re.search(r'^.*?json', f)]
             if last_step and len(articleFiles) != 1:
-                print >> sys.stderr, "INFO: skipping final text adopté renuméroté AN", step['directory']
+                print >> sys.stderr, "INFO: skipping final text adopté renuméroté AN", step['directory'].encode('utf-8')
                 break
             if len(articleFiles) > 0:
                 for articleFile in articleFiles:
