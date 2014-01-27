@@ -19,16 +19,19 @@ cat $1 | while read line ; do
 #  dossier=$(echo $line | awk -F ';' '{print $1"_"$4"_"$5}' | sed 's/-\([0-9]*\)-/\1/')
   dossier="procedure"
   etape=$(echo $line | sed 's/ //g' | awk -F ';' '{print $6"_"$8"_"$9"_"$10}')
+  etapid=$(echo $etape | sed 's/^\([0-9]\+\)_.*$/\1/')
   projectdir=$data"/"$dossier"/"$etape
+  norder=$(echo $line | awk -F ';' '{print $7}')
   order=$(echo $line | awk -F ';' '{print $6}')
   url=$(echo $line | awk -F ';' '{print $11}')
   escape=$(escapeit $url)
   chambre=$(echo $line | awk -F ';' '{print $9}')
+  stage=$(echo $line | awk -F ';' '{print $10}')
   
   mkdir -p "$data/$dossier"
   rm -rf "$projectdir"
   if test "$dossier" = "$olddossier"; then
-      if echo $line | grep -v ';depot;' > /dev/null ; then 
+      if [ "$norder" == "1" ] || echo $line | grep -v ';depot;' > /dev/null ; then 
 	  echo $line >>  "$data/$dossier/procedure.csv"
       fi
   else
@@ -44,8 +47,7 @@ cat $1 | while read line ; do
     echo "ERROR retrieving texte renvoyé en commission $data/.tmp/json/articles_antelaststep.json empty"
     exit 1
   fi
-  etapid=$(echo $etape | sed 's/^\([0-9]\+\)_.*$/\1/')
-  head -n 1 $data/.tmp/json/articles_antelaststep.json | sed 's/^\({"expose": "\).*"\(, "id": "\)\([0-9]\+\)\(_[^"]*", \)/\1Le texte est renvoyé en commission.", "echec": true\2'"$etapid"'\4/' $data/.tmp/json/articles_antelaststep.json > $data/.tmp/json/$escape
+  head -n 1 $data/.tmp/json/articles_antelaststep.json | sed 's/^{\("expose": "\).*"\(, "id": "\)\([0-9]\+\)\(_[^"]*", \)/{"echec": true, \1Le texte est renvoyé en commission."\2'"$etapid"'\4/' > $data/.tmp/json/$escape
   tail -n $(($(cat $data/.tmp/json/articles_antelaststep.json | wc -l) - 1)) $data/.tmp/json/articles_antelaststep.json >> $data/.tmp/json/$escape
  else 
   #Text export
@@ -57,22 +59,36 @@ cat $1 | while read line ; do
   fi
  fi
   # Complete articles with missing "conforme" or "non-modifié" text
-  if test -s $data/.tmp/json/articles_laststep.json; then
-    if ! python complete_articles.py $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json > $data/.tmp/json/$escape.tmp; then
+  if [ "$norder" != "1" ] && test -s $data/.tmp/json/articles_laststep.json; then
+    previous="$data/.tmp/json/articles_laststep.json"
+    if echo "$etape" | grep "_nouv.lect._senat_hemicycle" > /dev/null && grep '"type": "echec"' "$data/.tmp/json/$escape" > /dev/null; then
+      previous="$data/.tmp/json/articles_nouvlect.json"
+    fi
+    if ! python complete_articles.py $data/.tmp/json/$escape "$previous" > $data/.tmp/json/$escape.tmp; then
       echo "ERROR completing $data/.tmp/html/$escape"
       exit 1
     fi
     mv $data/.tmp/json/$escape{.tmp,}
   fi
-  if test -s $data/.tmp/json/articles_laststep.json; then
-    cp -f $data/.tmp/json/articles_laststep.json $data/.tmp/json/articles_antelaststep.json
+  if ! test -s $data/.tmp/json/$escape && [ "$stage" = "depot" ] && [ "$order" != "00" ]; then
+    echo "WARNING: creating depot step $projectdir from last step since no data found"
+    head -n 1 $data/.tmp/json/articles_laststep.json | sed 's/\("echec": true, \)\?\("expose": "\)[^"]*\(", "id": "\)\([0-9]\+\)\(_[^"]*", \)/\2\3'"$etapid"'\5/' > $data/.tmp/json/$escape
+    tail -n $(($(cat $data/.tmp/json/articles_laststep.json | wc -l) - 1)) $data/.tmp/json/articles_laststep.json >> $data/.tmp/json/$escape
   fi
-  cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
   if ! python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"; then
+    rm -rf "$projectdir"
     echo "ERROR creating arbo from $data/.tmp/json/$escape"
     exit 1
   fi
-  
+  if test -s $data/.tmp/json/articles_laststep.json; then
+    cp -f $data/.tmp/json/articles_laststep.json $data/.tmp/json/articles_antelaststep.json
+  fi
+  if [ "$norder" != "1"  ] || [ "$order" = "00" ]; then
+    cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
+  fi
+  if echo "$etape" | grep "_nouv.lect._assemblee_hemicycle" > /dev/null; then
+   cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_nouvlect.json
+  fi
   if test "$amdidtext" && test "$oldchambre" = "$chambre" && test "$olddossier" = "$dossier"; then
     urlchambre="http://www.nosdeputes.fr/14"
     if test "$chambre" = "senat"; then
