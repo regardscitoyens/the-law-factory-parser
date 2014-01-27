@@ -127,6 +127,7 @@ for l in f:
             ed = mult[1].strip()
             if re_suppr.match(line['statut']) or (len(alineas) == 1 and re_suppr.match(alineas[0])):
                 if (st not in oldartids and ed not in oldartids) or (st in oldstatus and re_suppr.match(oldstatus[st]) and ed in oldstatus and re_suppr.match(oldstatus[ed])):
+                    log("DEBUG: SKIP already deleted articles %s to %s" % (st.encode('utf-8'), ed.encode('utf-8')))
                     continue
                 log("DEBUG: Marking as deleted articles %s à %s" % (st.encode('utf-8'), ed.encode('utf-8')))
                 mult_type = "sup"
@@ -161,6 +162,7 @@ for l in f:
         if is_mult:
             if ed not in oldartids or cur != line['titre']:
                 if mult_type == "sup":
+                    print >> sys.stderr, "WARNING: could not find first or last part of mutliple article to be removed:", line['titre'].encode('utf-8'), "to", ed.encode('utf-8'), "(last found:", cur, ")"
                     continue
                 print >> sys.stderr, "ERROR: dealing with multiple article", line['titre'].encode('utf-8'), "to", ed.encode('utf-8'), "Could not find first or last part in last step (last found:", cur, ")"
                 exit(1)
@@ -234,6 +236,23 @@ for l in f:
         for i, t in enumerate(gd_text):
             line['alineas']["%03d" % (i+1)] = t
         write_json(line)
+
+while oldarts:
+    cur, a = oldarts.pop(0)
+    oldartids.remove(cur)
+    if a["statut"].startswith("conforme"):
+        log("DEBUG: Recovering art conforme %s" % cur.encode('utf-8'))
+        a["statut"] = "conforme"
+        a["order"] = order
+        order += 1
+        write_json(a)
+    elif not re_suppr.match(a["statut"]):
+        log("DEBUG: Marking art %s as supprimé" % cur.encode('utf-8'))
+        a["statut"] = "supprimé"
+        a["alineas"] = dict()
+        a["order"] = order
+        order += 1
+        write_json(a)
 
 f.close()
 
