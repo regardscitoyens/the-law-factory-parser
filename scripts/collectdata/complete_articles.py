@@ -49,39 +49,42 @@ except Exception as e:
 def write_json(data):
     print json.dumps(data, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
+bister = '(un|duo|tre|bis|qua|quint|quinqu|sex|sept|oct|nov|non|dec|ter|ies)+'
+make_sta_reg = lambda x: re.compile(r'^%s\s*(([\.°\-]+\s*)+)' % x)
+make_end_reg = lambda x: re.compile(r'^([LA][rRtT\.\s]+)?[IVX0-9]{1,4}([\-\.]+\d+)*(\s*%s)?%s' % (bister, x))
 def get_mark_from_last(text, start, last=""):
     log("- GET Extract from " + start + " to " + last)
     res = []
     try:
-        start = re.compile(r'^%s\s*(([\.°\-]+\s*)+)' % start)
+        start = make_sta_reg(start)
     except:
         print >> sys.stderr, 'ERROR', start, text, last
         exit(1)
     if last:
-        last = re.compile(r'^%s\s*(([\.°\-]+\s*)+)' % last)
+        last = make_sta_reg(last)
     re_end = None
     record = False
     for i in text:
-        sep = start.match(i)
+        matc = start.match(i)
         log("    TEST: " + i[:25])
         if re_end and re_end.match(i):
-            log("  --> END FOUND")
             if last:
-                re_end = re.compile(r'^[IVX0-9]{1,4}[%s]{1,4}' % sep)
+                re_end = make_end_reg(sep)
                 last = ""
             else:
+                log("  --> END FOUND")
                 record = False
                 break
-        elif sep:
-            sep = sep.group(1).strip()
+        elif matc:
+            sep = matc.group(1).strip()
             log("  --> START FOUND " + sep)
             record = True
             if last:
                 re_end = last
             else:
-                re_end = re.compile(r'^[IVX0-9]{1,4}[%s]{1,4}' % sep)
+                re_end = make_end_reg(sep)
         if record:
-            log("    copy alinea")
+            log("     copy alinea")
             res.append(i)
     return res
 
@@ -96,7 +99,7 @@ for l in f:
         continue
     line = json.loads(l)
     if not line or not "type" in line:
-        sys.stderr.write("JSON %s badly formatted, missing field type: %s" % (FILE, line))
+        sys.stderr.write("JSON %s badly formatted, missing field type: %s\n" % (FILE, line))
         sys.exit()
     if line["type"] == "echec":
         texte["echec"] = True
@@ -184,7 +187,7 @@ for l in f:
         # Clean empty articles with only "Non modifié" and include text from previous step
             if re_confo.match(text):
                 if not line['titre'] in oldstep:
-                    sys.stderr.write("WARNING: found repeated article %s missing from previous step %s: %s" % (line['titre'], FILE, line['alineas']))
+                    sys.stderr.write("WARNING: found repeated article %s missing from previous step %s: %s\n" % (line['titre'], FILE, line['alineas']))
                 else:
                     log("DEBUG: get back Art %s" % line['titre'])
                     alineas.pop(0)
@@ -193,12 +196,13 @@ for l in f:
         for j, text in enumerate(alineas):
             text = text.encode('utf-8')
             if "(Non modifi" in text and not line['titre'] in oldstep:
-                sys.stderr.write("WARNING: found repeated article missing %s from previous step %s: %s" % (line['titre'], FILE, line['alineas']))
+                sys.stderr.write("WARNING: found repeated article missing %s from previous step %s: %s\n" % (line['titre'], FILE, text))
             elif re_confo_with_txt.search(text):
                 text = re_confo_with_txt.sub(r' \2', text)
                 gd_text.append(text)
             elif "(Non modifi" in text:
-                part = re.split("\s*([\.°\-]+\s*)+", text)
+
+                part = re.split("\s*([\.°\-]+\s*)+\s*\(Non", text)
                 if not part:
                     log("ERROR trying to get non-modifiés")
                     exit(1)
