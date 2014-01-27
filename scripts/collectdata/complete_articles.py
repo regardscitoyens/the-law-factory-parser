@@ -51,7 +51,7 @@ def write_json(data):
 
 bister = '(un|duo|tre|bis|qua|quint|quinqu|sex|sept|oct|nov|non|dec|ter|ies)+'
 make_sta_reg = lambda x: re.compile(r'^%s\s*(([\.°\-]+\s*)+)' % x)
-make_end_reg = lambda x: re.compile(r'^([LA][rRtT\.\s]+)?[IVX0-9]{1,4}([\-\.]+\d+)*(\s*%s)?%s' % (bister, x))
+make_end_reg = lambda x: re.compile(r'^([LA][LArRtT\.\s]+)?[IVX0-9]{1,4}([\-\.]+\d+)*(\s*%s)?%s' % (bister, x))
 def get_mark_from_last(text, start, last=""):
     log("- GET Extract from " + start + " to " + last)
     res = []
