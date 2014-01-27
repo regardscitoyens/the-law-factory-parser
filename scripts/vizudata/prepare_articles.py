@@ -49,7 +49,25 @@ out = {'law_title': title, 'articles': {}, 'short_title': properties.get("short_
 step_id = ''
 old_step_id = ''
 steps = properties['steps']
-nsteps = len(["" for a in steps if a['stage'] not in ['promulgation',u'constitutionnalité']]) - 1
+first = steps.pop(0)
+otherfst = []
+depots = 1
+while len(steps):
+    step = steps.pop(0)
+    if step['step'] != 'depot':
+        steps.insert(0, step)
+        break
+    depots += 1
+    if "/leg/pjl" in step['source_url']:
+        otherfst.append(first)
+        first = dict(step)
+    else:
+        otherfst.append(step)
+otherfst.append(first)
+otherfst.extend(steps)
+steps = otherfst
+
+nsteps = len(["" for a in steps if a['stage'] not in ['promulgation', u'constitutionnalité']]) - 1
 for nstep, step in enumerate(steps):
     last_step = (nstep == nsteps and
       step['institution'] == 'assemblee' and
@@ -64,7 +82,7 @@ for nstep, step in enumerate(steps):
         path = os.path.join(sourcedir, step['resulting_text_directory'])
         if step_id:
             old_step_id = step_id
-        step_id = step['directory']
+        step_id = "%02d%s" % (nstep, step['directory'][2:])
 
         for root, dirs, files in os.walk(path):
             articleFiles = [os.path.abspath(os.path.join(root,f)) for f in files if re.search(r'^A.*', getParentFolder(root, f)) and re.search(r'^.*?json', f)]
@@ -85,8 +103,8 @@ for nstep, step in enumerate(steps):
                             if st['id_step'] == old_step_id:
                                 oldtext = st['text']
                                 break
-                        if not oldtext:
-                            s['status'] = 'new'
+                        if not oldtext or nstep < depots:
+                            s['status'] = 'new' if nstep >= depots else 'none'
                             s['diff'] = 'add'
                             s['n_diff'] = 1
                         elif s['status'] == "sup":
@@ -129,7 +147,7 @@ for nstep, step in enumerate(steps):
                         s = create_step(step_id, article)
                         s['n_diff'] = 1
                         s['diff'] = 'add'
-                        if nstep:
+                        if nstep >= depots:
                             s['status'] = 'new'
                         else:
                             s['status'] = 'none'
