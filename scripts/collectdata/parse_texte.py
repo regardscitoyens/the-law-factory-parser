@@ -66,6 +66,7 @@ re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4}
 re_clean_subsec_space2 = re.compile(r'^("?[IVX0-9]{1,4})\s*([a-z]*)\s*([A-H]{1,4})([\.°\-])', re.I)
 re_clean_punc_space = re.compile(u'([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])')
 re_clean_spaces = re.compile(r'\s+')
+re_clean_coord = re.compile(r'^["\(]*(pour)?\s*coordination[\)\s\.]*$', re.I)
 # Clean html and special chars
 lower_inner_title = lambda x: x.group(1)+x.group(3).lower()
 html_replace = [
@@ -245,6 +246,7 @@ for text in soup.find_all("p"):
         # Clean different versions of same comment.
         line = re_clean_supr.sub('(Supprimé)', line)
         line = re_clean_conf.sub('(Non modifié)', line)
+        line = re_clean_coord.sub('', line)
         line = re_clean_subsec_space.sub(r'\1\4 \5', line)
         line = re_clean_subsec_space2.sub(r'\1 \2 \3\4', line)
         line = re_clean_punc_space.sub(r'\1 \2', line.decode('utf-8')).encode('utf-8')
