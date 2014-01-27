@@ -58,8 +58,9 @@ $i = 0;
 while ($#row > 10) {
     if ($steps[$i] =~ /$row[9];$row[10]/) {
 	@step = split(/;/, $steps[$i]);
-	print STDERR "WARNING: AN url differs on $chambre $stade (original: $row[11] ; new: $step[3])\n" if ($row[11] ne $step[3]);
-	$row[11] = $step[3];
+	print STDERR "WARNING: AN url differs on $chambre $stade (from Senat: $row[11] ; from AN: $step[3])\n" if ($row[11] ne $step[3]);
+#   Keep warnings but don't rewrite urls since Senate rebuilt data is most of the times better than AN's
+#	$row[11] = $step[3];
 	$row[13] = $step[2];
 	$i++;
     }
