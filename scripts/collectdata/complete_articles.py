@@ -162,11 +162,11 @@ for l in f:
         if is_mult:
             if ed not in oldartids or cur != line['titre']:
                 if mult_type == "sup":
-                    print >> sys.stderr, "WARNING: could not find first or last part of mutliple article to be removed:", line['titre'].encode('utf-8'), "to", ed.encode('utf-8'), "(last found:", cur, ")"
+                    print >> sys.stderr, "WARNING: could not find first or last part of multiple article to be removed:", line['titre'].encode('utf-8'), "to", ed.encode('utf-8'), "(last found:", cur, ")"
                     continue
                 print >> sys.stderr, "ERROR: dealing with multiple article", line['titre'].encode('utf-8'), "to", ed.encode('utf-8'), "Could not find first or last part in last step (last found:", cur, ")"
                 exit(1)
-            while oldarts:
+            while True:
                 if mult_type == "sup" and not re_suppr.match(a["statut"]):
                     log("DEBUG: Marking art %s as supprimé" % cur.encode('utf-8'))
                     a["statut"] = "supprimé"
@@ -180,7 +180,7 @@ for l in f:
                     a["order"] = order
                     order += 1
                     write_json(a)
-                if cur == ed:
+                if cur == ed or not oldarts:
                     break
                 cur, a = oldarts.pop(0)
             continue
