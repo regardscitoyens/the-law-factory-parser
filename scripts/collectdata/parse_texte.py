@@ -140,6 +140,7 @@ re_mat_end = re.compile(r"(<i>Délibéré|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</
 re_mat_dots = re.compile(r"^[.…]+$")
 re_mat_st  = re.compile(r"(<i>|\()+\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,10}$", re.I)
 re_mat_new = re.compile(r"\s*\(\s*nouveau\s*\)\s*", re.I)
+re_mat_texte = re.compile(r'\(texte d', re.I)
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
 re_clean_conf = re.compile(r"\((conforme|non[\s-]*modifi..?)s?\)", re.I)
@@ -260,7 +261,7 @@ for text in soup.find_all("p"):
         line = re_clean_spaces.sub(' ', line)
         line = re_mat_sec.sub(lambda x: x.group(1)[0].upper()+x.group(1)[1:].lower()+x.group(4) if re_mat_n.match(x.group(4)) else x.group(0), line)
         # Clean comments (Texte du Sénat), (Texte de la Commission), ...
-        if ali_num == 0 and line.startswith('(Texte d'):
+        if ali_num == 0 and re_mat_texte.match(line):
             continue
         line = line.strip()
         if line:
