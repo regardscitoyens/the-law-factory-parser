@@ -31,7 +31,7 @@ cat $1 | while read line ; do
   mkdir -p "$data/$dossier"
   rm -rf "$projectdir"
   if test "$dossier" = "$olddossier"; then
-      if [ "$norder" == "1" ] || echo $line | grep -v ';depot;' > /dev/null ; then 
+      if [ "$norder" = "1" ] || [ "$stage" != 'depot' ] || ([ "$chambre" = "senat" ] && [ "$norder" = "4" ]); then 
 	  echo $line >>  "$data/$dossier/procedure.csv"
       fi
   else
@@ -58,8 +58,8 @@ cat $1 | while read line ; do
     exit 1
   fi
  fi
-  # Complete articles with missing "conforme" or "non-modifié" text
-  if [ "$norder" != "1" ] && test -s $data/.tmp/json/articles_laststep.json; then
+  # Complete articles with missing "conforme" or "non-modifié" text for all steps except depots 1ère lecture
+  if [ "$norder" != "1" ] && [ "$norder" != 4 ] && test -s $data/.tmp/json/articles_laststep.json; then
     previous="$data/.tmp/json/articles_laststep.json"
     if echo "$etape" | grep "_nouv.lect._senat_hemicycle" > /dev/null && grep '"type": "echec"' "$data/.tmp/json/$escape" > /dev/null; then
       previous="$data/.tmp/json/articles_nouvlect.json"
@@ -83,7 +83,7 @@ cat $1 | while read line ; do
   if test -s $data/.tmp/json/articles_laststep.json; then
     cp -f $data/.tmp/json/articles_laststep.json $data/.tmp/json/articles_antelaststep.json
   fi
-  if [ "$norder" != "1"  ] || [ "$order" = "00" ]; then
+  if [ "$norder" != "1" ] || [ "$order" = "00" ]; then
     cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
   fi
   if echo "$etape" | grep "_nouv.lect._assemblee_hemicycle" > /dev/null; then

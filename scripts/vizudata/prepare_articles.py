@@ -48,24 +48,22 @@ out = {'law_title': title, 'articles': {}, 'short_title': properties.get("short_
 
 step_id = ''
 old_step_id = ''
-steps = properties['steps']
-first = steps.pop(0)
+tmpsteps = properties['steps']
+# Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
+first = tmpsteps.pop(0)
 otherfst = []
+steps = []
 depots = 1
-while len(steps):
-    step = steps.pop(0)
-    if step['step'] != 'depot':
-        steps.insert(0, step)
-        break
-    depots += 1
-    if "/leg/pjl" in step['source_url']:
-        otherfst.append(first)
+for step in tmpsteps:
+    if not 'step' in step or step['step'] != 'depot':
+        steps.append(step)
+    elif "/leg/pjl" in step['source_url']:
+        steps.insert(0, first)
         first = dict(step)
     else:
-        otherfst.append(step)
-otherfst.append(first)
-otherfst.extend(steps)
-steps = otherfst
+        steps.insert(0, step)
+        depots += 1
+steps.insert(0, first)
 
 nsteps = len(["" for a in steps if a['stage'] not in ['promulgation', u'constitutionnalité']]) - 1
 for nstep, step in enumerate(steps):
@@ -80,8 +78,6 @@ for nstep, step in enumerate(steps):
         continue
     try:
         path = os.path.join(sourcedir, step['resulting_text_directory'])
-        if step_id:
-            old_step_id = step_id
         step_id = "%02d%s" % (nstep, step['directory'][2:])
 
         for root, dirs, files in os.walk(path):
@@ -150,7 +146,7 @@ for nstep, step in enumerate(steps):
                         if nstep >= depots:
                             s['status'] = 'new'
                         else:
-                            s['status'] = 'none'
+                            s['status'] = 'depot'
                         txt = " ".join(s['text'])
                     if s['status'] == 'sup':
                         s['length'] = 50
@@ -158,8 +154,11 @@ for nstep, step in enumerate(steps):
                     else:
                         s['length'] = len(txt)
                     out['articles'][id]['steps'].append(s)
+        if 'step' in step and (step['step'] != 'depot' or nstep == 0):
+            old_step_id = step_id
 
     except Exception as e:
         sys.stderr.write("ERROR parsing step %s:\n%s: %s\n" % (step, type(e), e))
         exit(1)
+
 print json.dumps(out, ensure_ascii=False).encode('utf8')
