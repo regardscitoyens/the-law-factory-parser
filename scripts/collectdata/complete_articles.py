@@ -16,7 +16,9 @@ except:
     log("ERROR: Cannot open json file %s" % FILE)
     sys.exit()
 
+find_num = re.compile(r'-[a-z]*(\d+)$')
 try:
+    oldnum = 0
     oldstep = {}
     oldjson =  []
     oldstatus = {}
@@ -32,6 +34,8 @@ try:
                 sys.exit()
             if line["type"] != "texte":
                 oldjson.append(line)
+            else:
+                oldnum = int(find_num.search(line['id']).group(1))
             if line["type"] == "article":
                 keys = line['alineas'].keys()
                 keys.sort()
@@ -39,8 +43,6 @@ try:
                 oldstatus[line["titre"]] = line['statut']
                 oldartids.append(line["titre"])
                 oldarts.append((line["titre"], line))
-
-
 except Exception as e:
     print >> sys.stderr, type(e), e
     log("No previous step found at %s" % sys.argv[2])
@@ -66,7 +68,7 @@ def get_mark_from_last(text, start, last=""):
     record = False
     for i in text:
         matc = start.match(i)
-        log("    TEST: " + i[:25])
+        log("    TEST: " + i[:50])
         if re_end and re_end.match(i):
             if last:
                 re_end = make_end_reg(sep)
@@ -101,6 +103,8 @@ for l in f:
     if not line or not "type" in line:
         sys.stderr.write("JSON %s badly formatted, missing field type: %s\n" % (FILE, line))
         sys.exit()
+    if oldnum and 'source_text' in line and oldnum != line['source_text']:
+        continue
     if line["type"] == "echec":
         texte["echec"] = True
         texte["expose"] = line["texte"]

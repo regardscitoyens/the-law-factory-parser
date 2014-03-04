@@ -150,6 +150,7 @@ re_echec_hemi2 = re.compile(r"de loi a été rejetée par l('Assemblée national
 re_echec_com = re.compile(r" la commission .*(effet est d'entraîner le rejet du|a rejeté le|n'a pas adopté [ld]e) texte[.\s]", re.I)
 re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*parven(u[es]?|ir) à (élaborer )?un texte commun)", re.I)
 re_rap_mult = re.compile(r'[\s<>/ai]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
+re_src_mult = re.compile(r'^- L(?:A PROPOSITION|E PROJET) DE LOI n°\s*(\d+)\D')
 re_clean_mult_1 = re.compile(r'\s*et\s*', re.I)
 re_clean_mult_2 = re.compile(r'[^,\d]', re.I)
 re_sep_text = re.compile(r'\s*<b>\s*(article|titre|chapitre|tome|volume|livre)\s*(I|uniqu|pr..?limina|1|prem)[ier]*\s*</b>\s*$', re.I)
@@ -160,6 +161,7 @@ section_id = ""
 article = None
 indextext = -1
 curtext = -1
+srclst = []
 section = {"type": "section", "id": ""}
 for text in soup.find_all("p"):
     line = clean_html(str(text))
@@ -168,9 +170,14 @@ for text in soup.find_all("p"):
         continue
     if line == "<b>RAPPORT</b>":
         read = -1
-    if indextext != -1 and re_sep_text.match(line):
+    if (srclst or indextext != -1) and re_sep_text.match(line):
         curtext += 1
-    if re_rap_mult.match(line):
+        art_num = 0
+    srcl = re_src_mult.search(line)
+    if srcl and read < 1:
+        srclst.append(int(srcl.group(1)))
+        continue
+    elif re_rap_mult.match(line):
         line = re_cl_html.sub("", line)
         line = re_clean_mult_1.sub(",", line)
         line = re_clean_mult_2.sub("", line)
@@ -215,6 +222,8 @@ for text in soup.find_all("p"):
             art_num += 1
             ali_num = 0
             article = {"type": "article", "order": art_num, "alineas": {}, "statut": "none"}
+            if srclst:
+                article["source_text"] = srclst[curtext]
             m = re_mat_art.match(line)
             article["titre"] = re_cl_uno.sub("1er", m.group(1).strip())
             if m.group(2) is not None:
