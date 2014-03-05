@@ -6,7 +6,7 @@ if [ -z "$1" ]; then
   mkdir -p data/.cache
   curl -sL http://data.senat.fr/data/dosleg/dossiers-legislatifs.csv |
    iconv -f "iso-8859-15" -t "utf-8" > data/.cache/list_dossiers_senat.csv
-  head -n 1 data/.cache/list_dossiers_senat.csv > data/dossiers_promulgues.csv
+  head -n 1 data/.cache/list_dossiers_senat.csv | sed 's/^/id;/' > data/dossiers_promulgues.csv
 fi
 
 cat data/.cache/list_dossiers_senat.csv     |
