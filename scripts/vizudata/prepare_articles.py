@@ -10,7 +10,13 @@ except:
 
 sourcedir = sys.argv[1]
 if not sourcedir:
-    sys.stderr.write('Error could not find directory at %s' % sourcedir)
+    sys.stderr.write('Error, no input directory given')
+    exit(1)
+try:
+    with open(os.path.join(sourcedir, 'procedure.json'), "r") as procedure:
+        procedure = json.load(procedure)
+except:
+    sys.stderr.write('Error: could not find or load procedure.json in directory %s' % sourcedir)
     exit(1)
 
 def getParentFolder(root, f):
@@ -40,15 +46,13 @@ def create_step(step_id, article):
     s['order'] = article['order']
     return s
 
-with open(os.path.join(sourcedir, 'procedure.json'), "r") as properties:
-    properties = json.load(properties)
-title = properties.get("long_title", "Missing title").replace(properties.get("short_title", "").lower(), properties.get("short_title", ""))
+title = procedure.get("long_title", "Missing title").replace(procedure.get("short_title", "").lower(), procedure.get("short_title", ""))
 title = title[0].upper() + title[1:]
-out = {'law_title': title, 'articles': {}, 'short_title': properties.get("short_title", "")}
+out = {'law_title': title, 'articles': {}, 'short_title': procedure.get("short_title", "")}
 
 step_id = ''
 old_step_id = ''
-tmpsteps = properties['steps']
+tmpsteps = procedure['steps']
 # Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
 first = tmpsteps.pop(0)
 otherfst = []
