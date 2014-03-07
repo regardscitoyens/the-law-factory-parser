@@ -16,7 +16,7 @@ except:
     log("ERROR: Cannot open json file %s" % FILE)
     sys.exit()
 
-find_num = re.compile(r'-[a-z]*(\d+)$')
+find_num = re.compile(r'-[a-z]*(\d+)\D?$')
 try:
     oldnum = 0
     oldstep = {}

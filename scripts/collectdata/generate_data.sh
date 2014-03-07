@@ -120,7 +120,7 @@ cat $1 | while read line ; do
       tmpseancecsv="."$id_seance".csv"
       download "$urlchambre/seance/$id_seance/$dossier_instit/csv" > $tmpseancecsv
       if head -n 1 $tmpseancecsv  | grep -v '404' | grep '[a-z]' > /dev/null; then
-	seance_name=$(head -n 2 $tmpseancecsv | tail -n 1 | awk -F ';' '{print $4 "T" $5 "_" $1}' | sed 's/ //g')
+        seance_name=$(head -n 2 $tmpseancecsv | tail -n 1 | awk -F ';' '{print $4 "T" $5 "_" $1}' | sed 's/ //g')
         mkdir -p $inter_dir
         cat $tmpseancecsv > $inter_dir/$seance_name.csv
         download "$urlchambre/seance/$id_seance/$dossier_instit/json" > $inter_dir/$seance_name.json
