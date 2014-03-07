@@ -18,7 +18,7 @@ except:
     sys.stderr.write('Error: could not find procedure data in directory %s' % sourcedir)
     exit(1)
 
-def init_section(dic, key, inter):
+def init_section(dic, key, inter, order):
     if inter[key] not in dic:
         dic[inter[key]] = {
             'source': inter['source'],
@@ -29,8 +29,11 @@ def init_section(dic, key, inter):
             'total_intervs': 0,
             'total_mots': 0,
             'groupes': {},
-            'orateurs': {}
+            'orateurs': {},
+            'order': order
         }
+        order += 1
+    return order
 
 def add_intervs(dic, key, inter):
     if key not in dic:
@@ -49,6 +52,7 @@ for step in procedure['steps']:
     if not ('has_interventions' in step and step['has_interventions']):
         continue
     intervs = []
+    step['intervention_files'].sort()
     for interv_file in step['intervention_files']:
         try:
             with open(os.path.join(sourcedir, 'procedure', step['intervention_directory'], "%s.json" % interv_file)) as interv_file:
@@ -57,13 +61,16 @@ for step in procedure['steps']:
             sys.stderr.write('Error: intervention file %s listed in procedure.json missing from dir %s of %s' % (interv_file, step['intervention_directory'], sourcedir))
             exit(1)
 
+    chambre = 'Assemblée nationale' if 'url_nosdeputes' in intervs[0]['intervention'] else 'Sénat'
+
     # By default divide in subsections, or by seance if no subsection
     sections = {}
     seances = {}
+    sec_order = se_order = 1
     for i in intervs:
         i['intervention']['intervenant_fonction'] = i['intervention'].get('intervenant_fonction', '') or ''
-        init_section(seances, 'seance_titre', i['intervention'])
-        init_section(sections, 'soussection', i['intervention'])
+        se_order = init_section(seances, 'seance_titre', i['intervention'], se_order)
+        sec_order = init_section(sections, 'soussection', i['intervention'], sec_order)
     sectype = 'soussection'
     if len(sections) < 2:
         sectype = 'seance_titre'
