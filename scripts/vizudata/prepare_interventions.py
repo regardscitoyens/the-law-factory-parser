@@ -23,7 +23,6 @@ def init_section(dic, key, inter, order):
         dic[inter[key]] = {
             'source': inter['source'],
             'link': inter.get('url_nosdeputes', inter.get('url_nossenateurs')),
-           # 'chambre': 'Assemblée nationale' if 'url_nosdeputes' in inter else 'Sénat',
            # 'date': inter['date'],
            # 'moment': inter['heure'],
             'total_intervs': 0,
@@ -38,15 +37,19 @@ def init_section(dic, key, inter, order):
 def add_intervs(dic, key, inter):
     if key not in dic:
         dic[key] = {
-            'nom': key,
-           # 'groupe': inter['intervenant_groupe'],
-            'fonction': inter['intervenant_fonction'],
             'nb_intervs': 0,
             'nb_mots': 0
         }
     dic[key]['nb_intervs'] += 1
     dic[key]['nb_mots'] += int(inter['nbmots'])
 
+def personalize_link(link, inter, chambre):
+    if inter['intervenant_slug']:
+        return link.replace("##TYPE##", "senateur" if chambre == "Sénat" else "depute").replace("##SLUG##", inter['intervenant_slug'])
+    return ""
+
+photos_root_url = "http://www.nos##TYPE##s.fr/##TYPE##/photo/##SLUG##"
+mps_root_url = "http://www.nos##TYPE##s.fr/##SLUG##"
 steps = {}
 for step in procedure['steps']:
     if not ('has_interventions' in step and step['has_interventions']):
@@ -92,6 +95,10 @@ for step in procedure['steps']:
         if i['intervenant_fonction']:
             orateur += ", %s" % i['intervenant_fonction']
         add_intervs(sections[i[sectype]]['orateurs'], orateur, i)
+        sections[i[sectype]]['orateurs'][orateur]['groupe'] = i['intervenant_groupe']
+        sections[i[sectype]]['orateurs'][orateur]['fonction'] = i['intervenant_fonction']
+        sections[i[sectype]]['orateurs'][orateur]['link'] = personalize_link(mps_root_url, i, chambre)
+        sections[i[sectype]]['orateurs'][orateur]['photo'] = personalize_link(photos_root_url, i, chambre)
     steps[step['directory']] = sections
 
 print json.dumps(steps, ensure_ascii=False).encode('utf8')
