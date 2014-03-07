@@ -55,19 +55,22 @@ old_step_id = ''
 tmpsteps = procedure['steps']
 # Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
 first = tmpsteps.pop(0)
-otherfst = []
+firsts_sen = []
 steps = []
-depots = 1
 for step in tmpsteps:
     if not 'step' in step or step['step'] != 'depot':
         steps.append(step)
-    elif "/leg/pjl" in step['source_url']:
-        steps.insert(0, first)
-        first = dict(step)
     else:
-        steps.insert(0, step)
-        depots += 1
+        firsts_sen.insert(0, step)
+depots = 1
+depots_sen = len(firsts_sen)
+if "/leg/pjl" in first['source_url'] or "/leg/ppl" in first['source_url']:
+    depots_sen += 1
 steps.insert(0, first)
+if depots_sen > 1:
+    for f in firsts_sen:
+        steps.insert(0, f)
+        depots += 1
 
 nsteps = len(["" for a in steps if a['stage'] not in ['promulgation', u'constitutionnalité']]) - 1
 for nstep, step in enumerate(steps):
