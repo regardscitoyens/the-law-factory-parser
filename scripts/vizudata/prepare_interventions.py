@@ -79,6 +79,8 @@ for step in procedure['steps']:
         sectype = 'seance_titre'
         sections = seances
 
+    groupes = []
+    orateurs = []
     for inter in intervs:
         i = inter['intervention']
         if not i['intervenant_nom']:
@@ -88,17 +90,21 @@ for step in procedure['steps']:
 
         # Consider as separate groups cases such as: personnalités, présidents and rapporteurs
         gpe = u"présidence" if i['intervenant_fonction'] in [u"président", u"présidente"] else i['intervenant_fonction'] if not i['intervenant_slug'] or i['intervenant_fonction'].startswith('rapporte') else i['intervenant_groupe']
+        if gpe not in groupes:
+            groupes.append(gpe)
         add_intervs(sections[i[sectype]]['groupes'], gpe, i)
 
         # Consider as two separate speakers a same perso with two different fonctions
         orateur = i['intervenant_nom']
         if i['intervenant_fonction']:
             orateur += ", %s" % i['intervenant_fonction']
+        if orateur not in orateurs:
+            orateurs.append(orateur)
         add_intervs(sections[i[sectype]]['orateurs'], orateur, i)
         sections[i[sectype]]['orateurs'][orateur]['groupe'] = i['intervenant_groupe']
         sections[i[sectype]]['orateurs'][orateur]['fonction'] = i['intervenant_fonction']
         sections[i[sectype]]['orateurs'][orateur]['link'] = personalize_link(mps_root_url, i, chambre)
         sections[i[sectype]]['orateurs'][orateur]['photo'] = personalize_link(photos_root_url, i, chambre)
-    steps[step['directory']] = sections
+    steps[step['directory']] = {'groupes': groupes, 'orateurs': orateurs, 'divisions': sections}
 
 print json.dumps(steps, ensure_ascii=False).encode('utf8')
