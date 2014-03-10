@@ -32,9 +32,10 @@ def unifyStatus(status):
         return "new"
     return "none"
 
-def create_step(step_id, article):
+def create_step(step_id, directory, article):
     s = {}
     s['id_step'] = step_id
+    s['directory'] = directory
     if article.get('statut'):
         s['status'] = unifyStatus(article['statut'])
     else:
@@ -99,7 +100,7 @@ for nstep, step in enumerate(steps):
 
                     id = article['titre'].replace(' ', '_')
                     if out['articles'].get(id):
-                        s = create_step(step_id, article)
+                        s = create_step(step_id, step['directory'], article)
                         txt = " ".join(s['text'])
                         oldtext = None
                         for st in out['articles'][id]['steps']:
@@ -147,7 +148,7 @@ for nstep, step in enumerate(steps):
                         else:
                             out['articles'][id]['section'] = 'none'
                         out['articles'][id]['steps'] = []
-                        s = create_step(step_id, article)
+                        s = create_step(step_id, step['directory'], article)
                         s['n_diff'] = 1
                         s['diff'] = 'add'
                         if nstep >= depots:
