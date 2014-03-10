@@ -57,6 +57,8 @@ with open(csvpath, 'rb') as csvfile:
     procedure['end'] = row[14]
     procedure['long_title'] = row[1]
     procedure['short_title'] = row[2]
+    procedure['url_dossier_senat'] = "http://www.senat.fr/dossier-legislatif/%s.html" % row[5]
+    procedure['url_dossier_assemblee'] = "http://www.assemblee-nationale.fr/%s/dossiers/%s.asp" % (row[3], row[4])
 
     print json.dumps(procedure, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
