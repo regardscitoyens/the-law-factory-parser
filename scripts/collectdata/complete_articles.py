@@ -52,8 +52,9 @@ def write_json(data):
     print json.dumps(data, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
 bister = '(un|duo|tre|bis|qua|quint|quinqu|sex|sept|oct|nov|non|dec|ter|ies)+'
-make_sta_reg = lambda x: re.compile(r'^%s\s*(([\.°\-]+\s*)+)' % x)
-make_end_reg = lambda x: re.compile(r'^([LA][LArRtT\.\s]+)?[IVX0-9]{1,4}([\-\.]+\d+)*(\s*%s)?%s' % (bister, x))
+make_sta_reg = lambda x: re.compile(r'^"?(?:Art[\s\.]*)?%s\s*(([\.°\-]+\s*)+)' % x)
+make_end_reg = lambda x: re.compile(r'^"?([LA][LArRtTO\.\s]+)?[IVX0-9\-]{1,6}([\-\.]+\d+)*(\s*%s)?%s' % (bister, x))
+re_sect_chg = re.compile(r'^"?((chap|t)itre|volume|livre|tome|(sous-)?section)\s+[1-9IVX]', re.I)
 def get_mark_from_last(text, start, last=""):
     log("- GET Extract from " + start + " to " + last)
     res = []
@@ -69,7 +70,7 @@ def get_mark_from_last(text, start, last=""):
     for i in text:
         matc = start.match(i)
         log("    TEST: " + i[:50])
-        if re_end and re_end.match(i):
+        if re_end and (re_end.match(i) or re_sect_chg.match(i)):
             if last:
                 re_end = make_end_reg(sep)
                 last = ""
