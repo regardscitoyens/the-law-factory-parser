@@ -60,6 +60,22 @@ def romans(n):
             i += len(r)
     return res
 
+upcase_accents = "ÇÀÂÄÉÈÊËÎÏÔÖÙÛÜ"
+locase_accents = "çàâäéèêëîïôöùûü"
+def real_lower(text):
+    for a in upcase_accents:
+        text = text.replace(a, locase_accents[upcase_accents.find(a)])
+    return text.lower()
+def lower_but_first(text):
+    return text[0].upper() + real_lower(text[1:])
+re_fullupcase = re.compile("^([\W0-9]*)([A-Z%s][\W0-9A-Z%s]*)$" % (upcase_accents, upcase_accents), re.U)
+def clean_full_upcase(text):
+    mat = re_fullupcase.match(text)
+    if mat:
+        text = mat.group(1) + lower_but_first(mat.group(2))
+    return text
+
+section_titles = "((chap|t)itre|volume|livre|tome|(sous-)?section)"
 re_clean_premier = re.compile(r'((PREM)?)(1|I)ER?')
 re_clean_bister = re.compile(r'([IXV\d]+e?r?)\s+((un|duo|tre|bis|qua|quint|quinqu|sex|sept|oct|nov|non|dec|ter|ies)+)', re.I)
 re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]+)\s*([^\s\)])', re.I)
@@ -68,7 +84,7 @@ re_clean_punc_space = re.compile(u'([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])'
 re_clean_spaces = re.compile(r'\s+')
 re_clean_coord = re.compile(r'^["\(]*(pour)?\s*coordination[\)\s\.]*$', re.I)
 # Clean html and special chars
-lower_inner_title = lambda x: x.group(1)+x.group(3).lower()
+lower_inner_title = lambda x: x.group(1)+lower_but_first(x.group(3))+" "
 html_replace = [
     (re.compile(r" "), " "),
     (re.compile(r'(«\s+|\s+»)'), '"'),
@@ -92,7 +108,7 @@ html_replace = [
     (re.compile(r"\s*</?img>\s*", re.I), ""),
     (re.compile(r"œ\s*", re.I), "oe"),
     (re_clean_spaces, " "),
-    (re.compile(r'^((<[^>]*>)*"[A-Z])([A-ZÉ]+ )'), lower_inner_title),
+    (re.compile(r'^((<[^>]*>)*")%s ' % section_titles, re.I), lower_inner_title),
     (re.compile(r' pr..?liminaire', re.I), ' préliminaire')
 ]
 def clean_html(t):
@@ -130,7 +146,7 @@ blank_none = lambda x: x if x else ""
 re_cl_html = re.compile(r"<[^>]+>")
 re_cl_par  = re.compile(r"[()]")
 re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
-re_mat_sec = re.compile(r"((chap|t)itre|volume|livre|tome|(sous-)?section)(\s+(.+)e?r?)", re.I)
+re_mat_sec = re.compile(r"%s(\s+(.+)e?r?)" % section_titles, re.I)
 re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
 re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
@@ -153,7 +169,7 @@ re_rap_mult = re.compile(r'[\s<>/ai]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
 re_src_mult = re.compile(r'^- L(?:A PROPOSITION|E PROJET) DE LOI n°\s*(\d+)\D')
 re_clean_mult_1 = re.compile(r'\s*et\s*', re.I)
 re_clean_mult_2 = re.compile(r'[^,\d]', re.I)
-re_sep_text = re.compile(r'\s*<b>\s*(article|titre|chapitre|tome|volume|livre)\s*(I|uniqu|pr..?limina|1|prem)[ier]*\s*</b>\s*$', re.I)
+re_sep_text = re.compile(r'\s*<b>\s*(article|%s)\s*(I|uniqu|pr..?limina|1|prem)[ier]*\s*</b>\s*$' % section_titles, re.I)
 re_stars = re.compile(r'^[\s*_]+$')
 re_art_uni = re.compile(r'\s*article\s*unique\s*$', re.I)
 read = art_num = ali_num = 0
@@ -200,7 +216,7 @@ for text in soup.find_all("p"):
     m = re_mat_sec.match(line)
     if m:
         read = 1 # Activate titles lecture
-        section["type_section"] = m.group(1).lower()
+        section["type_section"] = real_lower(m.group(1))
         section_typ = m.group(1).upper()[0]
         if m.group(3) is not None:
             section_typ += "S"
@@ -227,7 +243,7 @@ for text in soup.find_all("p"):
             m = re_mat_art.match(line)
             article["titre"] = re_cl_uno.sub("1er", m.group(1).strip())
             if m.group(2) is not None:
-                article["statut"] = re_cl_par.sub("", str(m.group(2)).lower()).strip()
+                article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
             if section["id"] != "":
                 article["section"] = section["id"]
         # Read a section's title
@@ -245,14 +261,15 @@ for text in soup.find_all("p"):
             break
         # Find extra status information
         if ali_num == 0 and re_mat_st.match(line):
-            article["statut"] = re_cl_html.sub("", re_cl_par.sub("", line.lower()).strip())
+            article["statut"] = re_cl_html.sub("", re_cl_par.sub("", real_lower(line)).strip())
             continue
         if re_mat_dots.match(line):
             continue
         line = re_clean_art_spaces.sub('', re_clean_idx_spaces.sub(r'\1. ', re_mat_new.sub(" ", re_cl_html.sub("", line)).strip()))
         # Clean low/upcase issues with BIS TER etc.
-        line = re_clean_premier.sub(lambda m: (m.group(0).lower() if m.group(1) else "")+m.group(3)+"er", line)
-        line = re_clean_bister.sub(lambda m: m.group(1)+" "+m.group(2).lower(), line)
+        line = clean_full_upcase(line)
+        line = re_clean_premier.sub(lambda m: (real_lower(m.group(0)) if m.group(1) else "")+m.group(3)+"er", line)
+        line = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), line)
         # Clean different versions of same comment.
         line = re_clean_supr.sub('(Supprimé)', line)
         line = re_clean_conf.sub('(Non modifié)', line)
@@ -268,7 +285,7 @@ for text in soup.find_all("p"):
                 tmp = line
         line = re_clean_punc_space.sub(r'\1 \2', tmp).encode('utf-8')
         line = re_clean_spaces.sub(' ', line)
-        line = re_mat_sec.sub(lambda x: x.group(1)[0].upper()+x.group(1)[1:].lower()+x.group(4) if re_mat_n.match(x.group(4)) else x.group(0), line)
+        line = re_mat_sec.sub(lambda x: lower_but_first(x.group(1))+x.group(4) if re_mat_n.match(x.group(4)) else x.group(0), line)
         # Clean comments (Texte du Sénat), (Texte de la Commission), ...
         if ali_num == 0 and re_mat_texte.match(line):
             continue
