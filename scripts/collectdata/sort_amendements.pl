@@ -18,10 +18,10 @@ sub clean_subject {
     $subj = shift;
     $subj = lc($subj);
     $subj =~ s/È/è/g;
-    $subj =~ s/premier/1er/i;
+    $subj =~ s/ (prem)?ier/ 1er/i;
     $subj =~ s/unique/1er/i;
     $subj =~ s/\s*\(((avant|apr).*)\)/ \1/;
-    $subj =~ s/\(.*//;
+    $subj =~ s/\s*\(.*$//i;
     $subj =~ s/\s*$//;
     $subj =~ s/^\s*//;
     $subj =~ s/^(\d)/article \1/;
@@ -33,7 +33,7 @@ sub clean_subject {
     $subj =~ s/(\d+e?r? \S+ )([a-z]+)$/\1\U\2/i;
     $subj =~ s/ annexe.*//i;
     $subj =~ s/ rapport.*//i;
-    $subj =~ s/Article 1$/article 1er/i;
+    $subj =~ s/article 1$/article 1er/i;
     return $subj;
 }
 sub solveorder {
@@ -64,6 +64,7 @@ while(<STDIN>) {
         $sujet = clean_subject($csv[6]);
         $order = solveorder($sujet);
         $order = 'ordre article' if ($sujet eq "sujet");
+        $csv[6] =~ s/([()[\]+.?*{}])/\\\1/g;
         s/;$csv[6];/;$order;$sujet;/;
     } elsif($outputtype eq 'xml') {
 	@partialxml = ();
