@@ -28,7 +28,7 @@ for f in os.listdir(os.path.join(sourcedir, '..')):
             with open(os.path.join(sourcedir, '..', f), "r") as gpes:
                 allgroupes[url] = {}
                 for gpe in json.load(gpes)['organismes']:
-                    allgroupes[url][gpe["organisme"]["acronyme"]] = {
+                    allgroupes[url][gpe["organisme"]["acronyme"].lower()] = {
                         "nom": gpe["organisme"]['nom'],
                         "color": "rgb(%s)" % gpe["organisme"]['couleur']}
         except:
@@ -115,9 +115,9 @@ for step in procedure['steps']:
         # Consider as separate groups cases such as: personnalités, présidents and rapporteurs
         gpe = i['intervenant_groupe']
         if i['intervenant_fonction'] in [u"président", u"présidente"]:
-            gpe = u"présidence"
+            gpe = u"Présidence"
         elif i['intervenant_fonction'].startswith('rapporte'):
-            gpe = "rapporteurs"
+            gpe = "Rapporteurs"
         elif not i['intervenant_slug']:
             gpe = i['intervenant_fonction']
         # TODO : group gouvernement, reste = auditionnés ?
@@ -125,13 +125,15 @@ for step in procedure['steps']:
             if DEBUG and i['intervenant_nom'] not in warndone:
                 warndone.append(i['intervenant_nom'])
                 sys.stderr.write('WARNING: neither groupe nor function found for %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl]))
-            gpe = "autre"
-        if gpe not in groupes:
-            groupes[gpe] = {'nom': allgroupes[urlapi][gpe]['nom'] if gpe in allgroupes[urlapi] else gpe[0].upper() + gpe[1:],
-                            'color': '#888888',
-                            'link': personalize_link(groupes_root_url, {'slug': gpe if gpe in allgroupes[urlapi] else ''}, urlapi)}
-            if gpe in allgroupes[urlapi]:
-                groupes[gpe]['color'] = allgroupes[urlapi][gpe]['color']
+            gpe = "Autres"
+        gpid = gpe.lower()
+        if gpid not in groupes:
+            groupes[gpid] = {'id': gpe,
+                             'nom': allgroupes[urlapi][gpid]['nom'] if gpid in allgroupes[urlapi] else gpe[0].upper() + gpe[1:],
+                             'color': '#888888',
+                             'link': personalize_link(groupes_root_url, {'slug': gpe if gpid in allgroupes[urlapi] else ''}, urlapi)}
+            if gpid in allgroupes[urlapi]:
+                groupes[gpid]['color'] = allgroupes[urlapi][gpid]['color']
         add_intervs(sections[i[sectype]]['groupes'], gpe, i)
 
         # Consider as two separate speakers a same perso with two different fonctions
