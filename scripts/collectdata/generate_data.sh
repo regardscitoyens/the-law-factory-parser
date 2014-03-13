@@ -9,10 +9,15 @@ data=$(if test "$2" ; then echo $2 ; else echo "data" ; fi)
 
 function escapeit { perl -e 'use URI::Escape; print uri_escape shift();print"\n"' $1 | sed 's/\s/_/g'; }
 #function download { curl -s $1 }
-function download { cache=$cachedir"/"$(escapeit $1) ; if ! test -e $cache ; then curl -s $1 > $cache.tmp ; mv $cache.tmp $cache ; fi ; cat $cache ; } ; mkdir -p $data"/../.cache/web" ; cachedir=$data"/../.cache/web"
+function download { cache=$cachedir"/"$(escapeit $1) ; if ! test -e $cache ; then curl -s -L $1 > $cache.tmp ; mv $cache.tmp $cache ; fi ; cat $cache ; } ; mkdir -p $data"/../.cache/web" ; cachedir=$data"/../.cache/web"
 
 mkdir -p $data/.tmp/html $data/.tmp/json
 rm -f $data/.tmp/json/articles_laststep.json
+
+for url in "2007.nosdeputes" "www.nosdeputes" "www.nossenateurs"; do
+  download "http://$url.fr/organismes/groupe/json" > "$data/../$url-groupes.json"
+done
+
 oldchambre=""
 cat $1 | while read line ; do 
   #Variables
