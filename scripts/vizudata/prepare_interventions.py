@@ -70,8 +70,6 @@ def personalize_link(link, obj, urlapi):
         return link.replace("##URLAPI##", urlapi).replace("##TYPE##", typeparl).replace("##SLUG##", slug)
     return ""
 
-findpos = lambda t, c: t.find(c) if c in t else 1000
-
 steps = {}
 for step in procedure['steps']:
     if not ('has_interventions' in step and step['has_interventions']):
@@ -89,7 +87,7 @@ for step in procedure['steps']:
 
     typeparl = "depute" if 'url_nosdeputes' in intervs[0]['intervention'] else "senateur"
     legis = intervs[0]['intervention']['url_nos%ss' % typeparl]
-    legis = legis[7:min(findpos(legis, '-'), findpos(legis, '.'))]
+    legis = legis[7:legis.find('.')]
     urlapi = "%s.nos%ss" % (legis, typeparl)
 
     # By default divide in subsections, or by seance if no subsection
