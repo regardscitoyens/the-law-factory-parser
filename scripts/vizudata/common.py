@@ -10,6 +10,15 @@ except:
 def print_json(dico):
     print json.dumps(dico, ensure_ascii=False).encode('utf8')
 
+upper_first = lambda t: t[0].upper() + t[1:]
+
+def identify_room(data, datatype):
+    typeparl = "depute" if 'url_nosdeputes' in data[0][datatype] else "senateur"
+    legis = data[0][datatype]['url_nos%ss' % typeparl]
+    legis = legis[7:legis.find('.')]
+    urlapi = "%s.nos%ss" % (legis, typeparl)
+    return typeparl, urlapi.lower()
+
 def personalize_link(link, obj, urlapi):
     slug = obj.get('intervenant_slug', obj.get('slug', ''))
     typeparl = "senateur" if urlapi.endswith("senateurs") else "depute"
@@ -29,6 +38,8 @@ class Context(object):
         if not self.sourcedir:
             sys.stderr.write('ERROR: no input directory given\n')
             exit(1)
+        self.allgroupes = {}
+        self.get_groupes()
 
     def get_procedure(self):
         try:
@@ -39,18 +50,30 @@ class Context(object):
             exit(1)
 
     def get_groupes(self):
-        allgroupes = {}
         for f in os.listdir(os.path.join(self.sourcedir, '..')):
             if f.endswith('-groupes.json'):
-                url = f.replace('-groupes.json', '')
+                url = f.replace('-groupes.json', '').lower()
                 try:
                     with open(os.path.join(self.sourcedir, '..', f), "r") as gpes:
-                        allgroupes[url] = {}
+                        self.allgroupes[url] = {}
                         for gpe in json.load(gpes)['organismes']:
-                            allgroupes[url][gpe["organisme"]["acronyme"]] = {
+                            self.allgroupes[url][gpe["organisme"]["acronyme"].upper()] = {
                                 "nom": gpe["organisme"]['nom'],
                                 "color": "rgb(%s)" % gpe["organisme"]['couleur']}
                 except:
                     sys.stderr.write('WARNING: could not read groupes file %s in data\n' % f)
-        return allgroupes
+
+    def add_groupe(self, groupes, gpe, urlapi):
+        gpid = gpe.lower()
+        if gpe.upper() in self.allgroupes[urlapi]:
+            gpid = gpe.upper()
+        if gpid not in groupes:
+            groupes[gpid] = {'nom': upper_first(gpe),
+                             'color': '#888888',
+                             'link': ''}
+            if gpid in self.allgroupes[urlapi]:
+                groupes[gpid]['nom'] = self.allgroupes[urlapi][gpid]['nom']
+                groupes[gpid]['color'] = self.allgroupes[urlapi][gpid]['color']
+                groupes[gpid]['link'] = groupe_link({'slug': gpid}, urlapi)
+        return gpid
 

@@ -6,7 +6,6 @@ from common import *
 
 context = Context(sys.argv)
 procedure = context.get_procedure()
-allgroupes = context.get_groupes()
 
 def init_section(dic, key, inter, order):
     if inter[key] not in dic:
@@ -51,10 +50,7 @@ for step in procedure['steps']:
             sys.stderr.write('ERROR: intervention file %s listed in procedure.json missing from dir %s of %s' % (interv_file, step['intervention_directory'], context.sourcedir))
             exit(1)
 
-    typeparl = "depute" if 'url_nosdeputes' in intervs[0]['intervention'] else "senateur"
-    legis = intervs[0]['intervention']['url_nos%ss' % typeparl]
-    legis = legis[7:legis.find('.')]
-    urlapi = "%s.nos%ss" % (legis, typeparl)
+    typeparl, urlapi = identify_room(intervs, 'intervention')
 
     # By default divide in subsections, or by seance if no subsection
     sections = {}
@@ -95,20 +91,11 @@ for step in procedure['steps']:
                 warndone.append(i['intervenant_nom'])
                 sys.stderr.write('WARNING: neither groupe nor function found for %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl]))
             gpe = u"Auditionnés"
-        gpid = gpe.lower()
-        if gpid not in groupes:
-            groupes[gpid] = {'id': gpid,
-                             'nom': gpe[0].upper() + gpe[1:],
-                             'color': '#888888',
-                             'link': ''}
-            if gpid in allgroupes[urlapi]:
-                groupes[gpid]['nom'] = allgroupes[urlapi][gpid]['nom']
-                groupes[gpid]['color'] = allgroupes[urlapi][gpid]['color']
-                groupes[gpid]['link'] = groupe_link({'slug': gpe}, urlapi)
+        gpid = context.add_groupe(groupes, gpe, urlapi)
         add_intervs(sections[i[sectype]]['groupes'], gpid, i)
 
         # Consider as two separate speakers a same perso with two different fonctions
-        orateur = i['intervenant_nom']
+        orateur = i['intervenant_nom'].lower()
         if orateur not in orateurs:
             orateurs[orateur] = {'nom': i['intervenant_nom'],
                                  'fonction': i['intervenant_fonction'],
@@ -116,8 +103,8 @@ for step in procedure['steps']:
                                  'color': '#888888',
                                  'link': parl_link(i, urlapi),
                                  'photo': photo_link(i, urlapi)}
-            if i['intervenant_groupe'] and i['intervenant_groupe'] in allgroupes[urlapi]:
-                orateurs[orateur]['color'] = allgroupes[urlapi][i['intervenant_groupe']]['color']
+            if i['intervenant_groupe'] and i['intervenant_groupe'].upper() in context.allgroupes[urlapi]:
+                orateurs[orateur]['color'] = context.allgroupes[urlapi][i['intervenant_groupe'].upper()]['color']
         else:
             if len(i['intervenant_fonction']) > len(orateurs[orateur]['fonction']):
                 if context.DEBUG and ((orateurs[orateur]['fonction'] and not i['intervenant_fonction'].startswith(orateurs[orateur]['fonction'])) or
