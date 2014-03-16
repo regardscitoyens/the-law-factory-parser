@@ -17,6 +17,7 @@ close JSON;
 sub clean_subject {
     $subj = shift;
     $subj = lc($subj);
+    $subj =~ s/\\u00c8/\\u00e8/ig;
     $subj =~ s/È/è/g;
     $subj =~ s/ (prem)?ier/ 1er/i;
     $subj =~ s/unique/1er/i;
