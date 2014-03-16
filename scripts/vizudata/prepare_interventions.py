@@ -1,38 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import re, csv, os, sys
-try:
-    import json
-except:
-    import simplejson as json
+import os, sys
+from common import *
 
-DEBUG = (len(sys.argv) > 2)
-
-sourcedir = sys.argv[1]
-if not sourcedir:
-    sys.stderr.write('ERROR: no input directory given\n')
-    exit(1)
-try:
-    with open(os.path.join(sourcedir, 'procedure', 'procedure.json'), "r") as procedure:
-        procedure = json.load(procedure)
-except:
-    sys.stderr.write('ERROR: could not find procedure data in directory %s\n' % sourcedir)
-    exit(1)
-
-allgroupes = {}
-for f in os.listdir(os.path.join(sourcedir, '..')):
-    if f.endswith('-groupes.json'):
-        url = f.replace('-groupes.json', '')
-        try:
-            with open(os.path.join(sourcedir, '..', f), "r") as gpes:
-                allgroupes[url] = {}
-                for gpe in json.load(gpes)['organismes']:
-                    allgroupes[url][gpe["organisme"]["acronyme"].lower()] = {
-                        "nom": gpe["organisme"]['nom'],
-                        "color": "rgb(%s)" % gpe["organisme"]['couleur']}
-        except:
-            sys.stderr.write('WARNING: could not read groupes file %s in data\n' % f)
+context = Context(sys.argv)
+procedure = context.get_procedure()
+allgroupes = context.get_groupes()
 
 def init_section(dic, key, inter, order):
     if inter[key] not in dic:
@@ -60,16 +34,6 @@ def add_intervs(dic, key, inter):
     dic[key]['nb_intervs'] += 1
     dic[key]['nb_mots'] += int(inter['nbmots'])
 
-photos_root_url = "http://##URLAPI##.fr/##TYPE##/photo/##SLUG##"
-mps_root_url = "http://##URLAPI##.fr/##SLUG##"
-groupes_root_url = "http://##URLAPI##.fr/groupe/##SLUG##"
-def personalize_link(link, obj, urlapi):
-    slug = obj.get('intervenant_slug', obj.get('slug', ''))
-    typeparl = "senateur" if urlapi.endswith("senateurs") else "depute"
-    if slug:
-        return link.replace("##URLAPI##", urlapi).replace("##TYPE##", typeparl).replace("##SLUG##", slug)
-    return ""
-
 steps = {}
 for step in procedure['steps']:
     if not ('has_interventions' in step and step['has_interventions']):
@@ -79,10 +43,10 @@ for step in procedure['steps']:
     warndone = []
     for interv_file in step['intervention_files']:
         try:
-            with open(os.path.join(sourcedir, 'procedure', step['intervention_directory'], "%s.json" % interv_file)) as interv_file:
+            with open(os.path.join(context.sourcedir, 'procedure', step['intervention_directory'], "%s.json" % interv_file)) as interv_file:
                 intervs += json.load(interv_file)['seance']
         except:
-            sys.stderr.write('ERROR: intervention file %s listed in procedure.json missing from dir %s of %s' % (interv_file, step['intervention_directory'], sourcedir))
+            sys.stderr.write('ERROR: intervention file %s listed in procedure.json missing from dir %s of %s' % (interv_file, step['intervention_directory'], context.sourcedir))
             exit(1)
 
     typeparl = "depute" if 'url_nosdeputes' in intervs[0]['intervention'] else "senateur"
@@ -122,7 +86,7 @@ for step in procedure['steps']:
             gpe = i['intervenant_fonction']
         # TODO : group gouvernement, reste = auditionnés ?
         if not gpe:
-            if DEBUG and i['intervenant_nom'] not in warndone:
+            if context.DEBUG and i['intervenant_nom'] not in warndone:
                 warndone.append(i['intervenant_nom'])
                 sys.stderr.write('WARNING: neither groupe nor function found for %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl]))
             gpe = "Autres"
@@ -131,7 +95,7 @@ for step in procedure['steps']:
             groupes[gpid] = {'id': gpe,
                              'nom': allgroupes[urlapi][gpid]['nom'] if gpid in allgroupes[urlapi] else gpe[0].upper() + gpe[1:],
                              'color': '#888888',
-                             'link': personalize_link(groupes_root_url, {'slug': gpe if gpid in allgroupes[urlapi] else ''}, urlapi)}
+                             'link': groupe_link({'slug': gpe if gpid in allgroupes[urlapi] else ''}, urlapi)}
             if gpid in allgroupes[urlapi]:
                 groupes[gpid]['color'] = allgroupes[urlapi][gpid]['color']
         add_intervs(sections[i[sectype]]['groupes'], gpe, i)
@@ -143,17 +107,17 @@ for step in procedure['steps']:
                                  'fonction': i['intervenant_fonction'],
                                  'groupe': i['intervenant_groupe'],
                                  'color': '#888888',
-                                 'link': personalize_link(mps_root_url, i, urlapi),
-                                 'photo': personalize_link(photos_root_url, i, urlapi)}
+                                 'link': parl_link(i, urlapi),
+                                 'photo': photo_link(i, urlapi)}
             if i['intervenant_groupe'] and i['intervenant_groupe'] in allgroupes[urlapi]:
                 orateurs[orateur]['color'] = allgroupes[urlapi][i['intervenant_groupe']]['color']
         else:
             if len(i['intervenant_fonction']) > len(orateurs[orateur]['fonction']):
-                if DEBUG and ((orateurs[orateur]['fonction'] and not i['intervenant_fonction'].startswith(orateurs[orateur]['fonction'])) or
+                if context.DEBUG and ((orateurs[orateur]['fonction'] and not i['intervenant_fonction'].startswith(orateurs[orateur]['fonction'])) or
                   (not orateurs[orateur]['fonction'] and not (i['intervenant_fonction'].startswith('rapporte') or i['intervenant_fonction'].startswith(u'président')))):
                     sys.stderr.write('WARNING: found different functions for %s at %s : %s / %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl], orateurs[orateur]['fonction'], i['intervenant_fonction']))
                 orateurs[orateur]['fonction'] = i['intervenant_fonction']
         add_intervs(sections[i[sectype]]['orateurs'], orateur, i)
     steps[step['directory']] = {'groupes': groupes, 'orateurs': orateurs, 'divisions': sections}
 
-print json.dumps(steps, ensure_ascii=False).encode('utf8')
+print_json(steps)
