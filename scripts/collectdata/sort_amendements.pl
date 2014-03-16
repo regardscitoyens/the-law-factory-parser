@@ -39,21 +39,18 @@ sub clean_subject {
 }
 sub solveorder {
     $art = shift;
-    if ($art =~ /^motion/i) {
+    $order = 10000;
+    if ($art =~ /^titre$/i || $art =~ /^intitul/i) {
         return 0;
-    } elsif ($art =~ /^(pro(jet|position)|texte)/i) {
+    } elsif ($art =~ /^motion/i) {
         return 1;
-    } elsif ($art =~ /^titre$/i || $art =~ /^intitul/i) {
-        return -5;
-    }
-    $order = -1;
-    if ($art =~ /article ((\d+).*)/i) {
+    } elsif ($art =~ /^(pro(jet|position)|texte)/i) {
+        return 5;
+    } elsif ($art =~ /article (1er|(\d+).*)/i) {
         if ($articles{lc($1)}) {
             $order = $articles{lc($1)};
         } elsif ($articles{$2}) {
-            $order = $articles{lc($2)};
-        } else {
-            return 1000;
+            $order = $articles{$2};
         }
         if ($art =~ /avant/i) {
             $order--;
