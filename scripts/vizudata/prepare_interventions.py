@@ -70,6 +70,7 @@ for step in procedure['steps']:
         sections = seances
 
     groupes = {}
+    orateurs = {}
     for inter in intervs:
         i = inter['intervention']
         if not i['intervenant_nom']:
@@ -105,8 +106,6 @@ for step in procedure['steps']:
                 groupes[gpid]['color'] = allgroupes[urlapi][gpid]['color']
                 groupes[gpid]['link'] = groupe_link({'slug': gpe}, urlapi)
         add_intervs(sections[i[sectype]]['groupes'], gpid, i)
-        if not "orateurs" in sections[i[sectype]]['groupes'][gpid]:
-            sections[i[sectype]]['groupes'][gpid]['orateurs'] = {}
 
         # Consider as two separate speakers a same perso with two different fonctions
         orateur = i['intervenant_nom']
@@ -125,7 +124,11 @@ for step in procedure['steps']:
                   (not orateurs[orateur]['fonction'] and not (i['intervenant_fonction'].startswith('rapporte') or i['intervenant_fonction'].startswith(u'président')))):
                     sys.stderr.write('WARNING: found different functions for %s at %s : %s / %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl], orateurs[orateur]['fonction'], i['intervenant_fonction']))
                 orateurs[orateur]['fonction'] = i['intervenant_fonction']
+
+        if not "orateurs" in sections[i[sectype]]['groupes'][gpid]:
+            sections[i[sectype]]['groupes'][gpid]['orateurs'] = {}
         add_intervs(sections[i[sectype]]['groupes'][gpid]['orateurs'], orateur, i)
+
     steps[step['directory']] = {'groupes': groupes, 'orateurs': orateurs, 'divisions': sections}
 
 print_json(steps)
