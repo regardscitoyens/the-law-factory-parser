@@ -31,12 +31,15 @@ for _, a in articles.iteritems():
     for s in a['steps']:
         stepid = s['directory']
         if stepid not in good_steps:
-            good_steps[stepid] = int(s['id_step'][:2])
+             good_steps[stepid] = int(s['id_step'][:2])
 
 for s in procedure['steps']:
     s['debats_order'] = None
     if 'directory' in s:
         s['debats_order'] = good_steps.get(s['directory'], None)
+    for field in s:
+        if field.endswith('_directory') or field.endswith('_files'):
+            del(s[field])
 
 print json.dumps(procedure, ensure_ascii=False).encode('utf8')
 
