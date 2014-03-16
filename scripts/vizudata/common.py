@@ -21,6 +21,8 @@ def identify_room(data, datatype):
 
 def personalize_link(link, obj, urlapi):
     slug = obj.get('intervenant_slug', obj.get('slug', ''))
+    if not slug and 'amendement' in obj:
+        slug = obj['amendement']['id']
     typeparl = "senateur" if urlapi.endswith("senateurs") else "depute"
     if slug:
         return link.replace("##URLAPI##", urlapi).replace("##TYPE##", typeparl).replace("##SLUG##", slug)
@@ -29,6 +31,7 @@ def personalize_link(link, obj, urlapi):
 parl_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/##SLUG##", obj, urlapi)
 photo_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/##TYPE##/photo/##SLUG##", obj, urlapi)
 groupe_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/groupe/##SLUG##", obj, urlapi)
+amdapi_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/api/document/Amendement/##SLUG##/json", obj, urlapi)
 
 class Context(object):
 
