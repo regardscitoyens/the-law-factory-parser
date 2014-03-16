@@ -18,7 +18,6 @@ def init_section(dic, key, inter, order):
             'total_intervs': 0,
             'total_mots': 0,
             'groupes': {},
-            'orateurs': {},
             'order': order
         }
         order += 1
@@ -71,7 +70,6 @@ for step in procedure['steps']:
         sections = seances
 
     groupes = {}
-    orateurs = {}
     for inter in intervs:
         i = inter['intervention']
         if not i['intervenant_nom']:
@@ -98,13 +96,17 @@ for step in procedure['steps']:
             gpe = "Auditionnés"
         gpid = gpe.lower()
         if gpid not in groupes:
-            groupes[gpid] = {'id': gpe,
-                             'nom': allgroupes[urlapi][gpid]['nom'] if gpid in allgroupes[urlapi] else gpe[0].upper() + gpe[1:],
+            groupes[gpid] = {'id': gpid,
+                             'nom': gpe[0].upper() + gpe[1:],
                              'color': '#888888',
-                             'link': groupe_link({'slug': gpe if gpid in allgroupes[urlapi] else ''}, urlapi)}
+                             'link': ''}
             if gpid in allgroupes[urlapi]:
+                groupes[gpid]['nom'] = allgroupes[urlapi][gpid]['nom']
                 groupes[gpid]['color'] = allgroupes[urlapi][gpid]['color']
-        add_intervs(sections[i[sectype]]['groupes'], gpe, i)
+                groupes[gpid]['link'] = groupe_link({'slug': gpe}, urlapi)
+        add_intervs(sections[i[sectype]]['groupes'], gpid, i)
+        if not "orateurs" in sections[i[sectype]]['groupes'][gpid]:
+            sections[i[sectype]]['groupes'][gpid]['orateurs'] = {}
 
         # Consider as two separate speakers a same perso with two different fonctions
         orateur = i['intervenant_nom']
@@ -123,7 +125,7 @@ for step in procedure['steps']:
                   (not orateurs[orateur]['fonction'] and not (i['intervenant_fonction'].startswith('rapporte') or i['intervenant_fonction'].startswith(u'président')))):
                     sys.stderr.write('WARNING: found different functions for %s at %s : %s / %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl], orateurs[orateur]['fonction'], i['intervenant_fonction']))
                 orateurs[orateur]['fonction'] = i['intervenant_fonction']
-        add_intervs(sections[i[sectype]]['orateurs'], orateur, i)
+        add_intervs(sections[i[sectype]]['groupes'][gpid]['orateurs'], orateur, i)
     steps[step['directory']] = {'groupes': groupes, 'orateurs': orateurs, 'divisions': sections}
 
 print_json(steps)
