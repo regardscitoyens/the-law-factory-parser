@@ -94,7 +94,7 @@ for step in procedure['steps']:
             if context.DEBUG and i['intervenant_nom'] not in warndone:
                 warndone.append(i['intervenant_nom'])
                 sys.stderr.write('WARNING: neither groupe nor function found for %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl]))
-            gpe = "Auditionnés"
+            gpe = u"Auditionnés"
         gpid = gpe.lower()
         if gpid not in groupes:
             groupes[gpid] = {'id': gpid,

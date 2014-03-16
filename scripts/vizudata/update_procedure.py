@@ -37,7 +37,7 @@ for s in procedure['steps']:
     s['debats_order'] = None
     if 'directory' in s:
         s['debats_order'] = good_steps.get(s['directory'], None)
-    for field in s:
+    for field in dict(s):
         if field.endswith('_directory') or field.endswith('_files'):
             del(s[field])
 
