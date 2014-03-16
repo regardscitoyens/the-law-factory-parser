@@ -129,6 +129,11 @@ for step in procedure['steps']:
             sections[i[sectype]]['groupes'][gpid]['orateurs'] = {}
         add_intervs(sections[i[sectype]]['groupes'][gpid]['orateurs'], orateur, i)
 
+    # Remove sections with less than 3 interventions
+    for s in dict(sections):
+        if sections[s]['total_intervs'] < 3:
+            del(sections[s])
+
     steps[step['directory']] = {'groupes': groupes, 'orateurs': orateurs, 'divisions': sections}
 
 print_json(steps)
