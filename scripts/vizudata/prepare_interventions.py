@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os, sys
+import os, sys, re
 from common import *
 
 context = Context(sys.argv)
@@ -33,6 +33,9 @@ def add_intervs(dic, key, inter):
         }
     dic[key]['nb_intervs'] += 1
     dic[key]['nb_mots'] += int(inter['nbmots'])
+
+re_gouv = re.compile(r'(ministre|garde.*sceaux|secr[ée]taire.*[eé]tat|haut-commissaire)', re.I|re.U)
+re_parl = re.compile(r'(d[eé]put[eé]|s[eé]nateur|membre du parlement|parlementaire)', re.I|re.U)
 
 steps = {}
 for step in procedure['steps']:
@@ -82,14 +85,17 @@ for step in procedure['steps']:
             gpe = u"Présidence"
         elif i['intervenant_fonction'].startswith('rapporte'):
             gpe = "Rapporteurs"
+        elif re_gouv.search(i['intervenant_fonction']):
+            gpe = "Gouvernement"
+        elif re_parl.match(i['intervenant_fonction']):
+            gpe = "Autres parlementaires"
         elif not i['intervenant_slug']:
             gpe = i['intervenant_fonction']
-        # TODO : group gouvernement, reste = auditionnés ?
         if not gpe:
             if context.DEBUG and i['intervenant_nom'] not in warndone:
                 warndone.append(i['intervenant_nom'])
                 sys.stderr.write('WARNING: neither groupe nor function found for %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl]))
-            gpe = "Autres"
+            gpe = "Auditionnés"
         gpid = gpe.lower()
         if gpid not in groupes:
             groupes[gpid] = {'id': gpe,
