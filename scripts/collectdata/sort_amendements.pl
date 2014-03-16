@@ -46,9 +46,14 @@ sub solveorder {
         return -5;
     }
     $order = -1;
-    if ($art =~ /article (\d.*)/i) {
-	next unless ($articles{lc($1)});
-        $order = $articles{lc($1)};
+    if ($art =~ /article ((\d+).*)/i) {
+        if ($articles{lc($1)}) {
+            $order = $articles{lc($1)};
+        } elsif ($articles{$2}) {
+            $order = $articles{lc($2)};
+        } else {
+            return 1000;
+        }
         if ($art =~ /avant/i) {
             $order--;
         } elsif ($art =~ /apr\S+s/i) {
@@ -68,7 +73,7 @@ while(<STDIN>) {
         s/;$csv[6];/;$order;$sujet;/;
     } elsif($outputtype eq 'xml') {
 	@partialxml = ();
-	foreach $l (split/<amendement>/) {
+	foreach $l (split /<amendement>/) {
 	    if ($l =~ /<sujet>([^<]+)<\/sujet>/) {
 		$sujet = clean_subject($1);
 		$order = solveorder($sujet);
@@ -79,7 +84,7 @@ while(<STDIN>) {
 	$_ = join('<amendement>', @partialxml);
     } elsif($outputtype eq 'json') {
 	@partialjson = ();
-	foreach $l (split(/},/)) {
+	foreach $l (split /},{"amendement":{/) {
 	    if ($l =~ /"sujet":"([^"]+)"/) {
 		$sujet = clean_subject($1);
 		$order = solveorder($sujet);
@@ -87,7 +92,7 @@ while(<STDIN>) {
 	    }
 	    push @partialjson, $l;
 	}
-	$_ = join('},', @partialjson);
+	$_ = join('},{"amendement":{', @partialjson);
     }
     print;
 }
