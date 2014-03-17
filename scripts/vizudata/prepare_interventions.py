@@ -32,8 +32,8 @@ def add_intervs(dic, key, inter):
     dic[key]['nb_intervs'] += 1
     dic[key]['nb_mots'] += int(inter['nbmots'])
 
-re_gouv = re.compile(r'(ministre|garde.*sceaux|secr[ée]taire.*[eé]tat|haut-commissaire)', re.I|re.U)
-re_parl = re.compile(r'(d[eé]put[eé]|s[eé]nateur|membre du parlement|parlementaire)', re.I|re.U)
+re_gouv = re.compile(u'(ministre|garde.*sceaux|secr[eéÉ]taire.*[eéÉ]tat|haut-commissaire)', re.I)
+re_parl = re.compile(u'(d[eéÉ]put[eéÉ]|s[eéÉ]nateur|membre du parlement|parlementaire)', re.I)
 
 steps = {}
 for step in procedure['steps']:
@@ -76,7 +76,7 @@ for step in procedure['steps']:
 
         # Consider as separate groups cases such as: personnalités, présidents and rapporteurs
         gpe = i['intervenant_groupe']
-        if i['intervenant_fonction'] in [u"président", u"présidente"]:
+        if i['intervenant_fonction'].lower() in [u"président", u"présidente"]:
             gpe = u"Présidence"
         elif i['intervenant_fonction'].startswith('rapporte'):
             gpe = "Rapporteurs"
