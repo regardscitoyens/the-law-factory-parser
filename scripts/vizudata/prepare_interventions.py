@@ -76,6 +76,7 @@ for step in procedure['steps']:
 
         # Consider as separate groups cases such as: personnalités, présidents and rapporteurs
         gpe = i['intervenant_groupe']
+        i['intervenant_fonction'] = decode_html(i['intervenant_fonction'])
         if i['intervenant_fonction'].lower() in [u"président", u"présidente"]:
             gpe = u"Présidence"
         elif i['intervenant_fonction'].startswith('rapporte'):

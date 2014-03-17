@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys, os, re
+from htmlentitydefs import name2codepoint
 try:
     import json
 except:
@@ -11,6 +12,10 @@ def print_json(dico):
     print json.dumps(dico, ensure_ascii=False).encode('utf8')
 
 upper_first = lambda t: t[0].upper() + t[1:]
+
+re_entities = re.compile(r'&([^;]+)(;|$)')
+decode_char = lambda x: unichr(int(x.group(1)[1:]) if x.group(1).startswith('#') else name2codepoint[x.group(1)])
+decode_html = lambda text: re_entities.sub(decode_char, text)
 
 def identify_room(data, datatype):
     typeparl = "depute" if 'url_nosdeputes' in data[0][datatype] else "senateur"
@@ -67,7 +72,7 @@ class Context(object):
                     sys.stderr.write('WARNING: could not read groupes file %s in data\n' % f)
 
     def add_groupe(self, groupes, gpe, urlapi):
-        gpid = gpe.lower()
+        gpid = upper_first(gpe.lower())
         if gpe.upper() in self.allgroupes[urlapi]:
             gpid = gpe.upper()
         if gpid not in groupes:
