@@ -63,6 +63,12 @@ cat $1 | while read line ; do
     exit 1
   fi
  fi
+  # Complete missing intermediate depots from last step
+  if [ $(cat $data/.tmp/json/$escape  | wc -l) -lt 2 ] && [ "$stage" = "depot" ] && [ "$order" != "00" ]; then
+    echo "WARNING: creating depot step $projectdir from last step since no data found"
+    head -n 1 $data/.tmp/json/articles_laststep.json | sed 's/\("echec": true, \)\?\("expose": "\)[^"]*\(", "id": "\)\([1-9]\+\)\(_[^"]*", \)/\2\3'"$etapid"'\5/' > $data/.tmp/json/$escape
+    tail -n $(($(cat $data/.tmp/json/articles_laststep.json | wc -l) - 1)) $data/.tmp/json/articles_laststep.json >> $data/.tmp/json/$escape
+  fi
   # Complete articles with missing "conforme" or "non-modifié" text for all steps except depots 1ère lecture
   if [ "$norder" != "1" ] && [ "$norder" != 4 ] && test -s $data/.tmp/json/articles_laststep.json; then
     previous="$data/.tmp/json/articles_laststep.json"
@@ -74,11 +80,6 @@ cat $1 | while read line ; do
       exit 1
     fi
     mv $data/.tmp/json/$escape{.tmp,}
-  fi
-  if ! test -s $data/.tmp/json/$escape && [ "$stage" = "depot" ] && [ "$order" != "00" ]; then
-    echo "WARNING: creating depot step $projectdir from last step since no data found"
-    head -n 1 $data/.tmp/json/articles_laststep.json | sed 's/\("echec": true, \)\?\("expose": "\)[^"]*\(", "id": "\)\([0-9]\+\)\(_[^"]*", \)/\2\3'"$etapid"'\5/' > $data/.tmp/json/$escape
-    tail -n $(($(cat $data/.tmp/json/articles_laststep.json | wc -l) - 1)) $data/.tmp/json/articles_laststep.json >> $data/.tmp/json/$escape
   fi
   if ! python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"; then
     rm -rf "$projectdir"
