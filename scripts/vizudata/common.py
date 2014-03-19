@@ -84,14 +84,14 @@ class Context(object):
                 groupes[gpid]['nom'] = self.allgroupes[urlapi][gpid]['nom']
                 groupes[gpid]['order'] = 10 + self.allgroupes[urlapi][gpid]['order']
                 groupes[gpid]['color'] = self.allgroupes[urlapi][gpid]['color']
-                groupes[gpid]['link'] =  groupe_link({'slug': gpid}, urlapi)
-            elif gpid == u"présidence":
+                groupes[gpid]['link'] = groupe_link({'slug': gpid}, urlapi)
+            elif gpid == u"Présidence":
                 groupes[gpid]['order'] = 0
-            elif gpid == u"rapporteurs":
+            elif gpid == u"Rapporteurs":
                 groupes[gpid]['order'] = 50
-            elif gpid == u"gouvernement":
+            elif gpid == u"Gouvernement":
                 groupes[gpid]['order'] = 60
-            elif gpid == u"auditionnés":
+            elif gpid == u"Auditionnés":
                 groupes[gpid]['order'] = 70
             else:
                 groupes[gpid]['order'] = 100
