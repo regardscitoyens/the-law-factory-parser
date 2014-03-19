@@ -118,6 +118,8 @@ for step in procedure['steps']:
         if not "orateurs" in sections[i[sectype]]['groupes'][gpid]:
             sections[i[sectype]]['groupes'][gpid]['orateurs'] = {}
         add_intervs(sections[i[sectype]]['groupes'][gpid]['orateurs'], orateur, i)
+        if sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur]['nb_intervs'] == 1:
+            sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur]['link'] = i['url_nos%ss' % typeparl]
 
     # Remove sections with less than 3 interventions
     for s in dict(sections):
