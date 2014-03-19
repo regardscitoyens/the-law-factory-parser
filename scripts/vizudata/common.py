@@ -67,6 +67,7 @@ class Context(object):
                         for gpe in json.load(gpes)['organismes']:
                             self.allgroupes[url][gpe["organisme"]["acronyme"].upper()] = {
                                 "nom": gpe["organisme"]['nom'],
+                                "order": int(gpe["organisme"]['order']),
                                 "color": "rgb(%s)" % gpe["organisme"]['couleur']}
                 except:
                     sys.stderr.write('WARNING: could not read groupes file %s in data\n' % f)
@@ -81,7 +82,18 @@ class Context(object):
                              'link': ''}
             if gpid in self.allgroupes[urlapi]:
                 groupes[gpid]['nom'] = self.allgroupes[urlapi][gpid]['nom']
+                groupes[gpid]['order'] = 10 + self.allgroupes[urlapi][gpid]['order']
                 groupes[gpid]['color'] = self.allgroupes[urlapi][gpid]['color']
-                groupes[gpid]['link'] = groupe_link({'slug': gpid}, urlapi)
+                groupes[gpid]['link'] =  groupe_link({'slug': gpid}, urlapi)
+            elif gpid == u"présidence":
+                groupes[gpid]['order'] = 0
+            elif gpid == u"rapporteurs":
+                groupes[gpid]['order'] = 50
+            elif gpid == u"gouvernement":
+                groupes[gpid]['order'] = 60
+            elif gpid == u"auditionnés":
+                groupes[gpid]['order'] = 70
+            else:
+                groupes[gpid]['order'] = 100
         return gpid
 
