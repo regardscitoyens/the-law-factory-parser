@@ -85,8 +85,10 @@ for step in procedure['steps']:
             gpe = "Gouvernement"
         elif re_parl.match(i['intervenant_fonction']):
             gpe = "Autres parlementaires"
-        elif not i['intervenant_slug']:
-            gpe = i['intervenant_fonction']
+        # Consider auditionnés individually ?
+#        elif not i['intervenant_slug']:
+#            gpe = i['intervenant_fonction']
+        # or not:
         if not gpe:
             if context.DEBUG and i['intervenant_nom'] not in warndone:
                 warndone.append(i['intervenant_nom'])
