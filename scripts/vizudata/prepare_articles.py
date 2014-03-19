@@ -53,12 +53,15 @@ out = {'law_title': title, 'articles': {}, 'short_title': procedure.get("short_t
 
 # Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
 dossier_id = sourcedir.split(os.path.sep)[-2]
+first = None
 steps = []
 latersteps = []
 for step in procedure['steps']:
     if step.get('step', '') == 'depot':
-        if step.get('chambre', '') == 'assemblee' or step.get('source_url', '').endswith("/%s.html" % dossier_id):
+        if step.get('institution', '') == 'assemblee' or (step.get('source_url', '').endswith("/%s.html" % dossier_id) and not first):
             first = step
+        elif first and first['institution'] == 'assemblee' and step.get('source_url', '').endswith("/%s.html" % dossier_id):
+            continue
         else:
             steps.append(step)
     else:
