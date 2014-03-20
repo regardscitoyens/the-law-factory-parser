@@ -145,7 +145,7 @@ for nstep, step in enumerate(steps):
                         if article.get('section'):
                             out['articles'][id]['section'] = article['section']
                         else:
-                            out['articles'][id]['section'] = 'none'
+                            out['articles'][id]['section'] = 'A%s' % article['titre']
                         out['articles'][id]['steps'] = []
                         s = create_step(step_id, step['directory'], article)
                         s['n_diff'] = 1
