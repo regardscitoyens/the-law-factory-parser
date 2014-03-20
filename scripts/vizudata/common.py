@@ -8,8 +8,16 @@ try:
 except:
     import simplejson as json
 
-def print_json(dico):
-    print json.dumps(dico, ensure_ascii=False).encode('utf8')
+def print_json(dico, filename=None):
+    if filename:
+        try:
+            with open(filename, 'w') as f:
+                f.write(json.dumps(dico, ensure_ascii=False).encode('utf8'))
+        except:
+            sys.stderr.write("ERROR: Could not write in file %s" % filename)
+            exit(1)
+    else:
+        print json.dumps(dico, ensure_ascii=False).encode('utf8')
 
 upper_first = lambda t: t[0].upper() + t[1:]
 
@@ -26,8 +34,6 @@ def identify_room(data, datatype):
 
 def personalize_link(link, obj, urlapi):
     slug = obj.get('intervenant_slug', obj.get('slug', ''))
-    if not slug and 'amendement' in obj:
-        slug = obj['amendement']['id']
     typeparl = "senateur" if urlapi.endswith("senateurs") else "depute"
     if slug:
         return link.replace("##URLAPI##", urlapi).replace("##TYPE##", typeparl).replace("##SLUG##", slug)
@@ -36,7 +42,7 @@ def personalize_link(link, obj, urlapi):
 parl_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/##SLUG##", obj, urlapi)
 photo_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/##TYPE##/photo/##SLUG##", obj, urlapi)
 groupe_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/groupe/##SLUG##", obj, urlapi)
-amdapi_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/api/document/Amendement/##SLUG##/json", obj, urlapi)
+amdapi_link = lambda urlapi: personalize_link("http://##URLAPI##.fr/api/document/Amendement/", {'slug': 'na'}, urlapi)
 
 class Context(object):
 

@@ -20,7 +20,7 @@ def simplify_sort(sort):
     return u"non-voté"
 
 def find_groupe(amd):
-    if "gouvernement" in amd['signataires'].lower():
+    if amd['signataires'] and "gouvernement" in amd['signataires'].lower():
         return "Gouvernement"
     ct = {}
     maxc = 0
@@ -71,7 +71,8 @@ for step in procedure['steps']:
           'date': a['date'],
           'sort': simplify_sort(a['sort']),
           'groupe': gpe,
-          'url_api': amdapi_link(amd, urlapi)
+          'id_api': a['id']
+
         })
 
         if not gpe:
@@ -80,6 +81,9 @@ for step in procedure['steps']:
             gpe = "Autre"
         context.add_groupe(groupes, gpe, urlapi)
 
-    steps[step['directory']] = {'groupes': groupes, 'sujets': sujets}
-
-print_json(steps)
+    filename = os.path.join(context.sourcedir, 'viz', 'amendements_%s.json' % step['directory'])
+    data = {'id_step': step['directory'],
+            'api_root_url': amdapi_link(urlapi),
+            'groupes': groupes,
+            'sujets': sujets}
+    print_json(data, filename)
