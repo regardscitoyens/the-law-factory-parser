@@ -85,8 +85,10 @@ for step in procedure['steps']:
             gpe = "Gouvernement"
         elif re_parl.match(i['intervenant_fonction']):
             gpe = "Autres parlementaires"
-        elif not i['intervenant_slug']:
-            gpe = i['intervenant_fonction']
+        # Consider auditionnés individually ?
+#        elif not i['intervenant_slug']:
+#            gpe = i['intervenant_fonction']
+        # or not:
         if not gpe:
             if context.DEBUG and i['intervenant_nom'] not in warndone:
                 warndone.append(i['intervenant_nom'])
@@ -116,6 +118,8 @@ for step in procedure['steps']:
         if not "orateurs" in sections[i[sectype]]['groupes'][gpid]:
             sections[i[sectype]]['groupes'][gpid]['orateurs'] = {}
         add_intervs(sections[i[sectype]]['groupes'][gpid]['orateurs'], orateur, i)
+        if sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur]['nb_intervs'] == 1:
+            sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur]['link'] = i['url_nos%ss' % typeparl]
 
     # Remove sections with less than 3 interventions
     for s in dict(sections):

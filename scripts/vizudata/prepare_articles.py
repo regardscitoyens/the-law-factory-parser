@@ -51,28 +51,27 @@ title = procedure.get("long_title", "Missing title").replace(procedure.get("shor
 title = title[0].upper() + title[1:]
 out = {'law_title': title, 'articles': {}, 'short_title': procedure.get("short_title", "")}
 
+# Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
+dossier_id = sourcedir.split(os.path.sep)[-2]
+first = None
+steps = []
+latersteps = []
+for step in procedure['steps']:
+    if step.get('step', '') == 'depot':
+        if step.get('institution', '') == 'assemblee' or (step.get('source_url', '').endswith("/%s.html" % dossier_id) and not first):
+            first = step
+        elif first and first['institution'] == 'assemblee' and step.get('source_url', '').endswith("/%s.html" % dossier_id):
+            continue
+        else:
+            steps.append(step)
+    else:
+        latersteps.append(step)
+steps.append(first)
+depots = len(steps)
+steps += latersteps
+
 step_id = ''
 old_step_id = ''
-tmpsteps = procedure['steps']
-# Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
-first = tmpsteps.pop(0)
-firsts_sen = []
-steps = []
-for step in tmpsteps:
-    if not 'step' in step or step['step'] != 'depot':
-        steps.append(step)
-    else:
-        firsts_sen.insert(0, step)
-depots = 1
-depots_sen = len(firsts_sen)
-if "/leg/pjl" in first['source_url'] or "/leg/ppl" in first['source_url']:
-    depots_sen += 1
-steps.insert(0, first)
-if depots_sen > 1:
-    for f in firsts_sen:
-        steps.insert(0, f)
-        depots += 1
-
 nsteps = len(["" for a in steps if a['stage'] not in ['promulgation', u'constitutionnalité']]) - 1
 for nstep, step in enumerate(steps):
     last_step = (nstep == nsteps and
@@ -162,7 +161,7 @@ for nstep, step in enumerate(steps):
                     else:
                         s['length'] = len(txt)
                     out['articles'][id]['steps'].append(s)
-        if 'step' in step and (step['step'] != 'depot' or nstep == 0):
+        if 'step' in step:
             old_step_id = step_id
 
     except Exception as e:
