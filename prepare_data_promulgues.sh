@@ -1,8 +1,7 @@
 #!/bin/bash
 
 if [ -z "$1" ]; then
-  rm -rf data
-  git checkout -- data/.htaccess
+  rm -rf data/.cache
   mkdir -p data/.cache
   curl -sL http://data.senat.fr/data/dosleg/dossiers-legislatifs.csv |
    iconv -f "iso-8859-15" -t "utf-8" > data/.cache/list_dossiers_senat.csv
@@ -20,6 +19,7 @@ cat data/.cache/list_dossiers_senat.csv     |
     continue
   fi
   echo "## Working on $url"
+  rm -rf "data/$id"
   bash generate_data_from_senat_url.sh "$url"
   if [ $? -eq 0 ]; then
     echo "$id;$line" >> data/dossiers_promulgues.csv
