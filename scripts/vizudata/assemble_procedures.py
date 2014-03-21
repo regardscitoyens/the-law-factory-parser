@@ -71,10 +71,13 @@ for d in dossiers:
     proc["themes"] = [a.strip().lower() for a in d["Thèmes"].split(',')]
     proc["total_amendements"] = int(d["total_amendements"])
     proc["total_mots"] = int(d["total_mots"])
+
 # TODO:
+# - Add metric on all steps
 # - take dates + décision CC from csv
 # - take état du dossier from csv when more than promulgués (and handle better end date then)
 # - take "numéro de la loi" from csv ? link to legifrance ? or just TA?
+
     statbin = bin_stat(proc["total_days"])
     if statbin not in stats:
         stats[statbin] = 0
