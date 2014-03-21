@@ -5,7 +5,8 @@ if [ -z "$1" ]; then
   mkdir -p data/.cache
   curl -sL http://data.senat.fr/data/dosleg/dossiers-legislatifs.csv |
    iconv -f "iso-8859-15" -t "utf-8" > data/.cache/list_dossiers_senat.csv
-  head -n 1 data/.cache/list_dossiers_senat.csv | sed 's/^/id;/' > data/dossiers_promulgues.csv
+  head -n 1 data/.cache/list_dossiers_senat.csv |
+   sed 's/^/id;/' | sed 's/$/;total_amendements;total_mots/' > data/dossiers_promulgues.csv
 fi
 
 cat data/.cache/list_dossiers_senat.csv     |
@@ -21,8 +22,10 @@ cat data/.cache/list_dossiers_senat.csv     |
   echo "## Working on $url"
   rm -rf "data/$id"
   bash generate_data_from_senat_url.sh "$url"
+  nb_amdts=$(cat "data/$id/viz/amendements_*.json" | sed 's/"id_api"/\n"id_api"/g' | grep '"id_api"' | wc -l)
+  nb_mots=$(cat "data/$id/viz/interventions.json" | sed 's/"total_mots"/\n"total_mots"/g' | grep '"total_mots"' | sed 's/"total_mots": //' | sed 's/, "total.*$//' | paste -s -d+ | bc)
   if [ $? -eq 0 ]; then
-    echo "$id;$line" >> data/dossiers_promulgues.csv
+    echo "$id;$line;$nb_amdts;$nb_mots" >> data/dossiers_promulgues.csv
   else
     rm -rf "data/$id"
   fi
