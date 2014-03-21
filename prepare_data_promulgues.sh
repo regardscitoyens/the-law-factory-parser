@@ -23,8 +23,12 @@ cat data/.cache/list_dossiers_senat.csv     |
   rm -rf "data/$id"
   bash generate_data_from_senat_url.sh "$url"
   if [ $? -eq 0 ]; then
-    nb_amdts=$(cat "data/$id/viz/amendements_*.json" | sed 's/"id_api"/\n"id_api"/g' | grep '"id_api"' | wc -l)
-    nb_mots=$(cat "data/$id/viz/interventions.json" | sed 's/"total_mots"/\n"total_mots"/g' | grep '"total_mots"' | sed 's/"total_mots": //' | sed 's/, "total.*$//' | paste -s -d+ | bc)
+    nb_amdts=$(cat "data/$id/viz/amendements_*.json" 2> /dev/null | sed 's/"id_api"/\n"id_api"/g' | grep '"id_api"' | wc -l)
+    if [ -s data/$id/viz/interventions.json ]; then
+      nb_mots=$(cat "data/$id/viz/interventions.json" | sed 's/"total_mots"/\n"total_mots"/g' | grep '"total_mots"' | sed 's/"total_mots": //' | sed 's/, "total.*$//' | paste -s -d+ | bc)
+    else
+      nb_mots=0
+    fi
     echo "$id;$line;$nb_amdts;$nb_mots" >> data/dossiers_promulgues.csv
   else
     rm -rf "data/$id"
