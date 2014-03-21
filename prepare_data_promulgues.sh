@@ -31,3 +31,5 @@ cat data/.cache/list_dossiers_senat.csv     |
   fi
   echo
  done
+
+python scripts/vizudata/assemble_procedures.py $(pwd) 50
