@@ -43,12 +43,7 @@ for step in procedure['steps']:
     step['intervention_files'].sort()
     warndone = []
     for interv_file in step['intervention_files']:
-        try:
-            with open(os.path.join(context.sourcedir, 'procedure', step['intervention_directory'], "%s.json" % interv_file)) as interv_file:
-                intervs += json.load(interv_file)['seance']
-        except:
-            sys.stderr.write('ERROR: intervention file %s listed in procedure.json missing from dir %s of %s' % (interv_file, step['intervention_directory'], context.sourcedir))
-            exit(1)
+        intervs += open_json(os.path.join(context.sourcedir, 'procedure', step['intervention_directory']), "%s.json" % interv_file)['seance']
 
     typeparl, urlapi = identify_room(intervs, 'intervention')
 

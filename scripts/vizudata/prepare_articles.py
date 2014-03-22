@@ -3,21 +3,13 @@
 
 import re, csv, os, sys
 from difflib import ndiff, SequenceMatcher
-try:
-    import json
-except:
-    import simplejson as json
+from common import json, open_json, print_json
 
 sourcedir = sys.argv[1]
 if not sourcedir:
     sys.stderr.write('Error, no input directory given')
     exit(1)
-try:
-    with open(os.path.join(sourcedir, 'procedure.json'), "r") as procedure:
-        procedure = json.load(procedure)
-except:
-    sys.stderr.write('Error: could not find or load procedure.json in directory %s' % sourcedir)
-    exit(1)
+procedure = open_json(sourcedir, 'procedure.json')
 
 def getParentFolder(root, f):
     abs = os.path.abspath(os.path.join(root, f))
@@ -168,4 +160,4 @@ for nstep, step in enumerate(steps):
         sys.stderr.write("ERROR parsing step %s:\n%s: %s\n" % (step, type(e), e))
         exit(1)
 
-print json.dumps(out, ensure_ascii=False).encode('utf8')
+print_json(out)

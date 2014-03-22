@@ -1,14 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os, sys, csv
+import os, sys
 from datetime import date
-try:
-    import json
-except:
-    import simplejson as json
-from common import print_json
-
+from common import open_csv, open_json, print_json
 
 sourcedir = os.path.join(sys.argv[1], 'data')
 if not sourcedir:
@@ -23,20 +18,15 @@ if len(sys.argv) > 2:
         sys.stderr.write('ERROR: pagesize given as input should be an integer: %s\n' % sys.argv[2])
         exit(1)
 
-try:
-    with open(os.path.join(sourcedir, 'dossiers_promulgues.csv'), "r") as dossiers_file:
-        dossiers = list(csv.DictReader(dossiers_file, delimiter=";"))
-except:
-    sys.stderr.write('ERROR: could not read dossiers_promulgues.csv in directory %s\n' % sourcedir)
-    exit(1)
-
+dossiers = open_csv(sourcedir, 'dossiers_promulgues.csv')
 total = len(dossiers)
-dossiers = sorted(dossiers, key=lambda k: k['Date de promulgation'])
+dossiers.sort(key=lambda k: k['Date de promulgation'], reverse=True)
 
 namefile = lambda npage: "dossiers_%s_%s.json" % (pagesize*npage, min(total, pagesize*(npage+1))-1)
 def save_json_page(tosave, done):
     npage = done / pagesize
     data = {"total": total,
+            "count": min(pagesize, len(tosave)),
             "page": npage,
             "next_page": None,
             "dossiers": tosave}
@@ -56,19 +46,14 @@ stats = {}
 done = 0
 tosave = []
 for d in dossiers:
-    try:
-        with open(os.path.join(sourcedir, d['id'], 'viz', 'procedure.json'), 'r') as proc_file:
-            proc = json.loads(proc_file.read())
-    except:
-        sys.stderr.write('ERROR: could not read procedure.json in %s/%s/viz\n' % (sourcedir, d['id']))
-        continue #exit(1)
+    proc = open_json(os.path.join(sourcedir, d['id'], 'viz'), 'procedure.json')
     proc["id"] = d["id"]
     proc["beginning"] = format_date(d["Date initiale"])
     proc["end"] = format_date(d["Date de promulgation"])
     proc["total_days"] = (datize(proc["end"]) - datize(proc["beginning"])).days + 1
     proc["procedure"] = proc["type"]
     proc["type"] = d["Type de dossier"]
-    proc["themes"] = [a.strip().lower() for a in d["Thèmes"].split(',')]
+    proc["themes"] = [a.strip().lower() for a in d[u"Thèmes"].split(',')]
     proc["total_amendements"] = int(d["total_amendements"])
     proc["total_mots"] = int(d["total_mots"])
 

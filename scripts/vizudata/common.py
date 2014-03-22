@@ -3,17 +3,39 @@
 
 import sys, os, re
 from htmlentitydefs import name2codepoint
+from csv import DictReader
 try:
     import json
 except:
     import simplejson as json
+
+def open_csv(dirpath, filename, delimiter=";"):
+    try:
+        data = []
+        with open(os.path.join(dirpath, filename), 'r') as f:
+            for row in DictReader(f, delimiter=delimiter):
+                data.append(dict([(k.decode('utf-8'), v.decode('utf-8')) for k, v in row.iteritems()]))
+            return data
+    except Exception as e:
+        print >> sys.stderr, type(e), e
+        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
+        exit(1)
+
+def open_json(dirpath, filename):
+    try:
+        with open(os.path.join(dirpath, filename), 'r') as f:
+            return json.load(f)
+    except:
+        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
+        exit(1)
 
 def print_json(dico, filename=None):
     if filename:
         try:
             with open(filename, 'w') as f:
                 f.write(json.dumps(dico, ensure_ascii=False).encode('utf8'))
-        except:
+        except Exception as e:
+            print >> sys.stderr, type(e), e
             sys.stderr.write("ERROR: Could not write in file %s" % filename)
             exit(1)
     else:
