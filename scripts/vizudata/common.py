@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys, os, re
+from datetime import date
 from htmlentitydefs import name2codepoint
 from csv import DictReader
 try:
@@ -40,6 +41,12 @@ def print_json(dico, filename=None):
             exit(1)
     else:
         print json.dumps(dico, ensure_ascii=False).encode('utf8')
+
+datize = lambda d: date(*tuple([int(a) for a in d.split('-')]))
+def format_date(d):
+    da = d.split('/')
+    da.reverse()
+    return "-".join(da)
 
 upper_first = lambda t: t[0].upper() + t[1:]
 

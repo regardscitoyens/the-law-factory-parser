@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os, sys
-from datetime import date
-from common import open_csv, open_json, print_json
+from common import *
 
 sourcedir = os.path.join(sys.argv[1], 'data')
 if not sourcedir:
@@ -20,25 +19,19 @@ if len(sys.argv) > 2:
 
 dossiers = open_csv(sourcedir, 'dossiers_promulgues.csv')
 total = len(dossiers)
-dossiers.sort(key=lambda k: k['Date de promulgation'], reverse=True)
+dossiers.sort(key=lambda k: format_date(k['Date de promulgation']), reverse=True)
 
 namefile = lambda npage: "dossiers_%s_%s.json" % (pagesize*npage, min(total, pagesize*(npage+1))-1)
 def save_json_page(tosave, done):
-    npage = done / pagesize
+    npage = (done - 1) / pagesize
     data = {"total": total,
-            "count": min(pagesize, len(tosave)),
+            "count": len(tosave),
             "page": npage,
             "next_page": None,
             "dossiers": tosave}
     if done < total:
         data["next_page"] = namefile(npage+1)
     print_json(data, os.path.join(sourcedir, namefile(npage)))
-
-def format_date(d):
-    da = d.split('/')
-    da.reverse()
-    return "-".join(da)
-datize = lambda d: date(*tuple([int(a) for a in d.split('-')]))
 
 delay_stats = 30
 bin_stat = lambda x: "<%s" % (delay_stats * (x / delay_stats + 1))
@@ -70,7 +63,7 @@ for d in dossiers:
 
     tosave.append(proc)
     done += 1
-    if not done % pagesize:
+    if done % pagesize == 0:
         save_json_page(tosave, done)
         tosave = []
 
