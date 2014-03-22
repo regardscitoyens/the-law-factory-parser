@@ -10,9 +10,7 @@ if not sourcedir:
     exit(1)
 
 procedure = open_json(os.path.join(sourcedir, 'procedure'), 'procedure.json')
-
-    with open(os.path.join(sourcedir, 'viz', 'articles_etapes.json'), "r") as articles:
-articles = openjson(os.path.join(sourcedir, 'viz'), 'articles_etapes.json')['articles']
+articles = open_json(os.path.join(sourcedir, 'viz'), 'articles_etapes.json')['articles']
 
 good_steps = {}
 for _, a in articles.iteritems():

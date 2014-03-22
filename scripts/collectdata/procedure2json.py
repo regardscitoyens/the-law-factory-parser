@@ -20,7 +20,7 @@ with open(csvpath, 'rb') as csvfile:
         if len(row) < 15:
             row.append("")
         step = {'date': row[13], 'enddate': row[14], 'stage': row[8], 'institution': row[9], 'source_url': row[11]}
-        if (row[7] != 'EXTRA'):
+        if row[7] != 'EXTRA':
             step['directory'] = row2dir(row)
             try:
                 if (os.stat(projectdir+'/'+step['directory']+'/amendements/amendements.csv')):
@@ -29,22 +29,22 @@ with open(csvpath, 'rb') as csvfile:
             except:
                 step['has_amendements'] = False
             try:
-                intervention_dir = projectdir+'/'+step['directory']+'/interventions/'
+                intervention_dir = os.path.join(projectdir, step['directory'], 'interventions')
                 if (os.stat(intervention_dir)):
                     step['has_interventions'] = True
             except:
                 step['has_interventions'] = False
-            if (step['has_interventions']):
+            if step['has_interventions']:
                 files = []
                 for f in os.listdir(intervention_dir):
                     if re.search('.json$', f):
                         files.append(f.replace('.json', ''))
                 step['intervention_files'] = files
-                step['intervention_directory'] = step['directory']+'/interventions'
+                step['intervention_directory'] = intervention_dir
             step['step'] = row[10]
-            step['resulting_text_directory'] =  row2dir(row)+'/texte'
-            if ((row[6] != 'XX') and (int(row[6]) > 0)):
-                step['working_text_directory'] = row2dir(prevrow)+'/texte'
+            step['resulting_text_directory'] =  os.path.join(row2dir(row), 'texte')
+            if row[6] != 'XX' and int(row[6]) > 0:
+                step['working_text_directory'] = os.path.join(row2dir(prevrow), 'texte')
             steps.append(step)
         else:
             if (row[8] == 'URGENCE'):
