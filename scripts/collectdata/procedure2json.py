@@ -23,9 +23,16 @@ with open(csvpath, 'rb') as csvfile:
         if row[7] != 'EXTRA':
             step['directory'] = row2dir(row)
             try:
-                if (os.stat(projectdir+'/'+step['directory']+'/amendements/amendements.csv')):
+                amdfile = os.path.join(projectdir, step['directory'], 'amendements', 'amendements.csv')
+                if os.stat(amdfile):
                     step['has_amendements'] = True
-                    step['amendement_directory'] = step['directory']+'/amendements'
+                    try:
+                        with open(amdfile, 'r') as amdf:
+                            step['nb_amendements'] = len(list(csv.DictReader(amdf, delimiter=";")))
+                    except:
+                        sys.stderr.write('ERROR: Could not read file %s' % amdfile)
+                        exit(1)
+                    step['amendement_directory'] = os.path.join(step['directory'], 'amendements')
             except:
                 step['has_amendements'] = False
             try:
