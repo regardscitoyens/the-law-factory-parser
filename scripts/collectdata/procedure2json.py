@@ -25,7 +25,6 @@ with open(csvpath, 'rb') as csvfile:
             try:
                 amdfile = os.path.join(projectdir, step['directory'], 'amendements', 'amendements.csv')
                 if os.stat(amdfile):
-                    step['has_amendements'] = True
                     try:
                         with open(amdfile, 'r') as amdf:
                             step['nb_amendements'] = len(list(csv.DictReader(amdf, delimiter=";")))
@@ -34,7 +33,7 @@ with open(csvpath, 'rb') as csvfile:
                         exit(1)
                     step['amendement_directory'] = os.path.join(step['directory'], 'amendements')
             except:
-                step['has_amendements'] = False
+                step['nb_amendements'] = 0
             try:
                 intervention_dir = os.path.join(projectdir, step['directory'], 'interventions')
                 if (os.stat(intervention_dir)):

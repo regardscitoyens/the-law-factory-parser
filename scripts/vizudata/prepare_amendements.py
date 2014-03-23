@@ -37,7 +37,7 @@ def find_groupe(amd):
 
 steps = {}
 for step in procedure['steps']:
-    if not ('has_amendements' in step and step['has_amendements']):
+    if not 'nb_amendements' in step or not step['nb_amendements']:
         continue
 
     amendements_src = open_json(os.path.join(context.sourcedir, 'procedure', step['amendement_directory']), 'amendements.json')['amendements']
