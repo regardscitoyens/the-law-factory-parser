@@ -19,12 +19,28 @@ if len(sys.argv) > 2:
 
 dossiers = open_csv(sourcedir, 'dossiers_promulgues.csv')
 total = len(dossiers)
+
+# Compute dates and length
+maxdays = 0
+mindate = ""
+maxdate = ""
+for d in dossiers:
+    d0 = format_date(d["Date initiale"])
+    d1 = format_date(d["Date de promulgation"])
+    days =  (datize(d1) - datize(d0)).days + 1
+    maxdays = max(maxdays, (datize(d1) - datize(d0)).days + 1)
+    mindate = min(mindate, d0)
+    maxdate = max(mindate, d1)
+
 dossiers.sort(key=lambda k: format_date(k['Date de promulgation']), reverse=True)
 
 namefile = lambda npage: "dossiers_%s_%s.json" % (pagesize*npage, min(total, pagesize*(npage+1))-1)
 def save_json_page(tosave, done):
     npage = (done - 1) / pagesize
     data = {"total": total,
+            "min_date": mindate,
+            "max_date": maxdate,
+            "max_days": maxdays,
             "count": len(tosave),
             "page": npage,
             "next_page": None,
