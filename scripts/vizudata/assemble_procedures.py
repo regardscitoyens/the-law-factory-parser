@@ -22,7 +22,7 @@ total = len(dossiers)
 
 # Compute dates and length
 maxdays = 0
-mindate = ""
+mindate = "9999"
 maxdate = ""
 for d in dossiers:
     d0 = format_date(d["Date initiale"])
@@ -30,7 +30,7 @@ for d in dossiers:
     days =  (datize(d1) - datize(d0)).days + 1
     maxdays = max(maxdays, (datize(d1) - datize(d0)).days + 1)
     mindate = min(mindate, d0)
-    maxdate = max(mindate, d1)
+    maxdate = max(maxdate, d1)
 
 dossiers.sort(key=lambda k: format_date(k['Date de promulgation']), reverse=True)
 
