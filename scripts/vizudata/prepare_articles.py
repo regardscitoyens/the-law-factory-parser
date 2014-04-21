@@ -98,7 +98,7 @@ for nstep, step in enumerate(steps):
                             if st['id_step'] == old_step_id:
                                 oldtext = st['text']
                                 break
-                        if not oldtext or nstep < depots:
+                        if txt and (not oldtext or nstep < depots):
                             s['status'] = 'new' if nstep >= depots else 'none'
                             s['diff'] = 'add'
                             s['n_diff'] = 1

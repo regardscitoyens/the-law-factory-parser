@@ -7,7 +7,7 @@ if ! test "$1"; then
 fi
 data=$(if test "$2" ; then echo $2 ; else echo "data" ; fi)
 
-function escapeit { perl -e 'use URI::Escape; print uri_escape shift();print"\n"' $1 | sed 's/\s/_/g'; }
+function escapeit { perl -e 'use URI::Escape; print uri_escape shift();print"\n"' "$1" | sed 's/\s/_/g'; }
 #function download { curl -s $1 }
 function download { cache=$cachedir"/"$(escapeit $1) ; if ! test -e $cache ; then curl -s $1 > $cache.tmp ; mv $cache.tmp $cache ; fi ; cat $cache ; } ; mkdir -p $data"/../.cache/web" ; cachedir=$data"/../.cache/web"
 
@@ -29,7 +29,7 @@ cat $1 | while read line ; do
   norder=$(echo $line | awk -F ';' '{print $8}')
   order=$(echo $line | awk -F ';' '{print $7}')
   url=$(echo $line | awk -F ';' '{print $12}')
-  escape=$(escapeit $url)
+  escape=$(escapeit "$url")
   chambre=$(echo $line | awk -F ';' '{print $10}')
   stage=$(echo $line | awk -F ';' '{print $11}')
   
@@ -72,8 +72,10 @@ cat $1 | while read line ; do
   # Complete articles with missing "conforme" or "non-modifié" text for all steps except depots 1ère lecture
   if [ "$norder" != "1" ] && [ "$norder" != 4 ] && test -s $data/.tmp/json/articles_laststep.json; then
     previous="$data/.tmp/json/articles_laststep.json"
-    if echo "$etape" | grep "_nouv.lect._senat_hemicycle" > /dev/null && grep '"type": "echec"' "$data/.tmp/json/$escape" > /dev/null; then
+    if echo "$etape" | grep "_nouv.lect._senat_hemicycle" > /dev/null && grep '"echec"[:,}]' "$data/.tmp/json/$escape" > /dev/null; then
       previous="$data/.tmp/json/articles_nouvlect.json"
+    elif echo "$etape" | grep "hemicycle" > /dev/null && grep '"echec"[:,}]' "$data/.tmp/json/articles_laststep.json" > /dev/null; then
+      previous="$data/.tmp/json/articles_antelaststep.json"
     fi
     if ! python complete_articles.py $data/.tmp/json/$escape "$previous" > $data/.tmp/json/$escape.tmp; then
       echo "ERROR completing $data/.tmp/html/$escape"
