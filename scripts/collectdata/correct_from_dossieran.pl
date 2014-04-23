@@ -39,7 +39,7 @@ foreach (split(/\n/, $content)) {
 	    $stade = "commission";
 	}
     }elsif(!/nomm..? |nomination/i && / (\d+) (janvier|f..?vrier|mars|avril|mai|juin|juillet|ao..?t|septembre|octobre|novembre|d..?cembre) (\d+)/ && $chambre && $stade && !$date) {
-	$annee = $3; $mois = $2; $jour = $1;
+	$annee = $3; $mois = $2; $jour = sprintf('%02d', $1);
 	lc($mois);
 	$mois =~ s/[^a-z]+//i;
 	$date = "$annee-".$mois{$mois}."-$jour";
