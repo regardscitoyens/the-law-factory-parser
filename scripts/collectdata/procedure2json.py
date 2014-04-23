@@ -12,6 +12,11 @@ projectdir = csvpath.replace('/procedure.csv', '')
 def row2dir(row):
     return row[6]+'_'+row[8].replace(' ', '')+'_'+row[9]+'_'+row[10]
 
+re_clean_texte = re.compile(r'(\s\+|de la sécurité sociale de financement |rectificative de finances |règlement portant |\.$)', re.I)
+re_shorten_title = re.compile(r"^pro(jet|position) de (loi|résolution)[\s:]*( (constitutionnelle|organique))* (sur |(port|ratifi|proroge|modifi|institu|habilit|interdis|tend|approuv|autoris|r[eé](lati[vfe]|tablissa|nforç))[ant,àux ]*)*(l(a ratific|'approb)ation d(e( l(a|')|s)? ?|u |'une? ))*(l['ea]s?\s*)?", re.I)
+
+upper_first = lambda t: t[0].upper() + t[1:]
+
 procedure = {'type': 'Normale'}
 steps = []
 with open(csvpath, 'rb') as csvfile:
@@ -61,8 +66,13 @@ with open(csvpath, 'rb') as csvfile:
     procedure['steps'] = steps
     procedure['beginning'] = steps[0]['date']
     procedure['end'] = row[14]
-    procedure['long_title'] = row[1]
-    procedure['short_title'] = row[2]
+    procedure['long_title'] = re_clean_texte.sub('', row[1]).replace(u'règlement de règlement', u'règlement')
+    if row[2]:
+        procedure['short_title'] = row[2]
+        if " de loi organique" in procedure['long_title']:
+            procedure['short_title'] += " (texte organique)"
+    else:
+        procedure['short_title'] = upper_first(re_shorten_title.sub('', procedure['long_title']))
     procedure['url_dossier_senat'] = "http://www.senat.fr/dossier-legislatif/%s.html" % row[5]
     procedure['url_dossier_assemblee'] = "http://www.assemblee-nationale.fr/%s/dossiers/%s.asp" % (row[3], row[4])
 
