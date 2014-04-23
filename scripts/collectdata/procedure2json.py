@@ -66,7 +66,7 @@ with open(csvpath, 'rb') as csvfile:
     procedure['steps'] = steps
     procedure['beginning'] = steps[0]['date']
     procedure['end'] = row[14]
-    procedure['long_title'] = re_clean_texte.sub('', row[1]).replace(u'règlement de règlement', u'règlement')
+    procedure['long_title'] = re_clean_texte.sub('', row[1]).replace('règlement de règlement', 'règlement')
     if row[2]:
         procedure['short_title'] = row[2]
         if " de loi organique" in procedure['long_title']:
