@@ -17,12 +17,19 @@ for _, a in articles.iteritems():
     for s in a['steps']:
         stepid = s['directory']
         if stepid not in good_steps:
-             good_steps[stepid] = int(s['id_step'][:2])
+            good_steps[stepid] = int(s['id_step'][:2])
 
 for s in procedure['steps']:
     s['debats_order'] = None
     if 'directory' in s:
         s['debats_order'] = good_steps.get(s['directory'], None)
+    if s.get('step', '') == 'depot' and s['debats_order'] != None:
+        if '/propositions/' in s.get('source_url', ''):
+            s['auteur_depot'] = u"Assemblée nationale"
+        elif '/leg/ppl' in s.get('source_url',''):
+            s['auteur_depot'] = u"Sénat"
+        else:
+            s['auteur_depot'] = u"Gouvernement"
     for field in dict(s):
         if field.endswith('_directory') or field.endswith('_files'):
             del(s[field])
