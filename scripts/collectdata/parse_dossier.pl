@@ -246,7 +246,7 @@ foreach $l (@lines) {
 
 if ($content =~ /Proc\S+dure acc\S+l\S+r\S+e/) {
     if ($content =~ /engag\S+e par le Gouvernement le (\d+) (\w+) (\d+)/) {
-	$annee = $3 ; $jour = $1 ; $mois = $2;
+	$annee = $3 ; $jour = sprintf('%02d', $1); $mois = $2;
 	$mois=~s/[^a-z]//g;
 	print "$date;$titrelong;$titrecourt;$legislature;$dossieran;$dossiersenat;XX;EXTRA;URGENCE;Gouvernement;URGENCE;;;$annee-".$mois{$mois}."-$jour;$annee-".$mois{$mois}."-$jour;\n";
     }
