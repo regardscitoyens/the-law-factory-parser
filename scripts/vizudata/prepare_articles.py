@@ -50,12 +50,14 @@ steps = []
 latersteps = []
 for step in procedure['steps']:
     if step.get('step', '') == 'depot':
-        if step.get('institution', '') == 'assemblee' or (step.get('source_url', '').endswith("/%s.html" % dossier_id) and not first):
+        if not first and (step.get('institution', '') == 'assemblee' or step.get('source_url', '').endswith("/%s.html" % dossier_id)):
             first = step
-        elif first and first['institution'] == 'assemblee' and step.get('source_url', '').endswith("/%s.html" % dossier_id):
+        elif first and first.get('institution', '') == 'assemblee' and step.get('source_url', '').endswith("/%s.html" % dossier_id):
             continue
-        else:
+        elif step.get('institution', '') == 'senat' and "/ppl" in step.get('source_url', '') and step.get('stage', u'') == u'1ère lecture':
             steps.append(step)
+        else:
+            continue
     else:
         latersteps.append(step)
 steps.append(first)

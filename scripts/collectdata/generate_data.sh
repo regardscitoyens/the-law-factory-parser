@@ -36,9 +36,7 @@ cat $1 | while read line ; do
   mkdir -p "$data/$dossier"
   rm -rf "$projectdir"
   if test "$dossier" = "$olddossier"; then
-      if [ "$norder" = "1" ] || [ "$stage" != 'depot' ] || ([ "$chambre" = "senat" ] && [ "$norder" = "4" ]); then 
 	  echo $line >>  "$data/$dossier/procedure.csv"
-      fi
   else
       echo $line >  "$data/$dossier/procedure.csv"
   fi
