@@ -25,8 +25,9 @@ $a2 = WWW::Mechanize->new(autocheck => 0);
 
 $titrecourt = '';
 $titrelong = '';
-if ($content =~ /title>([^<\-]+) -/) {
+if ($content =~ /title>([^<]+)</) {
     $titrecourt = $1;
+    $titrecourt =~ s/[-\s]*S[eé]nat(\.fr)?\s*$//i;
     utf8::encode($titrecourt);
 }
 if ($content =~ /Description" content="([^"]+)"/) {
