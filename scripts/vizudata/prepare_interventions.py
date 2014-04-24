@@ -43,7 +43,9 @@ for step in procedure['steps']:
     step['intervention_files'].sort()
     warndone = []
     for interv_file in step['intervention_files']:
-        intervs += open_json(os.path.join(context.sourcedir, 'procedure', step['intervention_directory']), "%s.json" % interv_file)['seance']
+        for i in open_json(os.path.join(context.sourcedir, 'procedure', step['intervention_directory']), "%s.json" % interv_file)['seance']:
+            del(i['intervention']['contenu'])
+            intervs.append(i)
 
     typeparl, urlapi = identify_room(intervs, 'intervention')
 
