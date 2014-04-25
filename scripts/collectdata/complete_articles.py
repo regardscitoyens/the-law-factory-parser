@@ -245,13 +245,13 @@ for l in f:
 while oldarts:
     cur, a = oldarts.pop(0)
     oldartids.remove(cur)
-    if a["statut"].startswith("conforme"):
+    if not texte.get('echec', '') and a["statut"].startswith("conforme"):
         log("DEBUG: Recovering art conforme %s" % cur.encode('utf-8'))
         a["statut"] = "conforme"
         a["order"] = order
         order += 1
         write_json(a)
-    elif not re_suppr.match(a["statut"]):
+    elif not re_suppr.match(a["statut"]) or texte.get('echec', ''):
         log("DEBUG: Marking art %s as supprimé" % cur.encode('utf-8'))
         a["statut"] = "supprimé"
         a["alineas"] = dict()
