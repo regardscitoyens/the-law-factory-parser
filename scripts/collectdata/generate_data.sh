@@ -72,7 +72,7 @@ cat $1 | while read line ; do
     previous="$data/.tmp/json/articles_laststep.json"
     if echo "$etape" | grep "_nouv.lect._senat_hemicycle" > /dev/null && grep '"echec"[:,}]' "$data/.tmp/json/$escape" > /dev/null; then
       previous="$data/.tmp/json/articles_nouvlect.json"
-    elif echo "$etape" | grep "hemicycle" > /dev/null && grep '"echec"[:,}]' "$data/.tmp/json/articles_laststep.json" > /dev/null; then
+    elif grep '"echec"[:,}]' "$data/.tmp/json/articles_laststep.json" > /dev/null; then
       previous="$data/.tmp/json/articles_antelaststep.json"
     fi
     if ! python complete_articles.py $data/.tmp/json/$escape "$previous" > $data/.tmp/json/$escape.tmp; then
