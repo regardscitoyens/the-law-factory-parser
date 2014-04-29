@@ -24,19 +24,25 @@ def unifyStatus(status):
         return "new"
     return "none"
 
-def create_step(step_id, directory, article):
+def create_step(step_id, directory, article=None, echec_type=None):
     s = {}
     s['id_step'] = step_id
     s['directory'] = directory
-    if article.get('statut'):
-        s['status'] = unifyStatus(article['statut'])
-    else:
-        s['status'] = 'none'
     s['text'] = []
-    for key in sorted(article['alineas'].keys()):
-        if article['alineas'][key] != '':
-            s['text'].append(article['alineas'][key])
-    s['order'] = article['order']
+    if article:
+        if article.get('statut'):
+            s['status'] = unifyStatus(article['statut'])
+        else:
+            s['status'] = 'none'
+        for key in sorted(article['alineas'].keys()):
+            if article['alineas'][key] != '':
+                s['text'].append(article['alineas'][key])
+        s['order'] = article['order']
+    else:
+        s['status'] = echec_type.upper()
+        s['length'] = -1
+        s['n_diff'] = 0
+        s['order'] = -1
     return s
 
 title = procedure.get("long_title", "Missing title").replace(procedure.get("short_title", "").lower(), procedure.get("short_title", ""))
@@ -80,7 +86,14 @@ for nstep, step in enumerate(steps):
     try:
         path = os.path.join(sourcedir, step['resulting_text_directory'])
         step_id = "%02d%s" % (nstep, step['directory'][2:])
+        echec = (step['echec'] and step['echec'] != "renvoi en commission")
 
+        if echec:
+            if not 'echec' in out['articles']:
+                out['articles']['echec'] = {'id': 'echec', 'titre': step['echec'], 'section': 'echec', 'steps': []}
+            next_step = create_step(step_id, step['directory'], echec_type=step['echec'])
+            out['articles']['echec']['steps'].append(next_step)
+            continue
         for root, dirs, files in os.walk(path):
             articleFiles = [os.path.abspath(os.path.join(root,f)) for f in files if re.search(r'^A.*', getParentFolder(root, f)) and re.search(r'^.*?json', f)]
             if last_step and len(articleFiles) != 1:
@@ -88,12 +101,12 @@ for nstep, step in enumerate(steps):
                 break
             if len(articleFiles) > 0:
                 for articleFile in articleFiles:
-                    with open(articleFile,"r") as article:
-                         article = json.load(article)
+                    with open(articleFile, "r") as article:
+                        article = json.load(article)
 
                     id = article['titre'].replace(' ', '_')
                     if out['articles'].get(id):
-                        s = create_step(step_id, step['directory'], article)
+                        s = create_step(step_id, step['directory'], article=article)
                         txt = " ".join(s['text'])
                         oldtext = None
                         for st in out['articles'][id]['steps']:
@@ -155,7 +168,7 @@ for nstep, step in enumerate(steps):
                     else:
                         s['length'] = len(txt)
                     out['articles'][id]['steps'].append(s)
-        if 'step' in step:
+        if 'step' in step and not echec:
             old_step_id = step_id
 
     except Exception as e:

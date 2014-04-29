@@ -24,7 +24,7 @@ with open(csvpath, 'rb') as csvfile:
     for row in csvproc:
         if len(row) < 15:
             row.append("")
-        step = {'date': row[13], 'enddate': row[14], 'stage': row[8], 'institution': row[9], 'source_url': row[11]}
+        step = {'date': row[13], 'enddate': row[14], 'stage': row[8], 'institution': row[9], 'source_url': row[11], 'echec': row[15] or None}
         if row[7] != 'EXTRA':
             step['directory'] = row2dir(row)
             try:
@@ -46,10 +46,7 @@ with open(csvpath, 'rb') as csvfile:
             except:
                 step['has_interventions'] = False
             if step['has_interventions']:
-                files = []
-                for f in os.listdir(intervention_dir):
-                    if re.search('.json$', f):
-                        files.append(f.replace('.json', ''))
+                files = [f.replace('.json', '') for f in os.listdir(intervention_dir) if f.endswith('.json')]
                 step['intervention_files'] = files
                 step['intervention_directory'] = intervention_dir
             step['step'] = row[10]

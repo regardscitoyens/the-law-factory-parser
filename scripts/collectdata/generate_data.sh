@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if ! test "$1"; then 
+if ! test "$1"; then
 	echo "USAGE: $0 DOSSIER_DESC.CSV [DATADIR]"
 	printf "\t DOSSIER_DESC.CSV: CSV décrivant un ou plusieurs dossiers parlementaires générés via parse_dosser.pl (de NosSénateurs)\n"
 	printf "\t DATADIR: répertoire où vont être mises les données (par defaut data/)"
@@ -19,7 +19,7 @@ for url in "2007-2012.nosdeputes" "www.nosdeputes" "www.nossenateurs"; do
 done
 
 oldchambre=""
-cat $1 | while read line ; do 
+cat $1 | while read line ; do
   #Variables
 #  dossier=$(echo $line | awk -F ';' '{print $1"_"$5"_"$6}' | sed 's/-\([0-9]*\)-/\1/')
   dossier="procedure"
@@ -32,35 +32,30 @@ cat $1 | while read line ; do
   escape=$(escapeit "$url")
   chambre=$(echo $line | awk -F ';' '{print $10}')
   stage=$(echo $line | awk -F ';' '{print $11}')
-  
+
   mkdir -p "$data/$dossier"
   rm -rf "$projectdir"
-  if test "$dossier" = "$olddossier"; then
-	  echo $line >>  "$data/$dossier/procedure.csv"
-  else
-      echo $line >  "$data/$dossier/procedure.csv"
-  fi
-  python procedure2json.py "$data/$dossier/procedure.csv" > "$data/$dossier/procedure.json"
-  olddossier=$dossier
   if echo $line | grep ';\(EXTRA\|texte retire\);' > /dev/null ; then
+	echo "$line;" >>  "$data/$dossier/procedure.csv"
+    olddossier=$dossier
 	continue;
   fi
- if echo $line | grep ';renvoi en commission;' > /dev/null ; then
-  if ! test -s $data/.tmp/json/articles_antelaststep.json; then
-    echo "ERROR retrieving texte renvoyé en commission $data/.tmp/json/articles_antelaststep.json empty"
-    exit 1
+  if echo $line | grep ';renvoi en commission;' > /dev/null ; then
+    if ! test -s $data/.tmp/json/articles_antelaststep.json; then
+      echo "ERROR retrieving texte renvoyé en commission $data/.tmp/json/articles_antelaststep.json empty"
+      exit 1
+    fi
+    head -n 1 $data/.tmp/json/articles_antelaststep.json | sed 's/^{\("expose": "\).*"\(, "id": "\)\([0-9]\+\)\(_[^"]*", \)/{"echec": true, \1Le texte est renvoyé en commission."\2'"$etapid"'\4/' > $data/.tmp/json/$escape
+    tail -n $(($(cat $data/.tmp/json/articles_antelaststep.json | wc -l) - 1)) $data/.tmp/json/articles_antelaststep.json >> $data/.tmp/json/$escape
+  else
+    #Text export
+    download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape;
+    #if file -i $data/.tmp/html/$escape | grep -i iso > /dev/null; then recode ISO885915..UTF8 $data/.tmp/html/$escape; fi
+    if ! python parse_texte.py $data/.tmp/html/$escape $order > $data/.tmp/json/$escape; then
+      echo "ERROR parsing $data/.tmp/html/$escape"
+      exit 1
+    fi
   fi
-  head -n 1 $data/.tmp/json/articles_antelaststep.json | sed 's/^{\("expose": "\).*"\(, "id": "\)\([0-9]\+\)\(_[^"]*", \)/{"echec": true, \1Le texte est renvoyé en commission."\2'"$etapid"'\4/' > $data/.tmp/json/$escape
-  tail -n $(($(cat $data/.tmp/json/articles_antelaststep.json | wc -l) - 1)) $data/.tmp/json/articles_antelaststep.json >> $data/.tmp/json/$escape
- else 
-  #Text export
-  download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape;
-  #if file -i $data/.tmp/html/$escape | grep -i iso > /dev/null; then recode ISO885915..UTF8 $data/.tmp/html/$escape; fi
-  if ! python parse_texte.py $data/.tmp/html/$escape $order > $data/.tmp/json/$escape; then
-    echo "ERROR parsing $data/.tmp/html/$escape"
-    exit 1
-  fi
- fi
   # Complete missing intermediate depots from last step
   if [ $(cat $data/.tmp/json/$escape  | wc -l) -lt 2 ] && [ "$stage" = "depot" ] && [ "$order" != "00" ]; then
     echo "WARNING: creating depot step $projectdir from last step since no data found"
@@ -81,6 +76,22 @@ cat $1 | while read line ; do
     fi
     mv $data/.tmp/json/$escape{.tmp,}
   fi
+
+  echec=""
+  if grep '"echec"[:,}]' "$data/.tmp/json/$escape" > /dev/null; then
+    echec="rejet"
+    if echo $line | grep ';renvoi en commission;' > /dev/null; then
+      echec="renvoi en commission"
+    elif echo $line | grep ';CMP;CMP;commission;' > /dev/null; then
+      echec="échec"
+    fi
+  fi
+  if test "$dossier" = "$olddossier"; then
+	echo "$line;$echec" >>  "$data/$dossier/procedure.csv"
+  else
+    echo "$line;$echec" >  "$data/$dossier/procedure.csv"
+  fi
+
   if ! python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"; then
     rm -rf "$projectdir"
     echo "ERROR creating arbo from $data/.tmp/json/$escape"
@@ -143,4 +154,6 @@ cat $1 | while read line ; do
   olddossier=$dossier
   echo "INFO: data exported in $projectdir"
 done
+
+python procedure2json.py "$data/$dossier/procedure.csv" > "$data/$dossier/procedure.json"
 

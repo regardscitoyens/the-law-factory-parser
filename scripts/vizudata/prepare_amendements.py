@@ -76,9 +76,10 @@ for step in procedure['steps']:
             gpe = "Autre"
         context.add_groupe(groupes, gpe, urlapi)
 
-    filename = os.path.join(context.sourcedir, 'viz', 'amendements_%s.json' % step['directory'])
+    amdtsfile = os.path.join(context.sourcedir, 'viz', 'amendements_%s.json' % step['directory'])
     data = {'id_step': step['directory'],
             'api_root_url': amdapi_link(urlapi),
             'groupes': groupes,
             'sujets': sujets}
-    print_json(data, filename)
+    print_json(data, amdtsfile)
+
