@@ -40,9 +40,9 @@ def create_step(step_id, directory, article=None, echec_type=None):
         s['order'] = article['order']
     else:
         s['status'] = echec_type.upper()
-        s['length'] = -1
+        s['length'] = 0
         s['n_diff'] = 0
-        s['order'] = -1
+        s['order'] = 1
     return s
 
 title = procedure.get("long_title", "Missing title").replace(procedure.get("short_title", "").lower(), procedure.get("short_title", ""))
