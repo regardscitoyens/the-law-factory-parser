@@ -91,6 +91,7 @@ cat $1 | while read line ; do
   else
     echo "$line;$echec" >  "$data/$dossier/procedure.csv"
   fi
+  python procedure2json.py "$data/$dossier/procedure.csv" > "$data/$dossier/procedure.json"
 
   if ! python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"; then
     rm -rf "$projectdir"
@@ -155,5 +156,4 @@ cat $1 | while read line ; do
   echo "INFO: data exported in $projectdir"
 done
 
-python procedure2json.py "$data/$dossier/procedure.csv" > "$data/$dossier/procedure.json"
 
