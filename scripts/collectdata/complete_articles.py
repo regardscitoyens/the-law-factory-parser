@@ -14,7 +14,11 @@ try:
     f = open(FILE, "r")
 except:
     log("ERROR: Cannot open json file %s" % FILE)
-    sys.exit()
+    sys.exit(1)
+
+def exit():
+    f.close()
+    sys.exit(1)
 
 find_num = re.compile(r'-[a-z]*(\d+)\D?$')
 try:
@@ -24,6 +28,7 @@ try:
     oldstatus = {}
     oldarts = []
     oldartids = []
+    oldsects = []
     with open(sys.argv[2], 'r') as f2:
         for l in f2:
             if not l.strip():
@@ -31,7 +36,7 @@ try:
             line = json.loads(l)
             if not line or not "type" in line:
                 log("JSON %s badly formatted, missing field type: %s" % (source, line))
-                sys.exit()
+                exit()
             if line["type"] != "texte":
                 oldjson.append(line)
             else:
@@ -43,10 +48,12 @@ try:
                 oldstatus[line["titre"]] = line['statut']
                 oldartids.append(line["titre"])
                 oldarts.append((line["titre"], line))
+            elif line["type"] == "section":
+                oldsects.append(line)
 except Exception as e:
     print >> sys.stderr, type(e), e
     log("No previous step found at %s" % sys.argv[2])
-    sys.exit()
+    exit()
 
 def write_json(data):
     print json.dumps(data, sort_keys=True, ensure_ascii=False).encode("utf-8")
@@ -62,7 +69,7 @@ def get_mark_from_last(text, start, last=""):
         start = make_sta_reg(start)
     except:
         print >> sys.stderr, 'ERROR', start.encode('utf-8'), text.encode('utf-8'), last.encode('utf-8')
-        exit(1)
+        exit()
     if last:
         last = make_sta_reg(last)
     re_end = None
@@ -91,11 +98,14 @@ def get_mark_from_last(text, start, last=""):
             res.append(i)
     return res
 
+re_alin_sup = re.compile(ur'supprimés?\)$', re.I)
+re_clean_alin = re.compile(r'^"?[IVXCDLMa-z\d]+[°)-\.\s]*(\s(%s|[A-Z]+)[°)-\.\s]+)*' % bister)
 re_clean_virg = re.compile(r'\s*,\s*')
 re_suppr = re.compile(r'\W*suppr(ess|im)', re.I)
 re_confo = re.compile(r'\W*(conforme|non[\s\-]*modifi)', re.I)
 re_confo_with_txt = re.compile(r'\s*\(\s*(conforme|non[\s\-]*modifié)\s*\)\s*([\W]*\w+)', re.I)
 order = 1
+cursec = ""
 done_titre = False
 for l in f:
     if not l.strip():
@@ -103,7 +113,7 @@ for l in f:
     line = json.loads(l)
     if not line or not "type" in line:
         sys.stderr.write("JSON %s badly formatted, missing field type: %s\n" % (FILE, line))
-        sys.exit()
+        exit()
     if oldnum and 'source_text' in line and oldnum != line['source_text']:
         continue
     if line["type"] == "echec":
@@ -115,11 +125,22 @@ for l in f:
         break
     elif line["type"] == "texte":
         texte = dict(line)
+        if texte["definitif"]:
+            from difflib import ndiff, SequenceMatcher
     else:
       if not done_titre:
         write_json(texte)
         done_titre = True
       if line["type"] != "article":
+        if texte['definitif']:
+            try:
+                cursec = oldsects.pop(0)
+                assert(cursec["type_section"] == line["type_section"])
+            except:
+                print >> sys.stderr, "ERROR: Problem while renumbering sections", line, "\n", cursec
+                exit()
+            line["newid"] = line["id"]
+            line["id"] = cursec["id"]
         write_json(line)
       else:
         keys = line['alineas'].keys()
@@ -141,9 +162,37 @@ for l in f:
                 mult_type = "conf"
             else:
                 print >> sys.stderr, "ERROR: Found multiple article which I don't knwo what to do with", line['titre'].encode('utf-8'), line
-                exit(1)
+                exit()
             line['titre'] = st
         cur = ""
+        if texte['definitif']:
+            try:
+                _, oldart = oldarts[0]
+            except:
+                print >> sys.stderr, "ERROR: Problem while renumbering articles", line, "\n", oldart
+                exit()
+            oldtxt = [re_clean_alin.sub('', v) for v in oldart["alineas"].values() if not re_alin_sup.search(v)]
+            txt = [re_clean_alin.sub('', v) for v in line["alineas"].values()]
+            compare = list(ndiff(txt, oldtxt))
+            mods = {'+': 0, '-': 0 ,'?': 0, ' ': 0}
+            for l in compare:
+                mod = l[0]
+                if mod == '?':
+                    mods[mod] += l.count('^')
+                else:
+                    mods[mod] += 1
+            if mods['+'] or mods['-']:
+                mods['?'] = mods['?'] / (mods['+'] + mods['-'])
+            diff = float(mods['?'])/max(len("".join(txt)), len("".join(oldtxt)))
+            if diff > 0.075:
+                print >> sys.stderr, "WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], line["titre"], mods['?'], len("".join(txt)), diff
+                log("------------------")
+                log("\n".join(compare))
+                log("------------------")
+            line['newtitre'] = line['titre']
+            line['titre'] = oldart['titre']
+            if "section" in line and cursec:
+                line["section"] = cursec["id"]
         if line['titre'] in oldartids and oldarts:
             while oldarts:
                 cur, a = oldarts.pop(0)
@@ -170,7 +219,7 @@ for l in f:
                     print >> sys.stderr, "WARNING: could not find first or last part of multiple article to be removed:", line['titre'].encode('utf-8'), "to", ed.encode('utf-8'), "(last found:", cur+")"
                     continue
                 print >> sys.stderr, "ERROR: dealing with multiple article", line['titre'].encode('utf-8'), "to", ed.encode('utf-8'), "Could not find first or last part in last step (last found:", cur+")"
-                exit(1)
+                exit()
             while True:
                 if mult_type == "sup" and not re_suppr.match(a["statut"]):
                     log("DEBUG: Marking art %s as supprimé" % cur.encode('utf-8'))
@@ -208,11 +257,10 @@ for l in f:
                 text = re_confo_with_txt.sub(r' \2', text)
                 gd_text.append(text)
             elif "(Non modifi" in text:
-
                 part = re.split("\s*([\.°\-]+\s*)+\s*\(Non", text)
                 if not part:
                     log("ERROR trying to get non-modifiés")
-                    exit(1)
+                    exit()
                 todo = part[0]
                 log("EXTRACT non-modifiés: " + str(part))
     # Extract series of non-modified subsections of articles from previous version.
@@ -240,7 +288,14 @@ for l in f:
             line['alineas']["%03d" % (i+1)] = t
         write_json(line)
 
+if texte['definitif'] and oldsects:
+    print >> sys.stderr, "ERROR: %s sections left:\n%s" % (len(oldsects), oldsects)
+    exit()
+
 while oldarts:
+    if texte['definitif']:
+        print >> sys.stderr, "ERROR: %s articles left:\n%s" % (len(oldarts), oldartids)
+        exit()
     cur, a = oldarts.pop(0)
     oldartids.remove(cur)
     if not texte.get('echec', '') and a["statut"].startswith("conforme"):
