@@ -13,12 +13,37 @@ import sys, re, html5lib
 import simplejson as json
 from bs4 import BeautifulSoup
 
+# Warning changing parenthesis in this regexp has multiple consequences throughout the code
+section_titles = "((chap|t)itre|volume|livre|tome|(sous-)?section)"
+
+re_clean_title_legif = re.compile("[\s|]*l[eé]gifrance(.gouv.fr)?$", re.I)
+clean_legifrance_regexps = [
+    (re.compile(r'[\n\t\r\s]+'), ' '),
+    (re.compile(r'<a[^>]*>\s*En savoir plus sur ce[^<]*</a>', re.I), ''),
+    (re.compile(r'<a/?[^>]*>', re.I), ''),
+    (re.compile(r'\s*<br/>\s*', re.I), '</p><p>'),
+    (re.compile(r'<div[^>]*class="titreSection[^>]*>\s*(%s\s+[\dIVXLCDM]+e?r?)\s*:\s*([^<]*?)\s*</div>' % section_titles, re.I), r'<p>\1</p><p><b>\5</b></p>'),
+    (re.compile(r'<div[^>]*class="titreArt[^>]*>(.*?)\s*</div>', re.I), r'<p><b>\1</b></p>'),
+]
+
+FILE = sys.argv[1]
 try:
-    FILE = sys.argv[1]
-    soup = BeautifulSoup(open(FILE,"r"), "html5lib")
+    with open(FILE, 'r') as f:
+        string = f.read()
+        try:
+            string = string.decode('utf-8')
+        except:
+            try:
+                string = string.decode('iso-8859-15')
+            except:
+                pass
+        if 'legifrance.gouv.fr' in FILE:
+            for reg, res in clean_legifrance_regexps:
+                string = reg.sub(res, string)
+    soup = BeautifulSoup(string, "html5lib")
 except:
     sys.stderr.write("ERROR: Cannot open file %s" % FILE)
-    sys.exit(1)
+    exit(1)
 
 if (len(sys.argv) > 2) :
     ORDER = "%02d_" % int(sys.argv[2])
@@ -29,22 +54,25 @@ url = re.sub(r"^.*/http", "http", FILE)
 url = re.sub(r"%3A", ":", re.sub(r"%2F", "/", url))
 texte = {"type": "texte", "source": url}
 # Generate Senat or AN ID from URL
-if re.search(r"assemblee-?nationale", url):
-    m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url)
+if "legifrance.gouv.fr" in url:
+    m = re.search(r"cidTexte=(JORFTEXT\d+)(\D|$)", url, re.I)
+    texte["id"] = ORDER + m.group(1)
+elif re.search(r"assemblee-?nationale", url, re.I):
+    m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
     numero = int(m.group(3))
     texte["id"] = ORDER+"A" + m.group(1) + "-"
     if m.group(2) is not None:
         texte["id"] += m.group(2)
     texte["id"] += str(numero)
 else:
-    m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})\d?\.", url)
+    m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})\d?\.", url, re.I)
     numero = int(m.group(3))
     texte["id"] = ORDER+"S" + m.group(2) + "-"
     if m.group(1) is not None:
         texte["id"] += m.group(1)
     texte["id"] += "%03d" % numero
 
-texte["titre"] = soup.title.string
+texte["titre"] = re_clean_title_legif.sub('', soup.title.string.strip('\n\t\s'))
 texte["expose"] = ""
 
 # Convert from roman numbers
@@ -75,7 +103,6 @@ def clean_full_upcase(text):
         text = mat.group(1) + lower_but_first(mat.group(2))
     return text
 
-section_titles = "((chap|t)itre|volume|livre|tome|(sous-)?section)"
 re_clean_premier = re.compile(r'((PREM)?)(1|I)ER?')
 re_clean_bister = re.compile(r'([IXV\d]+e?r?)\s+((un|duo|tre|bis|qua|quint|quinqu|sex|sept|oct|nov|non|dec|ter|ies)+)', re.I)
 re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]+)\s*([^\s\)])', re.I)
@@ -109,7 +136,7 @@ html_replace = [
     (re.compile(r"œ\s*", re.I), "oe"),
     (re_clean_spaces, " "),
     (re.compile(r'^((<[^>]*>)*")%s ' % section_titles, re.I), lower_inner_title),
-    (re.compile(r' pr..?liminaire', re.I), ' préliminaire')
+    (re.compile(r' pr..?liminaire', re.I), ' préliminaire'),
 ]
 def clean_html(t):
     for regex, repl in html_replace:
@@ -152,7 +179,7 @@ re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
 re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*</b>\s*$")
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
-re_mat_end = re.compile(r"(<i>Délibéré|<b>RAPPORT ANNEX|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<a>\*</a>\s*<i>1<i>\s*Not[ea])", re.I)
+re_mat_end = re.compile(r"(<i>Délibéré|(<b>)?RAPPORT ANNEX|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<a>\*</a>\s*<i>1<i>\s*Not[ea])", re.I)
 re_mat_dots = re.compile(r"^[.…]+$")
 re_mat_st  = re.compile(r"(<i>|\()+\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,10}$", re.I)
 re_mat_new = re.compile(r"\s*\(\s*nouveau\s*\)\s*", re.I)
