@@ -72,7 +72,7 @@ else:
         texte["id"] += m.group(1)
     texte["id"] += "%03d" % numero
 
-texte["titre"] = re_clean_title_legif.sub('', soup.title.string.strip('\n\t\s'))
+texte["titre"] = re_clean_title_legif.sub('', soup.title.string.strip())
 texte["expose"] = ""
 
 # Convert from roman numbers
