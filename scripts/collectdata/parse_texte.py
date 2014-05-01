@@ -16,6 +16,8 @@ from bs4 import BeautifulSoup
 # Warning changing parenthesis in this regexp has multiple consequences throughout the code
 section_titles = "((chap|t)itre|volume|livre|tome|(sous-)?section)"
 
+re_definitif = re.compile(ur'<p[^>]*align[=:\s\-]*center"?>\(?<(b|strong)>\(?texte d[^f]*finitif\)?</(b|strong)>\)?</p>', re.I)
+
 re_clean_title_legif = re.compile("[\s|]*l[eé]gifrance(.gouv.fr)?$", re.I)
 clean_legifrance_regexps = [
     (re.compile(r'[\n\t\r\s]+'), ' '),
@@ -40,6 +42,7 @@ try:
         if 'legifrance.gouv.fr' in FILE:
             for reg, res in clean_legifrance_regexps:
                 string = reg.sub(res, string)
+    definitif = re_definitif.search(string) is not None
     soup = BeautifulSoup(string, "html5lib")
 except:
     sys.stderr.write("ERROR: Cannot open file %s" % FILE)
@@ -52,7 +55,7 @@ else:
 
 url = re.sub(r"^.*/http", "http", FILE)
 url = re.sub(r"%3A", ":", re.sub(r"%2F", "/", url))
-texte = {"type": "texte", "source": url}
+texte = {"type": "texte", "source": url, "definitif": definitif}
 # Generate Senat or AN ID from URL
 if "legifrance.gouv.fr" in url:
     m = re.search(r"cidTexte=(JORFTEXT\d+)(\D|$)", url, re.I)
