@@ -215,7 +215,7 @@ for text in soup.find_all("p"):
     #print >> sys.stderr, read, curtext, indextext, line
     if re_stars.match(line):
         continue
-    if line == "<b>RAPPORT</b>":
+    if line == "<b>RAPPORT</b>" or line == "Mesdames, Messieurs,":
         read = -1
     if (srclst or indextext != -1) and re_sep_text.match(line):
         curtext += 1
