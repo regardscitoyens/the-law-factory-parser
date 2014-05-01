@@ -191,16 +191,14 @@ for l in f:
             continue
         if (re_suppr.match(line["statut"]) or (len(alineas) == 1 and re_suppr.match(alineas[0]))) and (line['titre'] not in oldstatus or re_suppr.match(oldstatus[line['titre']])):
            continue
-        if len(alineas) == 1:
-            text = alineas[0].encode('utf-8')
         # Clean empty articles with only "Non modifié" and include text from previous step
-            if re_confo.match(text):
-                if not line['titre'] in oldstep:
-                    sys.stderr.write("WARNING: found repeated article %s missing from previous step %s: %s\n" % (line['titre'], FILE, line['alineas']))
-                else:
-                    log("DEBUG: get back Art %s" % line['titre'])
-                    alineas.pop(0)
-                    alineas.extend(oldstep[line['titre']])
+        if len(alineas) == 1 and re_confo.match(alineas[0].encode('utf-8')):
+            if not line['titre'] in oldstep:
+                sys.stderr.write("WARNING: found repeated article %s missing from previous step %s: %s\n" % (line['titre'], FILE, line['alineas']))
+            else:
+                log("DEBUG: get back Art %s" % line['titre'])
+                alineas.pop(0)
+                alineas.extend(oldstep[line['titre']])
         gd_text = []
         for j, text in enumerate(alineas):
             text = text.encode('utf-8')
