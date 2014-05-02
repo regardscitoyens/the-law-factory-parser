@@ -170,7 +170,7 @@ for l in f:
         alineas = [line['alineas'][k] for k in keys]
         mult = line['titre'].split(u' à ')
         is_mult = (len(mult) > 1)
-        oldid = 1 if grdoldarts and ("conforme" in line['statut'].lower() or "conforme" in alineas[0].lower()) else 0
+        oldid = 1 if grdoldarts and ("conforme" in line['statut'].lower() or (alineas and "conforme" in alineas[0].lower())) else 0
         if is_mult:
             st = mult[0].strip()
             ed = mult[1].strip()
