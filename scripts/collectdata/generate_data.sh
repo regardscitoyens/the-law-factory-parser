@@ -18,7 +18,6 @@ for url in "2007-2012.nosdeputes" "www.nosdeputes" "www.nossenateurs"; do
   download "http://$url.fr/organismes/groupe/json" > "$data/../$url-groupes.json"
 done
 
-oldchambre=""
 cat $1 | while read line ; do
   #Variables
 #  dossier=$(echo $line | awk -F ';' '{print $1"_"$5"_"$6}' | sed 's/-\([0-9]*\)-/\1/')
@@ -112,7 +111,13 @@ cat $1 | while read line ; do
   if echo "$etape" | grep "_nouv.lect._assemblee_hemicycle" > /dev/null; then
    cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_nouvlect.json
   fi
-  if test "$amdidtext" && test "$oldchambre" = "$chambre" && test "$olddossier" = "$dossier"; then
+
+  if echo $line | grep ';CMP;assemblee;' > /dev/null; then
+    amdidtext=$amdidtextcmpa
+  elif echo $line | grep ';CMP;senat;' > /dev/null; then
+    amdidtext=$amdidtextcmps
+  fi
+  if test "$amdidtext" && (test "$stage" = "commission" || test "$stage" = "hemicycle") && test "$olddossier" = "$dossier"; then
     if test "$chambre" = "senat"; then
 	  dossier_instit=$(echo $line | awk -F ';' '{print $6}')
       urlchambre="http://www.nossenateurs.fr"
@@ -156,7 +161,17 @@ cat $1 | while read line ; do
 
   #End
   amdidtext=$(echo $line | awk -F ';' '{print $13}')
-  oldchambre=$chambre
+  if echo $line | grep ';CMP;CMP;commission;' > /dev/null; then
+    if echo $line | grep 'senat.fr' > /dev/null; then
+      amdidtextcmpa=
+      amdidtextcmps=$amdidtext
+    elif echo $line | grep 'nationale.fr' > /dev/null; then
+      amdidtextcmpa=$amdidtext
+      amdidtextcmps=
+      
+    fi
+  fi
+  
   olddossier=$dossier
   echo "INFO: data exported in $projectdir"
 done
