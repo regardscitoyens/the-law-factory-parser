@@ -9,9 +9,9 @@ if [ -z "$1" ]; then
    sed 's/^/id;/' | sed 's/$/;total_amendements;total_mots/' > data/dossiers_promulgues.csv
 fi
 
-cat data/.cache/list_dossiers_senat.csv     |
-#grep '/20\(0[8-9]\|1[0-9]\)";.*;"promulgu' |
- grep '/20\(50[8-9]\|1[0-9]\)";.*;"promulgu' |
+cat data/.cache/list_dossiers_senat.csv      |
+#grep ';"promulgu.*20\(0[8-9]\|1[0-9]\)";'    |
+ grep ';"promulgu.*20\(50[8-9]\|1[0-9]\)";'  |
  while read line; do
   url=$(echo $line | sed 's/^.*";"\(http[^"]\+\)";.*$/\1/')
   id=$(echo $url | sed 's/.*dossier-legislatif.//' | sed 's/.html$//')
