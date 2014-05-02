@@ -32,6 +32,17 @@ def add_intervs(dic, key, inter):
     dic[key]['nb_intervs'] += 1
     dic[key]['nb_mots'] += int(inter['nbmots'])
 
+gouv_members = {}
+re_hash_gm = re.compile(r'\W+')
+hash_gm = lambda x: re_hash_gm.sub('', x).lower()
+def save_gm(i):
+    hgm = hash_gm(i['intervenant_nom'])
+    if hgm not in gouv_members or len(gouv_members[hgm]) < len(i['intervenant_fonction']):
+        gouv_members[hgm] = i['intervenant_fonction']
+def get_gm(i):
+    hgm = hash_gm(i['intervenant_nom'])
+    return gouv_members[hgm] if hgm in gouv_members else ""
+
 re_gouv = re.compile(u'(ministre|garde.*sceaux|secr[eéÉ]taire.*[eéÉ]tat|haut-commissaire)', re.I)
 re_parl = re.compile(u'(d[eéÉ]put[eéÉ]|s[eéÉ]nateur|membre du parlement|parlementaire)', re.I)
 
@@ -80,6 +91,7 @@ for step in procedure['steps']:
             gpe = "Rapporteurs"
         elif re_gouv.search(i['intervenant_fonction']):
             gpe = "Gouvernement"
+            save_gm(i)
         elif re_parl.match(i['intervenant_fonction']):
             gpe = "Autres parlementaires"
         # Consider auditionnés individually ?
@@ -90,7 +102,12 @@ for step in procedure['steps']:
             if context.DEBUG and i['intervenant_nom'] not in warndone:
                 warndone.append(i['intervenant_nom'])
                 sys.stderr.write('WARNING: neither groupe nor function found for %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl]))
-            gpe = u"Auditionnés"
+            gm = get_gm(i)
+            if gm:
+                gpe = "Gouvernement"
+                i['intervenant_fonction'] = gm
+            else:
+                gpe = u"Auditionnés"
         gpid = context.add_groupe(groupes, gpe, urlapi)
         add_intervs(sections[i[sectype]]['groupes'], gpid, i)
 
