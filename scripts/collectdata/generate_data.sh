@@ -75,7 +75,6 @@ cat $1 | while read line ; do
     if echo "$etape" | grep hemicycle > /dev/null; then
       anteprevious="$data/.tmp/json/articles_antelaststep.json"
     fi
-    echo " -> $etape $anteprevious"
     if ! python complete_articles.py $data/.tmp/json/$escape "$previous" "$anteprevious" > $data/.tmp/json/$escape.tmp; then
       echo "ERROR completing $data/.tmp/html/$escape"
       exit 1

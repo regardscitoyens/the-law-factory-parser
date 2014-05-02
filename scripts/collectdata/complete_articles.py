@@ -57,7 +57,6 @@ except Exception as e:
 
 grdoldarts = {}
 if "%2Fta" in FILE and len(sys.argv) > 3 and sys.argv[3]:
-  print >> sys.stderr, "TEST GOOD"
   try:
     with open(sys.argv[3], 'r') as f3:
         for l in f3:
