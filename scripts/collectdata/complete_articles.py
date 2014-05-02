@@ -105,7 +105,7 @@ re_suppr = re.compile(r'\W*suppr(ess|im)', re.I)
 re_confo = re.compile(r'\W*(conforme|non[\s\-]*modifi)', re.I)
 re_confo_with_txt = re.compile(r'\s*\(\s*(conforme|non[\s\-]*modifié)\s*\)\s*([\W]*\w+)', re.I)
 order = 1
-cursec = ""
+cursec = {'id': ''}
 done_titre = False
 for l in f:
     if not l.strip():
@@ -139,8 +139,9 @@ for l in f:
             except:
                 print >> sys.stderr, "ERROR: Problem while renumbering sections", line, "\n", cursec
                 exit()
-            line["newid"] = line["id"]
-            line["id"] = cursec["id"]
+            if line["id"] != cursec["id"]:
+                line["newid"] = line["id"]
+                line["id"] = cursec["id"]
         write_json(line)
       else:
         keys = line['alineas'].keys()
@@ -186,19 +187,22 @@ for l in f:
                 mod = l[0]
                 if mod == '?':
                     mods[mod] += l.count('^')
+                    mods[mod] += l.count('-')
+                    mods[mod] += l.count('+')
                 else:
                     mods[mod] += 1
             if mods['+'] or mods['-']:
                 mods['?'] = mods['?'] / (mods['+'] + mods['-'])
             diff = float(mods['?'])/max(len("".join(txt)), len("".join(oldtxt)))
-            if diff > 0.075:
+            if diff > 0.15:
                 print >> sys.stderr, "WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], line["titre"], mods['?'], len("".join(txt)), diff
                 log("------------------")
                 log("\n".join(compare))
                 log("------------------")
-            line['newtitre'] = line['titre']
-            line['titre'] = oldart['titre']
-            if "section" in line and cursec:
+            if line['titre'] != oldart['titre']:
+                line['newtitre'] = line['titre']
+                line['titre'] = oldart['titre']
+            if "section" in line and cursec['id'] != line["section"]:
                 line["section"] = cursec["id"]
         if line['titre'] in oldartids and oldarts:
             while oldarts:
@@ -303,8 +307,8 @@ while oldarts:
     cur, a = oldarts.pop(0)
     oldartids.remove(cur)
     if texte['definitif'] and not re_suppr.match(a["statut"]):
-        print >> sys.stderr, "ERROR: %s articles left:\n%s" % (len(oldarts), oldartids)
         exit()
+        print >> sys.stderr, "ERROR: %s articles left:\n%s %s" % (len(oldarts)+1, cur, oldartids)
     if not texte.get('echec', '') and a["statut"].startswith("conforme"):
         log("DEBUG: Recovering art conforme %s" % cur.encode('utf-8'))
         a["statut"] = "conforme"

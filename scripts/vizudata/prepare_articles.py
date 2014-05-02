@@ -98,6 +98,8 @@ for nstep, step in enumerate(steps):
                     id = article['titre'].replace(' ', '_')
                     if out['articles'].get(id):
                         s = create_step(step_id, step['directory'], article=article)
+                        if 'newtitre' in article:
+                            s['art_newnum'] = article['newtitre']
                         txt = " ".join(s['text'])
                         oldtext = None
                         for st in out['articles'][id]['steps']:
