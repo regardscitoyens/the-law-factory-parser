@@ -195,7 +195,7 @@ re_clean_conf = re.compile(r"\((conforme|non[\s-]*modifi..?)s?\)", re.I)
 re_clean_supr = re.compile(r'\((dispositions?\s*d..?clar..?es?\s*irrecevable.*article 4.*Constitution.*|suppr(ession|im..?s?)(\s*(conforme|maintenue|par la commission mixte paritaire))*)\)["\s]*$', re.I)
 re_echec_hemi = re.compile(r"<i>L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
 re_echec_hemi2 = re.compile(r"de loi a été rejetée par l('Assemblée nationale|e Sénat)\.$", re.I)
-re_echec_com = re.compile(r" la commission .*(effet est d'entraîner le rejet du|a rejeté le|n'a pas adopté [ld]e) texte[.\s]", re.I)
+re_echec_com = re.compile(r" la commission .*(effet est d'entraîner le rejet|demande de rejeter|a rejeté|n'a pas adopté)[dleau\s]*(projet|proposition|texte)[.\s]", re.I)
 re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*parven(u[es]?|ir) à (élaborer )?un texte commun)", re.I)
 re_rap_mult = re.compile(r'[\s<>/ai]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
 re_src_mult = re.compile(r'^- L(?:A PROPOSITION|E PROJET) DE LOI n°\s*(\d+)\D')
@@ -223,13 +223,15 @@ for text in soup.find_all("p"):
         curtext += 1
         art_num = 0
     srcl = re_src_mult.search(line)
+    cl_line = re_cl_html.sub("", line).strip()
     if srcl and read < 1:
         srclst.append(int(srcl.group(1)))
         continue
     elif re_rap_mult.match(line):
-        line = re_cl_html.sub("", line)
+        line = cl_line
         line = re_clean_mult_1.sub(",", line)
         line = re_clean_mult_2.sub("", line)
+        cl_line = re_cl_html.sub("", line).strip()
         for n_t in line.split(','):
             indextext += 1
             if int(n_t) == numero:
@@ -239,9 +241,9 @@ for text in soup.find_all("p"):
         texte = save_text(texte)
     elif re_mat_exp.match(line):
         read = -1 # Deactivate description lecture
-    elif re_echec_cmp.search(line) or re_echec_com.search(line) or re_echec_hemi.match(line) or re_echec_hemi2.search(line):
+    elif re_echec_cmp.search(cl_line) or re_echec_com.search(cl_line) or re_echec_hemi.match(cl_line) or re_echec_hemi2.search(cl_line):
         texte = save_text(texte)
-        pr_js({"type": "echec", "texte": re_cl_html.sub("", line).strip()})
+        pr_js({"type": "echec", "texte": cl_line})
         break
     elif read == -1 or (indextext != -1 and curtext != indextext):
         continue
@@ -263,7 +265,7 @@ for text in soup.find_all("p"):
     elif re_mat_end.match(line):
         break
     elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line):
-        line = re_cl_html.sub("", line).strip()
+        line = cl_line
         # Read a new article
         if re_mat_art.match(line):
             if article is not None:
@@ -298,7 +300,7 @@ for text in soup.find_all("p"):
             continue
         if re_mat_dots.match(line):
             continue
-        line = re_clean_art_spaces.sub('', re_clean_idx_spaces.sub(r'\1. ', re_mat_new.sub(" ", re_cl_html.sub("", line)).strip()))
+        line = re_clean_art_spaces.sub('', re_clean_idx_spaces.sub(r'\1. ', re_mat_new.sub(" ", cl_line).strip()))
         # Clean low/upcase issues with BIS TER etc.
         line = clean_full_upcase(line)
         line = re_clean_premier.sub(lambda m: (real_lower(m.group(0)) if m.group(1) else "")+m.group(3)+"er", line)
