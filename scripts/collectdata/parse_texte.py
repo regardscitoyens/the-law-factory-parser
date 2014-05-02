@@ -137,9 +137,10 @@ html_replace = [
     (re.compile(r"</?s>", re.I), ""),
     (re.compile(r"\s*</?img>\s*", re.I), ""),
     (re.compile(r"œ\s*", re.I), "oe"),
-    (re_clean_spaces, " "),
     (re.compile(r'^((<[^>]*>)*")%s ' % section_titles, re.I), lower_inner_title),
     (re.compile(r' pr..?liminaire', re.I), ' préliminaire'),
+    (re.compile(r'<strike>[^<]*</strike>', re.I), ''),
+    (re_clean_spaces, " "),
 ]
 def clean_html(t):
     for regex, repl in html_replace:
