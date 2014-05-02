@@ -167,7 +167,14 @@ for l in f:
         cur = ""
         if texte['definitif']:
             try:
-                _, oldart = oldarts[0]
+                goon = True
+                while goon:
+                    _, oldart = oldarts[0]
+                    if re_suppr.match(oldart['statut']):
+                        c, _ = oldarts.pop(0)
+                        oldartids.remove(c)
+                    else:
+                        goon = False
             except:
                 print >> sys.stderr, "ERROR: Problem while renumbering articles", line, "\n", oldart
                 exit()
@@ -293,11 +300,11 @@ if texte['definitif'] and oldsects:
     exit()
 
 while oldarts:
-    if texte['definitif']:
-        print >> sys.stderr, "ERROR: %s articles left:\n%s" % (len(oldarts), oldartids)
-        exit()
     cur, a = oldarts.pop(0)
     oldartids.remove(cur)
+    if texte['definitif'] and not re_suppr.match(a["statut"]):
+        print >> sys.stderr, "ERROR: %s articles left:\n%s" % (len(oldarts), oldartids)
+        exit()
     if not texte.get('echec', '') and a["statut"].startswith("conforme"):
         log("DEBUG: Recovering art conforme %s" % cur.encode('utf-8'))
         a["statut"] = "conforme"
