@@ -184,7 +184,7 @@ re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
 re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*</b>\s*$")
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
-re_mat_end = re.compile(r"(<i>Délibéré|(<b>)?RAPPORT ANNEX|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|<a>\*</a>\s*(<i>)?1)", re.I)
+re_mat_end = re.compile(r"((<i>)?Délibéré en|(<b>)?RAPPORT ANNEX|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|<a>\*</a>\s*(<i>)?1)", re.I)
 re_mat_dots = re.compile(r"^(<i>)?[.…]+(</i>)?$")
 re_mat_st  = re.compile(r"(<i>|\()+\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,10}$", re.I)
 re_mat_new = re.compile(r"\s*\(\s*nouveau\s*\)\s*", re.I)
@@ -260,9 +260,9 @@ for text in soup.find_all("p"):
         section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"])
         section["id"] = section_par + section_typ + str(section_num)
     # Identify titles and new article zones
+    elif re_mat_end.match(line):
+        break
     elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line):
-        if re_mat_end.match(line):
-            break
         line = re_cl_html.sub("", line).strip()
         # Read a new article
         if re_mat_art.match(line):
@@ -292,8 +292,6 @@ for text in soup.find_all("p"):
             read = 0
     # Read articles with alineas
     if read == 2 and not m:
-        if re_mat_end.match(line):
-            break
         # Find extra status information
         if ali_num == 0 and re_mat_st.match(line):
             article["statut"] = re_cl_html.sub("", re_cl_par.sub("", real_lower(line)).strip())
