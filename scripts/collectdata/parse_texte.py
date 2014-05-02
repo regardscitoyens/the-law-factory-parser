@@ -176,6 +176,7 @@ blank_none = lambda x: x if x else ""
 re_cl_html = re.compile(r"<[^>]+>")
 re_cl_par  = re.compile(r"[()]")
 re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
+re_cl_sec_uno = re.compile(r"^[I1][eE][rR]?")
 re_mat_sec = re.compile(r"%s(\s+(.+)e?r?)" % section_titles, re.I)
 re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
 re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
@@ -251,8 +252,8 @@ for text in soup.find_all("p"):
         section_typ = m.group(1).upper()[0]
         if m.group(3) is not None:
             section_typ += "S"
-        section_num = re_cl_uno.sub("1", m.group(5).strip())
-        if re.match(r"\D", m.group(5)):
+        section_num = re_cl_uno.sub('1er', re_cl_sec_uno.sub("1er", m.group(5).strip()))
+        if re.match(r"[IVXCLDM]+", section_num):
             section_num = romans(section_num)
         # Get parent section id to build current section id
         section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"])
