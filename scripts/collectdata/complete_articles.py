@@ -299,7 +299,7 @@ for l in f:
             line['alineas']["%03d" % (i+1)] = t
         write_json(line)
 
-if texte['definitif'] and oldsects:
+if texte['definitif'] and oldsects and oldarts:
     print >> sys.stderr, "ERROR: %s sections left:\n%s" % (len(oldsects), oldsects)
     exit()
 
@@ -307,8 +307,8 @@ while oldarts:
     cur, a = oldarts.pop(0)
     oldartids.remove(cur)
     if texte['definitif'] and not re_suppr.match(a["statut"]):
-        exit()
         print >> sys.stderr, "ERROR: %s articles left:\n%s %s" % (len(oldarts)+1, cur, oldartids)
+        exit()
     if not texte.get('echec', '') and a["statut"].startswith("conforme"):
         log("DEBUG: Recovering art conforme %s" % cur.encode('utf-8'))
         a["statut"] = "conforme"
