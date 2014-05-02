@@ -37,6 +37,7 @@ cat $1 | while read line ; do
   rm -rf "$projectdir"
   if echo $line | grep ';\(EXTRA\|texte retire\);' > /dev/null ; then
 	echo "$line;" >>  "$data/$dossier/procedure.csv"
+    python procedure2json.py "$data/$dossier/procedure.csv" > "$data/$dossier/procedure.json"
     olddossier=$dossier
 	continue;
   fi
