@@ -5,7 +5,7 @@ import sys, re
 import simplejson as json
 
 FILE = sys.argv[1]
-DEBUG = True if len(sys.argv) > 3 else False
+DEBUG = True if len(sys.argv) > 4 else False
 def log(text):
     if DEBUG:
         print >> sys.stderr, text
@@ -21,14 +21,14 @@ def exit():
     sys.exit(1)
 
 find_num = re.compile(r'-[a-z]*(\d+)\D?$')
+oldnum = 0
+oldstep = [{}, {}]
+oldjson =  []
+oldstatus = {}
+oldartids = []
+oldarts = []
+oldsects = []
 try:
-    oldnum = 0
-    oldstep = {}
-    oldjson =  []
-    oldstatus = {}
-    oldarts = []
-    oldartids = []
-    oldsects = []
     with open(sys.argv[2], 'r') as f2:
         for l in f2:
             if not l.strip():
@@ -44,7 +44,7 @@ try:
             if line["type"] == "article":
                 keys = line['alineas'].keys()
                 keys.sort()
-                oldstep[line["titre"]] = [line['alineas'][k] for k in keys]
+                oldstep[0][line["titre"]] = [line['alineas'][k] for k in keys]
                 oldstatus[line["titre"]] = line['statut']
                 oldartids.append(line["titre"])
                 oldarts.append((line["titre"], line))
@@ -53,6 +53,28 @@ try:
 except Exception as e:
     print >> sys.stderr, type(e), e
     log("No previous step found at %s" % sys.argv[2])
+    exit()
+
+grdoldarts = {}
+if "%2Fta" in FILE and len(sys.argv) > 3 and sys.argv[3]:
+  print >> sys.stderr, "TEST GOOD"
+  try:
+    with open(sys.argv[3], 'r') as f3:
+        for l in f3:
+            if not l.strip():
+                continue
+            line = json.loads(l)
+            if not line or not "type" in line:
+                log("JSON %s badly formatted, missing field type: %s" % (source, line))
+                exit()
+            if line["type"] == "article":
+                keys = line['alineas'].keys()
+                keys.sort()
+                oldstep[1][line["titre"]] = [line['alineas'][k] for k in keys]
+                grdoldarts[line["titre"]] = line
+  except Exception as e:
+    print >> sys.stderr, type(e), e
+    log("No grand previous step found at %s" % sys.argv[2])
     exit()
 
 def write_json(data):
@@ -149,6 +171,7 @@ for l in f:
         alineas = [line['alineas'][k] for k in keys]
         mult = line['titre'].split(u' à ')
         is_mult = (len(mult) > 1)
+        oldid = 1 if grdoldarts and ("conforme" in line['statut'].lower() or "conforme" in alineas[0].lower()) else 0
         if is_mult:
             st = mult[0].strip()
             ed = mult[1].strip()
@@ -240,6 +263,8 @@ for l in f:
                     order += 1
                     write_json(a)
                 elif mult_type == "conf":
+                    if oldid:
+                        a = grdoldarts[line['titre']]
                     log("DEBUG: Recovering art conforme %s" % cur)
                     a["statut"] = "conforme"
                     a["order"] = order
@@ -253,16 +278,16 @@ for l in f:
            continue
         # Clean empty articles with only "Non modifié" and include text from previous step
         if len(alineas) == 1 and re_confo.match(alineas[0].encode('utf-8')):
-            if not line['titre'] in oldstep:
+            if not line['titre'] in oldstep[oldid]:
                 sys.stderr.write("WARNING: found repeated article %s missing from previous step %s: %s\n" % (line['titre'], FILE, line['alineas']))
             else:
                 log("DEBUG: get back Art %s" % line['titre'])
                 alineas.pop(0)
-                alineas.extend(oldstep[line['titre']])
+                alineas.extend(oldstep[oldid][line['titre']])
         gd_text = []
         for j, text in enumerate(alineas):
             text = text.encode('utf-8')
-            if "(Non modifi" in text and not line['titre'] in oldstep:
+            if "(Non modifi" in text and not line['titre'] in oldstep[0]:
                 sys.stderr.write("WARNING: found repeated article missing %s from previous step %s: %s\n" % (line['titre'], FILE, text))
             elif re_confo_with_txt.search(text):
                 text = re_confo_with_txt.sub(r' \2', text)
@@ -278,17 +303,17 @@ for l in f:
                 if " à " in todo:
                     start = re.split(" à ", todo)[0]
                     end = re.split(" à ", todo)[1]
-                    piece = get_mark_from_last(oldstep[line['titre']], start, end)
+                    piece = get_mark_from_last(oldstep[0][line['titre']], start, end)
     # Extract set of non-modified subsections of articles from previous version.
                 elif "," in todo or " et " in todo or " & " in todo:
                     piece = []
                     for i, mark in enumerate(re.split("(?:\s*(,|&|et)\s*)", todo)):
                         if i % 2 == 1:
                             continue
-                        piece.extend(get_mark_from_last(oldstep[line['titre']], mark))
+                        piece.extend(get_mark_from_last(oldstep[0][line['titre']], mark))
     # Extract single non-modified subsection of articles from previous version.
                 else:
-                    piece = get_mark_from_last(oldstep[line['titre']], todo)
+                    piece = get_mark_from_last(oldstep[0][line['titre']], todo)
                 gd_text.extend(piece)
             else:
                 gd_text.append(text.decode('utf-8'))

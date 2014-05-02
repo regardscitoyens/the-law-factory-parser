@@ -71,7 +71,12 @@ cat $1 | while read line ; do
     elif grep '"echec"[:,}]' "$data/.tmp/json/articles_laststep.json" > /dev/null; then
       previous="$data/.tmp/json/articles_antelaststep.json"
     fi
-    if ! python complete_articles.py $data/.tmp/json/$escape "$previous" > $data/.tmp/json/$escape.tmp; then
+    anteprevious=""
+    if echo "$etape" | grep hemicycle > /dev/null; then
+      anteprevious="$data/.tmp/json/articles_antelaststep.json"
+    fi
+    echo " -> $etape $anteprevious"
+    if ! python complete_articles.py $data/.tmp/json/$escape "$previous" "$anteprevious" > $data/.tmp/json/$escape.tmp; then
       echo "ERROR completing $data/.tmp/html/$escape"
       exit 1
     fi
