@@ -45,7 +45,7 @@ def get_gm(i):
 
 re_gouv = re.compile(u'(ministre|garde.*sceaux|secr[eéÉ]taire.*[eéÉ]tat|haut-commissaire)', re.I)
 re_parl = re.compile(u'(d[eéÉ]put[eéÉ]|s[eéÉ]nateur|membre du parlement|parlementaire)', re.I)
-
+re_rapporteur = re.compile(ur'((vice|co|pr[eéÉ]sidente?)[,\-\s]*)?rapporte', re.I)
 steps = {}
 for step in procedure['steps']:
     if not ('has_interventions' in step and step['has_interventions']):
@@ -87,7 +87,7 @@ for step in procedure['steps']:
         i['intervenant_fonction'] = decode_html(i['intervenant_fonction'])
         if i['intervenant_fonction'].lower() in [u"président", u"présidente"]:
             gpe = u"Présidence"
-        elif i['intervenant_fonction'].startswith('rapporte'):
+        elif re_rapporteur.match(i['intervenant_fonction']):
             gpe = "Rapporteurs"
         elif re_gouv.search(i['intervenant_fonction']):
             gpe = "Gouvernement"
