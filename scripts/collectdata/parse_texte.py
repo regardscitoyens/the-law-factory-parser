@@ -275,7 +275,7 @@ for text in soup.find_all("p"):
             if srclst:
                 article["source_text"] = srclst[curtext]
             m = re_mat_art.match(line)
-            article["titre"] = re_cl_uno.sub("1er", m.group(1).strip())
+            article["titre"] = re_cl_uno.sub("1er", m.group(1).strip().lower())
             if m.group(2) is not None:
                 article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
             if section["id"] != "":
