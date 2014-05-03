@@ -48,10 +48,13 @@ cat $1 | while read line ; do
     head -n 1 $data/.tmp/json/articles_antelaststep.json | sed 's/^{\("expose": "\).*"\(, "id": "\)\([0-9]\+\)\(_[^"]*", \)/{"echec": true, \1Le texte est renvoyé en commission."\2'"$etapid"'\4/' > $data/.tmp/json/$escape
     tail -n $(($(cat $data/.tmp/json/articles_antelaststep.json | wc -l) - 1)) $data/.tmp/json/articles_antelaststep.json >> $data/.tmp/json/$escape
   else
+    depot="false"
+    if [ "$stage" = "depot" ]; then
+      depot="true"
+    fi
     #Text export
     download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape;
-    #if file -i $data/.tmp/html/$escape | grep -i iso > /dev/null; then recode ISO885915..UTF8 $data/.tmp/html/$escape; fi
-    if ! python parse_texte.py $data/.tmp/html/$escape $order > $data/.tmp/json/$escape; then
+    if ! python parse_texte.py $data/.tmp/html/$escape $order | sed 's/\("type": "texte"\)}$/\1, "depot": '"$depot"'}/' > $data/.tmp/json/$escape; then
       echo "ERROR parsing $data/.tmp/html/$escape"
       exit 1
     fi

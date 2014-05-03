@@ -42,6 +42,7 @@ try:
                 oldjson.append(line)
             else:
                 oldnum = int(find_num.search(line['id']).group(1))
+                olddepot = line['depot']
             if line["type"] == "article":
                 keys = line['alineas'].keys()
                 keys.sort()
@@ -194,8 +195,13 @@ for l in f:
                 while goon:
                     _, oldart = oldarts[0]
                     if re_suppr.match(oldart['statut']):
-                        c, _ = oldarts.pop(0)
+                        c, a = oldarts.pop(0)
                         oldartids.remove(c)
+                        if olddepot:
+                            log("DEBUG: Marking art %s as supprimé" % c.encode('utf-8'))
+                            a["order"] = order
+                            order += 1
+                            write_json(a)
                     else:
                         goon = False
             except:
