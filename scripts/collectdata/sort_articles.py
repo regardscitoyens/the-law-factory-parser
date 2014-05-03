@@ -4,10 +4,14 @@
 import re
 
 # Handle all bis-ter words until 27 included
+# (adding 28 duodetrecies creates more complexity)
 # cf http://fr.wikipedia.org/wiki/Adverbe_multiplicatif
+# 27 is actually the biggest used case in all texts analyzed so far back to 2009
+# cf http://www.assemblee-nationale.fr/13/ta-commission/r3604-a0.asp
 bis_27 = ['bis', 'ter', 'quater', 'quinquies', 'sexies', 'septies', 'octies', 'novies',
 'decies', 'undecies', 'duodecies', 'terdecies', 'quaterdecies', 'quindecies', 'sexdecies', 'septdecies', 'octodecies', 'novodecies',
 'vicies', 'unvicies', 'duovicies', 'tervicies', 'quatervicies', 'quinvicies', 'sexvicies', 'septvicies']
+
 bister = '(un|duo|tre|bis|qua|quin[tqu]*|sex|sept|octo?|novo?|non|dec|vic|ter|ies)+'
 re_bister = re.compile(bister)
 
