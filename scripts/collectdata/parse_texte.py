@@ -12,6 +12,7 @@ html5lib, beautifulsoup4, simplejson"""
 import sys, re, html5lib
 import simplejson as json
 from bs4 import BeautifulSoup
+from sort_articles import bister
 
 # Warning changing parenthesis in this regexp has multiple consequences throughout the code
 section_titles = "((chap|t)itre|volume|livre|tome|(sous-)?section)"
@@ -107,7 +108,7 @@ def clean_full_upcase(text):
     return text
 
 re_clean_premier = re.compile(r'((PREM)?)(1|I)ER?')
-re_clean_bister = re.compile(r'([IXV\d]+e?r?)\s+((un|duo|tre|bis|qua|quint|quinqu|sex|sept|oct|nov|non|dec|ter|ies)+)', re.I)
+re_clean_bister = re.compile(r'([IXV\d]+e?r?)\s+(%s)' % bister, re.I)
 re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]+)\s*([^\s\)])', re.I)
 re_clean_subsec_space2 = re.compile(r'^("?[IVX0-9]{1,4})\s*([a-z]*)\s*([A-H]{1,4})([\.°\-])', re.I)
 re_clean_punc_space = re.compile(u'([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])')

@@ -3,6 +3,7 @@
 
 import sys, re
 import simplejson as json
+from sort_articles import bister, article_is_lower
 
 FILE = sys.argv[1]
 DEBUG = True if len(sys.argv) > 4 else False
@@ -79,7 +80,6 @@ if "%2Fta" in FILE and len(sys.argv) > 3 and sys.argv[3]:
 def write_json(data):
     print json.dumps(data, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
-bister = '(un|duo|tre|bis|qua|quint|quinqu|sex|sept|oct|nov|non|dec|ter|ies)+'
 make_sta_reg = lambda x: re.compile(r'^"?(?:Art[\s\.]*)?%s\s*(([\.°\-]+\s*)+)' % x)
 make_end_reg = lambda x: re.compile(r'^"?([LA][LArRtTO\.\s]+)?[IVX0-9\-]{1,6}([\-\.]+\d+)*(\s*%s)?%s' % (bister, x))
 re_sect_chg = re.compile(r'^"?((chap|t)itre|volume|livre|tome|(sous-)?section)\s+[1-9IVX]', re.I)
