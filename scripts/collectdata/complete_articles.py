@@ -226,10 +226,14 @@ for l in f:
                 line['titre'] = oldart['titre']
             if "section" in line and cursec['id'] != line["section"]:
                 line["section"] = cursec["id"]
-        if line['titre'] in oldartids and oldarts:
+        if oldarts:
             while oldarts:
                 cur, a = oldarts.pop(0)
-                oldartids.remove(cur)
+                if line['titre'] in oldartids or article_is_lower(cur, line['titre']):
+                    oldartids.remove(cur)
+                else:
+                    oldarts.insert(0, (cur, a))
+                    break
                 if cur == line['titre']:
                     break
                 #print >> sys.stderr, cur, line['titre'], a["statut"]
