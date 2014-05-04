@@ -81,47 +81,60 @@ if "%2Fta" in FILE and len(sys.argv) > 3 and sys.argv[3]:
 def write_json(data):
     print json.dumps(data, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
-make_sta_reg = lambda x: re.compile(r'^"?(?:Art[\s\.]*)?%s\s*(([\.°\-]+\s*)+)' % x)
-make_end_reg = lambda x: re.compile(r'^"?([LA][LArRtTO\.\s]+)?[IVX0-9\-]{1,6}([\-\.]+\d+)*(\s*%s)?%s' % (bister, x))
-re_sect_chg = re.compile(r'^"?((chap|t)itre|volume|livre|tome|(sous-)?section)\s+[1-9IVX]', re.I)
-def get_mark_from_last(text, start, last=""):
-    log("- GET Extract from " + start + " to " + last)
+null_reg = re.compile(r'^$')
+re_mat_uno = re.compile(r'[I1]$')
+re_mat_simple = re.compile(r'[IVXDCLM0-9]')
+make_sta_reg = lambda x: re.compile(r'^("?Art[\s\.]*)?%s\s*(([\.°\-]+\s*)+)' % x.replace('Art. ', ''))
+make_end_reg = lambda x, rich: re.compile(r'^%s[IVXDCLM0-9\-]{1,6}([\-\.]+\d+)*(\s*%s)?%s' % ('("?[LA][LArRtTO\.\s]+)?' if rich else "", bister, x))
+re_sect_chg = re.compile(r'^"?((chap|t)itre|volume|livre|tome|(sous-)?section)\s+[1-9IVXDC]', re.I)
+def get_mark_from_last(text, s, l="", sep="", force=False):
+    log("- GET Extract from " + s + " to " + l)
     res = []
     try:
-        start = make_sta_reg(start)
+        start = make_sta_reg(s)
     except:
-        print >> sys.stderr, 'ERROR', start.encode('utf-8'), text.encode('utf-8'), last.encode('utf-8')
+        print >> sys.stderr, 'ERROR', s.encode('utf-8'), text.encode('utf-8'), l.encode('utf-8')
         exit()
-    if last:
-        last = make_sta_reg(last)
+    rich = not re_mat_simple.match(s)
+    if l:
+        last = make_sta_reg(l)
     re_end = None
     record = False
-    for i in text:
+    for n, i in enumerate(text):
         matc = start.match(i)
         log("    TEST: " + i[:50])
         if re_end and (re_end.match(i) or re_sect_chg.match(i)):
-            if last:
-                re_end = make_end_reg(sep)
-                last = ""
+            if l:
+                re_end = make_end_reg(sep, rich)
+                l = ""
             else:
                 log("  --> END FOUND")
                 record = False
                 break
         elif matc:
-            sep = matc.group(1).strip()
+            sep = matc.group(2).strip()
             log("  --> START FOUND " + sep)
             record = True
-            if last:
+            if l:
                 re_end = last
             else:
-                re_end = make_end_reg(sep)
+                re_end = make_end_reg(sep, rich)
+        elif force:
+            record = True
+            re_end = null_reg
+            if n == 0:
+                i = "%s%s %s" % (s, ". -" if re_mat_simple.match(s) else sep, i)
         if record:
             log("     copy alinea")
             res.append(i)
+    # retry and get everything as I before II added if not found
+    if not res and not l and re_mat_uno.match(s):
+        log("   nothing found, grabbing all article now...")
+        return get_mark_from_last(text, s, l, sep=sep, force=True)
     return res
 
 re_alin_sup = re.compile(ur'supprimés?\)$', re.I)
-re_clean_alin = re.compile(r'^"?[IVXCDLMa-z\d]+[°)-\.\s]*(\s(%s|[A-Z]+)[°)-\.\s]+)*' % bister)
+re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
 re_clean_virg = re.compile(r'\s*,\s*')
 re_suppr = re.compile(r'\W*suppr(ess|im)', re.I)
 re_confo = re.compile(r'\W*(conforme|non[\s\-]*modifi)', re.I)
@@ -273,7 +286,7 @@ for l in f:
                     write_json(a)
                 elif mult_type == "conf":
                     if oldid:
-                        a = grdoldarts[line['titre']]
+                        a = grdoldarts[a['titre']]
                     log("DEBUG: Recovering art conforme %s" % cur)
                     a["statut"] = "conforme"
                     a["order"] = order
@@ -312,17 +325,17 @@ for l in f:
                 if " à " in todo:
                     start = re.split(" à ", todo)[0]
                     end = re.split(" à ", todo)[1]
-                    piece = get_mark_from_last(oldstep[0][line['titre']], start, end)
+                    piece = get_mark_from_last(oldstep[0][line['titre']], start, end, sep=part[1])
     # Extract set of non-modified subsections of articles from previous version.
                 elif "," in todo or " et " in todo or " & " in todo:
                     piece = []
                     for i, mark in enumerate(re.split("(?:\s*(,|&|et)\s*)", todo)):
                         if i % 2 == 1:
                             continue
-                        piece.extend(get_mark_from_last(oldstep[0][line['titre']], mark))
+                        piece.extend(get_mark_from_last(oldstep[0][line['titre']], mark, sep=part[1]))
     # Extract single non-modified subsection of articles from previous version.
                 else:
-                    piece = get_mark_from_last(oldstep[0][line['titre']], todo)
+                    piece = get_mark_from_last(oldstep[0][line['titre']], todo, sep=part[1])
                 gd_text.extend(piece)
             else:
                 gd_text.append(text.decode('utf-8'))

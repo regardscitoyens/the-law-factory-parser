@@ -18,6 +18,36 @@ for url in "2007-2012.nosdeputes" "www.nosdeputes" "www.nossenateurs"; do
   download "http://$url.fr/organismes/groupe/json" > "$data/../$url-groupes.json"
 done
 
+# Fix occasional wrong order of votes post CMP
+if grep ";CMP;assemblee;hemicycle;" $1 > /dev/null && grep ";CMP;senat;hemicycle;" $1 > /dev/null; then
+  reorder=false
+  line_a=$(grep ";CMP;assemblee;hemicycle;" $1)
+  line_s=$(grep ";CMP;senat;hemicycle;" $1)
+  num_a=$(echo $line_a | awk -F ';' '{print $7}' | sed 's/^0//')
+  num_s=$(echo $line_s | awk -F ';' '{print $7}' | sed 's/^0//')
+  min_num=$(($num_a<$num_s?$num_a:$num_s))
+  url=$(echo $line_a | awk -F ';' '{print $12}')
+  escape=$(escapeit "$url")
+  download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape
+  if grep -i 'Texte d\(&eacute;\|.\)finitif' $data/.tmp/html/$escape > /dev/null && [ $min_num -ne $num_s ]; then
+    reorder=true
+  else
+    url=$(echo $line_s | awk -F ';' '{print $12}')
+    escape=$(escapeit "$url")
+    download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape
+    if grep -i "Texte d\(&eacute;\|.\)finitif" $data/.tmp/html/$escape > /dev/null && [ $min_num -ne $num_a ]; then
+      reorder=true
+    fi
+  fi
+  if $reorder; then
+    echo "INFO: Reordering CMP hemicycle steps to handle renumbered texte définitif last"
+    grep -v ";CMP;[a-z]*;hemicycle;" $1 > $1.tmp
+    echo "$line_a" | sed "s/\(;0*\)$num_a\(;[0-9]\+;CMP\)/\1$num_s\2/" >> $1.tmp
+    echo "$line_s" | sed "s/\(;0*\)$num_s\(;[0-9]\+;CMP\)/\1$num_a\2/" >> $1.tmp
+    sort $1.tmp > $1
+  fi
+fi
+
 cat $1 | while read line ; do
   #Variables
 #  dossier=$(echo $line | awk -F ';' '{print $1"_"$5"_"$6}' | sed 's/-\([0-9]*\)-/\1/')
@@ -178,5 +208,4 @@ cat $1 | while read line ; do
   olddossier=$dossier
   echo "INFO: data exported in $projectdir"
 done
-
 
