@@ -83,9 +83,9 @@ def write_json(data):
 
 null_reg = re.compile(r'^$')
 re_mat_uno = re.compile(r'[I1]$')
-re_mat_simple = re.compile(r'[IVXDCLM0-9]')
+re_mat_simple = re.compile(r'[IVXDCLM\d]')
 make_sta_reg = lambda x: re.compile(r'^("?Art[\s\.]*)?%s\s*(([\.°\-]+\s*)+)' % x.replace('Art. ', ''))
-make_end_reg = lambda x, rich: re.compile(r'^%s[IVXDCLM0-9\-]{1,6}([\-\.]+\d+)*(\s*%s)?%s' % ('("?[LA][LArRtTO\.\s]+)?' if rich else "", bister, x))
+make_end_reg = lambda x, rich: re.compile(r'^%s[IVXDCLM\d\-]+([\-\.\s]+\d*)*((%s|[A-Z])\s*)*(\(|et\s|%s)' % ('("?[LA][LArRtTO\.\s]+)?' if rich else "", bister, x))
 re_sect_chg = re.compile(r'^"?((chap|t)itre|volume|livre|tome|(sous-)?section)\s+[1-9IVXDC]', re.I)
 def get_mark_from_last(text, s, l="", sep="", force=False):
     log("- GET Extract from " + s + " to " + l)
@@ -128,13 +128,17 @@ def get_mark_from_last(text, s, l="", sep="", force=False):
             log("     copy alinea")
             res.append(i)
     # retry and get everything as I before II added if not found
-    if not res and not l and re_mat_uno.match(s):
-        log("   nothing found, grabbing all article now...")
-        return get_mark_from_last(text, s, l, sep=sep, force=True)
+    if not res:
+        if not l and re_mat_uno.match(s):
+            log("   nothing found, grabbing all article now...")
+            return get_mark_from_last(text, s, l, sep=sep, force=True)
+        print >> sys.stderr, 'ERROR: could not retrieve ', s.encode('utf-8')
+        exit(1)
     return res
 
 re_alin_sup = re.compile(ur'supprimés?\)$', re.I)
 re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
+re_clean_et = re.compile(r'(\s*[\&,]\s*|\s+et\s+)+', re.I)
 re_clean_virg = re.compile(r'\s*,\s*')
 re_suppr = re.compile(r'\W*suppr(ess|im)', re.I)
 re_confo = re.compile(r'\W*(conforme|non[\s\-]*modifi)', re.I)
@@ -319,23 +323,18 @@ for l in f:
                 if not part:
                     log("ERROR trying to get non-modifiés")
                     exit()
-                todo = part[0]
-                log("EXTRACT non-modifiés: " + str(part))
+                pieces = re_clean_et.sub(',', part[0])
+                log("EXTRACT non-modifiés for "+line['titre']+": " + pieces)
+                piece = []
+                for todo in pieces.split(','):
     # Extract series of non-modified subsections of articles from previous version.
-                if " à " in todo:
-                    start = re.split(" à ", todo)[0]
-                    end = re.split(" à ", todo)[1]
-                    piece = get_mark_from_last(oldstep[0][line['titre']], start, end, sep=part[1])
+                    if " à " in todo:
+                        start = re.split(" à ", todo)[0]
+                        end = re.split(" à ", todo)[1]
+                        piece.extend(get_mark_from_last(oldstep[0][line['titre']], start, end, sep=part[1]))
     # Extract set of non-modified subsections of articles from previous version.
-                elif "," in todo or " et " in todo or " & " in todo:
-                    piece = []
-                    for i, mark in enumerate(re.split("(?:\s*(,|&|et)\s*)", todo)):
-                        if i % 2 == 1:
-                            continue
-                        piece.extend(get_mark_from_last(oldstep[0][line['titre']], mark, sep=part[1]))
-    # Extract single non-modified subsection of articles from previous version.
-                else:
-                    piece = get_mark_from_last(oldstep[0][line['titre']], todo, sep=part[1])
+                    elif todo:
+                        piece.extend(get_mark_from_last(oldstep[0][line['titre']], todo, sep=part[1]))
                 gd_text.extend(piece)
             else:
                 gd_text.append(text.decode('utf-8'))
