@@ -194,7 +194,7 @@ re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
 re_clean_conf = re.compile(r"\((conforme|non[\s-]*modifi..?)s?\)", re.I)
 re_clean_supr = re.compile(r'\((dispositions?\s*d..?clar..?es?\s*irrecevable.*article 4.*Constitution.*|suppr(ession|im..?s?)(\s*(conforme|maintenue|par la commission mixte paritaire))*)\)["\s]*$', re.I)
-re_echec_hemi = re.compile(r"<i>L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
+re_echec_hemi = re.compile(r"L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
 re_echec_hemi2 = re.compile(r"de loi a été rejetée par l('Assemblée nationale|e Sénat)\.$", re.I)
 re_echec_com = re.compile(r" la commission .*(effet est d'entraîner le rejet|demande de rejeter|a rejeté|n'a pas adopté)[dleau\s]*(projet|proposition|texte)[.\s]", re.I)
 re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*parven(u[es]?|ir) à (élaborer )?un texte commun)", re.I)
@@ -287,7 +287,7 @@ for text in soup.find_all("p"):
         # Read a section's title
         elif read == 1:
             texte = save_text(texte)
-            section["titre"] = line
+            section["titre"] = lower_but_first(line)
             if article is not None:
                 pr_js(article)
                 article = None

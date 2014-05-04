@@ -230,9 +230,6 @@ for l in f:
             similarity = float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
             if similarity < 0.75 and not olddepot:
                 print >> sys.stderr, "WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], line["titre"], len("".join(txt)), similarity
-                log("------------------")
-                log("\n".join(compare))
-                log("------------------")
             if line['titre'] != oldart['titre']:
                 line['newtitre'] = line['titre']
                 line['titre'] = oldart['titre']

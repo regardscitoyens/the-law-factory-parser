@@ -19,7 +19,7 @@ def mkdirs(d):
     if not os.path.exists(d):
         os.makedirs(d)
 
-re_sec_path = re.compile(r"(\d)(\D)")
+re_sec_path = re.compile(r"(\de?r?)([TCVLS])")
 def sec_path(s):
     return re_sec_path.sub(r"\1/\2", s)
 
@@ -123,4 +123,4 @@ for l in f:
         write_text(text, path+textid+".alineas")
 
 f.close()
-write_json(alldata, textid+".json")
+write_json(alldata, "texte.json")
