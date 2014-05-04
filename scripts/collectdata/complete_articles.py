@@ -84,7 +84,8 @@ def write_json(data):
 null_reg = re.compile(r'^$')
 re_mat_uno = re.compile(r'[I1]$')
 re_mat_simple = re.compile(r'[IVXDCLM\d]')
-make_sta_reg = lambda x: re.compile(r'^("?Art[\s\.]*)?%s\s*(([\.°\-]+\s*)+)' % x.replace('Art. ', ''))
+re_clean_art = re.compile(r'^"?Art\.?\s*', re.I)
+make_sta_reg = lambda x: re.compile(r'^("?Art[\s\.]*)?%s\s*(([\.°\-]+\s*)+)' % re_clean_art.sub('', x.encode('utf-8')))
 make_end_reg = lambda x, rich: re.compile(r'^%s[IVXDCLM\d\-]+([\-\.\s]+\d*)*((%s|[A-Z])\s*)*(\(|et\s|%s)' % ('("?[LA][LArRtTO\.\s]+)?' if rich else "", bister, x))
 re_sect_chg = re.compile(r'^"?((chap|t)itre|volume|livre|tome|(sous-)?section)\s+[1-9IVXDC]', re.I)
 def get_mark_from_last(text, s, l="", sep="", force=False):
@@ -93,7 +94,7 @@ def get_mark_from_last(text, s, l="", sep="", force=False):
     try:
         start = make_sta_reg(s)
     except:
-        print >> sys.stderr, 'ERROR', s.encode('utf-8'), text.encode('utf-8'), l.encode('utf-8')
+        print >> sys.stderr, 'ERROR', type(e), e, s.encode('utf-8'), l.encode('utf-8')
         exit()
     rich = not re_mat_simple.match(s)
     if l:
@@ -132,8 +133,8 @@ def get_mark_from_last(text, s, l="", sep="", force=False):
         if not l and re_mat_uno.match(s):
             log("   nothing found, grabbing all article now...")
             return get_mark_from_last(text, s, l, sep=sep, force=True)
-        print >> sys.stderr, 'ERROR: could not retrieve ', s.encode('utf-8')
-        exit(1)
+        print >> sys.stderr, 'ERROR: could not retrieve', s.encode('utf-8')
+        exit()
     return res
 
 re_alin_sup = re.compile(ur'supprimés?\)$', re.I)
