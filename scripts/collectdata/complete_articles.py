@@ -165,7 +165,7 @@ for l in f:
     elif line["type"] == "texte":
         texte = dict(line)
         if texte["definitif"]:
-            from difflib import ndiff, SequenceMatcher
+            from difflib import SequenceMatcher
     else:
       if not done_titre:
         write_json(texte)
@@ -225,22 +225,11 @@ for l in f:
                 print >> sys.stderr, "ERROR: Problem while renumbering articles", line, "\n", oldart
                 exit()
             oldtxt = [re_clean_alin.sub('', v) for v in oldart["alineas"].values() if not re_alin_sup.search(v)]
-            txt = [re_clean_alin.sub('', v) for v in line["alineas"].values()]
-            compare = list(ndiff(txt, oldtxt))
-            mods = {'+': 0, '-': 0 ,'?': 0, ' ': 0}
-            for l in compare:
-                mod = l[0]
-                if mod == '?':
-                    mods[mod] += l.count('^')
-                    mods[mod] += l.count('-')
-                    mods[mod] += l.count('+')
-                else:
-                    mods[mod] += 1
-            if mods['+'] or mods['-']:
-                mods['?'] = mods['?'] / (mods['+'] + mods['-'])
-            diff = float(mods['?'])/max(len("".join(txt)), len("".join(oldtxt)))
-            if diff > 0.15:
-                print >> sys.stderr, "WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], line["titre"], mods['?'], len("".join(txt)), diff
+            txt = [re_clean_alin.sub('', v) for v in line["alineas"].values() if not re_alin_sup.search(v)]
+            a = SequenceMatcher(None, oldtxt, txt).get_matching_blocks()
+            similarity = float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
+            if similarity < 0.75 and not olddepot:
+                print >> sys.stderr, "WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], line["titre"], len("".join(txt)), similarity
                 log("------------------")
                 log("\n".join(compare))
                 log("------------------")

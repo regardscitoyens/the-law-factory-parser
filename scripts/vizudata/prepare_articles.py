@@ -70,6 +70,10 @@ steps.append(first)
 depots = len(steps)
 steps += latersteps
 
+bister = '(un|duo|tre|bis|qua|quin[tqu]*|sex|sept|octo?|novo?|non|dec|vic|ter|ies)+'
+re_alin_sup = re.compile(ur'supprimés?\)$', re.I)
+re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
+
 step_id = ''
 old_step_id = ''
 for nstep, step in enumerate(steps):
@@ -100,11 +104,11 @@ for nstep, step in enumerate(steps):
                         s = create_step(step_id, step['directory'], article=article)
                         if 'newtitre' in article:
                             s['art_newnum'] = article['newtitre']
-                        txt = " ".join(s['text'])
+                        txt = "\n".join([re_clean_alin.sub('', v) for v in s['text'] if not re_alin_sup.search(v)])
                         oldtext = None
                         for st in out['articles'][id]['steps']:
                             if st['id_step'] == old_step_id:
-                                oldtext = st['text']
+                                oldtext = [re_clean_alin.sub('', v) for v in st['text'] if not re_alin_sup.search(v)]
                                 break
                         if txt and (not oldtext or nstep < depots):
                             s['status'] = 'new' if nstep >= depots else 'none'
@@ -114,7 +118,7 @@ for nstep, step in enumerate(steps):
                             s['diff'] = 'rem'
                             s['n_diff'] = 0
                         else:
-                            oldtxt = " ".join(oldtext)
+                            oldtxt = "\n".join(oldtext)
                             s['status'] = 'none'
                             if txt == oldtxt:
                                 s['diff'] = 'none'
@@ -135,9 +139,8 @@ for nstep, step in enumerate(steps):
                                     s['diff'] = 'both'
                                 else:
                                     s['diff'] = 'none'
-                                a = SequenceMatcher(None, oldtxt, txt).ratio()
-                                b = SequenceMatcher(None, txt, oldtxt).ratio()
-                                s['n_diff'] = 1 - (a + b)/2
+                                a = SequenceMatcher(None, oldtxt, txt).get_matching_blocks()
+                                s['n_diff'] = 1 - float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
                     else:
                         out['articles'][id] = {}
                         out['articles'][id]['id'] = id
@@ -154,7 +157,7 @@ for nstep, step in enumerate(steps):
                             s['status'] = 'new'
                         else:
                             s['status'] = 'depot'
-                        txt = " ".join(s['text'])
+                        txt = "\n".join(s['text'])
                     if s['status'] == 'sup':
                         s['length'] = 50
                         s['n_diff'] = 0
