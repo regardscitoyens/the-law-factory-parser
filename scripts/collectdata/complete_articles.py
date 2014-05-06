@@ -87,7 +87,7 @@ re_mat_simple = re.compile(r'[IVXDCLM\d]')
 re_clean_art = re.compile(r'^"?Art\.?\s*', re.I)
 make_sta_reg = lambda x: re.compile(r'^("?Art[\s\.]*)?%s\s*(([\.°\-]+\s*)+)' % re_clean_art.sub('', x.encode('utf-8')))
 make_end_reg = lambda x, rich: re.compile(r'^%s[IVXDCLM\d\-]+([\-\.\s]+\d*)*((%s|[A-Z])\s*)*(\(|et\s|%s)' % ('("?[LA][LArRtTO\.\s]+)?' if rich else "", bister, x))
-re_sect_chg = re.compile(r'^"?((chap|t)itre|volume|livre|tome|(sous-)?section)\s+[1-9IVXDC]', re.I)
+re_sect_chg = re.compile(r'^((chap|t)itre|volume|livre|tome|(sous-)?section)\s+[1-9IVXDC]', re.I)
 def get_mark_from_last(text, s, l="", sep="", force=False):
     log("- GET Extract from " + s + " to " + l)
     res = []
