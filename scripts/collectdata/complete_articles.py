@@ -84,6 +84,7 @@ def write_json(data):
 null_reg = re.compile(r'^$')
 re_mat_uno = re.compile(r'[I1]$')
 re_mat_simple = re.compile(r'[IVXDCLM\d]')
+re_mat_complex = re.compile(r'L[O.\s]*[IVXDCLM\d]')
 re_clean_art = re.compile(r'^"?Art\.?\s*', re.I)
 make_sta_reg = lambda x: re.compile(r'^("?Art[\s\.]*)?%s\s*(([\.°\-]+\s*)+)' % re_clean_art.sub('', x.encode('utf-8')))
 make_end_reg = lambda x, rich: re.compile(r'^%s[IVXDCLM\d\-]+([\-\.\s]+\d*)*((%s|[A-Z])\s*)*(\(|et\s|%s)' % ('("?[LA][LArRtTO\.\s]+)?' if rich else "", bister, x))
@@ -96,7 +97,7 @@ def get_mark_from_last(text, s, l="", sep="", force=False):
     except:
         print >> sys.stderr, 'ERROR', type(e), e, s.encode('utf-8'), l.encode('utf-8')
         exit()
-    rich = not re_mat_simple.match(s)
+    rich = re_mat_complex.match(s) or not re_mat_simple.match(s)
     if l:
         last = make_sta_reg(l)
     re_end = None
