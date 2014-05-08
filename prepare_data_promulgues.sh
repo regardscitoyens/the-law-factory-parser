@@ -6,7 +6,7 @@ if [ -z "$1" ]; then
   curl -sL http://data.senat.fr/data/dosleg/dossiers-legislatifs.csv |
    iconv -f "iso-8859-15" -t "utf-8" > data/.cache/list_dossiers_senat.csv
   head -n 1 data/.cache/list_dossiers_senat.csv |
-   sed 's/^/id;/' | sed 's/$/;total_amendements;total_mots/' > data/dossiers_promulgues.csv
+   sed 's/^/id;/' | sed 's/$/;total_amendements;total_mots;short_title/' > data/dossiers_promulgues.csv
 fi
 
 cat data/.cache/list_dossiers_senat.csv      |
@@ -28,7 +28,8 @@ cat data/.cache/list_dossiers_senat.csv      |
     if [ -z "$nb_mots" ]; then
       nb_mots=0
     fi
-    echo "$id;$line;$nb_amdts;$nb_mots" >> data/dossiers_promulgues.csv
+    short_title=$(cat data/$id/viz/procedure.json | sed 's/^.*"short_title": "//' | sed 's/"[,}\s].*$//')
+    echo "$id;$line;$nb_amdts;$nb_mots;$short_title" >> data/dossiers_promulgues.csv
   else
     rm -rf "data/$id"
   fi
