@@ -173,19 +173,21 @@ cat $1 | while read line ; do
 
     #Interventions export
     inter_dir="$projectdir/interventions"
-    is_commission=''
+    commission_or_hemicycle=''
     if echo $etape | grep commission > /dev/null; then
-      is_commission='?commission=1'
+      commission_or_hemicycle='?commission=1'
+    else
+      commission_or_hemicycle='?hemicycle=1'
     fi
-    download "$urlchambre/seances/$amdidtext/csv$is_commission" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
+    download "$urlchambre/seances/$amdidtext/csv$commission_or_hemicycle" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
       tmpseancecsv="."$id_seance".csv"
-      download "$urlchambre/seance/$id_seance/$dossier_instit/csv" > $tmpseancecsv
+      download "$urlchambre/seance/$id_seance/$amdidtext/csv" > $tmpseancecsv
       if head -n 1 $tmpseancecsv  | grep -v '404' | grep '[a-z]' > /dev/null; then
         seance_name=$(head -n 2 $tmpseancecsv | tail -n 1 | awk -F ';' '{print $4 "T" $5 "_" $1}' | sed 's/ //g')
         mkdir -p $inter_dir
         cat $tmpseancecsv > $inter_dir/$seance_name.csv
-        download "$urlchambre/seance/$id_seance/$dossier_instit/json" > $inter_dir/$seance_name.json
-        download "$urlchambre/seance/$id_seance/$dossier_instit/xml" > $inter_dir/$seance_name.xml
+        download "$urlchambre/seance/$id_seance/$amdidtext/json" > $inter_dir/$seance_name.json
+        download "$urlchambre/seance/$id_seance/$amdidtext/xml" > $inter_dir/$seance_name.xml
       fi
       rm $tmpseancecsv
     done
