@@ -179,19 +179,29 @@ cat $1 | while read line ; do
     else
       commission_or_hemicycle='?hemicycle=1'
     fi
-    download "$urlchambre/seances/$amdidtext/csv$commission_or_hemicycle" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
+    if ! test "$oldamdidtext" ; then oldamdidtext=$amdidtext; fi
+    for (( i = 1 ; i < 3 ; i++ )) do
+    if test $i = 1 ; then
+	loiid=$amdidtext
+    else
+	loiid=$oldamdidtext
+    fi
+    id_seance=""
+    download "$urlchambre/seances/$loiid/csv$commission_or_hemicycle" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
       tmpseancecsv="."$id_seance".csv"
-      download "$urlchambre/seance/$id_seance/$amdidtext/csv" > $tmpseancecsv
+      download "$urlchambre/seance/$id_seance/$loiid/csv" > $tmpseancecsv
       if head -n 1 $tmpseancecsv  | grep -v '404' | grep '[a-z]' > /dev/null; then
         seance_name=$(head -n 2 $tmpseancecsv | tail -n 1 | awk -F ';' '{print $4 "T" $5 "_" $1}' | sed 's/ //g')
         mkdir -p $inter_dir
         cat $tmpseancecsv > $inter_dir/$seance_name.csv
-        download "$urlchambre/seance/$id_seance/$amdidtext/json" > $inter_dir/$seance_name.json
-        download "$urlchambre/seance/$id_seance/$amdidtext/xml" > $inter_dir/$seance_name.xml
+        download "$urlchambre/seance/$id_seance/$loiid/json" > $inter_dir/$seance_name.json
+        download "$urlchambre/seance/$id_seance/$loiid/xml" > $inter_dir/$seance_name.xml
       fi
       rm $tmpseancecsv
     done
-
+    if test "$id_seance" ; then break; fi
+    done
+    oldamdidtext=$amdidtext
   fi
 
   #End
