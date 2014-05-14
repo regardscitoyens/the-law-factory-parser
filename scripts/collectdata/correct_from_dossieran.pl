@@ -12,7 +12,7 @@ if (!$row[4] || !$row[3]) {
   }
   exit(0);
 }
-
+chomp($row[$#row]);
 $url = "http://www.assemblee-nationale.fr/$row[3]/dossiers/".$row[4].".asp";
 $a = WWW::Mechanize->new();
 $a->get($url);
@@ -62,9 +62,13 @@ while ($#row > 10) {
 #   Keep warnings but don't rewrite urls since Senate rebuilt data is most of the times better than AN's
 #	$row[11] = $step[3];
 	$row[13] = $step[2];
+	if (($row[10] eq 'depot') && $row[14]) {
+		$row[13] = $row[14];
+	}
 	$i++;
     }
     print STDERR "WARNING: begining date missing $row[8];$row[9];$row[10]\n" unless ($row[13]);
-    print join(';', @row);
+    print join(';', @row)."\n";
     @row = split(/;/, <STDIN>);
+    chomp($row[$#row]) if ($#row > 0);
 }
