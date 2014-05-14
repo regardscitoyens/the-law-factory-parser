@@ -216,15 +216,16 @@ cat $1 | while read line ; do
   fi
 
   #End
-  amdidtext=$(echo $line | awk -F ';' '{print $13}')
-  if echo $line | grep ';CMP;CMP;commission;' > /dev/null; then
-    if echo $line | grep 'senat.fr' > /dev/null; then
-      amdidtextcmpa=
-      amdidtextcmps=$amdidtext
-    elif echo $line | grep 'nationale.fr' > /dev/null; then
-      amdidtextcmpa=$amdidtext
-      amdidtextcmps=
-      
+  if [ -z "$echec" ]; then
+    amdidtext=$(echo $line | awk -F ';' '{print $13}')
+    if echo $line | grep ';CMP;CMP;commission;' > /dev/null; then
+      if echo $line | grep 'senat.fr' > /dev/null; then
+        amdidtextcmpa=
+        amdidtextcmps=$amdidtext
+      elif echo $line | grep 'nationale.fr' > /dev/null; then
+        amdidtextcmpa=$amdidtext
+        amdidtextcmps=
+      fi
     fi
   fi
   
