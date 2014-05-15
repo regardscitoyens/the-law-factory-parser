@@ -8,9 +8,20 @@ fi
 data=$(if test "$2" ; then echo $2 ; else echo "data" ; fi)
 
 function escapeit { perl -e 'use URI::Escape; print uri_escape shift();print"\n"' "$1" | sed 's/\s/_/g'; }
-#function download { curl -s $1 }
-function download { cache=$cachedir"/"$(escapeit $1) ; if ! test -e $cache ; then curl -s $1 > $cache.tmp ; mv $cache.tmp $cache ; fi ; cat $cache ; } ; mkdir -p $data"/../.cache/web" ; cachedir=$data"/../.cache/web"
+function download {
+  cache=$cachedir"/"$(escapeit $1)
+  if ! test -e $cache ; then
+    if curl -sLI $1 | grep " 404" > /dev/null; then
+      echo > $cache.tmp
+    else
+      curl -sL $1 > $cache.tmp
+    fi
+    mv $cache.tmp $cache
+  fi
+  cat $cache
+}
 
+mkdir -p $data"/../.cache/web" ; cachedir=$data"/../.cache/web"
 mkdir -p $data/.tmp/html $data/.tmp/json
 rm -f $data/.tmp/json/articles_laststep.json
 
@@ -161,14 +172,16 @@ cat $1 | while read line ; do
     fi
 
     #Amendements export
-    mkdir -p "$projectdir/amendements"
-    download "$urlchambre/amendements/$amdidtext/csv" | perl sort_amendements.pl $data/.tmp/json/$escape csv >  "$projectdir/amendements/amendements.csv"
-    if grep [a-z] "$projectdir/amendements/amendements.csv" > /dev/null; then
+    if [ -z "$echec" ]; then
+      mkdir -p "$projectdir/amendements"
+      download "$urlchambre/amendements/$amdidtext/csv" | perl sort_amendements.pl $data/.tmp/json/$escape csv >  "$projectdir/amendements/amendements.csv"
+      if grep [a-z] "$projectdir/amendements/amendements.csv" > /dev/null; then
     	download "$urlchambre/amendements/$amdidtext/json" | perl sort_amendements.pl $data/.tmp/json/$escape json > "$projectdir/amendements/amendements.json"
     	download "$urlchambre/amendements/$amdidtext/xml"  | perl sort_amendements.pl $data/.tmp/json/$escape xml > "$projectdir/amendements/amendements.xml"
-    else
+      else
     	rm "$projectdir/amendements/amendements.csv"
     	rmdir $projectdir/amendements
+      fi
     fi
 
     #Interventions export
@@ -181,39 +194,40 @@ cat $1 | while read line ; do
     fi
     if ! test "$oldamdidtext" ; then oldamdidtext=$amdidtext; fi
     for (( i = 1 ; i < 3 ; i++ )) do
-    if test $i = 1 ; then
-	loiid=$amdidtext
-    else
-	loiid=$oldamdidtext
-    fi
-    id_seance=""
-    download "$urlchambre/seances/$loiid/csv$commission_or_hemicycle" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
-      tmpseancecsv="."$id_seance".csv"
-      download "$urlchambre/seance/$id_seance/$loiid/csv" > $tmpseancecsv
-      if head -n 1 $tmpseancecsv  | grep -v '404' | grep '[a-z]' > /dev/null; then
-        seance_name=$(head -n 2 $tmpseancecsv | tail -n 1 | awk -F ';' '{print $4 "T" $5 "_" $1}' | sed 's/ //g')
-        mkdir -p $inter_dir
-        cat $tmpseancecsv > $inter_dir/$seance_name.csv
-        download "$urlchambre/seance/$id_seance/$loiid/json" > $inter_dir/$seance_name.json
-        download "$urlchambre/seance/$id_seance/$loiid/xml" > $inter_dir/$seance_name.xml
+      if test $i = 1 ; then
+        loiid=$amdidtext
+      else
+        loiid=$oldamdidtext
       fi
-      rm $tmpseancecsv
-    done
-    if test "$id_seance" ; then break; fi
+      id_seance=""
+      download "$urlchambre/seances/$loiid/csv$commission_or_hemicycle" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
+        tmpseancecsv="."$id_seance".csv"
+        download "$urlchambre/seance/$id_seance/$loiid/csv" > $tmpseancecsv
+        if head -n 1 $tmpseancecsv | grep '[a-z]' > /dev/null; then
+          seance_name=$(head -n 2 $tmpseancecsv | tail -n 1 | awk -F ';' '{print $4 "T" $5 "_" $1}' | sed 's/ //g')
+          mkdir -p $inter_dir
+          cat $tmpseancecsv > $inter_dir/$seance_name.csv
+          download "$urlchambre/seance/$id_seance/$loiid/json" > $inter_dir/$seance_name.json
+          download "$urlchambre/seance/$id_seance/$loiid/xml" > $inter_dir/$seance_name.xml
+        fi
+        rm $tmpseancecsv
+      done
+      if test "$id_seance" ; then break; fi
     done
     oldamdidtext=$amdidtext
   fi
 
   #End
-  amdidtext=$(echo $line | awk -F ';' '{print $13}')
-  if echo $line | grep ';CMP;CMP;commission;' > /dev/null; then
-    if echo $line | grep 'senat.fr' > /dev/null; then
-      amdidtextcmpa=
-      amdidtextcmps=$amdidtext
-    elif echo $line | grep 'nationale.fr' > /dev/null; then
-      amdidtextcmpa=$amdidtext
-      amdidtextcmps=
-      
+  if [ -z "$echec" ]; then
+    amdidtext=$(echo $line | awk -F ';' '{print $13}')
+    if echo $line | grep ';CMP;CMP;commission;' > /dev/null; then
+      if echo $line | grep 'senat.fr' > /dev/null; then
+        amdidtextcmpa=
+        amdidtextcmps=$amdidtext
+      elif echo $line | grep 'nationale.fr' > /dev/null; then
+        amdidtextcmpa=$amdidtext
+        amdidtextcmps=
+      fi
     fi
   fi
   

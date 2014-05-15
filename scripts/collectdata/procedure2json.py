@@ -58,6 +58,8 @@ with open(csvpath, 'rb') as csvfile:
             if (row[8] == 'URGENCE'):
                 procedure['type'] = 'urgence'
             else:
+                if (row[8] == "constitutionnalité"):
+                    step['decision'] = row[10]
                 steps.append(step)
         prevrow = row
     procedure['steps'] = steps
