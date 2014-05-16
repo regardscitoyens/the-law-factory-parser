@@ -7,8 +7,8 @@ open JSON, "$textjson";
 while(<JSON>) {
     next unless (/"article"/);
     if (/"titre": "([^"]+)"/) {
-	$titre = $1;
-	/order": (\d+),/;
+        $titre = $1;
+        /order": (\d+),/;
         $articles{lc($titre)} = $1 * 10;
     }
 }
@@ -46,7 +46,7 @@ sub solveorder {
         return 1;
     } elsif ($art =~ /^(pro(jet|position)|texte)/i) {
         return 5;
-    } elsif ($art =~ /article (1er|(\d+).*)/i) {
+    } elsif ($art =~ /article (1er.*|(\d+).*)$/i) {
         if ($articles{lc($1)}) {
             $order = $articles{lc($1)};
         } elsif ($articles{$2}) {
