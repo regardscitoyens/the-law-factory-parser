@@ -235,3 +235,5 @@ cat $1 | while read line ; do
   echo "INFO: data exported in $projectdir"
 done
 
+perl reorder_interventions_and_correct_procedure.pl "$data/procedure"
+python procedure2json.py "$data/procedure/procedure.csv" > "$data/procedure/procedure.json"
