@@ -27,7 +27,7 @@ if ($#keys == -1) {
 
 my $csvchanged = 0;
 
-open INT, "ls $dir/*/interventions/*xml |";
+open INT, "ls $dir/*/interventions/*.* |";
 while (<INT>) {
     chomp;
     if (/\/(..)_[^_]*_([^_]*)_[^_]*\/interventions\/(\d{4})-(\d{2})-(\d{2})/) {
@@ -59,9 +59,10 @@ while (<INT>) {
 		    if ($procedure->{$testprevid}[14] <= $date && $procedure->{$testnextid}[13] >= $date && $procedure->{$testid}[9] eq $chambre) {
 			my $location = $dir.'/'.$testid.'_'.$procedure->{$testid}[8].'_'.$procedure->{$testid}[9].'_'.$procedure->{$testid}[10].'/interventions/';
 			$location =~ s/ //g;
-			print STDERR "INFO: NEW Location ".$location." found for $_\n";
 			mkdir ($location);
-			exec("mv $_ $location");
+			my $file = $_;
+			system("mv $file $location");
+			print STDERR "INFO: NEW Location ".$location." found for $file\n";
 			$solved = 1;
 		    }
 		    if ($solved) {
