@@ -2,27 +2,34 @@
 
 use WWW::Mechanize;
 use utf8;
+use strict;
 
-@row = split(/;/, <STDIN>);
-if (!$row[4] || !$row[3]) {
+my $procedure = [];
+my $i = 0;
+my @row;
+while ((@row = split(/;/, <STDIN>)) && ($#row > 10)) {
+        chomp($row[$#row]);
+	@{$procedure->[$i++]} = @row;
+}
+
+if (!($#{$procedure}+1) && !$procedure->[0][4] || !$procedure->[0][3]) {
   print STDERR "WARNING: no dossier AN found, skipping corrector\n";
-  while ($#row > 10) {
-    print join(';', @row);
-    @row = split(/;/, <STDIN>);
-  }
   exit(0);
 }
-chomp($row[$#row]);
-$url = "http://www.assemblee-nationale.fr/$row[3]/dossiers/".$row[4].".asp";
-$a = WWW::Mechanize->new();
+
+my $url = "http://www.assemblee-nationale.fr/".$procedure->[0][3]."/dossiers/".$procedure->[0][4].".asp";
+my $a = WWW::Mechanize->new();
 $a->get($url);
-$content = $a->content;
+my $content = $a->content;
 utf8::encode($content);
-%mois = ('janvier'=>'01', 'fvrier'=>'02', 'mars'=>'03', 'avril'=>'04', 'mai'=>'05', 'juin'=>'06', 'juillet'=>'07', 'aot'=>'08', 'septembre'=>'09','octobre'=>'10','novembre'=>'11','dcembre'=>'12');
-@steps = ();
+my %mois = ('janvier'=>'01', 'fvrier'=>'02', 'mars'=>'03', 'avril'=>'04', 'mai'=>'05', 'juin'=>'06', 'juillet'=>'07', 'aot'=>'08', 'septembre'=>'09','octobre'=>'10','novembre'=>'11','dcembre'=>'12');
+my @steps = ();
+my $section; my $chambre; my $stade; my $date; my $mindate = '99999999'; my $maxdate; my $hasetape = 0;
 foreach (split(/\n/, $content)) {
+    s/mis en ligne le \d+ \S+//;
     if (s/.*<a name="ETAPE[^"]+">((<a[^>]+>|<i>|<\/i>|<br\/?>|<\/a>|<sup>|<\/sup>|<\/font>|<\/b>|[^>])+)<\/p>(.*)//) {
 	$section = $1;
+	$hasetape = 1;
 	$section =~ s/<[^>]+>//g;
 	if ($section =~ /assembl..?e nationale/i) {
 	    $chambre = "assemblee";
@@ -38,37 +45,86 @@ foreach (split(/\n/, $content)) {
 	}elsif (/commission/i) {
 	    $stade = "commission";
 	}
-    }elsif(!/nomm..? |nomination/i && / (\d+) (janvier|f..?vrier|mars|avril|mai|juin|juillet|ao..?t|septembre|octobre|novembre|d..?cembre) (\d+)/ && $chambre && $stade && !$date) {
-	$annee = $3; $mois = $2; $jour = sprintf('%02d', $1);
+    }elsif(!/nomm..? |nomination/i && / (\d+) (janvier|f..?vrier|mars|avril|mai|juin|juillet|ao..?t|septembre|octobre|novembre|d..?cembre) (20\d+)/ && $chambre && $stade && !$date) {
+	my $annee = $3; my $mois = $2; my $jour = sprintf('%02d', $1);
 	lc($mois);
 	$mois =~ s/[^a-z]+//i;
 	$date = "$annee-".$mois{$mois}."-$jour";
     }
-    if(/"([^"]+\/(projets|ta-commission|ta)\/[^"\-]+(|-a0).asp)"/) {
+    if($hasetape && / (\d+) (janvier|f..?vrier|mars|avril|mai|juin|juillet|ao..?t|septembre|octobre|novembre|d..?cembre) (20\d+)/) {
+	my $annee = $3; my $mois = $2; my $jour = sprintf('%02d', $1);
+	lc($mois);
+	$mois =~ s/[^a-z]+//i;
+	my $adate = "$annee-".$mois{$mois}."-$jour";
+	$mindate = $adate if (join('', split(/-/, $mindate)) > join('', split(/-/, $adate)));
+	$maxdate = $adate if (join('', split(/-/, $maxdate)) < join('', split(/-/, $adate)));
+    }
+    if(/"([^"]+\/(projets|ta-commission|ta)\/[^"\-]+(|-a0).asp)"/ || /"(http:\/\/www.senat.fr\/leg[^\"]+)"/) { 
 	$url = $1;
 	if ($url !~ /^http/) {
 	    $url = 'http://www.assemblee-nationale.fr'.$url;
 	}
-	push @steps, "$chambre;$stade;$date;$url" if ($chambre eq 'assemblee');
+	$mindate = '' if ($mindate eq '99999999');
+	push @steps, "$chambre;$stade;$date;$mindate;$maxdate;$url";
+#	print STDERR  "$chambre;$stade;$date;$mindate;$maxdate;$url\n";
 	$stade = '';
 	$date = '';
+	$mindate = '99999999';
+	$maxdate = '';
     }
 }
-$i = 0;
-while ($#row > 10) {
-    if ($steps[$i] =~ /$row[9];$row[10]/) {
-	@step = split(/;/, $steps[$i]);
-	print STDERR "WARNING: AN url differs on $chambre $stade (from Senat: $row[11] ; from AN: $step[3])\n" if ($row[11] ne $step[3]);
-#   Keep warnings but don't rewrite urls since Senate rebuilt data is most of the times better than AN's
-#	$row[11] = $step[3];
-	$row[13] = $step[2];
-	if (($row[10] eq 'depot') && $row[14]) {
-		$row[13] = $row[14];
+my $i = 0;
+for(my $y = 0 ; $y <= $#{$procedure} ; $y++) {
+    if ($steps[$i] =~ /$procedure->[$y][9];$procedure->[$y][10]/) {
+	my @step = split(/;/, $steps[$i]);
+	if ($step[1] ne 'depot') {
+
+	    if (!($procedure->[$y][13]) && $step[2]) {
+		$procedure->[$y][13] = $step[2];
+	    }
+	    if (!($procedure->[$y][13]) && $step[3]) {
+		$procedure->[$y][13] = $step[3];
+	    }
+	    if (!($procedure->[$y][14]) && $step[4]) {
+		$procedure->[$y][14] = $step[4];
+	    }
+	    #If min date doesn't match the beginning one & if min date fits with the previous ones
+	    if (($step[3] ne $procedure->[$y][13]) && (join('', split(/-/, $step[3])) >= join('', split(/-/, $procedure->[$y-1][14])))) {
+		$procedure->[$y][13] = $step[3];
+	    }
+
+	    #if max date doesn't match the ending one & max date fits with the following one (if set)
+	    if (($step[4] ne $procedure->[$y][14]) && (join('',split(/-/, $step[4])) >= join('',split(/-/,$procedure->[$y][13]))) &&  (!$procedure->[$y+1][13] || (join('',split(/-/, $step[4])) <= join('',split(/-/,$procedure->[$y+1][13]))))) {
+		$procedure->[$y][14] = $step[4];
+	    }
+#	    my $diff = join('', split(/-/, $step[3])) - join('', split(/-/, $procedure->[$y][13]));
+#	    print STDERR "WARNING: diff begin: $diff ($step[3] / ". $procedure->[$y][13]." / $step[2])".$procedure->[$y][8].";".$procedure->[$y][9].";".$procedure->[$y][10]."\n";
+#	    
+#	    $diff = join('', split(/-/, $step[4])) - join('', split(/-/, $procedure->[$y][14]));
+#	    print STDERR "WARNING: diff end: $diff  ($step[4] / ". $procedure->[$y][14].")".$procedure->[$y][8].";".$procedure->[$y][9].";".$procedure->[$y][10]."\n";
 	}
 	$i++;
     }
-    print STDERR "WARNING: begining date missing $row[8];$row[9];$row[10]\n" unless ($row[13]);
-    print join(';', @row)."\n";
-    @row = split(/;/, <STDIN>);
-    chomp($row[$#row]) if ($#row > 0);
+    if (($procedure->[$y][10] eq 'depot') && $procedure->[$y][14]) {
+	$procedure->[$y][13] = $procedure->[$y][14];
+    }
+    if (!($procedure->[$y][13]) && $procedure->[$y][14]) {
+	print STDERR "WARNING: begining date missing ".$procedure->[$y][8].";".$procedure->[$y][9].";".$procedure->[$y][10]." => use ending date\n" unless ($procedure->[$y][13]);
+	$procedure->[$y][13] = $procedure->[$y][14]
+    }
+    if ($y) {
+	my $curbegdate = $procedure->[$y][13]; $curbegdate =~ s/-//g;
+	my $prevenddate = $procedure->[$y-1][14]; $prevenddate =~ s/-//g;
+	my $curenddate = $procedure->[$y][14]; $curenddate =~ s/-//g;
+	print STDERR "WARNING: begining date ($curbegdate) should not later than the ending date ($curenddate) ".$procedure->[$y][8].";".$procedure->[$y][9].";".$procedure->[$y][10]."\n" if ($curbegdate > $curenddate && $curbegdate && $curenddate && ($procedure->[$y][6]+0));
+	if ($curbegdate < $prevenddate && $curbegdate && $prevenddate && ($procedure->[$y][6]+0)) {
+	    $procedure->[$y][13] = $procedure->[$y-1][14];
+	    print STDERR "WARNING: begining date ($curbegdate) should not earlier than the ending date ($prevenddate) of the previous step ".$procedure->[$y][8].";".$procedure->[$y][9].";".$procedure->[$y][10]." => REWRITE IT\n";
+	}
+
+    }
+}
+
+for(my $y = 0 ; $y <= $#{$procedure} ; $y++) {
+    print join(';', @{$procedure->[$y]})."\n";
 }
