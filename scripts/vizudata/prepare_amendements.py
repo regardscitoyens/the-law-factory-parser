@@ -60,7 +60,13 @@ for step in procedure['steps']:
               'order': a['ordre_article'],
               'amendements': []
             }
+
         gpe = find_groupe(a)
+        if not gpe:
+            sys.stderr.write('WARNING: no groupe found for %s\n' % a['url_nos%ss' % typeparl])
+            gpe = "Inconnu"
+        context.add_groupe(groupes, gpe, urlapi)
+
         sujets[key]['amendements'].append({
           'numero': a['numero'],
           'date': a['date'],
@@ -70,11 +76,6 @@ for step in procedure['steps']:
 
         })
 
-        if not gpe:
-            if context.DEBUG:
-                sys.stderr.write('WARNING: no groupe found for %s\n' % a['url_nos%ss' % typeparl])
-            gpe = "Autre"
-        context.add_groupe(groupes, gpe, urlapi)
 
     amdtsfile = os.path.join(context.sourcedir, 'viz', 'amendements_%s.json' % step['directory'])
     data = {'id_step': step['directory'],
