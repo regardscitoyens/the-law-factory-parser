@@ -117,10 +117,6 @@ for step in procedure['steps']:
                 warndone.append(i['intervenant_nom'])
                 print >> sys.stderr, 'WARNING: skipping interventions from %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl])
             continue
-        # Consider auditionnés individually ?
-#        elif not i['intervenant_slug']:
-#            gpe = i['intervenant_fonction']
-        # or not:
         if not gpe:
             if context.DEBUG and i['intervenant_nom'] not in warndone:
                 warndone.append(i['intervenant_nom'])
@@ -136,7 +132,9 @@ for step in procedure['steps']:
             if ra:
                 gpe = "Rapporteurs"
                 i['intervenant_fonction'] = ra
-        save_o_g(i, gpe)
+        existing = get_o_g(i)
+        if not (existing and gpe == u"Présidence") and gpe != get_o_g(i):
+            save_o_g(i, gpe)
 
     for inter in intervs:
         i = inter['intervention']
@@ -172,7 +170,7 @@ for step in procedure['steps']:
 
     # Remove sections with less than 3 interventions
     for s in dict(sections):
-        if sections[s]['total_intervs'] < 3:
+        if sections[s]['total_intervs'] < 3 or sections[s]['total_mots'] < 150 or sections[s]['groupes'].keys() == [u'Présidence']:
             del(sections[s])
 
     steps[step['directory']] = {'groupes': groupes, 'orateurs': orateurs, 'divisions': sections}
