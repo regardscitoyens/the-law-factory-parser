@@ -28,7 +28,7 @@ if ($#keys == -1) {
 
 my $csvchanged = 0;
 
-open INT, "ls $dir/*/interventions/*.xml |";
+open INT, "ls $dir/*/interventions/*.csv |";
 while (<INT>) {
     chomp;
     if (/\/(..)_[^_]*_([^_]*)_[^_]*\/interventions\/(\d{4})-(\d{2})-(\d{2})/) {
