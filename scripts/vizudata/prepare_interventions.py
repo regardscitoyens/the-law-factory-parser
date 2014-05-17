@@ -32,16 +32,32 @@ def add_intervs(dic, key, inter):
     dic[key]['nb_intervs'] += 1
     dic[key]['nb_mots'] += int(inter['nbmots'])
 
+re_hash = re.compile(r'\W+')
+hash_name = lambda x: re_hash.sub('', x).lower()
+def save_hash(i, dico, val=None):
+    if not val:
+        val = i['intervenant_fonction']
+    h = hash_name(i['intervenant_nom'])
+    if h not in dico or len(dico[h]) < len(val):
+        dico[h] = val
+def get_hash(i, dico):
+    h = hash_name(i['intervenant_nom'])
+    return dico[h] if h in dico else ""
 gouv_members = {}
-re_hash_gm = re.compile(r'\W+')
-hash_gm = lambda x: re_hash_gm.sub('', x).lower()
+rapporteurs = {}
+orat_gpes = {}
 def save_gm(i):
-    hgm = hash_gm(i['intervenant_nom'])
-    if hgm not in gouv_members or len(gouv_members[hgm]) < len(i['intervenant_fonction']):
-        gouv_members[hgm] = i['intervenant_fonction']
+    save_hash(i, gouv_members)
 def get_gm(i):
-    hgm = hash_gm(i['intervenant_nom'])
-    return gouv_members[hgm] if hgm in gouv_members else ""
+    return get_hash(i, gouv_members)
+def save_rap(i):
+    save_hash(i, rapporteurs)
+def get_rap(i):
+    return get_hash(i, rapporteurs)
+def save_o_g(i, gpe):
+    save_hash(i, orat_gpes, gpe)
+def get_o_g(i):
+    return get_hash(i, orat_gpes)
 
 re_gouv = re.compile(u'(ministre|garde.*sceaux|secr[eéÉ]taire.*[eéÉ]tat|haut-commissaire)', re.I)
 re_parl = re.compile(u'(d[eéÉ]put[eéÉ]|s[eéÉ]nateur|membre du parlement|parlementaire)', re.I)
@@ -75,6 +91,7 @@ for step in procedure['steps']:
 
     groupes = {}
     orateurs = {}
+    orat_gpes = {}
     for inter in intervs:
         i = inter['intervention']
         if not i['intervenant_nom']:
@@ -89,6 +106,7 @@ for step in procedure['steps']:
             gpe = u"Présidence"
         elif re_rapporteur.match(i['intervenant_fonction']):
             gpe = "Rapporteurs"
+            save_rap(i)
         elif re_gouv.search(i['intervenant_fonction']):
             gpe = "Gouvernement"
             save_gm(i)
@@ -113,7 +131,19 @@ for step in procedure['steps']:
                 i['intervenant_fonction'] = gm
             else:
                 gpe = u"Auditionnés"
-        gpid = context.add_groupe(groupes, gpe, urlapi)
+        else:
+            ra = get_rap(i)
+            if ra:
+                gpe = "Rapporteurs"
+                i['intervenant_fonction'] = ra
+        save_o_g(i, gpe)
+
+    for inter in intervs:
+        i = inter['intervention']
+        gpe = get_o_g(i)
+        if not gpe:
+            continue
+        gpid = context.add_groupe(groupes, get_o_g(i), urlapi)
         add_intervs(sections[i[sectype]]['groupes'], gpid, i)
 
         # Consider as two separate speakers a same perso with two different fonctions
