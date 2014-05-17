@@ -77,8 +77,20 @@ foreach (split(/\n/, $content)) {
 	    $url = 'http://www.assemblee-nationale.fr'.$url;
 	}
 	$mindate = '' if ($mindate eq '99999999');
-	push @steps, "$chambre;$stade;$date;$mindate;$maxdate;$url";
-#	print STDERR  "$chambre;$stade;$date;$mindate;$maxdate;$url\n";
+	my $pchambre = $chambre;
+	if ($chambre eq 'CMP') {
+	    if ($stade eq 'hemicycle') {
+		if ($url =~ /senat/) {
+		    $pchambre = "senat";
+		}else{
+		    $pchambre = 'assemblee';
+		}
+	    }elsif($stade eq 'depot') {
+		$stade = 'commission';
+	    }
+	}
+	push @steps, "$pchambre;$stade;$date;$mindate;$maxdate;$url" if ($stade);
+#	print STDERR  "INFO: $pchambre;$stade;$date;$mindate;$maxdate;$url\n" if ($stade);
 	$stade = '';
 	$date = '';
 	$mindate = '99999999';
@@ -88,10 +100,18 @@ foreach (split(/\n/, $content)) {
 
 my $i = 0;
 for(my $y = 0 ; $y <= $#{$procedure} ; $y++) {
-    if ($steps[$i] =~ /$procedure->[$y][9];$procedure->[$y][10]/) {
+    my $stepfound = 0;
+    if ($steps[$i] =~ /$procedure->[$y][9];$procedure->[$y][10];/) {
+	$stepfound = 1;
+    }elsif ($steps[$i+1] =~ /$procedure->[$y][9];$procedure->[$y][10];/) {
+	print STDERR "WARNING: Step missing : $steps[$i]\n";
+	$i++;
+	$stepfound = 1;
+    }
+    if ($stepfound) {
 	my @step = split(/;/, $steps[$i]);
+	$i++;
 	if ($step[1] ne 'depot') {
-
 	    if (!($procedure->[$y][13]) && $step[2]) {
 		$procedure->[$y][13] = $step[2];
 	    }
@@ -116,7 +136,6 @@ for(my $y = 0 ; $y <= $#{$procedure} ; $y++) {
 #	    $diff = join('', split(/-/, $step[4])) - join('', split(/-/, $procedure->[$y][14]));
 #	    print STDERR "WARNING: diff end: $diff  ($step[4] / ". $procedure->[$y][14].")".$procedure->[$y][8].";".$procedure->[$y][9].";".$procedure->[$y][10]."\n";
 	}
-	$i++;
     }
     if (($procedure->[$y][10] eq 'depot') && $procedure->[$y][14]) {
 	$procedure->[$y][13] = $procedure->[$y][14];
@@ -134,8 +153,11 @@ for(my $y = 0 ; $y <= $#{$procedure} ; $y++) {
 	    $procedure->[$y][13] = $procedure->[$y-1][14];
 	    print STDERR "WARNING: begining date ($curbegdate) should not earlier than the ending date ($prevenddate) of the previous step ".$procedure->[$y][8].";".$procedure->[$y][9].";".$procedure->[$y][10]." => REWRITE IT\n";
 	}
-
     }
+}
+
+for (my $y = $i ; $y <= $#steps ; $y++) {
+    print "WARNING: step mission : ".$steps[$y]."\n";
 }
 
 for(my $y = 0 ; $y <= $#{$procedure} ; $y++) {
