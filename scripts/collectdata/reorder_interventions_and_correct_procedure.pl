@@ -3,8 +3,9 @@
 use strict;
 
 my $dir = shift();
+my $debug = shift();
 if (!$dir) {
-    print STDERR "Pocedure directory need as argument\n";
+    print STDERR "ERROR: Pocedure directory need as argument\n";
     exit 1;
 }
 
@@ -21,13 +22,13 @@ close CSV;
 
 my @keys = keys %{$procedure};
 if ($#keys == -1) {
-    print STDERR "No procedure found\n";
+    print STDERR "ERROR: No procedure found\n";
     exit 2;
 }
 
 my $csvchanged = 0;
 
-open INT, "ls $dir/*/interventions/*.* |";
+open INT, "ls $dir/*/interventions/*.xml |";
 while (<INT>) {
     chomp;
     if (/\/(..)_[^_]*_([^_]*)_[^_]*\/interventions\/(\d{4})-(\d{2})-(\d{2})/) {
@@ -41,7 +42,7 @@ while (<INT>) {
 	    if ($previd && $procedure->{$previd}[14] <= $date) {
 		$procedure->{$id}[13] = $date;
 		$csvchanged = 1;
-		print STDERR "INFO: change beginning date of $id thanks to $_\n";
+		print STDERR "INFO: change beginning date of $id thanks to $_\n" if ($debug);
 	    }else{
 		print STDERR "ERROR: PB beginnig \t $_ (".$procedure->{$id}[13]." < $date < ".$procedure->{$id}[14].")\n";
 	    }
@@ -50,7 +51,7 @@ while (<INT>) {
 	    if ($procedure->{$nextid}[13] >= $date) {
 		$procedure->{$id}[14] = $date;
 		$csvchanged = 1;
-		print STDERR "INFO: change ending date of $id thanks to $_\n";
+		print STDERR "INFO: change ending date of $id thanks to $_\n" if ($debug);
 	    }else{
 		my $testid = $id; my $solved = 0;
 		for (my $i = $id+0 ; ($testid = sprintf('%02d', $i)) && $procedure->{$testid} ; $i++ ) {
@@ -62,19 +63,23 @@ while (<INT>) {
 			mkdir ($location);
 			my $file = $_;
 			system("mv $file $location");
-			print STDERR "INFO: NEW Location ".$location." found for $file\n";
+			$file =~ s/csv$/xml/;
+			system("mv $file $location");
+			$file =~ s/xml$/json/;
+			system("mv $file $location");
+			print STDERR "INFO: NEW Location ".$location." found for $file & co\n" if ($debug);
 			$solved = 1;
 		    }
 		    if ($solved) {
 			if ($procedure->{$testid}[13] > $date) {
 			    $procedure->{$testid}[13] = $date;
 			    $csvchanged = 1;
-			    print STDERR "INFO: change beginning date of $testid thanks to $_\n";
+			    print STDERR "INFO: change beginning date of $testid thanks to $_\n" if ($debug);
 			}
 			if ($procedure->{$testid}[14] < $date) {
 			    $procedure->{$testid}[14] = $date;
 			    $csvchanged = 1;
-			    print STDERR "INFO: change ending date of $testid thanks to $_\n";
+			    print STDERR "INFO: change ending date of $testid thanks to $_\n" if ($debug);
 			}
 			last;
 		    }
@@ -94,5 +99,5 @@ if ($csvchanged) {
 	print CSV join(';', @{$procedure->{$id}})."\n";
     }
     close CSV;
-    print STDERR "INFO: $dir/procedure.csv CHANGED\n";
+    print STDERR "INFO: $dir/procedure.csv CHANGED\n" if ($debug);
 }
