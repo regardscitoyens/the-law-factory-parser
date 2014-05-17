@@ -92,8 +92,13 @@ for step in procedure['steps']:
         elif re_gouv.search(i['intervenant_fonction']):
             gpe = "Gouvernement"
             save_gm(i)
-        elif re_parl.match(i['intervenant_fonction']):
+        elif not gpe and re_parl.search(i['intervenant_fonction']+' '+i['intervenant_nom']):
             gpe = "Autres parlementaires"
+            # unmeaningful information hard to rematch to the groups, usually invectives, skipping it
+            if context.DEBUG and i['intervenant_nom'] not in warndone:
+                warndone.append(i['intervenant_nom'])
+                print >> sys.stderr, 'WARNING: skipping interventions from %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl])
+            continue
         # Consider auditionnés individually ?
 #        elif not i['intervenant_slug']:
 #            gpe = i['intervenant_fonction']
@@ -101,7 +106,7 @@ for step in procedure['steps']:
         if not gpe:
             if context.DEBUG and i['intervenant_nom'] not in warndone:
                 warndone.append(i['intervenant_nom'])
-                sys.stderr.write('WARNING: neither groupe nor function found for %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl]))
+                print >> sys.stderr, 'WARNING: neither groupe nor function found for %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl])
             gm = get_gm(i)
             if gm:
                 gpe = "Gouvernement"
@@ -126,7 +131,7 @@ for step in procedure['steps']:
             if len(i['intervenant_fonction']) > len(orateurs[orateur]['fonction']):
                 if context.DEBUG and ((orateurs[orateur]['fonction'] and not i['intervenant_fonction'].startswith(orateurs[orateur]['fonction'])) or
                   (not orateurs[orateur]['fonction'] and not (i['intervenant_fonction'].startswith('rapporte') or i['intervenant_fonction'].startswith(u'président')))):
-                    sys.stderr.write('WARNING: found different functions for %s at %s : %s / %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl], orateurs[orateur]['fonction'], i['intervenant_fonction']))
+                    print >> sys.stderr, 'WARNING: found different functions for %s at %s : %s / %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl], orateurs[orateur]['fonction'], i['intervenant_fonction'])
                 orateurs[orateur]['fonction'] = i['intervenant_fonction']
 
         if not "orateurs" in sections[i[sectype]]['groupes'][gpid]:
