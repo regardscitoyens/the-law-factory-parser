@@ -113,7 +113,6 @@ class Context(object):
             gpid = gpe.upper()
         if gpid not in groupes:
             groupes[gpid] = {'nom': upper_first(gpe),
-                             'color': '#888888',
                              'link': ''}
             if gpid in self.allgroupes[urlapi]:
                 groupes[gpid]['nom'] = self.allgroupes[urlapi][gpid]['nom']
@@ -121,14 +120,19 @@ class Context(object):
                 groupes[gpid]['color'] = self.allgroupes[urlapi][gpid]['color']
                 groupes[gpid]['link'] = groupe_link({'slug': gpid}, urlapi)
             elif gpid == u"Présidence":
+                groupes[gpid]['color'] = "#bfbbcc"
                 groupes[gpid]['order'] = 0
             elif gpid == u"Rapporteurs":
+                groupes[gpid]['color'] = "#b9ccc0"
                 groupes[gpid]['order'] = 50
             elif gpid == u"Gouvernement":
+                groupes[gpid]['color'] = "#cccbb3"
                 groupes[gpid]['order'] = 60
             elif gpid == u"Auditionnés":
+                groupes[gpid]['color'] = "#ccb7b6"
                 groupes[gpid]['order'] = 70
             else:
+                groupes[gpid]['color'] = "#bfbfbf"
                 groupes[gpid]['order'] = 100
         return gpid
 
