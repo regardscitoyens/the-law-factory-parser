@@ -24,9 +24,21 @@ my $content = $a->content;
 utf8::encode($content);
 my %mois = ('janvier'=>'01', 'fvrier'=>'02', 'mars'=>'03', 'avril'=>'04', 'mai'=>'05', 'juin'=>'06', 'juillet'=>'07', 'aot'=>'08', 'septembre'=>'09','octobre'=>'10','novembre'=>'11','dcembre'=>'12');
 my @steps = ();
-my $section; my $chambre; my $stade; my $date; my $mindate = '99999999'; my $maxdate; my $hasetape = 0;
+my $section; my $chambre; my $stade; my $date; my $mindate = '99999999'; my $maxdate; my $hasetape = 0; my $canparse = 0;
 foreach (split(/\n/, $content)) {
+    s/\r//g;
     s/mis en ligne le \d+ \S+//;
+    if (/<hr>.*Loi/) {
+	$canparse = 0;
+	if (/organique/i && $procedure->[0][1] =~ /organique/i) {
+	    $canparse = 1;
+	}elsif (!/organique/i && $procedure->[0][1] !~ /organique/i) {
+	    $canparse = 1;
+	}
+    }
+    unless ($canparse) {
+	next;
+    }
     if (s/.*<a name="ETAPE[^"]+">((<a[^>]+>|<i>|<\/i>|<br\/?>|<\/a>|<sup>|<\/sup>|<\/font>|<\/b>|[^>])+)<\/p>(.*)//) {
 	$section = $1;
 	$hasetape = 1;
@@ -73,6 +85,7 @@ foreach (split(/\n/, $content)) {
 	$maxdate = '';
     }
 }
+
 my $i = 0;
 for(my $y = 0 ; $y <= $#{$procedure} ; $y++) {
     if ($steps[$i] =~ /$procedure->[$y][9];$procedure->[$y][10]/) {
