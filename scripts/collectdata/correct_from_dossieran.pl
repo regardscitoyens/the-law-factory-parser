@@ -23,6 +23,11 @@ $a->get($url);
 my $content = $a->content;
 utf8::encode($content);
 
+my $urltextcommission = 'ta-commission';
+if ($content !~ /ta-commission/) {
+    $urltextcommission = 'rapports';
+}
+
 my %mois = ('janvier'=>'01', 'fvrier'=>'02', 'mars'=>'03', 'avril'=>'04', 'mai'=>'05', 'juin'=>'06', 'juillet'=>'07', 'aot'=>'08', 'septembre'=>'09','octobre'=>'10','novembre'=>'11','dcembre'=>'12');
 my @steps = ();
 my $section; my $chambre; my $stade; my $date; my $mindate = '99999999'; my $maxdate; my $hasetape = 0; my $canparse = 0;
@@ -72,7 +77,7 @@ foreach (split(/\n/, $content)) {
 	$mindate = $adate if (join('', split(/-/, $mindate)) > join('', split(/-/, $adate)));
 	$maxdate = $adate if (join('', split(/-/, $maxdate)) < join('', split(/-/, $adate)));
     }
-    if(/"([^"]+\/(projets|ta-commission|ta)\/[^"\-]+(|-a0).asp)"/ || /"(http:\/\/www.senat.fr\/leg[^\"]+)"/) { 
+    if(/"([^"]+\/(projets|$urltextcommission|ta)\/[^"\-]+(|-a0).asp)"/ || /"(http:\/\/www.senat.fr\/leg[^\"]+)"/) { 
 	$url = $1;
 	if ($url !~ /^http/) {
 	    $url = 'http://www.assemblee-nationale.fr'.$url;
