@@ -4,6 +4,8 @@ use WWW::Mechanize;
 use utf8;
 use strict;
 
+my $debug = shift();
+
 my %missing_dossieran = ('pjl11-497' => '14;accord_Serbie_cooperation_policiere', 'pjl10-511' => '13;accord_fiscal_Costa_Rica', 'pjl10-512' => '13;accord_fiscal_Liberia', 'pjl10-513' => '13;accord_fiscal_Brunei', 'pjl10-514' => '13;accord_fiscal_Belize', 'pjl10-515' => '13;accord_fiscal_Dominique', 'pjl10-516' => '13;accord_fiscal_Anguilla');
 
 my $procedure = {};
@@ -32,11 +34,6 @@ my $a = WWW::Mechanize->new();
 $a->get($url);
 my $content = $a->content;
 utf8::encode($content);
-
-my $urltextcommission = 'ta-commission';
-if ($content !~ /ta-commission/) {
-    $urltextcommission = 'rapports';
-}
 
 my %mois = ('janvier'=>'01', 'fvrier'=>'02', 'mars'=>'03', 'avril'=>'04', 'mai'=>'05', 'juin'=>'06', 'juillet'=>'07', 'aot'=>'08', 'septembre'=>'09','octobre'=>'10','novembre'=>'11','dcembre'=>'12');
 my @steps = ();
@@ -87,7 +84,7 @@ foreach (split(/\n/, $content)) {
 	$mindate = $adate if (join('', split(/-/, $mindate)) > join('', split(/-/, $adate)));
 	$maxdate = $adate if (join('', split(/-/, $maxdate)) < join('', split(/-/, $adate)));
     }
-    if(/"([^"]+\/(projets|$urltextcommission|ta)\/[^"\-]+(|-a0).asp)"/ || /"(http:\/\/www.senat.fr\/leg[^\"]+)"/) { 
+    if(/"([^"]+\/(projets|ta-commission|ta)\/[^"\-]+(|-a0).asp)"/ || /"(http:\/\/www.senat.fr\/leg[^\"]+)"/ || (!/ta-commission/ && /"([^"]+\/(rapports)\/[^"\-]+(|-a0).asp)"/) || (!/"http:\/\/www.senat.fr\/leg/ && /"(http:\/\/www.senat.fr\/rap[^\"]+)"/)) { 
 	$url = $1;
 	if ($url !~ /^http/) {
 	    $url = 'http://www.assemblee-nationale.fr'.$url;
@@ -111,6 +108,12 @@ foreach (split(/\n/, $content)) {
 	$date = '';
 	$mindate = '99999999';
 	$maxdate = '';
+    }
+}
+
+if ($debug) {
+    foreach my $s (@steps) {
+	print STDERR "DEBUG: $s\n";
     }
 }
 
