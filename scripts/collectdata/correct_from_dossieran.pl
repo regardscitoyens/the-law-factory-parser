@@ -189,7 +189,7 @@ foreach my $y (sort  @pkeys) {
 }
 
 for (my $y = $i ; $y <= $#steps ; $y++) {
-    print "WARNING: step mission : ".$steps[$y]."\n";
+    print STDERR "WARNING: step mission : ".$steps[$y]."\n";
     my $lasty = sprintf('%02d', $i - 1);
     @{$procedure->{$lasty.$y}} = @{$procedure->{$lasty}};
     my @step = split(/;/, $steps[$y]);
