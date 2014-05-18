@@ -126,7 +126,7 @@ foreach my $y (sort  @pkeys) {
 	$stepfound = 1;
     }elsif ($steps[$i+1] =~ /$procedure->{$y}[9];$procedure->{$y}[10];/) {
 	print STDERR "WARNING: Step missing : $steps[$i]\n";
-	my $lasty = sprintf('%02d', $y);
+	my $lasty = sprintf('%02d', $y - 1);
 	@{$procedure->{$lasty.$i}} = @{$procedure->{$lasty}};
 	my @step = split(/;/, $steps[$i]);
 	$procedure->{$lasty.$i}[13] = $step[3];
