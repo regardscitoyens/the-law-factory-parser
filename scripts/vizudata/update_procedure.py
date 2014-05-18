@@ -25,9 +25,9 @@ for s in procedure['steps']:
         s['debats_order'] = good_steps.get(s['directory'], None)
     if s.get('step', '') == 'depot' and s['debats_order'] != None:
         if '/propositions/' in s.get('source_url', ''):
-            s['auteur_depot'] = u"Assemblée nationale"
+            s['auteur_depot'] = u"Députés"
         elif '/leg/ppl' in s.get('source_url',''):
-            s['auteur_depot'] = u"Sénat"
+            s['auteur_depot'] = u"Sénateurs"
         else:
             s['auteur_depot'] = u"Gouvernement"
     for field in dict(s):
