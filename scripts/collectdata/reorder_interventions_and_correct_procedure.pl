@@ -57,6 +57,10 @@ while (<INT>) {
 		for (my $i = $id+0 ; ($testid = sprintf('%02d', $i)) && ($#{$procedure->{$testid}} != -1) ; $i++ ) {
 		    my $testprevid = sprintf('%02d', $i - 1);
 		    my $testnextid = sprintf('%02d', $i + 1);
+		    if ($procedure->{$testid}[7] == $procedure->{$testprevid}[7]) {
+			$testprevid = sprintf('%02d', $i - 2);
+		    }
+		    print STDERR "DEBUG: ".$procedure->{$testprevid}[14].' ('.$procedure->{$testid}[13].") >= $date >= ".$procedure->{$testnextid}[13]." &&  ".$procedure->{$testid}[9]." eq $chambre ?\n" if ($debug);
 		    if ($procedure->{$testprevid}[14] <= $date && $procedure->{$testnextid}[13] >= $date && $procedure->{$testid}[9] eq $chambre) {
 			my $location = $dir.'/'.$testid.'_'.$procedure->{$testid}[8].'_'.$procedure->{$testid}[9].'_'.$procedure->{$testid}[10].'/interventions/';
 			$location =~ s/ //g;
