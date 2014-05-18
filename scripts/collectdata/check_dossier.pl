@@ -25,12 +25,14 @@ while(<STDIN>) {
 	print STDERR "WARNING: $id: duplicated entry : ".$csv[7]."\n";
     }
   if ($csv[11] ne "texte retire" && $csv[11] ne "renvoi en commission") {
-    if ($csv[11] !~ /^http/ && $csv[7] ne 'EXTRA') {
+    if ($csv[10] ne 'commission' || $csv[8] !~ /finitive/) { #no bill url for commission / lecture definitive
+      if ($csv[11] !~ /^http/ && $csv[7] ne 'EXTRA') {
 	print "$id: not valid url ".$csv[11]."\n";
 	$errors++;
-    }elsif($csv[9] =~ /assemblee|senat/ && $csv[11] !~ /$csv[9]/) {
+      }elsif($csv[9] =~ /assemblee|senat/ && $csv[11] !~ /$csv[9]/) {
 	print "$id: not a chambre url ".$csv[11]."\n";
 	$errors++;
+      }
     }
   }
 }
