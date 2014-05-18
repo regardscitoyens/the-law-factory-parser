@@ -216,5 +216,9 @@ foreach my $y (sort keys %{$procedure}) {
 	$procedure->{$y}[6] = sprintf('%02d', $nbstep++) if ($procedure->{$y}[6] ne 'XX');
 	$procedure->{$y}[7] = $nbline if ($procedure->{$y}[7] + 0);
     }
+    #For "lecture definitive" in commission, no need of bill url
+    if (($procedure->{$y}[8] =~ /finitive/) && ($procedure->{$y}[10] eq 'commission')) {
+	$procedure->{$y}[11] = '';
+    }
     print join(';', @{$procedure->{$y}})."\n";
 }
