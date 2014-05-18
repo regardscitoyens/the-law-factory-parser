@@ -22,7 +22,7 @@ while(<STDIN>) {
     $extra[$csv[7]] = $csv[11];
     $etapes[$csv[7]] = $csv[8];
     }elsif ($data[$csv[7]-1] ne 'CMP' && $csv[7] ne 'EXTRA') {
-	print STDERR "WARNING: $id: duplicated entry ".$csv[7]."\n";
+	print STDERR "WARNING: $id: duplicated entry : ".$csv[7]."\n";
     }
   if ($csv[11] ne "texte retire" && $csv[11] ne "renvoi en commission") {
     if ($csv[11] !~ /^http/ && $csv[7] ne 'EXTRA') {
