@@ -176,4 +176,11 @@ for nstep, step in enumerate(steps):
         sys.stderr.write("ERROR parsing step %s:\n%s: %s\n" % (step, type(e), e))
         exit(1)
 
+for a in out['articles']:
+    new_steps = []
+    for s in out['articles'][a]['steps']:
+        del(s['text'])
+        new_steps.append(s)
+    out['articles'][a]['steps'] = new_steps
+
 print_json(out)
