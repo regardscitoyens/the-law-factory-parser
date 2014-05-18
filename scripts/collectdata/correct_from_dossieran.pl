@@ -30,6 +30,7 @@ if (($#{$procedure->{'00'}} > -1) && (!$procedure->{'00'}[4] || !$procedure->{'0
 }
 
 my $url = "http://www.assemblee-nationale.fr/".$procedure->{'00'}[3]."/dossiers/".$procedure->{'00'}[4].".asp";
+print STDERR "DEBUG: dossier an : $url\n" if ($debug);
 my $a = WWW::Mechanize->new();
 $a->get($url);
 my $content = $a->content;
