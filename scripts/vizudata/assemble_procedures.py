@@ -49,9 +49,6 @@ def save_json_page(tosave, done):
         data["next_page"] = namefile(npage+1)
     print_json(data, os.path.join(sourcedir, namefile(npage)))
 
-delay_stats = 30
-bin_stat = lambda x: delay_stats * (x / delay_stats + 1)
-stats = {}
 done = 0
 tosave = []
 for d in dossiers:
@@ -72,11 +69,6 @@ for d in dossiers:
 # - take état du dossier from csv when more than promulgués (and handle better end date then)
 # - take "numéro de la loi" from csv ? link to legifrance ? or just TA?
 
-    statbin = bin_stat(proc["total_days"])
-    if statbin not in stats:
-        stats[statbin] = 0
-    stats[statbin] += 1
-
     tosave.append(proc)
     done += 1
     if done % pagesize == 0:
@@ -85,13 +77,4 @@ for d in dossiers:
 
 if tosave:
     save_json_page(tosave, done)
-
-maxdays = max(stats.keys())
-days = delay_stats
-while days < maxdays:
-    if days not in stats:
-        stats[days] = 0
-    days += delay_stats
-
-print_json(stats, os.path.join(sourcedir, 'stats_dossiers.json'))
 
