@@ -44,7 +44,7 @@ while (<INT>) {
 		$csvchanged = 1;
 		print STDERR "INFO: change beginning date of $id thanks to $_\n" if ($debug);
 	    }else{
-		print STDERR "ERROR: PB beginnig \t $_ (".$procedure->{$id}[13]." < $date < ".$procedure->{$id}[14].")\n";
+		print STDERR "ERROR: PB beginnig \t $_ : ".$procedure->{$id}[13]." (begin) < $date (actual) < ".$procedure->{$id}[14]." (end)\n";
 	    }
 	}
 	if ($procedure->{$id}[14] < $date) {
@@ -54,7 +54,7 @@ while (<INT>) {
 		print STDERR "INFO: change ending date of $id thanks to $_\n" if ($debug);
 	    }else{
 		my $testid = $id; my $solved = 0;
-		for (my $i = $id+0 ; ($testid = sprintf('%02d', $i)) && $procedure->{$testid} ; $i++ ) {
+		for (my $i = $id+0 ; ($testid = sprintf('%02d', $i)) && ($#{$procedure->{$testid}} != -1) ; $i++ ) {
 		    my $testprevid = sprintf('%02d', $i - 1);
 		    my $testnextid = sprintf('%02d', $i + 1);
 		    if ($procedure->{$testprevid}[14] <= $date && $procedure->{$testnextid}[13] >= $date && $procedure->{$testid}[9] eq $chambre) {
@@ -84,7 +84,7 @@ while (<INT>) {
 			last;
 		    }
 		}
-		print STDERR "ERROR: PB ending \t $_ (".$procedure->{$id}[13]." < $date < ".$procedure->{$id}[14].")\n" unless($solved);
+		print STDERR "ERROR: PB ending \t $_ : ".$procedure->{$id}[13]."(begin) < $date (actual) < ".$procedure->{$id}[14]."(end)\n" unless($solved);
 	    }
 	}
     }
