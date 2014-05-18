@@ -105,6 +105,7 @@ foreach (split(/\n/, $content)) {
 }
 
 my $i = 0;
+my $stepadded = 0;
 my @pkeys = keys %{$procedure};
 foreach my $y (sort  @pkeys) {
     my $stepfound = 0;
@@ -121,6 +122,7 @@ foreach my $y (sort  @pkeys) {
 	$procedure->{$lasty.$i}[10] = $step[1];
 	$procedure->{$lasty.$i}[6] = $lasty.$i;
 	$procedure->{$lasty.$i}[11] = $step[5];
+	$stepadded = 1;
 	$i++;
 	$stepfound = 1;
     }
@@ -183,6 +185,7 @@ for (my $y = $i ; $y <= $#steps ; $y++) {
     $procedure->{$lasty.$y}[10] = $step[1];
     $procedure->{$lasty.$y}[6] = $lasty.$y;
     $procedure->{$lasty.$y}[11] = $step[5];
+    $stepadded = 1;
 }
 
 my $nbstep = 0;
@@ -190,12 +193,14 @@ my $nbline = 0;
 my %nbstep ;
 my $cmpfirstpassed = 0;
 foreach my $y (sort keys %{$procedure}) {
-    $nbline++ unless ($procedure->{$y}[8] eq 'CMP' && $procedure->{$y}[10] eq 'hemicycle');
-    if ($procedure->{$y}[8] eq 'CMP' && $procedure->{$y}[10] eq 'hemicycle' && !$cmpfirstpassed) {
-	$nbline++ ;
-	$cmpfirstpassed = 1;
+    if ($stepadded) {
+	$nbline++ unless ($procedure->{$y}[8] eq 'CMP' && $procedure->{$y}[10] eq 'hemicycle');
+	if ($procedure->{$y}[8] eq 'CMP' && $procedure->{$y}[10] eq 'hemicycle' && !$cmpfirstpassed) {
+	    $nbline++ ;
+	    $cmpfirstpassed = 1;
+	}
+	$procedure->{$y}[6] = sprintf('%02d', $nbstep++) if ($procedure->{$y}[6] ne 'XX');
+	$procedure->{$y}[7] = $nbline if ($procedure->{$y}[7] + 0);
     }
-    $procedure->{$y}[6] = sprintf('%02d', $nbstep++) if ($procedure->{$y}[6] ne 'XX');
-    $procedure->{$y}[7] = $nbline if ($procedure->{$y}[7] + 0);
     print join(';', @{$procedure->{$y}})."\n";
 }
