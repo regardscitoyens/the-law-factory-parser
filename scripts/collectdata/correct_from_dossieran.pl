@@ -112,6 +112,15 @@ foreach my $y (sort  @pkeys) {
 	$stepfound = 1;
     }elsif ($steps[$i+1] =~ /$procedure->{$y}[9];$procedure->{$y}[10];/) {
 	print STDERR "WARNING: Step missing : $steps[$i]\n";
+	my $lasty = sprintf('%02d', $y);
+	@{$procedure->{$lasty.$i}} = @{$procedure->{$lasty}};
+	my @step = split(/;/, $steps[$i]);
+	$procedure->{$lasty.$i}[13] = $step[3];
+	$procedure->{$lasty.$i}[14] = $step[4];
+	$procedure->{$lasty.$i}[9]  = $step[0];
+	$procedure->{$lasty.$i}[10] = $step[1];
+	$procedure->{$lasty.$i}[6] = $lasty.$i;
+	$procedure->{$lasty.$i}[11] = $step[5];
 	$i++;
 	$stepfound = 1;
     }
@@ -165,8 +174,28 @@ foreach my $y (sort  @pkeys) {
 
 for (my $y = $i ; $y <= $#steps ; $y++) {
     print "WARNING: step mission : ".$steps[$y]."\n";
+    my $lasty = sprintf('%02d', $i - 1);
+    @{$procedure->{$lasty.$y}} = @{$procedure->{$lasty}};
+    my @step = split(/;/, $steps[$y]);
+    $procedure->{$lasty.$y}[13] = $step[3];
+    $procedure->{$lasty.$y}[14] = $step[4];
+    $procedure->{$lasty.$y}[9]  = $step[0];
+    $procedure->{$lasty.$y}[10] = $step[1];
+    $procedure->{$lasty.$y}[6] = $lasty.$y;
+    $procedure->{$lasty.$y}[11] = $step[5];
 }
 
+my $nbstep = 0;
+my $nbline = 0;
+my %nbstep ;
+my $cmpfirstpassed = 0;
 foreach my $y (sort keys %{$procedure}) {
+    $nbline++ unless ($procedure->{$y}[8] eq 'CMP' && $procedure->{$y}[10] eq 'hemicycle');
+    if ($procedure->{$y}[8] eq 'CMP' && $procedure->{$y}[10] eq 'hemicycle' && !$cmpfirstpassed) {
+	$nbline++ ;
+	$cmpfirstpassed = 1;
+    }
+    $procedure->{$y}[6] = sprintf('%02d', $nbstep++) if ($procedure->{$y}[6] ne 'XX');
+    $procedure->{$y}[7] = $nbline if ($procedure->{$y}[7] + 0);
     print join(';', @{$procedure->{$y}})."\n";
 }
