@@ -4,6 +4,8 @@ use WWW::Mechanize;
 use utf8;
 use strict;
 
+my %missing_dossieran = ('pjl11-497' => '14;accord_Serbie_cooperation_policiere', 'pjl10-511' => '13;accord_fiscal_Costa_Rica', 'pjl10-512' => '13;accord_fiscal_Liberia', 'pjl10-513' => '13;accord_fiscal_Brunei', 'pjl10-514' => '13;accord_fiscal_Belize', 'pjl10-515' => '13;accord_fiscal_Dominique', 'pjl10-516' => '13;accord_fiscal_Anguilla');
+
 my $procedure = {};
 my $i = 0;
 my @row;
@@ -12,9 +14,17 @@ while ((@row = split(/;/, <STDIN>)) && ($#row > 10)) {
 	@{$procedure->{$row[6]}} = @row;
 }
 
-if (!($procedure->{'00'}) && !$procedure->{'00'}[4] || !$procedure->{'00'}[3]) {
-  print STDERR "WARNING: no dossier AN found, skipping corrector\n";
-  exit(0);
+if (($#{$procedure->{'00'}} > -1) && (!$procedure->{'00'}[4] || !$procedure->{'00'}[3])) {
+    if ($missing_dossieran{$procedure->{'00'}[5]}) {
+	my @dossieran = split(/;/, $missing_dossieran{$procedure->{'00'}[5]});
+	foreach my $y (keys %{$procedure}) {
+	    $procedure->{$y}[3] = $dossieran[0];
+	    $procedure->{$y}[4] = $dossieran[1];
+	}
+    }else{
+	print STDERR "WARNING: no dossier AN found, skipping corrector\n";
+	exit(0);
+    }
 }
 
 my $url = "http://www.assemblee-nationale.fr/".$procedure->{'00'}[3]."/dossiers/".$procedure->{'00'}[4].".asp";
