@@ -334,7 +334,7 @@ for l in f:
 
 if texte['definitif'] and oldsects and oldarts:
     print >> sys.stderr, "ERROR: %s sections left:\n%s" % (len(oldsects), oldsects)
-    exit()
+    #exit()
 
 while oldarts:
     cur, a = oldarts.pop(0)
