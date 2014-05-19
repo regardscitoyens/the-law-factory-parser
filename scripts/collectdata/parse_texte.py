@@ -259,6 +259,7 @@ for text in soup.find_all("p"):
         if m.group(3) is not None:
             section_typ += "S"
         section_num = re_cl_html.sub("", re_cl_uno.sub('1', re_cl_sec_uno.sub('1', m.group(5).strip())).strip())
+        section_num = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), section_num)
         m2 = re_mat_romans.match(section_num)
         if m2:
             rest = section_num.replace(m2.group(0), '')
