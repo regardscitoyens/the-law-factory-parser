@@ -13,6 +13,7 @@ if (!$id) {
 @data = ('INIT');
 @extra = ();
 @etapes = ();
+@levels = ();
 $errors = 0;
 while(<STDIN>) {
     chomp;
@@ -21,6 +22,7 @@ while(<STDIN>) {
 	$data[$csv[7]] = $csv[9];
     $extra[$csv[7]] = $csv[11];
     $etapes[$csv[7]] = $csv[8];
+    $levels[$csv[7]] = $csv[10];
     }elsif ($data[$csv[7]-1] ne 'CMP' && $csv[7] ne 'EXTRA') {
 	print STDERR "WARNING: $id: duplicated entry : ".$csv[7]."\n";
     }
@@ -40,6 +42,7 @@ while(<STDIN>) {
 for ($i = 0 ; $i < $#data ; $i++) {
     unless($data[$i]) {
 	if ($data[$i+1] ne 'CMP' &&
+     !($i gt 0 && $levels[$i+1] eq "commission") &&
      $etapes[$i-1] ne "l. définitive" &&
      !($etapes[$i+1] eq 'nouv. lect.' && $data[$i-1] eq "CMP") &&
      $extra[$i+1] ne 'texte retire' &&

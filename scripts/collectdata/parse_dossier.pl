@@ -40,10 +40,18 @@ $content =~ s/<a name="[^"]*"><\/a>//g;
 $content =~ s/<li>Texte/<li><a href="UNKNOWN">Texte<\/a>/g;
 $content =~ s/<li>Rapport/<li><a href="UNKNOWN">Texte<\/a>/g;
 
-$legislature = "";
+$legislature = "13";
 if ($content =~ /nationale\.fr\/(\d+)\/dossier/) {
     $legislature = $1;
 }
+
+my %missing_dossieran = ('pjl11-497' => '14;accord_Serbie_cooperation_policiere', 'pjl10-511' => '13;accord_fiscal_Costa_Rica', 'pjl10-512' => '13;accord_fiscal_Liberia', 'pjl10-513' => '13;accord_fiscal_Brunei', 'pjl10-514' => '13;accord_fiscal_Belize', 'pjl10-515' => '13;accord_fiscal_Dominique', 'pjl10-516' => '13;accord_fiscal_Anguilla');
+if ($missing_dossieran{$dossiersenat}) {
+my @detailsan = split(/;/, $missing_dossieran{$dossiersenat});
+    $legislature = $detailsan[0];
+    $dossieran = $detailsan[1];
+}
+
 if ($content =~ /timeline-1[^>]*<em>(\d{2})\/(\d{2})\/(\d{2})<\/em>/) {
 	print "date : $1/$2/$3\n";
 }
