@@ -15,4 +15,7 @@ if ! cat  $datadir/.tmp/dossier.csv | perl check_dossier.pl "$url($datadir/.tmp/
     exit 1;
 fi
 
-bash generate_data.sh $datadir/.tmp/dossier.csv $datadir
+bash generate_data.sh $datadir/.tmp/dossier.csv $datadir || exit 1
+
+perl reorder_interventions_and_correct_procedure.pl "$datadir/procedure"
+python procedure2json.py "$datadir/procedure/procedure.csv" > "$datadir/procedure/procedure.json"
