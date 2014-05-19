@@ -113,13 +113,14 @@ my $stepadded = 0;
 my @pkeys = keys %{$procedure};
 foreach my $y (sort  @pkeys) {
     my $stepfound = 0;
+	my $lasty = sprintf('%02d', $y - 1);
+	my @step = split(/;/, $steps[$i]);
     if ($steps[$i] =~ /$procedure->{$y}[9];$procedure->{$y}[10];/) {
 	$stepfound = 1;
-    }elsif ($steps[$i+1] =~ /$procedure->{$y}[9];$procedure->{$y}[10];/) {
+    }elsif ($steps[$i+1] =~ /$procedure->{$y}[9];$procedure->{$y}[10];/ &&
+     !($procedure->{$lasty}[10] eq "commission" && $step[1] eq "commission" && $step[5] =~ /\/rap\//)) {
 	print STDERR "WARNING: Step missing : $steps[$i]\n";
-	my $lasty = sprintf('%02d', $y - 1);
 	@{$procedure->{$lasty.$i}} = @{$procedure->{$lasty}};
-	my @step = split(/;/, $steps[$i]);
 	$procedure->{$lasty.$i}[13] = $step[3];
 	$procedure->{$lasty.$i}[14] = $step[4];
 	$procedure->{$lasty.$i}[9]  = $step[0];
@@ -179,10 +180,11 @@ foreach my $y (sort  @pkeys) {
 }
 
 for (my $y = $i ; $y <= $#steps ; $y++) {
-    print STDERR "WARNING: step mission : ".$steps[$y]."\n";
-    my $lasty = sprintf('%02d', $i - 1);
+  my $lasty = sprintf('%02d', $i - 1);
+  my @step = split(/;/, $steps[$y]);
+  if (!($procedure->{$lasty}[10] eq "commission" && $step[1] eq "commission" && $step[5] =~ /\/rap\//)) {
+    print STDERR "WARNING: step missing : ".$steps[$y]."\n";
     @{$procedure->{$lasty.$y}} = @{$procedure->{$lasty}};
-    my @step = split(/;/, $steps[$y]);
     $procedure->{$lasty.$y}[13] = $step[3];
     $procedure->{$lasty.$y}[14] = $step[4];
     $procedure->{$lasty.$y}[9]  = $step[0];
@@ -190,6 +192,7 @@ for (my $y = $i ; $y <= $#steps ; $y++) {
     $procedure->{$lasty.$y}[6] = $lasty.$y;
     $procedure->{$lasty.$y}[11] = $step[5];
     $stepadded = 1;
+  }
 }
 
 my $nbstep = 0;
