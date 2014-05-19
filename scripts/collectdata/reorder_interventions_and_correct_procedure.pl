@@ -103,5 +103,5 @@ if ($csvchanged) {
 	print CSV join(';', @{$procedure->{$id}})."\n";
     }
     close CSV;
-    print STDERR "INFO: $dir/procedure.csv CHANGED\n" if ($debug);
+    print STDERR "INFO: $dir/procedure.csv CHANGED\n";
 }
