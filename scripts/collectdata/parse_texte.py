@@ -80,11 +80,13 @@ texte["titre"] = re_clean_title_legif.sub('', soup.title.string.strip())
 texte["expose"] = ""
 
 # Convert from roman numbers
+re_mat_romans = re.compile(r"[IVXCLDM]+", re.I)
 romans_map = zip(
     (1000,  900, 500, 400 , 100,  90 , 50 ,  40 , 10 ,   9 ,  5 ,  4  ,  1),
     ( 'M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I')
 )
 def romans(n):
+    n = n.upper()
     i = res = 0
     for d, r in romans_map:
         while n[i:i + len(r)] == r:
@@ -256,9 +258,12 @@ for text in soup.find_all("p"):
         section_typ = m.group(1).upper()[0]
         if m.group(3) is not None:
             section_typ += "S"
-        section_num = re_cl_uno.sub('1er', re_cl_sec_uno.sub("1er", m.group(5).strip()))
-        if re.match(r"[IVXCLDM]+", section_num):
-            section_num = romans(section_num)
+        section_num = re_cl_html.sub("", re_cl_uno.sub('1', re_cl_sec_uno.sub('1', m.group(5).strip())).strip())
+        m2 = re_mat_romans.match(section_num)
+        if m2:
+            rest = section_num.replace(m2.group(0), '')
+            section_num = romans(m2.group(0))
+            if rest: section_num = str(section_num) + rest
         # Get parent section id to build current section id
         section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"])
         section["id"] = section_par + section_typ + str(section_num)
