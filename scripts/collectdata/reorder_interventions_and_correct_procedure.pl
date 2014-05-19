@@ -98,6 +98,7 @@ close(INT);
 if ($csvchanged) {
     open CSV, "> $dir/procedure.csv";
     foreach my $id (sort {$procedure->{$a}[6] cmp $procedure->{$b}[6]} keys(%{$procedure})) {
+    if (!$procedure->{$id}[6]) { next; }
 	$procedure->{$id}[13] =~ s/(....)(..)(..)/\1-\2-\3/;
 	$procedure->{$id}[14] =~ s/(....)(..)(..)/\1-\2-\3/;
 	print CSV join(';', @{$procedure->{$id}})."\n";
