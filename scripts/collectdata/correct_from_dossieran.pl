@@ -75,7 +75,7 @@ foreach (split(/\n/, $content)) {
 	$mindate = $adate if (join('', split(/-/, $mindate)) > join('', split(/-/, $adate)));
 	$maxdate = $adate if (join('', split(/-/, $maxdate)) < join('', split(/-/, $adate)));
     }
-    if(/"([^"]+\/(projets|ta-commission|ta)\/[^"\-]+(|-a0).asp)"/ || /"(http:\/\/www.senat.fr\/leg[^\"]+)"/ || (!/ta-commission/ && /"([^"]+\/(rapports)\/[^"\-]+(|-a0).asp)"/) || (!/"http:\/\/www.senat.fr\/leg/ && /"(http:\/\/www.senat.fr\/rap[^\"]+)"/)) { 
+    if(/"([^"]+\/(projets|ta-commission|ta)\/[^"\-]+(|-a0).asp)"/ || /"(http:\/\/www.senat.fr\/leg[^\"]+)"/ || (!/ta-commission/ && /"([^"]+\/(rapports)\/[^"\-]+(|-a0).asp)"/) || (!/"http:\/\/www.senat.fr\/leg/ && /"(http:\/\/www.senat.fr\/rap[^\"]+)"/)) {
 	$url = $1;
 	if ($url !~ /^http/) {
 	    $url = 'http://www.assemblee-nationale.fr'.$url;
@@ -155,7 +155,7 @@ foreach my $y (sort  @pkeys) {
 	    }
 #	    my $diff = join('', split(/-/, $step[3])) - join('', split(/-/, $procedure->{$y}[13]));
 #	    print STDERR "WARNING: diff begin: $diff ($step[3] / ". $procedure->{$y}[13]." / $step[2])".$procedure->{$y}[8].";".$procedure->{$y}[9].";".$procedure->{$y}[10]."\n";
-#	    
+#
 #	    $diff = join('', split(/-/, $step[4])) - join('', split(/-/, $procedure->{$y}[14]));
 #	    print STDERR "WARNING: diff end: $diff  ($step[4] / ". $procedure->{$y}[14].")".$procedure->{$y}[8].";".$procedure->{$y}[9].";".$procedure->{$y}[10]."\n";
 	}

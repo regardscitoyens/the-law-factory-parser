@@ -66,11 +66,11 @@ while (<INT>) {
 			$location =~ s/ //g;
 			mkdir ($location);
 			my $file = $_;
-			system("mv $file $location");
+			system("mv -f $file $location");
 			$file =~ s/csv$/xml/;
-			system("mv $file $location");
+			system("mv -f $file $location");
 			$file =~ s/xml$/json/;
-			system("mv $file $location");
+			system("mv -f $file $location");
 			print STDERR "INFO: NEW Location ".$location." found for $file & co\n" if ($debug);
 			$solved = 1;
 		    }
