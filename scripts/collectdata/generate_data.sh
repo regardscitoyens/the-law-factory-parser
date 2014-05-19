@@ -174,10 +174,10 @@ cat $1 | while read line ; do
     #Amendements export
     if [ -z "$echec" ]; then
       mkdir -p "$projectdir/amendements"
-      download "$urlchambre/amendements/$amdidtext/csv" | perl sort_amendements.pl $data/.tmp/json/$escape csv >  "$projectdir/amendements/amendements.csv"
+      download "$urlchambre/amendements/$amdidtext/csv" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json csv > "$projectdir/amendements/amendements.csv"
       if grep [a-z] "$projectdir/amendements/amendements.csv" > /dev/null; then
-    	download "$urlchambre/amendements/$amdidtext/json" | perl sort_amendements.pl $data/.tmp/json/$escape json > "$projectdir/amendements/amendements.json"
-    	download "$urlchambre/amendements/$amdidtext/xml"  | perl sort_amendements.pl $data/.tmp/json/$escape xml > "$projectdir/amendements/amendements.xml"
+    	download "$urlchambre/amendements/$amdidtext/json" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json json > "$projectdir/amendements/amendements.json"
+    	download "$urlchambre/amendements/$amdidtext/xml" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json xml > "$projectdir/amendements/amendements.xml"
       else
     	rm "$projectdir/amendements/amendements.csv"
     	rmdir $projectdir/amendements
