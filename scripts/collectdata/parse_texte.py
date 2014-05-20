@@ -19,6 +19,11 @@ section_titles = "((chap|t)itre|volume|livre|tome|(sous-)?section)"
 
 re_definitif = re.compile(ur'<p[^>]*align[=:\s\-]*center"?>\(?<(b|strong)>\(?texte d[^f]*finitif\)?</(b|strong)>\)?</p>', re.I)
 
+clean_texte_regexps = [
+    (re.compile(r'[\n\t\r\s]+'), ' '),
+    (re.compile(r'(>%s\s*[\dIVXLCDM]+(<sup>[eE][rR]?</sup>)?)\s+-\s+([^<]*?)\s*</p>' % section_titles.upper()), r'\1</p><p><b>\6</b></p>'),
+]
+
 re_clean_title_legif = re.compile("[\s|]*l[eé]gifrance(.gouv.fr)?$", re.I)
 clean_legifrance_regexps = [
     (re.compile(r'[\n\t\r\s]+'), ' '),
@@ -43,6 +48,10 @@ try:
         if 'legifrance.gouv.fr' in FILE:
             for reg, res in clean_legifrance_regexps:
                 string = reg.sub(res, string)
+        else:
+            for reg, res in clean_texte_regexps:
+                string = reg.sub(res, string)
+
     definitif = re_definitif.search(string) is not None
     soup = BeautifulSoup(string, "html5lib")
 except:
