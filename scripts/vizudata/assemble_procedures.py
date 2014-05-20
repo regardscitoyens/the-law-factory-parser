@@ -67,7 +67,7 @@ for d in dossiers:
 # - take dates + décision CC from csv
 # - take état du dossier from csv when more than promulgués (and handle better end date then)
 # - take "numéro de la loi" from csv ? link to legifrance ? or just TA?
-# - add more metrics (whole size diff, number echecs, number amdmts adoptés majo/oppo, ...)
+# - add more metrics (whole size diff, number echecs, diff total_articles, number amdmts adoptés majo/oppo, ...)
 
     tosave.append(proc)
     done += 1

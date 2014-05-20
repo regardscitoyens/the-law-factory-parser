@@ -173,6 +173,7 @@ for step in procedure['steps']:
         if sections[s]['total_intervs'] < 3 or sections[s]['total_mots'] < 150 or sections[s]['groupes'].keys() == [u'Présidence']:
             del(sections[s])
 
-    steps[step['directory']] = {'groupes': groupes, 'orateurs': orateurs, 'divisions': sections}
+    if sections:
+        steps[step['directory']] = {'groupes': groupes, 'orateurs': orateurs, 'divisions': sections}
 
 print_json(steps)
