@@ -40,7 +40,8 @@ with open(csvpath, 'rb') as csvfile:
             except:
                 step['nb_amendements'] = 0
             try:
-                intervention_dir = os.path.join(projectdir, step['directory'], 'interventions')
+                interv_dir = os.path.join(step['directory'], 'interventions')
+                intervention_dir = os.path.join(projectdir, interv_dir)
                 if (os.stat(intervention_dir)):
                     step['has_interventions'] = True
             except:
@@ -48,7 +49,7 @@ with open(csvpath, 'rb') as csvfile:
             if step['has_interventions']:
                 files = [f.replace('.json', '') for f in os.listdir(intervention_dir) if f.endswith('.json')]
                 step['intervention_files'] = files
-                step['intervention_directory'] = intervention_dir
+                step['intervention_directory'] = interv_dir
             step['step'] = row[10]
             step['resulting_text_directory'] =  os.path.join(row2dir(row), 'texte')
             if row[6] != 'XX' and int(row[6]) > 0:
