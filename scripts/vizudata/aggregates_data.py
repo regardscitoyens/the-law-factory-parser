@@ -4,10 +4,10 @@
 import sys, os
 from common import open_json, print_json
 
-dossiersId = sys.argv[1]
-if not dossiersId:
-    sys.stderr.write('Error, no input directory given')
-    exit(1)
+#dossiersId = sys.argv[1]
+#if not dossiersId:
+#    sys.stderr.write('Error, no input directory given')
+#    exit(1)
 
 
 
@@ -34,12 +34,9 @@ class CountAmendementComputation(object):
 
 
     def computeAmendements(self,amdt):
-        #print ">>>>>>>>>>>>>>>>>%s"% amdt["amendement"]["id"]
         self.countAmdt = self.countAmdt + 1
 
-        print amdt["amendement"]["sort"] 
         if amdt["amendement"]["sort"] == u"Adopté":
-        #if amdt["amendement"]["sort"] == u"Tombe":
             self.countAmdtAdoptes = self.countAmdtAdoptes +1
         
 
@@ -51,8 +48,9 @@ class CountAmendementComputation(object):
         return
 
     def finalize(self):
-        print "Number Amendements : %d" % self.countAmdt
-        print "Number Amendements Adoptées : %d" % self.countAmdtAdoptes
+        #print "Number Amendements : %d" % self.countAmdt
+        #print "Number Amendements Adoptées : %d" % self.countAmdtAdoptes
+        return
 
 
 
@@ -69,8 +67,6 @@ class  DossierWalker(object):
         self.procedurePath = os.path.join("data",self.id, "procedure")
 
     def step_walker(self,step):
-        #if "directory" in step:
-        #    print step["directory"]
 
         #Amendement treatment    
         if "amendement_directory" in step:
@@ -114,7 +110,6 @@ class  DossierWalker(object):
 ####################################################
 
     def walk(self):
-        print "WALKER %s"% self.procedurePath
         procedure = open_json(self.procedurePath, "procedure.json")
 
         for step in procedure['steps'] :
@@ -132,7 +127,7 @@ class  DossierWalker(object):
  
 
 #computation = BasicComputation()
-computation = CountAmendementComputation()
+#computation = CountAmendementComputation()
 
-myWalker = DossierWalker(dossiersId, computation)
-myWalker.walk()
+#myWalker = DossierWalker(dossiersId, computation)
+#myWalker.walk()
