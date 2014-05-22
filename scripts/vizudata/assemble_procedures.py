@@ -3,6 +3,7 @@
 
 import os, sys
 from common import *
+from aggregates_data import DossierWalker,CountAmendementComputation
 
 sourcedir = os.path.join(sys.argv[1], 'data')
 if not sourcedir:
@@ -52,6 +53,11 @@ def save_json_page(tosave, done):
 done = 0
 tosave = []
 for d in dossiers:
+
+    computation = CountAmendementComputation()
+    myWalker = DossierWalker(d["id"],computation)
+    myWalker.walk()
+
     proc = open_json(os.path.join(sourcedir, d['id'], 'viz'), 'procedure.json')
     proc["id"] = d["id"]
     proc["beginning"] = format_date(d["Date initiale"])
@@ -61,6 +67,7 @@ for d in dossiers:
     proc["type"] = d["Type de dossier"]
     proc["themes"] = [a.strip().lower() for a in d[u"Thèmes"].split(',')]
     proc["total_amendements"] = int(d["total_amendements"])
+    proc["total_amendements_adoptes"] = computation.countAmdtAdoptes
     proc["total_mots"] = int(d["total_mots"])
 
 # TODO:
