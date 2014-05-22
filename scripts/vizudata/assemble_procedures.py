@@ -68,6 +68,8 @@ for d in dossiers:
     proc["themes"] = [a.strip().lower() for a in d[u"Thèmes"].split(',')]
     proc["total_amendements"] = int(d["total_amendements"])
     proc["total_amendements_adoptes"] = computation.countAmdtAdoptes
+    proc["total_amendements_parlementaire"] = computation.countAmdtParl
+    proc["total_amendements_parlementaire_adoptes"] = computation.countAmdtParlAdoptes
     proc["total_mots"] = int(d["total_mots"])
 
 # TODO:

@@ -4,11 +4,6 @@
 import sys, os
 from common import open_json, print_json
 
-#dossiersId = sys.argv[1]
-#if not dossiersId:
-#    sys.stderr.write('Error, no input directory given')
-#    exit(1)
-
 
 
 #######################################################
@@ -29,15 +24,22 @@ class BasicComputation(object):
 class CountAmendementComputation(object):
     
     def __init__(self):
-        self.countAmdt = 0;
-        self.countAmdtAdoptes = 0;
+        self.countAmdt = 0
+        self.countAmdtAdoptes = 0
+        self.countAmdtParl = 0
+        self.countAmdtParlAdoptes = 0
 
 
     def computeAmendements(self,amdt):
         self.countAmdt = self.countAmdt + 1
 
+        if amdt["amendement"]["signataires"] != u"le Gouvernement":
+            self.countAmdtParl = self.countAmdtParl +1
+        
         if amdt["amendement"]["sort"] == u"Adopté":
             self.countAmdtAdoptes = self.countAmdtAdoptes +1
+            if amdt["amendement"]["signataires"] != u"le Gouvernement":
+                self.countAmdtParlAdoptes = self.countAmdtParlAdoptes +1
         
 
     def computeInterventions(self,interv):
@@ -48,8 +50,8 @@ class CountAmendementComputation(object):
         return
 
     def finalize(self):
-        #print "Number Amendements : %d" % self.countAmdt
-        #print "Number Amendements Adoptées : %d" % self.countAmdtAdoptes
+        #print "Number Amendements : %d" % self.countAmdtParl
+        #print "Number Amendements Adoptées : %d" % self.countAmdtParlAdoptes
         return
 
 
@@ -125,6 +127,12 @@ class  DossierWalker(object):
 #######################################################
 ####################################################
  
+#dossiersId = sys.argv[1]
+#if not dossiersId:
+#    sys.stderr.write('Error, no input directory given')
+#    exit(1)
+
+
 
 #computation = BasicComputation()
 #computation = CountAmendementComputation()
