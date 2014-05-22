@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys, os
-from common import open_json, print_json
+from common import open_json, print_json, amendementIsFromGouvernement
 
 
 
@@ -33,12 +33,13 @@ class CountAmendementComputation(object):
     def computeAmendements(self,amdt):
         self.countAmdt = self.countAmdt + 1
 
-        if amdt["amendement"]["signataires"] != u"le Gouvernement":
+        #"le Gouvernement" pour l'AN and "Le Gouvernement" for Senat
+        if not amendementIsFromGouvernement(amdt):
             self.countAmdtParl = self.countAmdtParl +1
         
         if amdt["amendement"]["sort"] == u"Adopté":
             self.countAmdtAdoptes = self.countAmdtAdoptes +1
-            if amdt["amendement"]["signataires"] != u"le Gouvernement":
+            if not amendementIsFromGouvernement(amdt):
                 self.countAmdtParlAdoptes = self.countAmdtParlAdoptes +1
         
 
