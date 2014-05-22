@@ -75,7 +75,7 @@ foreach (split(/\n/, $content)) {
 	$mindate = $adate if (join('', split(/-/, $mindate)) > join('', split(/-/, $adate)));
 	$maxdate = $adate if (join('', split(/-/, $maxdate)) < join('', split(/-/, $adate)));
     }
-    if(/"([^"]+\/(projets|ta-commission|ta)\/[^"\-]+(|-a0).asp)"/ || /"(http:\/\/www.senat.fr\/leg[^\"]+)"/ || (!/ta-commission/ && /"([^"]+\/(rapports)\/[^"\-]+(|-a0).asp)"/) || (!/"http:\/\/www.senat.fr\/leg/ && /"(http:\/\/www.senat.fr\/rap[^\"]+)"/)) {
+    if(/"([^"]+\/(projets|ta-commission|ta)\/[^"\-]+(|-a0).asp)"/ || /"(http:\/\/www.senat.fr\/leg[^\"]+)"/ || (!/ta-commission/ && !$url && /"([^"]+\/(rapports)\/[^"\-]+(|-a0).asp)"/) || (!/"http:\/\/www.senat.fr\/leg/ && /"(http:\/\/www.senat.fr\/rap[^\"]+)"/)) {
 	$url = $1;
 	if ($url !~ /^http/) {
 	    $url = 'http://www.assemblee-nationale.fr'.$url;
@@ -93,7 +93,7 @@ foreach (split(/\n/, $content)) {
 		$stade = 'commission';
 	    }
 	}
-	push @steps, "$pchambre;$stade;$date;$mindate;$maxdate;$url" if ($stade);
+	push @steps, "$pchambre;$stade;$date;$mindate;$maxdate;$url" if ($stade && $steps[$#steps] !~ /$pchambre;$stade/);
 #	print STDERR  "INFO: $pchambre;$stade;$date;$mindate;$maxdate;$url\n" if ($stade);
 	$stade = '';
 	$date = '';
@@ -119,7 +119,7 @@ foreach my $y (sort  @pkeys) {
 	$stepfound = 1;
     }elsif ($steps[$i+1] =~ /$procedure->{$y}[9];$procedure->{$y}[10];/ &&
      !($procedure->{$lasty}[10] eq "commission" && $step[1] eq "commission" && $step[5] =~ /\/rap\//)) {
-	print STDERR "WARNING: Step missing : $steps[$i]\n";
+	print STDERR "WARNING: Step missing : $steps[$i] (1)\n";
 	@{$procedure->{$lasty.$i}} = @{$procedure->{$lasty}};
 	$procedure->{$lasty.$i}[13] = $step[3];
 	$procedure->{$lasty.$i}[14] = $step[4];
@@ -183,7 +183,7 @@ for (my $y = $i ; $y <= $#steps ; $y++) {
   my $lasty = sprintf('%02d', $i - 1);
   my @step = split(/;/, $steps[$y]);
   if (!($procedure->{$lasty}[10] eq "commission" && $step[1] eq "commission" && $step[5] =~ /\/rap\//)) {
-    print STDERR "WARNING: step missing : ".$steps[$y]."\n";
+    print STDERR "WARNING: step missing : ".$steps[$y]." (2)\n";
     @{$procedure->{$lasty.$y}} = @{$procedure->{$lasty}};
     $procedure->{$lasty.$y}[13] = $step[3];
     $procedure->{$lasty.$y}[14] = $step[4];
