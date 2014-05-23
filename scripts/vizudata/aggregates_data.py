@@ -33,21 +33,41 @@ class CountAmendementComputation(object):
         self.countAmdtParl = 0
         self.countAmdtParlAdoptes = 0
 
+        ###interv
+        self.countNbMots = 0
+        self.dicoIntervenants = {}
+
 
     def computeAmendements(self,amdt):
-        self.countAmdt = self.countAmdt + 1
+        self.countAmdt += 1
 
         #"le Gouvernement" pour l'AN and "Le Gouvernement" for Senat
         if not amendementIsFromGouvernement(amdt):
-            self.countAmdtParl = self.countAmdtParl +1
+            self.countAmdtParl += 1
         
         if amdt["amendement"]["sort"] == u"Adopté":
-            self.countAmdtAdoptes = self.countAmdtAdoptes +1
+            self.countAmdtAdoptes += 1
             if not amendementIsFromGouvernement(amdt):
-                self.countAmdtParlAdoptes = self.countAmdtParlAdoptes +1
+                self.countAmdtParlAdoptes += 1
         
 
     def computeInterventions(self,interv):
+        #total_mots of a dossier is excluding some low valuable sections
+        #see the prepare_interventions.py:l173
+        #therefore we will have a different count
+        self.countNbMots += int(interv["intervention"]["nbmots"])
+
+        ##
+        slug = interv["intervention"]["intervenant_slug"]
+        if slug in self.dicoIntervenants:
+            self.dicoIntervenants[slug]+=1
+        else:
+            self.dicoIntervenants[slug]=0
+
+        
+
+
+
         # print "Compute interv"
         return
     def computeText(self,text):
