@@ -16,6 +16,7 @@ re_clean_texte = re.compile(r'(\s\+|de la sécurité sociale de financement |rec
 re_shorten_title = re.compile(r"^pro(jet|position) de (loi|résolution)[\s:]*( (constitutionnelle|organique))* (sur |(port|ratifi|proroge|modifi|institu|habilit|interdis|tend|approuv|autoris|r[eé](lati[vfe]|tablissa|nforç))[ant,àux ]*)*(l(a ratific|'approb)ation d(e( l(a|')|s)? ?|u |'une? ))*(l['ea]s?\s*)?", re.I)
 
 upper_first = lambda t: t[0].upper() + t[1:]
+url_jo = ""
 
 procedure = {'type': 'Normale'}
 steps = []
@@ -61,6 +62,8 @@ with open(csvpath, 'rb') as csvfile:
             else:
                 if (row[8] == "constitutionnalité"):
                     step['decision'] = row[10]
+                elif (row[8] == "promulgation"):
+                    url_jo = row[11]
                 steps.append(step)
         prevrow = row
     procedure['steps'] = steps
@@ -75,6 +78,7 @@ with open(csvpath, 'rb') as csvfile:
         procedure['short_title'] = upper_first(re_shorten_title.sub('', procedure['long_title']))
     procedure['url_dossier_senat'] = "http://www.senat.fr/dossier-legislatif/%s.html" % row[5]
     procedure['url_dossier_assemblee'] = "http://www.assemblee-nationale.fr/%s/dossiers/%s.asp" % (row[3], row[4])
+    procedure['url_jo'] = url_jo
 
     print json.dumps(procedure, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
