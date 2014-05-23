@@ -128,6 +128,7 @@ re_clean_coord = re.compile(r'^["\(]*(pour)?\s*coordination[\)\s\.]*$', re.I)
 # Clean html and special chars
 lower_inner_title = lambda x: x.group(1)+lower_but_first(x.group(3))+" "
 html_replace = [
+    (re.compile(r"−"), "-"),
     (re.compile(r" "), " "),
     (re.compile(r'(«\s+|\s+»)'), '"'),
     (re.compile(r'(«|»|“|”|„|‟|❝|❞|＂|〟|〞|〝)'), '"'),
@@ -201,7 +202,7 @@ re_mat_ann = re.compile(r"\s*<b>\s*ANNEXES?[\s<]+")
 re_mat_dots = re.compile(r"^(<i>)?[.…]+(</i>)?$")
 re_mat_st = re.compile(r"(<i>|\()+\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,10}$", re.I)
 re_mat_new = re.compile(r"\s*\(\s*nouveau\s*\)\s*", re.I)
-re_mat_texte = re.compile(r'\(texte (élaboré|d(u|e l))', re.I)
+re_mat_texte = re.compile(r'\(texte (modifié|élaboré|d(u|e l))', re.I)
 re_mat_single_char = re.compile(r'^\s*[LMN]\s*$')
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*"?\s+')
