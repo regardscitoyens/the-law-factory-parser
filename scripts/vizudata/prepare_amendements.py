@@ -26,7 +26,7 @@ def find_groupe(amd):
     maxc = 0
     result = ""
     for gpe in amd['groupes_parlementaires']:
-        g = gpe['groupe'].upper()
+        g = slug_groupe(gpe['groupe'])
         if g not in ct:
             ct[g] = 0
         ct[g] += 1

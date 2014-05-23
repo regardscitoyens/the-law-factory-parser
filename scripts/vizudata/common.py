@@ -73,6 +73,14 @@ photo_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/##TYPE##
 groupe_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/groupe/##SLUG##", obj, urlapi)
 amdapi_link = lambda urlapi: personalize_link("http://##URLAPI##.fr/api/document/Amendement/", {'slug': 'na'}, urlapi)
 
+def slug_groupe(g):
+    g = g.upper()
+    g = g.replace("SOCV", "SOC")
+    g = g.replace("CRC-SPG", "CRC")
+    g = g.replace("ECOLO", "ECO")
+    g = g.replace("ECO", "ECOLO")
+    return g
+
 class Context(object):
 
     def __init__(self, sysargs):
@@ -100,7 +108,8 @@ class Context(object):
                     with open(os.path.join(self.sourcedir, '..', f), "r") as gpes:
                         self.allgroupes[url] = {}
                         for gpe in json.load(gpes)['organismes']:
-                            self.allgroupes[url][gpe["organisme"]["acronyme"].upper()] = {
+                            acro = slug_groupe(gpe["organisme"]["acronyme"])
+                            self.allgroupes[url][acro] = {
                                 "nom": gpe["organisme"]['nom'],
                                 "order": int(gpe["organisme"]['order']),
                                 "color": "rgb(%s)" % gpe["organisme"]['couleur']}
@@ -109,8 +118,9 @@ class Context(object):
 
     def add_groupe(self, groupes, gpe, urlapi):
         gpid = upper_first(gpe.lower())
-        if gpe.upper() in self.allgroupes[urlapi]:
-            gpid = gpe.upper()
+        acro = slug_groupe(gpid)
+        if acro in self.allgroupes[urlapi]:
+            gpid = acro
         if gpid not in groupes:
             groupes[gpid] = {'nom': upper_first(gpe),
                              'link': ''}
