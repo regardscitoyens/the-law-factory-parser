@@ -108,15 +108,18 @@ cat $1 | while read line ; do
   fi
   # Complete articles with missing "conforme" or "non-modifié" text for all steps except depots 1ère lecture
   if [ "$norder" != "1" ] && [ "$norder" != 4 ] && test -s $data/.tmp/json/articles_laststep.json; then
-    previous="$data/.tmp/json/articles_laststep.json"
-    if echo "$etape" | grep "_nouv.lect._senat_hemicycle" > /dev/null && grep '"echec"[:,}]' "$data/.tmp/json/$escape" > /dev/null; then
-      previous="$data/.tmp/json/articles_nouvlect.json"
-    elif grep '"echec"[:,}]' "$data/.tmp/json/articles_laststep.json" > /dev/null; then
-      previous="$data/.tmp/json/articles_antelaststep.json"
-    fi
     anteprevious=""
     if echo "$etape" | grep hemicycle > /dev/null; then
       anteprevious="$data/.tmp/json/articles_antelaststep.json"
+    fi
+    previous="$data/.tmp/json/articles_laststep.json"
+    if echo "$etape" | grep "_nouv.lect._senat_hemicycle" > /dev/null && grep '"echec"[:,}]' "$data/.tmp/json/$escape" > /dev/null; then
+      previous="$data/.tmp/json/articles_nouvlect.json"
+    elif echo "$etape" | grep "l.définitive" > /dev/null; then
+      previous="$data/.tmp/json/articles_nouvlect.json"
+      anteprevious="$previous"
+    elif grep '"echec"[:,}]' "$data/.tmp/json/articles_laststep.json" > /dev/null; then
+      previous="$data/.tmp/json/articles_antelaststep.json"
     fi
     if ! python complete_articles.py $data/.tmp/json/$escape "$previous" "$anteprevious" > $data/.tmp/json/$escape.tmp; then
       echo "ERROR completing $data/.tmp/html/$escape"
