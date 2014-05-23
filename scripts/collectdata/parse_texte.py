@@ -198,7 +198,7 @@ re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉ
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
 re_mat_end = re.compile(r"((<i>)?Délibéré en|(<b>)?RAPPORT ANNEX|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|<a>\*</a>\s*(<i>)?1)", re.I)
 re_mat_dots = re.compile(r"^(<i>)?[.…]+(</i>)?$")
-re_mat_st  = re.compile(r"(<i>|\()+\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,10}$", re.I)
+re_mat_st = re.compile(r"(<i>|\()+\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,10}$", re.I)
 re_mat_new = re.compile(r"\s*\(\s*nouveau\s*\)\s*", re.I)
 re_mat_texte = re.compile(r'\(texte (élaboré|d(u|e l))', re.I)
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
@@ -269,6 +269,7 @@ for text in soup.find_all("p"):
             section_typ += "S"
         section_num = re_cl_html.sub("", re_cl_uno.sub('1', re_cl_sec_uno.sub('1', m.group(5).strip())).strip())
         section_num = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), section_num)
+        section_num = re_mat_new.sub('', section_num).strip()
         m2 = re_mat_romans.match(section_num)
         if m2:
             rest = section_num.replace(m2.group(0), '')
