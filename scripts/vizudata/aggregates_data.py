@@ -62,14 +62,11 @@ class CountAmendementComputation(object):
         if slug in self.dicoIntervenants:
             self.dicoIntervenants[slug]+=1
         else:
-            self.dicoIntervenants[slug]=0
-
-        
-
-
+            self.dicoIntervenants[slug]=1
 
         # print "Compute interv"
         return
+
     def computeText(self,text):
         #print "Compute Text"
         return
