@@ -128,6 +128,7 @@ re_clean_coord = re.compile(r'^["\(]*(pour)?\s*coordination[\)\s\.]*$', re.I)
 # Clean html and special chars
 lower_inner_title = lambda x: x.group(1)+lower_but_first(x.group(3))+" "
 html_replace = [
+    (re.compile(r"−"), "-"),
     (re.compile(r" "), " "),
     (re.compile(r'(«\s+|\s+»)'), '"'),
     (re.compile(r'(«|»|“|”|„|‟|❝|❞|＂|〟|〞|〝)'), '"'),
