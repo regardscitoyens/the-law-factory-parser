@@ -21,6 +21,10 @@ class BasicComputation(object):
     def finalize(self):
         print "Finalize"
 
+
+#######################################################
+#######################################################
+
 class CountAmendementComputation(object):
     
     def __init__(self):
@@ -96,7 +100,9 @@ class  DossierWalker(object):
             seance_files = step["intervention_files"]
             for seance_file in seance_files:
                 seance = open_json(intervDir, "%s.json"%seance_file)
-                self.computationClass.computeInterventions(seance)
+
+                for interv in seance["seance"]:
+                    self.computationClass.computeInterventions(interv)
         
         #Text Treatment
         if "working_text_directory" in step:
