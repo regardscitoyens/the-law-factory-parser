@@ -72,7 +72,8 @@ for d in dossiers:
     proc["total_amendements_parlementaire_adoptes"] = computation.countAmdtParlAdoptes
     proc["total_mots"] = int(d["total_mots"])
     proc["total_mots2"] = computation.countNbMots
-    proc["nb_interv"] = len(computation.dicoIntervenants)
+    proc["total_intervenant"] = len(computation.dicoIntervenants)
+    proc["total_accident_procedure"] = computation.countAccidentProcedure
 
 # TODO:
 # - take dates + décision CC from csv

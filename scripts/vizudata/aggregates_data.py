@@ -37,6 +37,8 @@ class CountAmendementComputation(object):
         self.countNbMots = 0
         self.dicoIntervenants = {}
 
+        ##steps
+        self.countAccidentProcedure = 0
 
     def computeAmendements(self,amdt):
         self.countAmdt += 1
@@ -70,6 +72,13 @@ class CountAmendementComputation(object):
     def computeText(self,text):
         #print "Compute Text"
         return
+
+    def computeStep(self, step):
+        #print "Compute Step"
+        if step["echec"] != None or step["source_url"] == "renvoi en commission":
+            self.countAccidentProcedure += 1
+
+
 
     def finalize(self):
         #print "Number Amendements : %d" % self.countAmdtParl
@@ -140,6 +149,7 @@ class  DossierWalker(object):
 
         for step in procedure['steps'] :
            self.step_walker(step)
+           self.computationClass.computeStep(step)
 
         self.computationClass.finalize()
 
