@@ -43,10 +43,14 @@ foreach (split(/\n/, $content)) {
     unless ($canparse) {
 	next;
     }
-    if (s/.*<a name="ETAPE[^"]+">((<a[^>]+>|<i>|<\/i>|<br\/?>|<\/a>|<sup>|<\/sup>|<\/font>|<\/b>|[^>])+)<\/p>(.*)//) {
-	$section = $1;
+    if (s/.*<a name="(ETAPE[^"]+)">((<a[^>]+>|<i>|<\/i>|<br\/?>|<\/a>|<sup>|<\/sup>|<\/font>|<\/b>|[^>])+)<\/p>(.*)//) {
+	print STDERR "DEBUG: Étape tag : $1\n" if ($debug);
+	$section = $2;
 	$hasetape = 1;
 	$section =~ s/<[^>]+>//g;
+	$date = '';
+	$mindate = '99999999';
+	$maxdate = '';
 	if ($section =~ /assembl..?e nationale/i) {
 	    $chambre = "assemblee";
 	}elsif($section =~ /s..?nat/i) {
@@ -91,6 +95,18 @@ foreach (split(/\n/, $content)) {
 		}
 	    }elsif($stade eq 'depot') {
 		$stade = 'commission';
+	    }
+	    if ($stade eq 'commission') {
+		$mindate =~ s/-//g;
+		$maxdate =~ s/-//g;
+		my $diff = $maxdate - $mindate;
+		$mindate =~ s/(\d{4})(\d{2})(\d{2})/\1-\2-\3/;
+		$maxdate =~ s/(\d{4})(\d{2})(\d{2})/\1-\2-\3/;
+		if (($diff) > 1000 ) {
+		    print STDERR "DEBUG: the period between mindate and maxdate is too long for a CMP, choose maxdate\n" if ($debug);
+		    $date = $maxdate;
+		    $mindate = $maxdate;
+		}
 	    }
 	}
 	push @steps, "$pchambre;$stade;$date;$mindate;$maxdate;$url" if ($stade && $steps[$#steps] !~ /$pchambre;$stade/);
