@@ -231,5 +231,7 @@ foreach my $y (sort keys %{$procedure}) {
 	$procedure->{$y}[6] = sprintf('%02d', $nbstep++) if ($procedure->{$y}[6] ne 'XX');
 	$procedure->{$y}[7] = $nbline if ($procedure->{$y}[7] + 0);
     }
+    #Hack grenel (pjl08-155)
+    $procedure->{$y}[11] =~ s/l09-5672/l09-5671/;
     print join(';', @{$procedure->{$y}})."\n";
 }
