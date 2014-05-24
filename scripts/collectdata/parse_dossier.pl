@@ -145,7 +145,7 @@ while ($ok) {
 		utf8::encode($etape);
 		$chambre = 'conseil constitutionnel';
 		$stade = 'conforme';
-		if ($p->get_text('/li') =~ /\((.*)\)/) {
+		if ($texte =~ /\((.*)\)/) {
 		    $stade = $1;
 		}
 		$printid = 'EXTRA';
