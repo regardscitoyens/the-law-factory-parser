@@ -109,7 +109,7 @@ foreach (split(/\n/, $content)) {
 		}
 	    }
 	}
-	push @steps, "$pchambre;$stade;$date;$mindate;$maxdate;$url" if ($stade && $steps[$#steps] !~ /$pchambre;$stade/);
+	push @steps, "$pchambre;$stade;$date;$mindate;$maxdate;$url;$chambre" if ($stade && $steps[$#steps] !~ /$pchambre;$stade/);
 #	print STDERR  "INFO: $pchambre;$stade;$date;$mindate;$maxdate;$url\n" if ($stade);
 	$stade = '';
 	$date = '';
@@ -127,10 +127,11 @@ if ($debug) {
 my $i = 0;
 my $stepadded = 0;
 my @pkeys = keys %{$procedure};
+my $lasty;
 foreach my $y (sort  @pkeys) {
     my $stepfound = 0;
-	my $lasty = sprintf('%02d', $y - 1);
-	my @step = split(/;/, $steps[$i]);
+    my @step = split(/;/, $steps[$i]);
+    print STDERR "DEBUG: ".$steps[$i]." =~ /".$procedure->{$y}[9].";".$procedure->{$y}[10]."\n" if ($debug);
     if ($steps[$i] =~ /$procedure->{$y}[9];$procedure->{$y}[10];/) {
 	$stepfound = 1;
     }elsif ($steps[$i+1] =~ /$procedure->{$y}[9];$procedure->{$y}[10];/ &&
@@ -148,8 +149,10 @@ foreach my $y (sort  @pkeys) {
 	$stepfound = 1;
     }
     if ($stepfound) {
+	print STDERR "DEBUG: step found ($i)\n" if ($debug);
 	my @step = split(/;/, $steps[$i]);
 	$i++;
+	$lasty = $y;
 	if ($step[1] ne 'depot') {
 	    if (!($procedure->{$y}[13]) && $step[2]) {
 		$procedure->{$y}[13] = $step[2];
@@ -196,7 +199,6 @@ foreach my $y (sort  @pkeys) {
 }
 
 for (my $y = $i ; $y <= $#steps ; $y++) {
-  my $lasty = sprintf('%02d', $i - 1);
   my @step = split(/;/, $steps[$y]);
   if (!($procedure->{$lasty}[10] eq "commission" && $step[1] eq "commission" && $step[5] =~ /\/rap\//)) {
     print STDERR "WARNING: step missing : ".$steps[$y]." (2)\n";
