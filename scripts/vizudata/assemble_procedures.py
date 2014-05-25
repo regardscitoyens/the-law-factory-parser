@@ -74,6 +74,9 @@ for d in dossiers:
     proc["total_mots2"] = computation.countNbMots
     proc["total_intervenant"] = len(computation.dicoIntervenants)
     proc["total_accident_procedure"] = computation.countAccidentProcedure
+    proc["total_articles"] = computation.totalArticles
+    proc["total_articles_modified"] = computation.totalArticlesModified
+    proc["ratio_article_modif"] = computation.totalArticlesModified/computation.totalArticles if computation.totalArticles != 0 else 0
 
 # TODO:
 # - take dates + décision CC from csv
