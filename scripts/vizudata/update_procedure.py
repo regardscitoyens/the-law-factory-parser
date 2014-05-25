@@ -22,7 +22,7 @@ for _, a in articles.iteritems():
 for s in procedure['steps']:
     s['debats_order'] = None
     if 'has_interventions' in s and s['has_interventions'] and s['directory'] not in intervs:
-        print >> sys.stderr, "WARNING: removing nearly empty interventions steps for %s" % s['directory']
+        print >> sys.stderr, u"WARNING: removing nearly empty interventions steps for %s" % s['directory']
         s['has_interventions'] = False
     if 'directory' in s:
         s['debats_order'] = good_steps.get(s['directory'], None)
