@@ -28,6 +28,8 @@ class BasicComputation(object):
 class CountAmendementComputation(object):
     
     def __init__(self):
+        
+        #Amendement
         self.countAmdt = 0
         self.countAmdtAdoptes = 0
         self.countAmdtParl = 0
@@ -39,6 +41,13 @@ class CountAmendementComputation(object):
 
         ##steps
         self.countAccidentProcedure = 0
+
+        #article_etapes
+        self.firstStep = ""
+        self.lastStep = ""
+        self.dicoArticles = {}
+        self.totalArticles = 0
+        self.totalArticlesModified = 0
 
     def computeAmendements(self,amdt):
         self.countAmdt += 1
@@ -77,7 +86,40 @@ class CountAmendementComputation(object):
         #print "Compute Step"
         if step["echec"] != None or step["source_url"] == "renvoi en commission":
             self.countAccidentProcedure += 1
+        if self.firstStep == "":
+            self.firstStep = step["directory"]
+        if "directory" in step :
+            self.lastStep = step["directory"]
 
+    def computeArticleEtapes(self, artEtape):
+        
+        for article in artEtape["articles"]:
+            art = artEtape["articles"][article]
+            artId = art["id"]
+            self.dicoArticles[artId]={}
+            myArt = self.dicoArticles[artId]
+            myArt["firstStep"] = "" 
+
+            for step in art["steps"]:
+                if myArt["firstStep"] == "":
+                    myArt["firstStep"] = step["directory"]
+                    if myArt["firstStep"] != self.firstStep:
+                        myArt["modified"] = True;
+                    else:
+                        myArt["modified"] = False;
+
+                myArt["lastStep"] = step["directory"]
+
+                if step["n_diff"] != 0 :
+                    myArt["modified"]= True;
+
+        for artId in self.dicoArticles:
+            art = self.dicoArticles[artId]
+            if art["lastStep"] == self.lastStep:
+                self.totalArticles+=1
+                if art["modified"]:
+                    self.totalArticlesModified+=1
+        return
 
 
     def finalize(self):
@@ -98,6 +140,7 @@ class  DossierWalker(object):
         self.id = id;
         self.computationClass = computationClass
         self.procedurePath = os.path.join("data",self.id, "procedure")
+        self.vizPath = os.path.join("data",self.id, "viz")
 
     def step_walker(self,step):
 
@@ -141,6 +184,11 @@ class  DossierWalker(object):
             text = open_json(textDir, "texte.json")
             
             self.computationClass.computeText(text)
+
+        #Article Etape 
+        articleEtape = open_json(self.vizPath, "articles_etapes.json")
+        self.computationClass.computeArticleEtapes(articleEtape)
+        
 
 ####################################################
 
