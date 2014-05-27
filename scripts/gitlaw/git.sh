@@ -31,13 +31,14 @@ cat procedure/procedure.csv | while read line; do
   if test -e procedure/$ID*/texte ; then 
     rm -rf texte
     cp -r procedure/$ID*/texte .
+    echo $line | awk -F ';' '{print $2}' > texte/titre.txt
+
     find texte -name *json -exec rm '{}' ';'
     find texte -name '*alineas' | sed 's/\(.*\)/mv "\1" "\1"/' | sed 's|[^/]*$|article.txt"|' | sh
     find texte -name '*titre' | sed 's/\(.*\)/mv "\1" "\1"/' | sed 's|[^/]*$|titre.txt"|' | sh
+    find texte -size 0 -exec rm '{}' ';'
     find texte -type f -exec git add '{}' ';'
     git status | grep supp | sed 's/.*: */git rm "/' | sed 's/$/"/' | sh
-
-    echo $line | awk -F ';' '{print $2}' > texte/titre.txt
 
     if test "$AUTEUR" = "assemblee"; then
 	export GIT_AUTHOR_NAME="Assemblée nationale"
