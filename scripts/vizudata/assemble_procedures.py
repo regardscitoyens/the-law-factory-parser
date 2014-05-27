@@ -88,6 +88,8 @@ for d in dossiers:
     proc["total_articles"] = computation.totalArticles
     proc["total_articles_modified"] = computation.totalArticlesModified
     proc["ratio_article_modif"] = computation.totalArticlesModified/computation.totalArticles if computation.totalArticles != 0 else 0
+    proc["input_text_length"] = computation.firstStepTextLength
+    proc["output_text_length"] = computation.lastStepTextLength
     first_found = False
     for s in proc['steps']:
         if s['debats_order'] == None:
@@ -99,6 +101,8 @@ for d in dossiers:
             firstText = read_text(d['id'], s['directory'])
     a = SequenceMatcher(None, "\n".join(firstText), "\n".join(lastText)).get_matching_blocks()
     proc["ratio_texte_modif"] = 1 - float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
+    proc["input_text_length2"] = len(firstText)
+    proc["output_text_length2"] = len(lastText)
 
 
 # TODO:

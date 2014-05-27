@@ -48,6 +48,8 @@ class CountAmendementComputation(object):
         self.dicoArticles = {}
         self.totalArticles = 0
         self.totalArticlesModified = 0
+        self.firstStepTextLength = 0
+        self.lastStepTextLength = 0
 
     def computeAmendements(self,amdt):
         self.countAmdt += 1
@@ -107,11 +109,15 @@ class CountAmendementComputation(object):
                         myArt["modified"] = True;
                     else:
                         myArt["modified"] = False;
+                        self.firstStepTextLength += step['length']
 
                 myArt["lastStep"] = step["directory"]
 
                 if step["n_diff"] != 0 :
                     myArt["modified"]= True;
+
+                if step["directory"] == self.lastStep:
+                    self.lastStepTextLength += step['length']
 
         for artId in self.dicoArticles:
             art = self.dicoArticles[artId]
