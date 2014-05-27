@@ -22,8 +22,5 @@ mkdir -p $datadir
 
 cd scripts
 
-bash generate_collectdata.sh $URLID $datadir && bash generate_vizudata.sh $datadir
-cd $datadir
-zip -qr procedure.zip procedure/
-cd -
+bash generate_collectdata.sh $URLID $datadir && bash generate_vizudata.sh $datadir && cd $datadir &&  zip -qr procedure.zip procedure/ && cd - 
 exit $?
