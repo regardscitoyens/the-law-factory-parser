@@ -24,6 +24,13 @@ class Stats(object):
 
         self.totalDays = 0
 
+        self.textSizeOrig = 0
+        self.textSizeFinal = 0
+        self.countTextWithDoubledVolume = 0
+        self.countTextWithDoubledVolume2 = 0
+        self.countTextReduced = 0
+        self.countTextReduced2 = 0
+
 
     def computeStatOverFile(self,file):
         dossiers = open_json("data", file)
@@ -46,6 +53,19 @@ class Stats(object):
             if dossier["total_accident_procedure"] > 0: 
                 self.nbDossiersAccidentProcedure +=1 
 
+            ##
+            self.textSizeOrig += dossier["input_text_length2"]
+            self.textSizeFinal += dossier["output_text_length2"]
+            if (float(dossier["output_text_length"])/dossier["input_text_length"]) > 2.0:
+                self.countTextWithDoubledVolume +=1
+            if dossier["output_text_length"] < dossier["input_text_length"]:
+                self.countTextReduced +=1
+
+            if (float(dossier["output_text_length2"])/dossier["input_text_length2"]) > 2.0:
+                self.countTextWithDoubledVolume2 +=1
+            if dossier["output_text_length2"] < dossier["input_text_length2"]:
+                self.countTextReduced2 +=1
+
     
     
     def printStats(self):
@@ -61,10 +81,12 @@ class Stats(object):
     
         print "======================================================"
         print "Nombre moyen intervenant : %f " %(float(self.totalIntervenant)/self.countDossiers)
-        print "Nombre d'articles : %d " % self.totalArticles
-        print "Nombre d'articles modifies : %d " % self.totalArticlesModified
-        print "Pourcentage d'articles de loi modifiés dans la procédure : %f " %(float(self.totalArticlesModified)/self.totalArticles)
+        #print "Nombre d'articles : %d " % self.totalArticles
+        #print "Nombre d'articles modifies : %d " % self.totalArticlesModified
+        #print "Pourcentage d'articles de loi modifiés dans la procédure : %f " %(float(self.totalArticlesModified)/self.totalArticles)
 
+
+        print "Nb moyen jour de procedure avant promul : %f" %(float(self.totalDays)/self.countDossiers)
 
         print "======================================================"
         print "total accident procedure : %d" % self.totalAccidentProcedure
@@ -72,7 +94,13 @@ class Stats(object):
         print "nombre dossier avec accident procedure : %d" % self.nbDossiersAccidentProcedure
         print "Proba dossier avec accident procedure : %f" % (float(self.nbDossiersAccidentProcedure)/self.countDossiers)
 
-        print "Nb moyen jour de procedure avant promul : %f" %(float(self.totalDays)/self.countDossiers)
+
+        print "======================================================"
+        #print "Nb texte ayant double de volume : %d" % self.countTextWithDoubledVolume
+        #print "Nb texte ayant reduit de volume : %d" % self.countTextReduced
+        print "Nb texte ayant double de volume 2 : %d" % self.countTextWithDoubledVolume2
+        print "Nb texte ayant reduit de volume 2 : %d" % self.countTextReduced2
+        print "Inflation législative moyenne : %f" % (float(self.textSizeFinal - self.textSizeOrig)/self.textSizeOrig)
 
 
 
