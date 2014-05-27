@@ -190,7 +190,7 @@ blank_none = lambda x: x if x else ""
 re_cl_html = re.compile(r"<[^>]+>")
 re_cl_par  = re.compile(r"[()]")
 re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
-re_cl_sec_uno = re.compile(r"^[I1][eE][rR]?")
+re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
 re_mat_sec = re.compile(r"%s(\s+(.+)e?r?)" % section_titles, re.I)
 re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
 re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
@@ -270,7 +270,7 @@ for text in soup.find_all("p"):
         section_typ = m.group(1).upper()[0]
         if m.group(3) is not None:
             section_typ += "S"
-        section_num = re_cl_html.sub("", re_cl_uno.sub('1', re_cl_sec_uno.sub('1', m.group(5).strip())).strip())
+        section_num = re_cl_uno.sub('1', re_cl_sec_uno.sub('1', re_cl_html.sub('', m.group(5).strip())).strip())
         section_num = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), section_num)
         section_num = re_mat_new.sub('', section_num).strip()
         m2 = re_mat_romans.match(section_num)
