@@ -4,6 +4,7 @@
 import os, sys
 from common import *
 from aggregates_data import DossierWalker,CountAmendementComputation
+from difflib import ndiff, SequenceMatcher
 
 sourcedir = os.path.join(sys.argv[1], 'data')
 if not sourcedir:
@@ -52,6 +53,16 @@ def save_json_page(tosave, done):
 
 done = 0
 tosave = []
+
+def read_text(text_id, step_id):
+    articles = open_json(os.path.join(sourcedir, text_id.encode('utf-8'), 'procedure', step_id.encode('utf-8'), 'texte'), 'texte.json')['articles']
+    texte = []
+    for art in articles:
+        for key in sorted(art['alineas'].keys()):
+            if art['alineas'][key] != '':
+                texte.append(art['alineas'][key])
+    return texte
+
 for d in dossiers:
 
     computation = CountAmendementComputation()
@@ -77,12 +88,26 @@ for d in dossiers:
     proc["total_articles"] = computation.totalArticles
     proc["total_articles_modified"] = computation.totalArticlesModified
     proc["ratio_article_modif"] = computation.totalArticlesModified/computation.totalArticles if computation.totalArticles != 0 else 0
+    proc["input_text_length"] = computation.firstStepTextLength
+    proc["output_text_length"] = computation.lastStepTextLength
+    first_found = False
+    for s in proc['steps']:
+        if s['debats_order'] == None:
+            continue
+        if s['step'] != "depot":
+            first_found = True
+            lastText = read_text(d['id'], s['directory'])
+        if not first_found and s['step'] == "depot":
+            firstText = read_text(d['id'], s['directory'])
+    a = SequenceMatcher(None, "\n".join(firstText), "\n".join(lastText)).get_matching_blocks()
+    proc["ratio_texte_modif"] = 1 - float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
+    proc["input_text_length2"] = len(firstText)
+    proc["output_text_length2"] = len(lastText)
+
 
 # TODO:
 # - take dates + décision CC from csv
 # - take état du dossier from csv when more than promulgués (and handle better end date then)
-# - take "numéro de la loi" from csv ? link to legifrance ? or just TA?
-# - add more metrics (whole size diff, number echecs, diff total_articles, number amdmts adoptés majo/oppo, ...)
 
     tosave.append(proc)
     done += 1
