@@ -14,6 +14,13 @@ class Stats(object):
         self.totalAmendementAdoptes = 0
         self.totalAmendementParlAdoptes = 0
 
+        self.totalIntervenant = 0
+
+        self.totalArticles = 0
+        self.totalArticlesModified = 0
+
+        self.totalAccidentProcedure = 0
+        self.nbDossiersAccidentProcedure = 0
 
 
     def computeStatOverFile(self,file):
@@ -24,6 +31,16 @@ class Stats(object):
             self.totalAmendementParl += dossier["total_amendements_parlementaire"]
             self.totalAmendementAdoptes += dossier["total_amendements_adoptes"]
             self.totalAmendementParlAdoptes += dossier["total_amendements_parlementaire_adoptes"]
+
+            self.totalIntervenant += dossier["total_intervenant"]
+
+            self.totalArticles += dossier["total_articles"]
+            self.totalArticlesModified += dossier["total_articles_modified"]
+
+            self.totalAccidentProcedure += dossier["total_accident_procedure"]
+            if dossier["total_accident_procedure"] > 0: 
+                self.nbDossiersAccidentProcedure +=1 
+
     
     
     def printStats(self):
@@ -37,7 +54,18 @@ class Stats(object):
         print "Nb Amendement du gouv Adoptes Moyen par dossier : %f" %(float(self.totalAmendementAdoptes - self.totalAmendementParlAdoptes)/self.countDossiers)
         print "Reussite des amendements du gouv : %f" % (float(self.totalAmendementAdoptes - self.totalAmendementParlAdoptes)/(self.totalAmendement - self.totalAmendementParl))
     
+        print "======================================================"
+        print "Nombre moyen intervenant : %f " %(float(self.totalIntervenant)/self.countDossiers)
+        print "Nombre d'articles : %d " % self.totalArticles
+        print "Nombre d'articles modifies : %d " % self.totalArticlesModified
+        print "Pourcentage d'articles de loi modifiés dans la procédure : %f " %(float(self.totalArticlesModified)/self.totalArticles)
 
+
+        print "======================================================"
+        print "total accident procedure : %d" % self.totalAccidentProcedure
+        print "Nb moyen accident procedure : %f" % (float(self.totalAccidentProcedure)/self.countDossiers)
+        print "nombre dossier avec accident procedure : %d" % self.nbDossiersAccidentProcedure
+        print "Proba dossier avec accident procedure : %f" % (float(self.nbDossiersAccidentProcedure)/self.countDossiers)
 
 
 
