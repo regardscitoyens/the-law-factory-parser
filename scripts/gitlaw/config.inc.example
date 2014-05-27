@@ -1,0 +1,2 @@
+GITPASSWD=gitlabpass
+GITLAB=~/bin/python-gitlab/gitlab
