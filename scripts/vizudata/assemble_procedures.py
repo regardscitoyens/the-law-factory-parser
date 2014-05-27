@@ -77,6 +77,8 @@ for d in dossiers:
     proc["total_articles"] = computation.totalArticles
     proc["total_articles_modified"] = computation.totalArticlesModified
     proc["ratio_article_modif"] = computation.totalArticlesModified/computation.totalArticles if computation.totalArticles != 0 else 0
+    proc["input_text_lenght"] = computation.firstStepTextLength
+    proc["output_text_lenght"] = computation.lastStepTextLength
 
 # TODO:
 # - take dates + décision CC from csv

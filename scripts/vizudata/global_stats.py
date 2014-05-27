@@ -22,11 +22,16 @@ class Stats(object):
         self.totalAccidentProcedure = 0
         self.nbDossiersAccidentProcedure = 0
 
+        self.totalDays = 0
+
 
     def computeStatOverFile(self,file):
         dossiers = open_json("data", file)
         for dossier in dossiers["dossiers"]:
             self.countDossiers += 1
+
+            self.totalDays += dossier["total_days"]
+
             self.totalAmendement += dossier["total_amendements"]
             self.totalAmendementParl += dossier["total_amendements_parlementaire"]
             self.totalAmendementAdoptes += dossier["total_amendements_adoptes"]
@@ -66,6 +71,8 @@ class Stats(object):
         print "Nb moyen accident procedure : %f" % (float(self.totalAccidentProcedure)/self.countDossiers)
         print "nombre dossier avec accident procedure : %d" % self.nbDossiersAccidentProcedure
         print "Proba dossier avec accident procedure : %f" % (float(self.nbDossiersAccidentProcedure)/self.countDossiers)
+
+        print "Nb moyen jour de procedure avant promul : %f" %(float(self.totalDays)/self.countDossiers)
 
 
 
