@@ -63,6 +63,7 @@ re_gouv = re.compile(u'(ministre|garde.*sceaux|secr[eéÉ]taire.*[eéÉ]tat|haut
 re_parl = re.compile(u'(d[eéÉ]put[eéÉ]|s[eéÉ]nateur|membre du parlement|parlementaire)', re.I)
 re_rapporteur = re.compile(ur'((vice|co|pr[eéÉ]sidente?)[,\-\s]*)?rapporte', re.I)
 steps = {}
+done_links = {}
 for step in procedure['steps']:
     if not ('has_interventions' in step and step['has_interventions']):
         continue
@@ -165,8 +166,13 @@ for step in procedure['steps']:
         if not "orateurs" in sections[i[sectype]]['groupes'][gpid]:
             sections[i[sectype]]['groupes'][gpid]['orateurs'] = {}
         add_intervs(sections[i[sectype]]['groupes'][gpid]['orateurs'], orateur, i)
-        if sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur]['nb_intervs'] == 1:
-            sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur]['link'] = i['url_nos%ss' % typeparl]
+
+        orat_sec = "%s-%s-%s" % (i[sectype],gpid,orateur)
+        if orat_sec not in done_links:
+            if not "link" in sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur] or i['nbmots'] > 20:
+                sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur]['link'] = i['url_nos%ss' % typeparl]
+            if int(i['nbmots']) > 20:
+                done_links[orat_sec] = True
 
     # Remove sections with less than 3 interventions
     for s in dict(sections):
