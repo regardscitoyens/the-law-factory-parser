@@ -9,6 +9,9 @@ class Stats(object):
     
     def __init__(self):
         self.countDossiers = 0
+        self.countDossiersAmende = 0
+
+
         self.totalAmendement = 0
         self.totalAmendementParl = 0
         self.totalAmendementAdoptes = 0
@@ -30,6 +33,12 @@ class Stats(object):
         self.countTextWithDoubledVolume2 = 0
         self.countTextReduced = 0
         self.countTextReduced2 = 0
+
+        self.countModifSup50 = 0
+        self.countInflaSup50 = 0
+
+        self.textValues = {}
+
 
 
     def computeStatOverFile(self,file):
@@ -66,6 +75,22 @@ class Stats(object):
             if dossier["output_text_length2"] < dossier["input_text_length2"]:
                 self.countTextReduced2 +=1
 
+            if dossier["total_amendements"] >0:
+                self.countDossiersAmende += 1
+
+                if dossier["ratio_texte_modif"] >= 0.5:
+                    self.countModifSup50 += 1
+                if (dossier["output_text_length2"]-dossier["input_text_length2"])/float(dossier["input_text_length2"]) > 0.5 :
+                    self.countInflaSup50 += 1
+
+
+
+            ##############################################
+            self.textValues[dossier["id"]] = {}
+            self.textValues[dossier["id"]]["inflation"] = (dossier["output_text_length2"]-dossier["input_text_length2"])/float(dossier["input_text_length2"])
+            self.textValues[dossier["id"]]["modification"] = dossier["ratio_texte_modif"]
+            self.textValues[dossier["id"]]["amendement"] = dossier["total_amendements"]
+            self.textValues[dossier["id"]]["short_title"] = dossier["short_title"]
     
     
     def printStats(self):
@@ -102,6 +127,26 @@ class Stats(object):
         print "Nb texte ayant reduit de volume 2 : %d" % self.countTextReduced2
         print "Inflation législative moyenne : %f" % (float(self.textSizeFinal - self.textSizeOrig)/self.textSizeOrig)
 
+        print "======================================================"
+        print "Texte ayant plus de 50%% de modification : %f" %(float(self.countModifSup50)/self.countDossiersAmende)
+        print "Texte ayant plus de 50%% d'inflation : %f" %(float(self.countInflaSup50)/self.countDossiersAmende)
+
+
+        #print self.textValues
+
+    def writeCSV(self):
+        f = open("stats.csv", "w")
+        for text in self.textValues :
+            title = self.textValues[text]["short_title"]
+            infla = self.textValues[text]["inflation"]
+            modif = self.textValues[text]["modification"]
+            amendement = self.textValues[text]["amendement"]
+
+            s = u"%s;%s;%f;%f;%d\n" %(text,title, infla, modif, amendement)
+            f.write(s.encode("utf-8"))
+        f.close()
+
+
 
 
 stats = Stats()
@@ -111,3 +156,4 @@ stats.computeStatOverFile("dossiers_100_149.json")
 stats.computeStatOverFile("dossiers_150_199.json")
 stats.computeStatOverFile("dossiers_200_209.json")
 stats.printStats()
+stats.writeCSV()
