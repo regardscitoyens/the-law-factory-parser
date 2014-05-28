@@ -6,7 +6,7 @@ from common import open_json, print_json
 
 
 class Stats(object):
-    
+
     def __init__(self):
         self.countDossiers = 0
         self.countDossiersAmende = 0
@@ -59,14 +59,14 @@ class Stats(object):
             self.totalArticlesModified += dossier["total_articles_modified"]
 
             self.totalAccidentProcedure += dossier["total_accident_procedure"]
-            if dossier["total_accident_procedure"] > 0: 
-                self.nbDossiersAccidentProcedure +=1 
+            if dossier["total_accident_procedure"] > 0:
+                self.nbDossiersAccidentProcedure +=1
 
             ##
             self.textSizeOrig += dossier["input_text_length2"]
             self.textSizeFinal += dossier["output_text_length2"]
-            if (float(dossier["output_text_length"])/dossier["input_text_length"]) > 2.0:
-                self.countTextWithDoubledVolume +=1
+            #if (float(dossier["output_text_length"])/dossier["input_text_length"]) > 2.0:
+            #    self.countTextWithDoubledVolume +=1
             if dossier["output_text_length"] < dossier["input_text_length"]:
                 self.countTextReduced +=1
 
@@ -91,8 +91,8 @@ class Stats(object):
             self.textValues[dossier["id"]]["modification"] = dossier["ratio_texte_modif"]
             self.textValues[dossier["id"]]["amendement"] = dossier["total_amendements"]
             self.textValues[dossier["id"]]["short_title"] = dossier["short_title"]
-    
-    
+
+
     def printStats(self):
         print "Total Amendement traites : %d" % (self.totalAmendement)
         print "Nb Amendement Moyen par dossier : %f" %(float(self.totalAmendement)/self.countDossiers)
@@ -103,7 +103,7 @@ class Stats(object):
         print "Nb Amendement du gouv Moyen par dossier : %f" %(float(self.totalAmendement - self.totalAmendementParl)/self.countDossiers)
         print "Nb Amendement du gouv Adoptes Moyen par dossier : %f" %(float(self.totalAmendementAdoptes - self.totalAmendementParlAdoptes)/self.countDossiers)
         print "Reussite des amendements du gouv : %f" % (float(self.totalAmendementAdoptes - self.totalAmendementParlAdoptes)/(self.totalAmendement - self.totalAmendementParl))
-    
+
         print "======================================================"
         print "Nombre moyen intervenant : %f " %(float(self.totalIntervenant)/self.countDossiers)
         #print "Nombre d'articles : %d " % self.totalArticles
@@ -154,6 +154,8 @@ stats.computeStatOverFile("dossiers_0_49.json")
 stats.computeStatOverFile("dossiers_50_99.json")
 stats.computeStatOverFile("dossiers_100_149.json")
 stats.computeStatOverFile("dossiers_150_199.json")
-stats.computeStatOverFile("dossiers_200_209.json")
+stats.computeStatOverFile("dossiers_200_249.json")
+stats.computeStatOverFile("dossiers_250_294.json")
+
 stats.printStats()
 stats.writeCSV()
