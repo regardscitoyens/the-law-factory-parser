@@ -171,8 +171,8 @@ for step in procedure['steps']:
         if orat_sec not in done_links:
             if not "link" in sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur] or i['nbmots'] > 20:
                 sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur]['link'] = i['url_nos%ss' % typeparl]
-            if int(i['nbmots']) > 20:
-                done_links[orat_sec] = True
+                if int(i['nbmots']) > 20:
+                    done_links[orat_sec] = True
 
     # Remove sections with less than 3 interventions
     for s in dict(sections):
