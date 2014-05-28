@@ -90,10 +90,19 @@ class Stats(object):
 
             ##############################################
             self.textValues[dossier["id"]] = {}
+            self.textValues[dossier["id"]]["short_title"] = dossier["short_title"]
+            self.textValues[dossier["id"]]["input_text_length"] = dossier["input_text_length2"]
+            self.textValues[dossier["id"]]["output_text_length"] = dossier["output_text_length2"]
             self.textValues[dossier["id"]]["inflation"] = (dossier["output_text_length2"]-dossier["input_text_length2"])/float(dossier["input_text_length2"])
             self.textValues[dossier["id"]]["modification"] = dossier["ratio_texte_modif"]
+
             self.textValues[dossier["id"]]["amendement"] = dossier["total_amendements"]
-            self.textValues[dossier["id"]]["short_title"] = dossier["short_title"]
+            self.textValues[dossier["id"]]["amendementAdoptes"] = dossier["total_amendements_adoptes"]
+            self.textValues[dossier["id"]]["tauxAdoption"] = dossier["total_amendements_adoptes"]/(float(dossier["total_amendements"] if dossier["total_amendements"] != 0 else 1))
+
+            self.textValues[dossier["id"]]["daysBeforeAdoption"] = dossier["total_days"]
+            self.textValues[dossier["id"]]["ProcedureAccident"] = dossier["total_accident_procedure"]
+            self.textValues[dossier["id"]]["NbIntervenants"] = dossier["total_intervenant"]
 
 
     def printStats(self):
@@ -139,15 +148,35 @@ class Stats(object):
         #print self.textValues
 
     def writeCSV(self):
-        f = open("stats.csv", "w")
+        f = open("dossier_stats.csv", "w")
+        f.write("Text Id;Short title;Input Text Length;Output Text Length;Inflation of text;Modification of text")
+        f.write(";Number of Amendement;Adopted Amendement;Adoption Ratio")
+        f.write(";Days of procedure;Intervenants;Procedure Accident")
+        f.write("\n")
+
         for text in self.textValues :
             title = self.textValues[text]["short_title"]
+            inputLength = self.textValues[text]["input_text_length"]
+            outputLength = self.textValues[text]["output_text_length"]
             infla = self.textValues[text]["inflation"]
             modif = self.textValues[text]["modification"]
             amendement = self.textValues[text]["amendement"]
+            amendementAdoptes = self.textValues[text]["amendementAdoptes"]
+            tauxAdoption = self.textValues[text]["tauxAdoption"]
 
-            s = u"%s;%s;%f;%f;%d\n" %(text,title, infla, modif, amendement)
+            daysBeforeAdoption = self.textValues[text]["daysBeforeAdoption"]
+            intervenants = self.textValues[text]["NbIntervenants"]
+            procedureAccident = self.textValues[text]["ProcedureAccident"]
+
+            s = u"\"%s\";\"%s\"" %(text,title)
             f.write(s.encode("utf-8"))
+            s = u";%d;%d;%f;%f" % (inputLength, outputLength,infla, modif)
+            f.write(s.encode("utf-8"))
+            s = u";%d;%d;%f" % (amendement, amendementAdoptes, tauxAdoption)
+            f.write(s.encode("utf-8"))
+            s = u";%d;%d;%d" % (daysBeforeAdoption, intervenants, procedureAccident)
+            f.write(s.encode("utf-8"))
+            f.write("\n")
         f.close()
 
 
