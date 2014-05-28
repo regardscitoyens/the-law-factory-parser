@@ -36,6 +36,7 @@ class Stats(object):
 
         self.countModifSup50 = 0
         self.countInflaSup50 = 0
+        self.countInflaSup100 = 0
 
         self.textValues = {}
 
@@ -82,6 +83,8 @@ class Stats(object):
                     self.countModifSup50 += 1
                 if (dossier["output_text_length2"]-dossier["input_text_length2"])/float(dossier["input_text_length2"]) > 0.5 :
                     self.countInflaSup50 += 1
+                if (dossier["output_text_length2"]-dossier["input_text_length2"])/float(dossier["input_text_length2"]) > 1 :
+                    self.countInflaSup100 += 1
 
 
 
@@ -130,6 +133,7 @@ class Stats(object):
         print "======================================================"
         print "Texte ayant plus de 50%% de modification : %f" %(float(self.countModifSup50)/self.countDossiersAmende)
         print "Texte ayant plus de 50%% d'inflation : %f" %(float(self.countInflaSup50)/self.countDossiersAmende)
+        print "Texte ayant plus de 100%% d'inflation : %f" %(float(self.countInflaSup100)/self.countDossiersAmende)
 
 
         #print self.textValues
