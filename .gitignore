@@ -1,5 +1,6 @@
 data/*
 !data/.htaccess
+!data/HEADER.html
 *~
 *.py[cod]
 
