@@ -1,2 +1,4 @@
 GITPASSWD=gitlabpass
 GITLAB=~/bin/python-gitlab/gitlab
+MYSQL_USER=gitlab
+MYSQL_PASS=gitlab
