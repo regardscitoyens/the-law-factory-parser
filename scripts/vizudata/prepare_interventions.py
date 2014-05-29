@@ -63,8 +63,8 @@ re_gouv = re.compile(u'(ministre|garde.*sceaux|secr[eéÉ]taire.*[eéÉ]tat|haut
 re_parl = re.compile(u'(d[eéÉ]put[eéÉ]|s[eéÉ]nateur|membre du parlement|parlementaire)', re.I)
 re_rapporteur = re.compile(ur'((vice|co|pr[eéÉ]sidente?)[,\-\s]*)?rapporte', re.I)
 steps = {}
-done_links = {}
 for step in procedure['steps']:
+    done_links = {}
     if not ('has_interventions' in step and step['has_interventions']):
         continue
     intervs = []
