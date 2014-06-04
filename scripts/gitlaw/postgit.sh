@@ -3,8 +3,8 @@
 MYDIR=$(echo $0 | sed 's|[^/]*$||')"./"
 . $MYDIR"config.inc"
 
-ls -d data/*/ | sed 's/data.//' | sed 's|/||' | grep ^p
-  | while read dossier ; do
+ls -d data/*/ | sed 's/data.//' | sed 's|/||' | grep ^p |
+  while read dossier ; do
     file="data/"$dossier"/procedure/procedure.csv";
     if test -e $file ; then
          head -n 1 $file | iconv -f UTF8 -t ISO88591 | sed 's/"//g' | awk -F ';' '{print "UPDATE projects SET created_at = \""$15" 00:00:00\",  name = \""$3"\" WHERE path = \""$6"\";"}'; 
