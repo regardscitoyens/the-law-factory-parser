@@ -37,3 +37,10 @@ cat data/.cache/list_dossiers_senat.csv      |
  done
 
 python scripts/vizudata/assemble_procedures.py $(pwd) 50
+
+rm data/dossiers/*
+for file in $(ls data/dossiers_*); do
+  outfile=$(echo $file | sed 's#dossiers#dossiers/lafabriquedelaloi.fr-dossiers#')
+  ln -s "$(pwd)/$file" "$(pwd)/$outfile"
+done
+
