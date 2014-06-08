@@ -1,7 +1,10 @@
 the-law-factory-parser
 ======================
 
-Data generator for the-law-factory project
+Data generator for [the-law-factory project](https://github.com/RegardsCitoyens/the-law-factory) (http://www.LaFabriqueDeLaLoi.fr)
+
+Code used to generate the API avaialble at: http://www.LaFabriqueDeLaLoi.fr/api/
+
 
 ## Generate data for one bill ##
 
