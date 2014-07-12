@@ -29,6 +29,7 @@ A few perl and python dependencies are required. You can install them with the f
 
  ```bash
  sudo apt-get install recode libwww-mechanize-perl
+ sudo apt-get install python-pip
+ sudo apt-get install python-bs4
  sudo pip install -r requirements.txt
  ```
-
