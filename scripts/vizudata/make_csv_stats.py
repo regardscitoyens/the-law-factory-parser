@@ -36,7 +36,7 @@ headers = [
   "total_amendements_adoptes",
   "taux_amendements_adoptes",
   "total_amendements_parlementaire",
-  "total_amendements_parlementaire_adoptes"
+  "total_amendements_parlementaire_adoptes",
   "taux_amendements_parlementaire_adoptes"
 ]
 print ",".join(headers)
