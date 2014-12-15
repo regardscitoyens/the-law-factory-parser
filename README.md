@@ -1,7 +1,10 @@
 the-law-factory-parser
 ======================
 
-Data generator for the-law-factory project
+Data generator for [the-law-factory project](https://github.com/RegardsCitoyens/the-law-factory) (http://www.LaFabriqueDeLaLoi.fr)
+
+Code used to generate the API avaialble at: http://www.LaFabriqueDeLaLoi.fr/api/
+
 
 ## Generate data for one bill ##
 
@@ -26,6 +29,7 @@ A few perl and python dependencies are required. You can install them with the f
 
  ```bash
  sudo apt-get install recode libwww-mechanize-perl
+ sudo apt-get install python-pip
+ sudo apt-get install python-bs4
  sudo pip install -r requirements.txt
  ```
-

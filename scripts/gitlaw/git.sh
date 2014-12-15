@@ -13,19 +13,19 @@ mkdir $BILL
 cd $BILL
 git init
 
-wget "http://www.lafabriquedelaloi.fr/api/"$BILL"/procedure.zip"
-unzip procedure.zip
+wget -q "http://www.lafabriquedelaloi.fr/api/"$BILL"/procedure.zip"
+unzip -q procedure.zip
 rm procedure.zip
 mv procedure .procedure
 GITLAB_GROUP=$($GITLAB group list | grep -B 1 parlement | head -n 1 | sed 's/.* //')
 
-find . -name 'A*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/A*|/Article_|')'"' ; done | sh
-find . -name 'SS*' -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/SS*|/SousSection_|')'"' ; done | sh
-find . -name 'S*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/S*|/Section_|')'"' ; done | sh
-find . -name 'C*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/C*|/Chapitre_|')'"' ; done | sh
-find . -name 'T*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/T*|/Titre_|')'"' ; done | sh
-find . -name 'L*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/L*|/Livre_|')'"' ; done  | sh
-find . -name 'V*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/V*|/Volume_|')'"' ; done  | sh
+find . -name 'A*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/A|/Article_|')'"' ; done |sh
+find . -name 'SS*' -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/SS|/SousSection_|')'"' ; done |sh
+find . -name 'S*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/S|/Section_|')'"' ; done |sh
+find . -name 'C*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/C|/Chapitre_|')'"' ; done |sh
+find . -name 'T*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/T|/Titre_|')'"' ; done |sh
+find . -name 'L*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/L|/Livre_|')'"' ; done |sh
+find . -name 'V*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/V|/Volume_|')'"' ; done |sh
 
 echo $GITLAB project create $(head -n 1 .procedure/procedure.csv  | awk -F ';' '{print " --description=\""$2"\" --name="$6}') --namespace-id=$GITLAB_GROUP --public=true | sh
 sleep 2
