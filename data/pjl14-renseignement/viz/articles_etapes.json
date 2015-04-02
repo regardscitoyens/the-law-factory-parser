@@ -1,0 +1,407 @@
+{
+    "articles": {
+        "10": {
+            "id": "10", 
+            "section": "A10", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 634, 
+                    "n_diff": 1, 
+                    "order": 10, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 10, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "10"
+        }, 
+        "11": {
+            "id": "11", 
+            "section": "A11", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 1060, 
+                    "n_diff": 1, 
+                    "order": 11, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 11, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "11"
+        }, 
+        "12": {
+            "id": "12", 
+            "section": "A12", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 1987, 
+                    "n_diff": 1, 
+                    "order": 12, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 12, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "12"
+        }, 
+        "13": {
+            "id": "13", 
+            "section": "A13", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 1746, 
+                    "n_diff": 1, 
+                    "order": 13, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 13, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "13"
+        }, 
+        "14": {
+            "id": "14", 
+            "section": "A14", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 555, 
+                    "n_diff": 1, 
+                    "order": 14, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 14, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "14"
+        }, 
+        "15": {
+            "id": "15", 
+            "section": "A15", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 117, 
+                    "n_diff": 1, 
+                    "order": 15, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 15, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "15"
+        }, 
+        "16": {
+            "id": "16", 
+            "section": "A16", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 241, 
+                    "n_diff": 1, 
+                    "order": 16, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 16, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "16"
+        }, 
+        "1er": {
+            "id": "1er", 
+            "section": "A1er", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 18580, 
+                    "n_diff": 1, 
+                    "order": 1, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 1, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "1er"
+        }, 
+        "2": {
+            "id": "2", 
+            "section": "A2", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 8198, 
+                    "n_diff": 1, 
+                    "order": 2, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 2, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "2"
+        }, 
+        "3": {
+            "id": "3", 
+            "section": "A3", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 6526, 
+                    "n_diff": 1, 
+                    "order": 3, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 3, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "3"
+        }, 
+        "4": {
+            "id": "4", 
+            "section": "A4", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 4048, 
+                    "n_diff": 1, 
+                    "order": 4, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 4, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "4"
+        }, 
+        "5": {
+            "id": "5", 
+            "section": "A5", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 2464, 
+                    "n_diff": 1, 
+                    "order": 5, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 5, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "5"
+        }, 
+        "6": {
+            "id": "6", 
+            "section": "A6", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 1861, 
+                    "n_diff": 1, 
+                    "order": 6, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 6, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "6"
+        }, 
+        "7": {
+            "id": "7", 
+            "section": "A7", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 1179, 
+                    "n_diff": 1, 
+                    "order": 7, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 7, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "7"
+        }, 
+        "8": {
+            "id": "8", 
+            "section": "A8", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 4313, 
+                    "n_diff": 1, 
+                    "order": 8, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 8, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "8"
+        }, 
+        "9": {
+            "id": "9", 
+            "section": "A9", 
+            "steps": [
+                {
+                    "diff": "add", 
+                    "directory": "0_1\u00e8relecture_assemblee_depot", 
+                    "id_step": "001\u00e8relecture_assemblee_depot", 
+                    "length": 687, 
+                    "n_diff": 1, 
+                    "order": 9, 
+                    "status": "depot"
+                },
+                {
+                    "diff": "both", 
+                    "directory": "1_1\u00e8relecture_assemblee_commission", 
+                    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+                    "length": 50, 
+                    "n_diff": 1, 
+                    "order": 9, 
+                    "status": "none"
+                }
+            ], 
+            "titre": "9"
+        }
+    }, 
+    "law_title": "Projet de loi relatif au renseignement", 
+    "sections": {}, 
+    "short_title": "Police et s\u00e9curit\u00e9 : renseignement"
+}

@@ -227,6 +227,7 @@ indextext = -1
 curtext = -1
 srclst = []
 section = {"type": "section", "id": ""}
+donearticles = 0
 for text in soup.find_all("p"):
     line = clean_html(str(text))
     #print >> sys.stderr, read, curtext, indextext, line
@@ -282,7 +283,7 @@ for text in soup.find_all("p"):
         section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"])
         section["id"] = section_par + section_typ + str(section_num)
     # Identify titles and new article zones
-    elif re_mat_end.match(line) or (read == 2 and re_mat_ann.match(line)):
+    elif (re_mat_end.match(line) and donearticles != 0) or (read == 2 and re_mat_ann.match(line)):
         break
     elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line):
         line = cl_line
@@ -290,6 +291,7 @@ for text in soup.find_all("p"):
         if re_mat_art.match(line):
             if article is not None:
                 texte = save_text(texte)
+                donearticles += 1
                 pr_js(article)
             read = 2 # Activate alineas lecture
             art_num += 1
@@ -308,6 +310,7 @@ for text in soup.find_all("p"):
             texte = save_text(texte)
             section["titre"] = lower_but_first(line)
             if article is not None:
+                donearticles += 1
                 pr_js(article)
                 article = None
             pr_js(section)
