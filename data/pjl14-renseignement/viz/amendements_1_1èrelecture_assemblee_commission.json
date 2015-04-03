@@ -1,0 +1,2418 @@
+{
+    "api_root_url": "http://www.nosdeputes.fr/api/document/Amendement/", 
+    "groupes": {
+        "ECOLO": {
+            "color": "rgb(0,230,30)", 
+            "link": "http://www.nosdeputes.fr/groupe/ECOLO", 
+            "nom": "\u00c9cologiste", 
+            "order": 12
+        }, 
+        "Gouvernement": {
+            "color": "#cccbb3", 
+            "link": "", 
+            "nom": "Gouvernement", 
+            "order": 60
+        }, 
+        "SRC": {
+            "color": "rgb(255,50,190)", 
+            "link": "http://www.nosdeputes.fr/groupe/SRC", 
+            "nom": "Socialiste, r\u00e9publicain et citoyen", 
+            "order": 11
+        }, 
+        "UDI": {
+            "color": "rgb(30,180,255)", 
+            "link": "http://www.nosdeputes.fr/groupe/UDI", 
+            "nom": "Union des d\u00e9mocrates et ind\u00e9pendants", 
+            "order": 14
+        }, 
+        "UMP": {
+            "color": "rgb(30,30,200)", 
+            "link": "http://www.nosdeputes.fr/groupe/UMP", 
+            "nom": "Union pour un mouvement populaire", 
+            "order": 16
+        }
+    }, 
+    "id_step": "1_1\u00e8relecture_assemblee_commission", 
+    "sujets": {
+        "Apr\u00e8s l'article 12": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "UMP", 
+                    "id_api": "95940", 
+                    "numero": "CL20", 
+                    "sort": "non-vot\u00e9"
+                }
+            ], 
+            "details": "article additionnel apr\u00e8s l'article 12", 
+            "order": 121, 
+            "titre": "Apr\u00e8s l'article 12"
+        }, 
+        "Apr\u00e8s l'article 13": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95529", 
+                    "numero": "CL304", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article additionnel apr\u00e8s l'article 13", 
+            "order": 131, 
+            "titre": "Apr\u00e8s l'article 13"
+        }, 
+        "Apr\u00e8s l'article 1er": {
+            "amendements": [
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94841", 
+                    "numero": "CL43", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95192", 
+                    "numero": "CL96", 
+                    "sort": "non-vot\u00e9"
+                }
+            ], 
+            "details": "article additionnel apr\u00e8s l'article 1er", 
+            "order": 11, 
+            "titre": "Apr\u00e8s l'article 1er"
+        }, 
+        "Apr\u00e8s l'article 3": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95643", 
+                    "numero": "CL183", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95721", 
+                    "numero": "CL185", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article additionnel apr\u00e8s l'article 3", 
+            "order": 31, 
+            "titre": "Apr\u00e8s l'article 3"
+        }, 
+        "Apr\u00e8s l'article 4": {
+            "amendements": [
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95038", 
+                    "numero": "CL123", 
+                    "sort": "rejet\u00e9"
+                }
+            ], 
+            "details": "article additionnel apr\u00e8s l'article 4", 
+            "order": 41, 
+            "titre": "Apr\u00e8s l'article 4"
+        }, 
+        "Apr\u00e8s l'article 9": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95781", 
+                    "numero": "DN10", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95855", 
+                    "numero": "CL169", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95967", 
+                    "numero": "CL143", 
+                    "sort": "non-vot\u00e9"
+                }
+            ], 
+            "details": "article additionnel apr\u00e8s l'article 9", 
+            "order": 91, 
+            "titre": "Apr\u00e8s l'article 9"
+        }, 
+        "Article 10": {
+            "amendements": [
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94863", 
+                    "numero": "CL4", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94906", 
+                    "numero": "CL124", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95869", 
+                    "numero": "CL145", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article 10", 
+            "order": 100, 
+            "titre": "Article 10"
+        }, 
+        "Article 12": {
+            "amendements": [
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94940", 
+                    "numero": "CL3", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94983", 
+                    "numero": "CL54", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95097", 
+                    "numero": "CL125", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95118", 
+                    "numero": "CL1", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95314", 
+                    "numero": "CL126", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95351", 
+                    "numero": "CL2", 
+                    "sort": "non-vot\u00e9"
+                }
+            ], 
+            "details": "article 12", 
+            "order": 120, 
+            "titre": "Article 12"
+        }, 
+        "Article 13": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95572", 
+                    "numero": "CL271", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95610", 
+                    "numero": "CL270", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95836", 
+                    "numero": "CL269", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95871", 
+                    "numero": "CL272", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95953", 
+                    "numero": "CL268", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article 13", 
+            "order": 130, 
+            "titre": "Article 13"
+        }, 
+        "Article 14": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95656", 
+                    "numero": "CL214", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article 14", 
+            "order": 140, 
+            "titre": "Article 14"
+        }, 
+        "Article 15": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95889", 
+                    "numero": "CL291", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article 15", 
+            "order": 150, 
+            "titre": "Article 15"
+        }, 
+        "Article 1er": {
+            "amendements": [
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94878", 
+                    "numero": "CL93", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "94714", 
+                    "numero": "CL41", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94721", 
+                    "numero": "CL59", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94734", 
+                    "numero": "CL87", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94741", 
+                    "numero": "CL69", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94757", 
+                    "numero": "CL45", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "94760", 
+                    "numero": "CL26", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94766", 
+                    "numero": "CL130", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94777", 
+                    "numero": "CL67", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94785", 
+                    "numero": "CL49", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94797", 
+                    "numero": "CL52", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94805", 
+                    "numero": "CL127", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94806", 
+                    "numero": "CL70", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94812", 
+                    "numero": "CL47", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94820", 
+                    "numero": "CL65", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "94840", 
+                    "numero": "CL33", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94849", 
+                    "numero": "CL72", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94858", 
+                    "numero": "CL57", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94870", 
+                    "numero": "CL91", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94880", 
+                    "numero": "CL131", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94899", 
+                    "numero": "CL44", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94901", 
+                    "numero": "CL80", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94913", 
+                    "numero": "CL92", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "SRC", 
+                    "id_api": "94916", 
+                    "numero": "CL133", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "94918", 
+                    "numero": "CL21", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94938", 
+                    "numero": "CL82", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94953", 
+                    "numero": "CL64", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94959", 
+                    "numero": "CL55", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "94961", 
+                    "numero": "CL24", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95006", 
+                    "numero": "CL78", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95007", 
+                    "numero": "CL88", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95019", 
+                    "numero": "CL22", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95033", 
+                    "numero": "CL60", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95044", 
+                    "numero": "CL30", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95055", 
+                    "numero": "CL10", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95056", 
+                    "numero": "CL37", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95061", 
+                    "numero": "CL85", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95067", 
+                    "numero": "CL89", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95075", 
+                    "numero": "CL46", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95076", 
+                    "numero": "CL62", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95081", 
+                    "numero": "CL81", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95085", 
+                    "numero": "CL94", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95087", 
+                    "numero": "CL61", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95090", 
+                    "numero": "CL39", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95102", 
+                    "numero": "CL73", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95109", 
+                    "numero": "CL29", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95110", 
+                    "numero": "CL90", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95114", 
+                    "numero": "CL11", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95123", 
+                    "numero": "CL31", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95137", 
+                    "numero": "CL76", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "SRC", 
+                    "id_api": "95141", 
+                    "numero": "CL128", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95142", 
+                    "numero": "CL58", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95143", 
+                    "numero": "CL83", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95151", 
+                    "numero": "CL50", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95156", 
+                    "numero": "CL75", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95161", 
+                    "numero": "CL36", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95164", 
+                    "numero": "CL42", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95171", 
+                    "numero": "CL7", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95182", 
+                    "numero": "CL25", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95183", 
+                    "numero": "CL8", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95186", 
+                    "numero": "CL38", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95204", 
+                    "numero": "CL63", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95224", 
+                    "numero": "CL86", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95225", 
+                    "numero": "CL77", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95232", 
+                    "numero": "CL56", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95251", 
+                    "numero": "CL95", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95252", 
+                    "numero": "CL74", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95255", 
+                    "numero": "CL35", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "SRC", 
+                    "id_api": "95264", 
+                    "numero": "CL129", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95265", 
+                    "numero": "CL28", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95276", 
+                    "numero": "CL84", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95304", 
+                    "numero": "CL51", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95331", 
+                    "numero": "CL66", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95337", 
+                    "numero": "CL40", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95339", 
+                    "numero": "CL48", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95346", 
+                    "numero": "CL71", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95352", 
+                    "numero": "CL68", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95353", 
+                    "numero": "CL79", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95403", 
+                    "numero": "DN3", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95411", 
+                    "numero": "DN2", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95434", 
+                    "numero": "DN1", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95443", 
+                    "numero": "DN9", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95486", 
+                    "numero": "DN4", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95519", 
+                    "numero": "CL301", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95522", 
+                    "numero": "CL153", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95545", 
+                    "numero": "CL219", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95549", 
+                    "numero": "CL220", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95550", 
+                    "numero": "CL243", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95551", 
+                    "numero": "CL149", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95556", 
+                    "numero": "CL157", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95571", 
+                    "numero": "CL152", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95574", 
+                    "numero": "CL248", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95578", 
+                    "numero": "CL146", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95583", 
+                    "numero": "CL242", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95588", 
+                    "numero": "CL229", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95596", 
+                    "numero": "CL236", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95605", 
+                    "numero": "CL237", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95608", 
+                    "numero": "CL155", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95611", 
+                    "numero": "CL303", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95616", 
+                    "numero": "CL232", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95618", 
+                    "numero": "CL233", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95622", 
+                    "numero": "CL144", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95628", 
+                    "numero": "CL228", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95629", 
+                    "numero": "CL148", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95632", 
+                    "numero": "CL227", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95644", 
+                    "numero": "CL231", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95646", 
+                    "numero": "CL279", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95652", 
+                    "numero": "CL294", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95661", 
+                    "numero": "CL246", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95678", 
+                    "numero": "CL284", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95680", 
+                    "numero": "CL215", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95685", 
+                    "numero": "CL280", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95687", 
+                    "numero": "CL136", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95703", 
+                    "numero": "CL218", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95705", 
+                    "numero": "CL244", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95710", 
+                    "numero": "CL298", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95712", 
+                    "numero": "CL234", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95718", 
+                    "numero": "CL151", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95724", 
+                    "numero": "CL135", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95726", 
+                    "numero": "CL238", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95736", 
+                    "numero": "CL137", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95748", 
+                    "numero": "CL285", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95750", 
+                    "numero": "CL223", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95759", 
+                    "numero": "CL226", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95771", 
+                    "numero": "CL299", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95773", 
+                    "numero": "CL241", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95776", 
+                    "numero": "CL296", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95778", 
+                    "numero": "CL230", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95790", 
+                    "numero": "CL138", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95798", 
+                    "numero": "CL297", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95814", 
+                    "numero": "CL156", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95819", 
+                    "numero": "CL240", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95820", 
+                    "numero": "CL281", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95821", 
+                    "numero": "CL288", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95828", 
+                    "numero": "CL287", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95829", 
+                    "numero": "CL222", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95830", 
+                    "numero": "CL221", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95833", 
+                    "numero": "CL282", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95837", 
+                    "numero": "CL216", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95846", 
+                    "numero": "CL239", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "UMP", 
+                    "id_api": "95849", 
+                    "numero": "CL9", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95854", 
+                    "numero": "CL245", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95874", 
+                    "numero": "CL293", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95878", 
+                    "numero": "CL292", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95879", 
+                    "numero": "CL147", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95886", 
+                    "numero": "CL290", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95891", 
+                    "numero": "CL224", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95902", 
+                    "numero": "CL302", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95903", 
+                    "numero": "CL295", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95906", 
+                    "numero": "CL134", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95915", 
+                    "numero": "CL235", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95928", 
+                    "numero": "CL154", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95930", 
+                    "numero": "CL289", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95947", 
+                    "numero": "CL300", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95963", 
+                    "numero": "CL247", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95966", 
+                    "numero": "CL150", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95970", 
+                    "numero": "CL225", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95971", 
+                    "numero": "CL286", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95972", 
+                    "numero": "CL217", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-04-01", 
+                    "groupe": "ECOLO", 
+                    "id_api": "96071", 
+                    "numero": "CL305", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-04-01", 
+                    "groupe": "Gouvernement", 
+                    "id_api": "96112", 
+                    "numero": "CL308", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-04-01", 
+                    "groupe": "ECOLO", 
+                    "id_api": "96134", 
+                    "numero": "CL306", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-04-01", 
+                    "groupe": "ECOLO", 
+                    "id_api": "96164", 
+                    "numero": "CL307", 
+                    "sort": "non-vot\u00e9"
+                }
+            ], 
+            "details": "article 1er", 
+            "order": 10, 
+            "titre": "Article 1er"
+        }, 
+        "Article 2": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95563", 
+                    "numero": "CL189", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94786", 
+                    "numero": "CL107", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94795", 
+                    "numero": "CL114", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "94856", 
+                    "numero": "CL32", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94874", 
+                    "numero": "CL113", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "94923", 
+                    "numero": "CL34", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "94926", 
+                    "numero": "CL27", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94928", 
+                    "numero": "CL101", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94930", 
+                    "numero": "CL99", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94951", 
+                    "numero": "CL12", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94962", 
+                    "numero": "CL13", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94974", 
+                    "numero": "CL108", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95024", 
+                    "numero": "CL98", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95041", 
+                    "numero": "CL105", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95108", 
+                    "numero": "CL100", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95116", 
+                    "numero": "CL103", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95147", 
+                    "numero": "CL104", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95167", 
+                    "numero": "CL102", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95177", 
+                    "numero": "CL97", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95244", 
+                    "numero": "CL109", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95248", 
+                    "numero": "CL112", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95277", 
+                    "numero": "CL111", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95287", 
+                    "numero": "CL110", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95347", 
+                    "numero": "CL106", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95465", 
+                    "numero": "DN5", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95507", 
+                    "numero": "DN6", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95537", 
+                    "numero": "CL182", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95553", 
+                    "numero": "CL181", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95584", 
+                    "numero": "CL184", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95590", 
+                    "numero": "CL179", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95598", 
+                    "numero": "CL167", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95620", 
+                    "numero": "CL140", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95647", 
+                    "numero": "CL187", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95659", 
+                    "numero": "CL175", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95667", 
+                    "numero": "CL139", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95676", 
+                    "numero": "CL190", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95679", 
+                    "numero": "CL283", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95711", 
+                    "numero": "CL188", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95738", 
+                    "numero": "CL164", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95754", 
+                    "numero": "CL176", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95756", 
+                    "numero": "CL178", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95768", 
+                    "numero": "CL172", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95769", 
+                    "numero": "CL160", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95795", 
+                    "numero": "CL186", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95810", 
+                    "numero": "CL171", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95812", 
+                    "numero": "CL177", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95827", 
+                    "numero": "CL180", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95835", 
+                    "numero": "CL170", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95862", 
+                    "numero": "CL161", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95865", 
+                    "numero": "CL165", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95934", 
+                    "numero": "CL174", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95944", 
+                    "numero": "CL166", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95973", 
+                    "numero": "CL168", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article 2", 
+            "order": 20, 
+            "titre": "Article 2"
+        }, 
+        "Article 3": {
+            "amendements": [
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94735", 
+                    "numero": "CL117", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94763", 
+                    "numero": "CL16", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "94877", 
+                    "numero": "CL14", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94893", 
+                    "numero": "CL132", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94950", 
+                    "numero": "CL118", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UDI", 
+                    "id_api": "95100", 
+                    "numero": "CL23", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95260", 
+                    "numero": "CL119", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95305", 
+                    "numero": "CL115", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95310", 
+                    "numero": "CL116", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95317", 
+                    "numero": "CL15", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95525", 
+                    "numero": "CL277", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95540", 
+                    "numero": "CL197", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95569", 
+                    "numero": "CL200", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95607", 
+                    "numero": "CL276", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95650", 
+                    "numero": "CL193", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95654", 
+                    "numero": "CL202", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95664", 
+                    "numero": "CL198", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95672", 
+                    "numero": "CL206", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95682", 
+                    "numero": "CL274", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95691", 
+                    "numero": "CL199", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95698", 
+                    "numero": "CL192", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95737", 
+                    "numero": "CL201", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95745", 
+                    "numero": "CL194", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95802", 
+                    "numero": "CL203", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95863", 
+                    "numero": "CL204", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95892", 
+                    "numero": "CL278", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95893", 
+                    "numero": "CL275", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95913", 
+                    "numero": "CL191", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95916", 
+                    "numero": "CL205", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95927", 
+                    "numero": "CL195", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95952", 
+                    "numero": "CL196", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95954", 
+                    "numero": "CL273", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article 3", 
+            "order": 30, 
+            "titre": "Article 3"
+        }, 
+        "Article 4": {
+            "amendements": [
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "94789", 
+                    "numero": "CL122", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95168", 
+                    "numero": "CL121", 
+                    "sort": "rejet\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "ECOLO", 
+                    "id_api": "95290", 
+                    "numero": "CL120", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95421", 
+                    "numero": "DN7", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95435", 
+                    "numero": "DN8", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95694", 
+                    "numero": "CL142", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95701", 
+                    "numero": "CL259", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95717", 
+                    "numero": "CL260", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95757", 
+                    "numero": "CL256", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95780", 
+                    "numero": "CL252", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95794", 
+                    "numero": "CL251", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95804", 
+                    "numero": "CL253", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95808", 
+                    "numero": "CL258", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95831", 
+                    "numero": "CL254", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95872", 
+                    "numero": "CL257", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95896", 
+                    "numero": "CL255", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95904", 
+                    "numero": "CL261", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95905", 
+                    "numero": "CL249", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95919", 
+                    "numero": "CL250", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95923", 
+                    "numero": "CL141", 
+                    "sort": "non-vot\u00e9"
+                }
+            ], 
+            "details": "article 4", 
+            "order": 40, 
+            "titre": "Article 4"
+        }, 
+        "Article 5": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95957", 
+                    "numero": "CL173", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article 5", 
+            "order": 50, 
+            "titre": "Article 5"
+        }, 
+        "Article 6": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95593", 
+                    "numero": "CL266", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95617", 
+                    "numero": "CL265", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95707", 
+                    "numero": "CL262", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95749", 
+                    "numero": "CL263", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95900", 
+                    "numero": "CL264", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95959", 
+                    "numero": "CL267", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article 6", 
+            "order": 60, 
+            "titre": "Article 6"
+        }, 
+        "Article 7": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95534", 
+                    "numero": "CL209", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95548", 
+                    "numero": "CL210", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95641", 
+                    "numero": "CL207", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95867", 
+                    "numero": "CL208", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article 7", 
+            "order": 70, 
+            "titre": "Article 7"
+        }, 
+        "Article 8": {
+            "amendements": [
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95623", 
+                    "numero": "CL211", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95686", 
+                    "numero": "CL213", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95926", 
+                    "numero": "CL212", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article 8", 
+            "order": 80, 
+            "titre": "Article 8"
+        }, 
+        "Article 9": {
+            "amendements": [
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95198", 
+                    "numero": "CL53", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95630", 
+                    "numero": "CL163", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95695", 
+                    "numero": "CL162", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95744", 
+                    "numero": "CL158", 
+                    "sort": "adopt\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "SRC", 
+                    "id_api": "95936", 
+                    "numero": "CL159", 
+                    "sort": "adopt\u00e9"
+                }
+            ], 
+            "details": "article 9", 
+            "order": 90, 
+            "titre": "Article 9"
+        }, 
+        "Avant l'article 12": {
+            "amendements": [
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95020", 
+                    "numero": "CL19", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "UMP", 
+                    "id_api": "95785", 
+                    "numero": "CL18", 
+                    "sort": "non-vot\u00e9"
+                }
+            ], 
+            "details": "article additionnel avant l'article 12", 
+            "order": 119, 
+            "titre": "Avant l'article 12"
+        }, 
+        "Avant l'article 1er": {
+            "amendements": [
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95010", 
+                    "numero": "CL5", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-30", 
+                    "groupe": "UMP", 
+                    "id_api": "95035", 
+                    "numero": "CL6", 
+                    "sort": "non-vot\u00e9"
+                }, 
+                {
+                    "date": "2015-03-31", 
+                    "groupe": "UMP", 
+                    "id_api": "95746", 
+                    "numero": "CL17", 
+                    "sort": "non-vot\u00e9"
+                }
+            ], 
+            "details": "article additionnel avant l'article 1er", 
+            "order": 9, 
+            "titre": "Avant l'article 1er"
+        }
+    }
+}

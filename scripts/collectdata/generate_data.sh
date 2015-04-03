@@ -203,7 +203,7 @@ cat $1 | while read line ; do
         loiid=$oldamdidtext
       fi
       id_seance=""
-      download "$urlchambre/seances/$loiid/csv$commission_or_hemicycle" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
+      download "$urlchambre/seances/$loiid/csv$commission_or_hemicycle&$$" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
         tmpseancecsv="."$id_seance".csv"
         download "$urlchambre/seance/$id_seance/$loiid/csv" > $tmpseancecsv
         if head -n 1 $tmpseancecsv | grep '[a-z]' > /dev/null; then
