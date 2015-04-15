@@ -205,7 +205,8 @@ re_mat_new = re.compile(r"\s*\(\s*nouveau\s*\)\s*", re.I)
 re_mat_texte = re.compile(r'\(texte (modifié|élaboré|d(u|e l))', re.I)
 re_mat_single_char = re.compile(r'^\s*[LMN]\s*$')
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
-re_clean_art_spaces = re.compile(r'^\s*"?\s+')
+re_clean_art_spaces = re.compile(r'^\s*("?)\s+')
+re_clean_art_spaces2 = re.compile(r'\s+\.\s*-\s+')
 re_clean_conf = re.compile(r"\((conforme|non[\s-]*modifi..?)s?\)", re.I)
 re_clean_supr = re.compile(r'\((dispositions?\s*d..?clar..?es?\s*irrecevable.*article 4.*Constitution.*|(maintien de la )?suppr(ession|im..?s?)(\s*(conforme|maintenue|par la commission mixte paritaire))*)\)["\s]*$', re.I)
 re_echec_hemi = re.compile(r"L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
@@ -323,7 +324,7 @@ for text in soup.find_all("p"):
             continue
         if re_mat_dots.match(line):
             continue
-        line = re_clean_art_spaces.sub('', re_clean_idx_spaces.sub(r'\1. ', re_mat_new.sub(" ", cl_line).strip()))
+        line = re_clean_art_spaces2.sub('. - ', re_clean_art_spaces.sub(r'\1', re_clean_idx_spaces.sub(r'\1. ', re_mat_new.sub(" ", cl_line).strip())))
         # Clean low/upcase issues with BIS TER etc.
         line = clean_full_upcase(line)
         line = re_clean_premier.sub(lambda m: (real_lower(m.group(0)) if m.group(1) else "")+m.group(3)+"er", line)
