@@ -76,8 +76,8 @@ with open(csvpath, 'rb') as csvfile:
             procedure['short_title'] += " (texte organique)"
     else:
         procedure['short_title'] = upper_first(re_shorten_title.sub('', procedure['long_title']))
-    procedure['url_dossier_senat'] = "http://www.senat.fr/dossier-legislatif/%s.html" % row[5]
-    procedure['url_dossier_assemblee'] = "http://www.assemblee-nationale.fr/%s/dossiers/%s.asp" % (row[3], row[4])
+    procedure['url_dossier_senat'] = "http://www.senat.fr/dossier-legislatif/%s.html" % row[5] if row[5] else ""
+    procedure['url_dossier_assemblee'] = "http://www.assemblee-nationale.fr/%s/dossiers/%s.asp" % (row[3], row[4]) if row[4] else ""
     procedure['url_jo'] = url_jo
 
     print json.dumps(procedure, sort_keys=True, ensure_ascii=False).encode("utf-8")
