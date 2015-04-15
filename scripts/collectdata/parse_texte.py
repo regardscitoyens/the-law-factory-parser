@@ -130,6 +130,7 @@ lower_inner_title = lambda x: x.group(1)+lower_but_first(x.group(3))+" "
 html_replace = [
     (re.compile(r"−"), "-"),
     (re.compile(r" "), " "),
+    (re.compile(r"</?br/?>[«\"\s]+", re.I), " "),
     (re.compile(r'(«\s+|\s+»)'), '"'),
     (re.compile(r'(«|»|“|”|„|‟|❝|❞|＂|〟|〞|〝)'), '"'),
     (re.compile(r"(’|＇|’|ߴ|՚|ʼ|❛|❜)"), "'"),
@@ -138,7 +139,6 @@ html_replace = [
     (re.compile(r"(</?)em>", re.I), r"\1i>"),
     (re.compile(r"(</?)strong>", re.I), r"\1b>"),
     (re.compile(r"<(![^>]*|/?(p|span))>", re.I), ""),
-    (re.compile(r"</?br>", re.I), " "),
     (re.compile(r"\s*\n+\s*"), " "),
     (re.compile(r"<[^>]*></[^>]*>"), ""),
     (re.compile(r"^<b><i>", re.I), "<i><b>"),
