@@ -169,7 +169,7 @@ foreach my $y (sort  @pkeys) {
 	    }
 
 	    #if max date doesn't match the ending one & max date fits with the following one (if set)
-	    if (($step[4] ne $procedure->{$y}[14]) && (join('',split(/-/, $step[4])) >= join('',split(/-/,$procedure->{$y}[13]))) &&  (!$procedure->{sprintf('%02d', $y+1)}[13] || (join('',split(/-/, $step[4])) <= join('',split(/-/,$procedure->{sprintf('%02d', $y+1)}[13]))))) {
+	    if ($step[4] && ($step[4] ne $procedure->{$y}[14]) && (join('',split(/-/, $step[4])) >= join('',split(/-/,$procedure->{$y}[13]))) &&  (!$procedure->{sprintf('%02d', $y+1)}[13] || (join('',split(/-/, $step[4])) <= join('',split(/-/,$procedure->{sprintf('%02d', $y+1)}[13]))))) {
 		$procedure->{$y}[14] = $step[4];
 	    }
 #	    my $diff = join('', split(/-/, $step[3])) - join('', split(/-/, $procedure->{$y}[13]));
