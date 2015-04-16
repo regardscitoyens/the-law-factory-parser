@@ -59,7 +59,7 @@
                     "groupe": "UMP", 
                     "id_api": "97507", 
                     "numero": "33", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
@@ -73,14 +73,14 @@
                     "groupe": "UMP", 
                     "id_api": "97484", 
                     "numero": "74", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "UMP", 
                     "id_api": "97461", 
                     "numero": "88", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article additionnel apr\u00e8s l'article 10", 
@@ -94,49 +94,49 @@
                     "groupe": "UMP", 
                     "id_api": "97397", 
                     "numero": "75", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "UMP", 
                     "id_api": "97477", 
                     "numero": "76", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "UMP", 
                     "id_api": "97529", 
                     "numero": "77", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "UMP", 
                     "id_api": "97390", 
                     "numero": "78", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "UMP", 
                     "id_api": "97402", 
                     "numero": "81", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "UMP", 
                     "id_api": "97490", 
                     "numero": "82", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "UMP", 
                     "id_api": "97533", 
                     "numero": "83", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
@@ -157,14 +157,14 @@
                     "groupe": "UMP", 
                     "id_api": "97480", 
                     "numero": "79", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "UMP", 
                     "id_api": "97419", 
                     "numero": "219", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article additionnel apr\u00e8s l'article 12", 
@@ -178,28 +178,28 @@
                     "groupe": "Gouvernement", 
                     "id_api": "98245", 
                     "numero": "399", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "UMP", 
                     "id_api": "98317", 
                     "numero": "422", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "UMP", 
                     "id_api": "98366", 
                     "numero": "423", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "UMP", 
                     "id_api": "98421", 
                     "numero": "424", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article additionnel apr\u00e8s l'article 15", 
@@ -241,14 +241,14 @@
                     "groupe": "UDI", 
                     "id_api": "97482", 
                     "numero": "134", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97423", 
                     "numero": "135", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
@@ -304,21 +304,21 @@
                     "groupe": "UMP", 
                     "id_api": "97506", 
                     "numero": "217", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97409", 
                     "numero": "300", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97519", 
                     "numero": "314", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article additionnel apr\u00e8s l'article 3", 
@@ -332,7 +332,7 @@
                     "groupe": "SRC", 
                     "id_api": "97488", 
                     "numero": "337", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article additionnel apr\u00e8s l'article 8", 
@@ -346,35 +346,35 @@
                     "groupe": "UMP", 
                     "id_api": "97510", 
                     "numero": "84", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "GDR", 
                     "id_api": "97417", 
                     "numero": "150", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "ECOLO", 
                     "id_api": "97513", 
                     "numero": "203", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "SRC", 
                     "id_api": "97412", 
                     "numero": "292", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "SRC", 
                     "id_api": "97530", 
                     "numero": "336", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 10", 
@@ -388,14 +388,14 @@
                     "groupe": "UMP", 
                     "id_api": "97496", 
                     "numero": "101", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "ECOLO", 
                     "id_api": "97468", 
                     "numero": "204", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 11", 
@@ -409,21 +409,21 @@
                     "groupe": "SRC", 
                     "id_api": "97433", 
                     "numero": "328", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "SRC", 
                     "id_api": "97422", 
                     "numero": "339", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "SRC", 
                     "id_api": "97535", 
                     "numero": "340", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 14", 
@@ -500,7 +500,7 @@
                     "groupe": "UMP", 
                     "id_api": "97301", 
                     "numero": "12", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
@@ -948,7 +948,7 @@
                     "groupe": "RRDP", 
                     "id_api": "97341", 
                     "numero": "160", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
@@ -1396,7 +1396,7 @@
                     "groupe": "SRC", 
                     "id_api": "97234", 
                     "numero": "261", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
@@ -1718,7 +1718,7 @@
                     "groupe": "SRC", 
                     "id_api": "97195", 
                     "numero": "324", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
@@ -1907,14 +1907,14 @@
                     "groupe": "Gouvernement", 
                     "id_api": "97568", 
                     "numero": "384", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
                     "groupe": "Gouvernement", 
                     "id_api": "97567", 
                     "numero": "385", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
@@ -2019,7 +2019,7 @@
                     "groupe": "Gouvernement", 
                     "id_api": "97615", 
                     "numero": "406", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
@@ -2124,476 +2124,476 @@
                     "groupe": "UMP", 
                     "id_api": "97440", 
                     "numero": "20", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97457", 
                     "numero": "21", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97411", 
                     "numero": "22", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97437", 
                     "numero": "23", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97404", 
                     "numero": "24", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97396", 
                     "numero": "25", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97451", 
                     "numero": "26", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97393", 
                     "numero": "27", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97525", 
                     "numero": "28", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97497", 
                     "numero": "29", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97442", 
                     "numero": "30", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97564", 
                     "numero": "42", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97446", 
                     "numero": "43", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97508", 
                     "numero": "44", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97391", 
                     "numero": "45", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97414", 
                     "numero": "46", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97428", 
                     "numero": "59", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97415", 
                     "numero": "60", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97479", 
                     "numero": "61", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97454", 
                     "numero": "69", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97430", 
                     "numero": "92", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97472", 
                     "numero": "93", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
                     "groupe": "UMP", 
                     "id_api": "97545", 
                     "numero": "94", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97556", 
                     "numero": "103", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97407", 
                     "numero": "104", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97548", 
                     "numero": "105", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97489", 
                     "numero": "120", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97536", 
                     "numero": "122", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97438", 
                     "numero": "130", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97416", 
                     "numero": "139", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97425", 
                     "numero": "141", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "GDR", 
                     "id_api": "97410", 
                     "numero": "145", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "GDR", 
                     "id_api": "97483", 
                     "numero": "146", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "GDR", 
                     "id_api": "97448", 
                     "numero": "147", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "GDR", 
                     "id_api": "97458", 
                     "numero": "148", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "GDR", 
                     "id_api": "97537", 
                     "numero": "149", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97398", 
                     "numero": "184", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97424", 
                     "numero": "185", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97467", 
                     "numero": "186", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97464", 
                     "numero": "187", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97400", 
                     "numero": "188", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97394", 
                     "numero": "189", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97445", 
                     "numero": "190", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97514", 
                     "numero": "191", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97491", 
                     "numero": "192", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97527", 
                     "numero": "193", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97469", 
                     "numero": "228", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97521", 
                     "numero": "232", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97502", 
                     "numero": "254", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97499", 
                     "numero": "255", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97395", 
                     "numero": "259", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97589", 
                     "numero": "283", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97523", 
                     "numero": "284", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97421", 
                     "numero": "285", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97544", 
                     "numero": "293", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97512", 
                     "numero": "321", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97493", 
                     "numero": "357", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97526", 
                     "numero": "358", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
                     "groupe": "Gouvernement", 
                     "id_api": "98144", 
                     "numero": "380", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
                     "groupe": "Gouvernement", 
                     "id_api": "97546", 
                     "numero": "382", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
                     "groupe": "ECOLO", 
                     "id_api": "97593", 
                     "numero": "395", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "UMP", 
                     "id_api": "97976", 
                     "numero": "412", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "UMP", 
                     "id_api": "97697", 
                     "numero": "413", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "UMP", 
                     "id_api": "97691", 
                     "numero": "414", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "Gouvernement", 
                     "id_api": "98465", 
                     "numero": "437", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "UMP", 
                     "id_api": "98470", 
                     "numero": "441", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "ECOLO", 
                     "id_api": "98462", 
                     "numero": "442", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "ECOLO", 
                     "id_api": "98472", 
                     "numero": "443", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 2", 
@@ -2607,224 +2607,224 @@
                     "groupe": "UMP", 
                     "id_api": "97501", 
                     "numero": "32", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97427", 
                     "numero": "47", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97465", 
                     "numero": "48", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97406", 
                     "numero": "70", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97453", 
                     "numero": "71", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97500", 
                     "numero": "123", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97441", 
                     "numero": "126", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97460", 
                     "numero": "127", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97473", 
                     "numero": "128", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97401", 
                     "numero": "129", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97435", 
                     "numero": "132", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97456", 
                     "numero": "137", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97503", 
                     "numero": "140", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "GDR", 
                     "id_api": "97471", 
                     "numero": "152", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97485", 
                     "numero": "155", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97392", 
                     "numero": "194", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97431", 
                     "numero": "195", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97522", 
                     "numero": "196", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97528", 
                     "numero": "197", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97436", 
                     "numero": "256", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97449", 
                     "numero": "257", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97505", 
                     "numero": "286", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97520", 
                     "numero": "287", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97498", 
                     "numero": "302", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97504", 
                     "numero": "327", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97531", 
                     "numero": "341", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97518", 
                     "numero": "342", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97463", 
                     "numero": "350", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97563", 
                     "numero": "351", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97532", 
                     "numero": "365", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
                     "groupe": "Gouvernement", 
                     "id_api": "97560", 
                     "numero": "383", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "Gouvernement", 
                     "id_api": "98235", 
                     "numero": "421", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 3", 
@@ -2838,77 +2838,77 @@
                     "groupe": "SRC", 
                     "id_api": "97594", 
                     "numero": "207", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "98037", 
                     "numero": "243", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97470", 
                     "numero": "288", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97403", 
                     "numero": "335", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "98228", 
                     "numero": "366", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
                     "groupe": "SRC", 
                     "id_api": "97591", 
                     "numero": "388", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "ECOLO", 
                     "id_api": "98049", 
                     "numero": "403", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "ECOLO", 
                     "id_api": "97632", 
                     "numero": "404", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "SRC", 
                     "id_api": "98182", 
                     "numero": "415", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "SRC", 
                     "id_api": "98458", 
                     "numero": "416", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "SRC", 
                     "id_api": "98447", 
                     "numero": "428", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 3 bis", 
@@ -2922,70 +2922,70 @@
                     "groupe": "ECOLO", 
                     "id_api": "97492", 
                     "numero": "49", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97450", 
                     "numero": "62", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "GDR", 
                     "id_api": "97509", 
                     "numero": "153", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "GDR", 
                     "id_api": "97408", 
                     "numero": "154", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97534", 
                     "numero": "198", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97455", 
                     "numero": "199", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97494", 
                     "numero": "205", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UMP", 
                     "id_api": "97452", 
                     "numero": "304", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "Gouvernement", 
                     "id_api": "98293", 
                     "numero": "409", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-14", 
                     "groupe": "UMP", 
                     "id_api": "98425", 
                     "numero": "425", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 4", 
@@ -2999,21 +2999,21 @@
                     "groupe": "SRC", 
                     "id_api": "97434", 
                     "numero": "338", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
                     "groupe": "Gouvernement", 
                     "id_api": "97577", 
                     "numero": "378", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "SRC", 
                     "id_api": "98455", 
                     "numero": "429", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 5", 
@@ -3027,7 +3027,7 @@
                     "groupe": "SRC", 
                     "id_api": "97420", 
                     "numero": "326", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 6", 
@@ -3041,42 +3041,42 @@
                     "groupe": "GDR", 
                     "id_api": "97405", 
                     "numero": "151", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "ECOLO", 
                     "id_api": "97426", 
                     "numero": "201", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97486", 
                     "numero": "329", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97443", 
                     "numero": "330", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97481", 
                     "numero": "331", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "SRC", 
                     "id_api": "97603", 
                     "numero": "332", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 7", 
@@ -3090,14 +3090,14 @@
                     "groupe": "SRC", 
                     "id_api": "97611", 
                     "numero": "333", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-11", 
                     "groupe": "SRC", 
                     "id_api": "97602", 
                     "numero": "334", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 8", 
@@ -3111,14 +3111,14 @@
                     "groupe": "ECOLO", 
                     "id_api": "97478", 
                     "numero": "202", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-13", 
                     "groupe": "Gouvernement", 
                     "id_api": "97549", 
                     "numero": "377", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article 9", 
@@ -3132,56 +3132,56 @@
                     "groupe": "Gouvernement", 
                     "id_api": "97576", 
                     "numero": "370", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "ECOLO", 
                     "id_api": "98449", 
                     "numero": "430", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "ECOLO", 
                     "id_api": "98461", 
                     "numero": "431", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "ECOLO", 
                     "id_api": "98445", 
                     "numero": "432", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "ECOLO", 
                     "id_api": "98452", 
                     "numero": "433", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "ECOLO", 
                     "id_api": "98460", 
                     "numero": "434", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "ECOLO", 
                     "id_api": "98450", 
                     "numero": "435", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "ECOLO", 
                     "id_api": "98456", 
                     "numero": "436", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article additionnel avant l'article 12", 
@@ -3195,7 +3195,7 @@
                     "groupe": "UMP", 
                     "id_api": "97495", 
                     "numero": "72", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }
             ], 
             "details": "article additionnel avant l'article 4", 
