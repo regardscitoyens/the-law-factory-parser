@@ -79,7 +79,7 @@ cat $1 | while read line ; do
 	echo "$line;" >>  "$data/$dossier/procedure.csv"
     python procedure2json.py "$data/$dossier/procedure.csv" > "$data/$dossier/procedure.json"
     olddossier=$dossier
-	continue;
+	continue
   fi
   if echo $line | grep ';renvoi en commission;' > /dev/null ; then
     if ! test -s $data/.tmp/json/articles_antelaststep.json; then
@@ -88,6 +88,8 @@ cat $1 | while read line ; do
     fi
     head -n 1 $data/.tmp/json/articles_antelaststep.json | sed 's/^{\("expose": "\).*"\(, "id": "\)\([0-9]\+\)\(_[^"]*", \)/{"echec": true, \1Le texte est renvoyé en commission."\2'"$etapid"'\4/' > $data/.tmp/json/$escape
     tail -n $(($(cat $data/.tmp/json/articles_antelaststep.json | wc -l) - 1)) $data/.tmp/json/articles_antelaststep.json >> $data/.tmp/json/$escape
+  elif test -z "$url"; then
+    echo "MISSING URL $line"
   else
     depot="false"
     if [ "$stage" = "depot" ]; then
@@ -100,6 +102,9 @@ cat $1 | while read line ; do
       exit 1
     fi
   fi
+
+ if ! test -z "$url"; then # START AVOIDED PART WHEN MISSING TEXT
+
   # Complete missing intermediate depots from last step
   if [ $(cat $data/.tmp/json/$escape  | wc -l) -lt 2 ] && [ "$stage" = "depot" ] && [ "$order" != "00" ]; then
     echo "WARNING: creating depot step $projectdir from last step since no data found"
@@ -137,15 +142,9 @@ cat $1 | while read line ; do
       echec="échec"
     fi
   fi
-  if test "$dossier" = "$olddossier"; then
-	echo "$line;$echec" >>  "$data/$dossier/procedure.csv"
-  else
-    echo "$line;$echec" >  "$data/$dossier/procedure.csv"
-  fi
-  python procedure2json.py "$data/$dossier/procedure.csv" > "$data/$dossier/procedure.json"
-
   if ! python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"; then
     rm -rf "$projectdir"
+    echo "$line;$echec"
     echo "ERROR creating arbo from $data/.tmp/json/$escape"
     exit 1
   fi
@@ -158,6 +157,15 @@ cat $1 | while read line ; do
   if echo "$etape" | grep "_nouv.lect._assemblee_hemicycle" > /dev/null; then
    cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_nouvlect.json
   fi
+
+ fi # END AVOIDED PART WHEN MISSING TEXT
+
+  if test "$dossier" = "$olddossier"; then
+	echo "$line;$echec" >>  "$data/$dossier/procedure.csv"
+  else
+    echo "$line;$echec" >  "$data/$dossier/procedure.csv"
+  fi
+  python procedure2json.py "$data/$dossier/procedure.csv" > "$data/$dossier/procedure.json"
 
   if echo $line | grep ';CMP;assemblee;' > /dev/null; then
     amdidtext=$amdidtextcmpa

@@ -70,6 +70,10 @@ steps.append(first)
 depots = len(steps)
 steps += latersteps
 
+# skip step presently happening
+if not steps[-1]['enddate']:
+   steps.pop(-1)
+
 bister = '(un|duo|tre|bis|qua|quin[tqu]*|sex|sept|octo?|novo?|non|dec|vic|ter|ies)+'
 re_alin_sup = re.compile(ur'supprimés?\)$', re.I)
 re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
