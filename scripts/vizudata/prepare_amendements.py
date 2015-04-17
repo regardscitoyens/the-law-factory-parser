@@ -3,6 +3,8 @@
 
 import os, sys
 from common import *
+sys.path.append(os.path.join("..", "collectdata"))
+from sort_articles import compare_articles
 
 context = Context(sys.argv)
 procedure = context.get_procedure()
@@ -46,6 +48,9 @@ for step in procedure['steps']:
 
     sujets = {}
     groupes = {}
+
+    fix_order = False
+    orders = []
     for amd in amendements_src:
         a = amd['amendement']
         if "sort" not in a:
@@ -54,12 +59,15 @@ for step in procedure['steps']:
             continue
         key = format_sujet(a['sujet'])
         if key not in sujets:
+            orders.append(key)
             sujets[key] = {
               'titre': key,
               'details': a['sujet'],
               'order': a['ordre_article'],
               'amendements': []
             }
+        if a['ordre_article'] > 9000:
+            fix_order = True
 
         gpe = find_groupe(a)
         if not gpe:
@@ -76,6 +84,10 @@ for step in procedure['steps']:
 
         })
 
+    if fix_order:
+        orders.sort(compare_articles)
+        for i, k in enumerate(orders):
+            sujets[k]["order"] = i
 
     amdtsfile = os.path.join(context.sourcedir, 'viz', 'amendements_%s.json' % step['directory'])
     data = {'id_step': step['directory'],
