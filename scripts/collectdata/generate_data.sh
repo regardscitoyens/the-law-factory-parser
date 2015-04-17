@@ -148,17 +148,22 @@ cat $1 | while read line ; do
     echo "ERROR creating arbo from $data/.tmp/json/$escape"
     exit 1
   fi
+ else
+  rm -f $data/.tmp/json/articles_laststep.json
+ fi # END AVOIDED PART WHEN MISSING TEXT
+
   if test -s $data/.tmp/json/articles_laststep.json; then
     cp -f $data/.tmp/json/articles_laststep.json $data/.tmp/json/articles_antelaststep.json
   fi
-  if [ "$norder" != "1" ] || [ "$order" = "00" ]; then
-    cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
-  fi
-  if echo "$etape" | grep "_nouv.lect._assemblee_hemicycle" > /dev/null; then
-   cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_nouvlect.json
+  if test -f $data/.tmp/json/$escape; then
+    if [ "$norder" != "1" ] || [ "$order" = "00" ]; then
+      cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
+    fi
+    if echo "$etape" | grep "_nouv.lect._assemblee_hemicycle" > /dev/null; then
+     cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_nouvlect.json
+    fi
   fi
 
- fi # END AVOIDED PART WHEN MISSING TEXT
 
   if test "$dossier" = "$olddossier"; then
 	echo "$line;$echec" >>  "$data/$dossier/procedure.csv"
