@@ -45,7 +45,7 @@
                 }
             ], 
             "details": "article additionnel apr\u00e8s l'article 12", 
-            "order": 121, 
+            "order": 17, 
             "titre": "Apr\u00e8s l'article 12"
         }, 
         "Apr\u00e8s l'article 13": {
@@ -59,7 +59,7 @@
                 }
             ], 
             "details": "article additionnel apr\u00e8s l'article 13", 
-            "order": 131, 
+            "order": 19, 
             "titre": "Apr\u00e8s l'article 13"
         }, 
         "Apr\u00e8s l'article 1er": {
@@ -80,7 +80,7 @@
                 }
             ], 
             "details": "article additionnel apr\u00e8s l'article 1er", 
-            "order": 11, 
+            "order": 2, 
             "titre": "Apr\u00e8s l'article 1er"
         }, 
         "Apr\u00e8s l'article 3": {
@@ -101,7 +101,7 @@
                 }
             ], 
             "details": "article additionnel apr\u00e8s l'article 3", 
-            "order": 31, 
+            "order": 5, 
             "titre": "Apr\u00e8s l'article 3"
         }, 
         "Apr\u00e8s l'article 4": {
@@ -115,7 +115,7 @@
                 }
             ], 
             "details": "article additionnel apr\u00e8s l'article 4", 
-            "order": 41, 
+            "order": 7, 
             "titre": "Apr\u00e8s l'article 4"
         }, 
         "Apr\u00e8s l'article 9": {
@@ -143,7 +143,7 @@
                 }
             ], 
             "details": "article additionnel apr\u00e8s l'article 9", 
-            "order": 91, 
+            "order": 13, 
             "titre": "Apr\u00e8s l'article 9"
         }, 
         "Article 10": {
@@ -171,7 +171,7 @@
                 }
             ], 
             "details": "article 10", 
-            "order": 100, 
+            "order": 14, 
             "titre": "Article 10"
         }, 
         "Article 12": {
@@ -220,7 +220,7 @@
                 }
             ], 
             "details": "article 12", 
-            "order": 120, 
+            "order": 16, 
             "titre": "Article 12"
         }, 
         "Article 13": {
@@ -262,7 +262,7 @@
                 }
             ], 
             "details": "article 13", 
-            "order": 130, 
+            "order": 18, 
             "titre": "Article 13"
         }, 
         "Article 14": {
@@ -276,7 +276,7 @@
                 }
             ], 
             "details": "article 14", 
-            "order": 140, 
+            "order": 20, 
             "titre": "Article 14"
         }, 
         "Article 15": {
@@ -290,7 +290,7 @@
                 }
             ], 
             "details": "article 15", 
-            "order": 150, 
+            "order": 21, 
             "titre": "Article 15"
         }, 
         "Article 1er": {
@@ -615,7 +615,7 @@
                     "groupe": "UDI", 
                     "id_api": "95109", 
                     "numero": "CL29", 
-                    "sort": "non-vot\u00e9"
+                    "sort": "ind\u00e9fini"
                 }, 
                 {
                     "date": "2015-03-30", 
@@ -1438,7 +1438,7 @@
                 }
             ], 
             "details": "article 1er", 
-            "order": 10, 
+            "order": 1, 
             "titre": "Article 1er"
         }, 
         "Article 2": {
@@ -1816,7 +1816,7 @@
                 }
             ], 
             "details": "article 2", 
-            "order": 20, 
+            "order": 3, 
             "titre": "Article 2"
         }, 
         "Article 3": {
@@ -2047,7 +2047,7 @@
                 }
             ], 
             "details": "article 3", 
-            "order": 30, 
+            "order": 4, 
             "titre": "Article 3"
         }, 
         "Article 4": {
@@ -2194,7 +2194,7 @@
                 }
             ], 
             "details": "article 4", 
-            "order": 40, 
+            "order": 6, 
             "titre": "Article 4"
         }, 
         "Article 5": {
@@ -2208,7 +2208,7 @@
                 }
             ], 
             "details": "article 5", 
-            "order": 50, 
+            "order": 8, 
             "titre": "Article 5"
         }, 
         "Article 6": {
@@ -2257,7 +2257,7 @@
                 }
             ], 
             "details": "article 6", 
-            "order": 60, 
+            "order": 9, 
             "titre": "Article 6"
         }, 
         "Article 7": {
@@ -2292,7 +2292,7 @@
                 }
             ], 
             "details": "article 7", 
-            "order": 70, 
+            "order": 10, 
             "titre": "Article 7"
         }, 
         "Article 8": {
@@ -2320,7 +2320,7 @@
                 }
             ], 
             "details": "article 8", 
-            "order": 80, 
+            "order": 11, 
             "titre": "Article 8"
         }, 
         "Article 9": {
@@ -2362,7 +2362,7 @@
                 }
             ], 
             "details": "article 9", 
-            "order": 90, 
+            "order": 12, 
             "titre": "Article 9"
         }, 
         "Avant l'article 12": {
@@ -2383,7 +2383,7 @@
                 }
             ], 
             "details": "article additionnel avant l'article 12", 
-            "order": 119, 
+            "order": 15, 
             "titre": "Avant l'article 12"
         }, 
         "Avant l'article 1er": {
@@ -2411,7 +2411,7 @@
                 }
             ], 
             "details": "article additionnel avant l'article 1er", 
-            "order": 9, 
+            "order": 0, 
             "titre": "Avant l'article 1er"
         }
     }
