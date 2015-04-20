@@ -241,14 +241,14 @@
                     "groupe": "UDI", 
                     "id_api": "97482", 
                     "numero": "134", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-10", 
                     "groupe": "UDI", 
                     "id_api": "97423", 
                     "numero": "135", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-11", 
@@ -500,7 +500,7 @@
                     "groupe": "UMP", 
                     "id_api": "97301", 
                     "numero": "12", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-10", 
@@ -948,7 +948,7 @@
                     "groupe": "RRDP", 
                     "id_api": "97341", 
                     "numero": "160", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-10", 
@@ -1396,7 +1396,7 @@
                     "groupe": "SRC", 
                     "id_api": "97234", 
                     "numero": "261", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-10", 
@@ -1718,7 +1718,7 @@
                     "groupe": "SRC", 
                     "id_api": "97195", 
                     "numero": "324", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-10", 
@@ -1907,14 +1907,14 @@
                     "groupe": "Gouvernement", 
                     "id_api": "97568", 
                     "numero": "384", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-13", 
                     "groupe": "Gouvernement", 
                     "id_api": "97567", 
                     "numero": "385", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-13", 
@@ -2019,7 +2019,7 @@
                     "groupe": "Gouvernement", 
                     "id_api": "97615", 
                     "numero": "406", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-13", 
@@ -2243,7 +2243,7 @@
                     "groupe": "UMP", 
                     "id_api": "97415", 
                     "numero": "60", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-10", 
@@ -3160,7 +3160,7 @@
                     "groupe": "ECOLO", 
                     "id_api": "98445", 
                     "numero": "432", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-15", 
@@ -3195,14 +3195,14 @@
                     "groupe": "SRC", 
                     "id_api": "98475", 
                     "numero": "444", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-15", 
                     "groupe": "SRC", 
                     "id_api": "98474", 
                     "numero": "445", 
-                    "sort": "ind\u00e9fini"
+                    "sort": "non-vot\u00e9"
                 }, 
                 {
                     "date": "2015-04-15", 
