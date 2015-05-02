@@ -148,11 +148,5 @@ class Context(object):
 
 
 def amendementIsFromGouvernement(amdt):
-    #Gouv from AN
-    if amdt["amendement"]["signataires"] == u"le Gouvernement":
-        return True
-    #Gouv from Senat
-    if amdt["amendement"]["signataires"] == u"Le Gouvernement":
-        return True
-    return False
+    return amdt["amendement"]["signataires"].lower() == u"le gouvernement"
 
