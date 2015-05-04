@@ -1,3 +1,4 @@
 html5lib
 simplejson
 beautifulsoup4
+requests
