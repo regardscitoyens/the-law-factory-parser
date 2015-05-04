@@ -27,6 +27,8 @@ rm -f $data/.tmp/json/articles_laststep.json
 
 for url in "2007-2012.nosdeputes" "www.nosdeputes" "www.nossenateurs"; do
   download "http://$url.fr/organismes/groupe/json?$$" > "$data/../$url-groupes.json"
+  typeparl=$(echo $url | sed 's/^.*nos//')
+  download "http://$url.fr/$typeparl/json?$$" > "$data/../$url.parlementaires.json"
 done
 
 # Fix occasional wrong order of votes post CMP
