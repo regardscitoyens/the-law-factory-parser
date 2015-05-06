@@ -116,7 +116,7 @@ cat $1 | while read line ; do
   # Complete articles with missing "conforme" or "non-modifié" text for all steps except depots 1ère lecture
   if [ "$norder" != "1" ] && [ "$norder" != 4 ] && test -s $data/.tmp/json/articles_laststep.json; then
     anteprevious=""
-    if echo "$etape" | grep hemicycle > /dev/null; then
+    if echo "$etape" | grep hemicycle > /dev/null && test -s "$data/.tmp/json/articles_antelaststep.json"; then
       anteprevious="$data/.tmp/json/articles_antelaststep.json"
     fi
     previous="$data/.tmp/json/articles_laststep.json"
