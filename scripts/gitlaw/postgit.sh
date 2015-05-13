@@ -3,11 +3,12 @@
 MYDIR=$(echo $0 | sed 's|[^/]*$||')"./"
 . $MYDIR"config.inc"
 
+EXTRA=cat
 if test "$1"; then
-EXTRA="grep $1 | ";
+EXTRA="grep $1 ";
 fi
 
-ls -d data/*/ | sed 's/data.//' | sed 's|/||' | grep ^p | $EXTRA
+ls -d data/*/ | sed 's/data.//' | sed 's|/||' | grep ^p | $EXTRA |
   while read dossier ; do
     file="data/"$dossier"/procedure/procedure.csv";
     if test -e $file ; then
