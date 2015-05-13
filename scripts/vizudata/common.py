@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, os, re
+import sys, os, re, requests
 from datetime import date
 from htmlentitydefs import name2codepoint
 from csv import DictReader
@@ -62,7 +62,9 @@ def identify_room(data, datatype):
     return typeparl, urlapi.lower()
 
 def personalize_link(link, obj, urlapi):
-    slug = obj.get('intervenant_slug', obj.get('slug', ''))
+    if isinstance(obj, dict):
+        slug = obj.get('intervenant_slug', obj.get('slug', ''))
+    else: slug = obj
     typeparl = "senateur" if urlapi.endswith("senateurs") else "depute"
     if slug:
         return link.replace("##URLAPI##", urlapi).replace("##TYPE##", typeparl).replace("##SLUG##", slug)
@@ -83,7 +85,7 @@ def slug_groupe(g):
 
 class Context(object):
 
-    def __init__(self, sysargs):
+    def __init__(self, sysargs, load_parls=False):
         self.DEBUG = (len(sysargs) > 2)
         self.sourcedir = sysargs[1] if (len(sysargs) > 1) else ""
         if not self.sourcedir:
@@ -91,6 +93,9 @@ class Context(object):
             exit(1)
         self.allgroupes = {}
         self.get_groupes()
+        self.parlementaires = {}
+        if load_parls:
+            self.get_parlementaires()
 
     def get_procedure(self):
         try:
@@ -99,6 +104,26 @@ class Context(object):
         except:
             sys.stderr.write('ERROR: could not find procedure data in directory %s\n' % self.sourcedir)
             exit(1)
+
+    def get_parlementaires(self):
+        for f in os.listdir(os.path.join(self.sourcedir, '..')):
+            if f.endswith('-parlementaires.json'):
+                url = f.replace('-parlementaires.json', '').lower()
+                try:
+                    with open(os.path.join(self.sourcedir, '..', f), "r") as parls:
+                        self.parlementaires[url] = {}
+                        typeparl = "depute" if "depute" in url else "senateur"
+                        for parl in json.load(parls)[typeparl+"s"]:
+                            p = parl[typeparl]
+                            self.parlementaires[url][p["slug"]] = p
+                except:
+                    sys.stderr.write('WARNING: could not read parlementaires file %s in data\n' % f)
+
+    def get_parlementaire(self, urlapi, slug):
+        if self.parlementaires:
+            return self.parlementaires[urlapi][slug]
+        typeparl = "depute" if "deputes" in urlapi else "senateur"
+        return requests.get(parl_link(slug, urlapi)+"/json").json()[typeparl]
 
     def get_groupes(self):
         for f in os.listdir(os.path.join(self.sourcedir, '..')):
@@ -148,11 +173,5 @@ class Context(object):
 
 
 def amendementIsFromGouvernement(amdt):
-    #Gouv from AN
-    if amdt["amendement"]["signataires"] == u"le Gouvernement":
-        return True
-    #Gouv from Senat
-    if amdt["amendement"]["signataires"] == u"Le Gouvernement":
-        return True
-    return False
+    return amdt["amendement"]["signataires"].lower() == u"le gouvernement"
 

@@ -9,8 +9,8 @@ fi
 . $MYDIR"config.inc"
 
 BILL=$1
-mkdir $BILL
-cd $BILL
+mkdir -p "data/"$BILL
+cd "data/"$BILL
 git init
 
 wget -q "http://www.lafabriquedelaloi.fr/api/"$BILL"/procedure.zip"
