@@ -46,7 +46,7 @@ The configuration file used is *scripts/gitlaw/config.inc*.
 
 It contains :
 
-- **GITPASSWD** : the password for the admin user of our gitlab
+- **GITPASSWD** : the password for the admin user of our gitlab (same password for the 4 users assemblee, senat, CMP, gouvernement)
 - **GITLAB** : the path to gitlab API controler (ie: ~gitlab/python-gitlab/gitlab)
 - **MYSQL_USER** : the mysql user used by gitlab
 - **MYSQL_PASS** : the mysql pass used by gitlab
