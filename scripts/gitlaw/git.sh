@@ -27,7 +27,7 @@ find . -name 'T*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $d
 find . -name 'L*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/L|/Livre_|')'"' ; done |sh
 find . -name 'V*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/V|/Volume_|')'"' ; done |sh
 
-echo $GITLAB project create $(head -n 1 .procedure/procedure.csv  | awk -F ';' '{print " --description=\""$2"\" --name="$6}') --namespace-id=$GITLAB_GROUP --public=true | sh
+echo $GITLAB project create $(head -n 1 .procedure/procedure.csv  | awk -F ';' '{print " --description=\""$2"\" --name='$BILL'"}') --namespace-id=$GITLAB_GROUP --public=true | sh
 sleep 2
 touch /tmp/ChangeLog
 cat .procedure/procedure.csv | while read line; do
