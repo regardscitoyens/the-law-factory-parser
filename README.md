@@ -55,7 +55,7 @@ It contains :
 
 The following script generate git repository for a given law id :
 
-    bash scripts/gitlaw/git.sh <LAW_ID>
+    bash <PATH_TO_the-law-factory-parser>/scripts/gitlaw/git.sh <LAW_ID>
 
 It creates a gitlab repository, generate all the commits for the different steps and publish it on gitlab.
 
@@ -67,6 +67,6 @@ It uses *data/LAW_ID* as a working directory.
 
 To execute it :
 
-    bash scripts/gitlaw/postgit.sh <LAW_ID>
+    bash <PATH_TO_the-law-factory-parser>/scripts/gitlaw/postgit.sh <LAW_ID>
 
 It uses the data contained into *data/LAW_ID*.
