@@ -328,6 +328,7 @@ for text in soup.find_all("p"):
             continue
         line = re_clean_art_spaces2.sub('. - ', re_clean_art_spaces.sub(r'\1', re_clean_idx_spaces.sub(r'\1. ', re_mat_new.sub(" ", cl_line).strip())))
         # Clean low/upcase issues with BIS TER etc.
+        line = line.replace("oeUVRE", "OEUVRE")
         line = clean_full_upcase(line)
         line = re_clean_premier.sub(lambda m: (real_lower(m.group(0)) if m.group(1) else "")+m.group(3)+"er", line)
         line = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), line)
