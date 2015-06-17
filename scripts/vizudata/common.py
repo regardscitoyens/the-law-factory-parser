@@ -116,8 +116,9 @@ class Context(object):
                         for parl in json.load(parls)[typeparl+"s"]:
                             p = parl[typeparl]
                             self.parlementaires[url][p["slug"]] = p
-                except:
+                except Exception as e:
                     sys.stderr.write('WARNING: could not read parlementaires file %s in data\n' % f)
+                    sys.stderr.write('%s: %s\n' % (type(e), e))
 
     def get_parlementaire(self, urlapi, slug):
         if self.parlementaires:
@@ -133,13 +134,16 @@ class Context(object):
                     with open(os.path.join(self.sourcedir, '..', f), "r") as gpes:
                         self.allgroupes[url] = {}
                         for gpe in json.load(gpes)['organismes']:
+                            if not gpe["organisme"]["acronyme"]:
+                                continue
                             acro = slug_groupe(gpe["organisme"]["acronyme"])
                             self.allgroupes[url][acro] = {
                                 "nom": gpe["organisme"]['nom'],
                                 "order": int(gpe["organisme"]['order']),
                                 "color": "rgb(%s)" % gpe["organisme"]['couleur']}
-                except:
+                except Exception as e:
                     sys.stderr.write('WARNING: could not read groupes file %s in data\n' % f)
+                    sys.stderr.write('%s: %s\n' % (type(e), e))
 
     def add_groupe(self, groupes, gpe, urlapi):
         gpid = upper_first(gpe.lower())

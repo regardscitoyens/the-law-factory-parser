@@ -40,24 +40,26 @@ if grep ";CMP;assemblee;hemicycle;" $1 > /dev/null && grep ";CMP;senat;hemicycle
   num_s=$(echo $line_s | awk -F ';' '{print $7}' | sed 's/^0//')
   min_num=$(($num_a<$num_s?$num_a:$num_s))
   url=$(echo $line_a | awk -F ';' '{print $12}')
-  escape=$(escapeit "$url")
-  download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape
-  if grep -i 'Texte d\(&eacute;\|.\)finitif' $data/.tmp/html/$escape > /dev/null && [ $min_num -ne $num_s ]; then
-    reorder=true
-  else
-    url=$(echo $line_s | awk -F ';' '{print $12}')
+  if [ ! -z "$url" ]; then
     escape=$(escapeit "$url")
     download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape
-    if grep -i "Texte d\(&eacute;\|.\)finitif" $data/.tmp/html/$escape > /dev/null && [ $min_num -ne $num_a ]; then
+    if grep -i 'Texte d\(&eacute;\|.\)finitif' $data/.tmp/html/$escape > /dev/null && [ $min_num -ne $num_s ]; then
       reorder=true
+    else
+      url=$(echo $line_s | awk -F ';' '{print $12}')
+      escape=$(escapeit "$url")
+      download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape
+      if grep -i "Texte d\(&eacute;\|.\)finitif" $data/.tmp/html/$escape > /dev/null && [ $min_num -ne $num_a ]; then
+        reorder=true
+      fi
     fi
-  fi
-  if $reorder; then
-    echo "INFO: Reordering CMP hemicycle steps to handle renumbered texte définitif last"
-    grep -v ";CMP;[a-z]*;hemicycle;" $1 > $1.tmp
-    echo "$line_a" | sed "s/\(;0*\)$num_a\(;[0-9]\+;CMP\)/\1$num_s\2/" >> $1.tmp
-    echo "$line_s" | sed "s/\(;0*\)$num_s\(;[0-9]\+;CMP\)/\1$num_a\2/" >> $1.tmp
-    sort $1.tmp > $1
+    if $reorder; then
+      echo "INFO: Reordering CMP hemicycle steps to handle renumbered texte définitif last"
+      grep -v ";CMP;[a-z]*;hemicycle;" $1 > $1.tmp
+      echo "$line_a" | sed "s/\(;0*\)$num_a\(;[0-9]\+;CMP\)/\1$num_s\2/" >> $1.tmp
+      echo "$line_s" | sed "s/\(;0*\)$num_s\(;[0-9]\+;CMP\)/\1$num_a\2/" >> $1.tmp
+      sort $1.tmp > $1
+    fi
   fi
 fi
 
