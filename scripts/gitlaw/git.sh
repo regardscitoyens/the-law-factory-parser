@@ -9,8 +9,8 @@ fi
 . $MYDIR"config.inc"
 
 BILL=$1
-mkdir $BILL
-cd $BILL
+mkdir -p "data/"$BILL
+cd "data/"$BILL
 git init
 
 wget -q "http://www.lafabriquedelaloi.fr/api/"$BILL"/procedure.zip"
@@ -27,9 +27,9 @@ find . -name 'T*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $d
 find . -name 'L*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/L|/Livre_|')'"' ; done |sh
 find . -name 'V*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/V|/Volume_|')'"' ; done |sh
 
-echo $GITLAB project create $(head -n 1 .procedure/procedure.csv  | awk -F ';' '{print " --description=\""$2"\" --name="$6}') --namespace-id=$GITLAB_GROUP --public=true | sh
+echo $GITLAB project create $(head -n 1 .procedure/procedure.csv  | awk -F ';' '{print " --description=\""$2"\" --name='$BILL'"}') --namespace-id=$GITLAB_GROUP --public=true | sh
 sleep 2
-touch /tmp/ChangeLog
+touch /tmp/ChangeLog.$$
 cat .procedure/procedure.csv | while read line; do
   MSG=$(echo $line | awk -F ';' '{if ($8 == 1) print "Dépot du texte"; if ($8 != 1 && $11 != "depot" && $7 != "XX") print "Travaux en "$11", "$9;}'); 
   AUTEUR=$(echo $line | awk -F ';' '{if ($8 == 1 && $6 ~ /pjl/) print "gouv"; else print $10;}');
@@ -69,12 +69,12 @@ cat .procedure/procedure.csv | while read line; do
 	echo "ERROR: Wrong autheur '$AUTEUR'"
     fi; fi; fi; fi;
 
-    echo "* $DATE - $GIT_AUTHOR_NAME" > /tmp/modif.txt
-    echo "  $MSG" >> /tmp/modif.txt
-    echo >> /tmp/modif.txt
+    echo "* $DATE - $GIT_AUTHOR_NAME" > /tmp/modif.$$.txt
+    echo "  $MSG" >> /tmp/modif.$$.txt
+    echo >> /tmp/modif.$$.txt
 
-    cat /tmp/modif.txt /tmp/ChangeLog > texte/ChangeLog
-    cp texte/ChangeLog /tmp/
+    cat /tmp/modif.$$.txt /tmp/ChangeLog.$$ > texte/ChangeLog
+    cp texte/ChangeLog /tmp/ChangeLog.$$
 
     export GIT_COMMITER_NAME="$GIT_AUTHOR_NAME"
     git config --local user.name "$GIT_AUTHOR_NAME"
@@ -93,5 +93,7 @@ cat .procedure/procedure.csv | while read line; do
     git push -u origin master
   fi
 done
+
+rm /tmp/ChangeLog.$$ /tmp/modif.$$.txt
 
 cd -
