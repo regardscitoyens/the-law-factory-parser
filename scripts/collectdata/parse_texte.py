@@ -94,6 +94,8 @@ romans_map = zip(
     (1000,  900, 500, 400 , 100,  90 , 50 ,  40 , 10 ,   9 ,  5 ,  4  ,  1),
     ( 'M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I')
 )
+
+
 def romans(n):
     n = n.upper()
     i = res = 0
@@ -105,13 +107,21 @@ def romans(n):
 
 upcase_accents = "ÇÀÂÄÉÈÊËÎÏÔÖÙÛÜ"
 locase_accents = "çàâäéèêëîïôöùûü"
+
+
 def real_lower(text):
     for a in upcase_accents:
         text = text.replace(a, locase_accents[upcase_accents.find(a)])
     return text.lower()
+
+
 def lower_but_first(text):
     return text[0].upper() + real_lower(text[1:])
+
+
 re_fullupcase = re.compile("^([\W0-9]*)([A-Z%s][\W0-9A-Z%s]*)$" % (upcase_accents, upcase_accents), re.U)
+
+
 def clean_full_upcase(text):
     mat = re_fullupcase.match(text)
     if mat:
@@ -273,6 +283,7 @@ for text in soup.find_all("p"):
         break
     elif read == -1 or (indextext != -1 and curtext != indextext):
         continue
+
     # Identify section zones
     m = re_mat_sec.match(line)
     if m:
@@ -281,21 +292,26 @@ for text in soup.find_all("p"):
         section_typ = m.group(1).upper()[0]
         if m.group(3) is not None:
             section_typ += "S"
-        section_num = re_cl_uno.sub('1', re_cl_sec_uno.sub('1', re_cl_html.sub('', m.group(5).strip())).strip())
-        section_num = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), section_num)
-        section_num = re_mat_new.sub('', section_num).strip()
-        m2 = re_mat_romans.match(section_num)
-        if m2:
-            rest = section_num.replace(m2.group(0), '')
-            section_num = romans(m2.group(0))
-            if rest: section_num = str(section_num) + rest
-        # Get parent section id to build current section id
-        section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"])
-        section["id"] = section_par + section_typ + str(section_num)
+
+        if "TITRE LIMINAIRE" in line:
+            section["id"] = "TL"
+        else:
+            section_num = re_cl_uno.sub('1', re_cl_sec_uno.sub('1', re_cl_html.sub('', m.group(5).strip())).strip())
+            section_num = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), section_num)
+            section_num = re_mat_new.sub('', section_num).strip()
+            m2 = re_mat_romans.match(section_num)
+            if m2:
+                rest = section_num.replace(m2.group(0), '')
+                section_num = romans(m2.group(0))
+                if rest: section_num = str(section_num) + rest
+            # Get parent section id to build current section id
+            section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"]) if section["id"] != "TL" else "";
+            section["id"] = section_par + section_typ + str(section_num)
+
     # Identify titles and new article zones
     elif (re_mat_end.match(line) and donearticles != 0) or (read == 2 and re_mat_ann.match(line)):
         break
-    elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line):
+    elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line) or re.match(r"^Article ", line):
         line = cl_line
         # Read a new article
         if re_mat_art.match(line):
@@ -325,6 +341,7 @@ for text in soup.find_all("p"):
                 article = None
             pr_js(section)
             read = 0
+
     # Read articles with alineas
     if read == 2 and not m:
         # Find extra status information
