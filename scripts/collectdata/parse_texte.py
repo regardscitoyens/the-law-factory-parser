@@ -96,6 +96,8 @@ romans_map = zip(
     (1000,  900, 500, 400 , 100,  90 , 50 ,  40 , 10 ,   9 ,  5 ,  4  ,  1),
     ( 'M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I')
 )
+
+
 def romans(n):
     n = n.upper()
     i = res = 0
@@ -107,13 +109,21 @@ def romans(n):
 
 upcase_accents = "ÇÀÂÄÉÈÊËÎÏÔÖÙÛÜ"
 locase_accents = "çàâäéèêëîïôöùûü"
+
+
 def real_lower(text):
     for a in upcase_accents:
         text = text.replace(a, locase_accents[upcase_accents.find(a)])
     return text.lower()
+
+
 def lower_but_first(text):
     return text[0].upper() + real_lower(text[1:])
+
+
 re_fullupcase = re.compile("^([\W0-9]*)([A-Z%s][\W0-9A-Z%s]*)$" % (upcase_accents, upcase_accents), re.U)
+
+
 def clean_full_upcase(text):
     mat = re_fullupcase.match(text)
     if mat:
@@ -148,7 +158,7 @@ html_replace = [
     (re.compile(r"</b>(\s*)<b>", re.I), r"\1"),
     (re.compile(r"</?sup>", re.I), ""),
     (re.compile(r"^((<[bi]>)*)\((S|AN)[12]\)\s*", re.I), r"\1"),
-    (re.compile(r"^(<b>Article )\d+\s*<s>\s*", re.I), r"\1"),
+    (re.compile(r"^(<b>Article\s*)\d+\s*<s>\s*", re.I), r"\1"),
     (re.compile(r"<s>(.*)</s>", re.I), ""),
     (re.compile(r"</?s>", re.I), ""),
     (re.compile(r"\s*</?img>\s*", re.I), ""),
@@ -159,12 +169,16 @@ html_replace = [
     (re.compile(r'<strike>[^<]*</strike>', re.I), ''),
     (re_clean_spaces, " "),
 ]
+
+
 def clean_html(t):
     for regex, repl in html_replace:
         t = regex.sub(repl, t)
     return t.strip()
 
 re_clean_et = re.compile(r'(,|\s+et)\s+', re.I)
+
+
 def pr_js(dic):
     # Clean empty articles with only "Supprimé" as text
     if not dic:
@@ -184,11 +198,13 @@ def pr_js(dic):
             return
     print json.dumps(dic, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
+
 def save_text(txt):
     if "done" not in txt:
         pr_js(txt)
     txt["done"] = True
     return txt
+
 
 blank_none = lambda x: x if x else ""
 re_cl_html = re.compile(r"<[^>]+>")
@@ -200,7 +216,7 @@ re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
 re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
 re_mat_sec = re.compile(r"%s(\s+(.+)e?r?)" % section_titles, re.I)
 re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
-re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
+re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
 re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*</b>\s*$")
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
@@ -236,9 +252,10 @@ curtext = -1
 srclst = []
 section = {"type": "section", "id": ""}
 donearticles = 0
+
 for text in soup.find_all("p"):
     line = clean_html(str(text))
-    #print >> sys.stderr, read, curtext, indextext, line
+
     if re_stars.match(line):
         continue
     if line == "<b>RAPPORT</b>" or line == "Mesdames, Messieurs,":
@@ -271,6 +288,7 @@ for text in soup.find_all("p"):
         break
     elif read == -1 or (indextext != -1 and curtext != indextext):
         continue
+
     # Identify section zones
     m = re_mat_sec.match(line)
     if m:
@@ -279,21 +297,26 @@ for text in soup.find_all("p"):
         section_typ = m.group(1).upper()[0]
         if m.group(3) is not None:
             section_typ += "S"
-        section_num = re_cl_uno.sub('1', re_cl_sec_uno.sub('1', re_cl_html.sub('', m.group(5).strip())).strip())
-        section_num = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), section_num)
-        section_num = re_mat_new.sub('', section_num).strip()
-        m2 = re_mat_romans.match(section_num)
-        if m2:
-            rest = section_num.replace(m2.group(0), '')
-            section_num = romans(m2.group(0))
-            if rest: section_num = str(section_num) + rest
-        # Get parent section id to build current section id
-        section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"])
-        section["id"] = section_par + section_typ + str(section_num)
+
+        if "TITRE LIMINAIRE" in line:
+            section["id"] = "TL"
+        else:
+            section_num = re_cl_uno.sub('1', re_cl_sec_uno.sub('1', re_cl_html.sub('', m.group(5).strip())).strip())
+            section_num = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), section_num)
+            section_num = re_mat_new.sub('', section_num).strip()
+            m2 = re_mat_romans.match(section_num)
+            if m2:
+                rest = section_num.replace(m2.group(0), '')
+                section_num = romans(m2.group(0))
+                if rest: section_num = str(section_num) + rest
+            # Get parent section id to build current section id
+            section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"]) if section["id"] != "TL" else "";
+            section["id"] = section_par + section_typ + str(section_num)
+
     # Identify titles and new article zones
     elif (re_mat_end.match(line) and donearticles != 0) or (read == 2 and re_mat_ann.match(line)):
         break
-    elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line):
+    elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line) or re.match(r"^Article ", line):
         line = cl_line
         # Read a new article
         if re_mat_art.match(line):
@@ -323,6 +346,7 @@ for text in soup.find_all("p"):
                 article = None
             pr_js(section)
             read = 0
+
     # Read articles with alineas
     if read == 2 and not m:
         # Find extra status information
