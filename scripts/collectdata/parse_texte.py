@@ -21,6 +21,8 @@ re_definitif = re.compile(ur'<p[^>]*align[=:\s\-]*center"?>\(?<(b|strong)>\(?tex
 
 clean_texte_regexps = [
     (re.compile(r'[\n\t\r\s]+'), ' '),
+    (re.compile(r'(<t[rdh][^>]*>) ?<p [^>]*> ?'), r'\1'),
+    (re.compile(r' ?</p> ?(</t[rdh]>)'), r'\1'),
     (re.compile(r'(>%s\s*[\dIVXLCDM]+(<sup>[eE][rR]?</sup>)?)\s+-\s+([^<]*?)\s*</p>' % section_titles.upper()), r'\1</p><p><b>\6</b></p>'),
 ]
 
@@ -190,6 +192,9 @@ def save_text(txt):
 
 blank_none = lambda x: x if x else ""
 re_cl_html = re.compile(r"<[^>]+>")
+re_cl_html_except_tables = re.compile(r"</?[^t/][^>]*>", re.I)
+re_fix_missing_table = re.compile(r'(<td>\W*)$', re.I)
+cl_html_except_tables = lambda x: re_fix_missing_table.sub(r'\1</td></tr></tbody></table>', re_cl_html_except_tables.sub('', x)).strip().replace('> ', '>').replace(' <', '<').replace('<td><tr>', '<td></td></tr><tr>')
 re_cl_par  = re.compile(r"[()]")
 re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
 re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
@@ -326,6 +331,8 @@ for text in soup.find_all("p"):
             continue
         if re_mat_dots.match(line):
             continue
+        if "<table>" in line:
+            cl_line = cl_html_except_tables(line)
         line = re_clean_art_spaces2.sub('. - ', re_clean_art_spaces.sub(r'\1', re_clean_idx_spaces.sub(r'\1. ', re_mat_new.sub(" ", cl_line).strip())))
         # Clean low/upcase issues with BIS TER etc.
         line = line.replace("oeUVRE", "OEUVRE")
