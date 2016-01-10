@@ -9,6 +9,7 @@ import urlparse
 SENAT_URL = 'http://www.senat.fr'
 DOSSIER_ID_RE = re.compile('dossier-legislatif/([^/]+)\.html$')
 LEGISLATURE_RE = re.compile('(\d+)-\d+')
+DATE_RE = re.compile('(?: le |\()(\d+\s+\w+\s+\d{4})', re.UNICODE)
 
 
 def parse_dossier_senat(url, html):
@@ -125,12 +126,12 @@ def find_stage_and_step(element):
 
 
 def parse_date(text):
-    splitted_text = text.split(' le ')
+    match = DATE_RE.search(text)
 
-    if len(splitted_text) == 1:
-        return
+    if not match:
+        return ''
 
-    date = dateparser.parse(splitted_text[1], languages=['fr'])
+    date = dateparser.parse(match.groups()[0], languages=['fr'])
 
     return date.strftime('%Y-%m-%d') if date else ''
 
