@@ -2,48 +2,143 @@
 
 from bs4 import BeautifulSoup
 
+import dateparser
 import re
+import urlparse
 
-legislature_re = re.compile('dossier-legislatif/\w+(\d\d)-\d+.html')
+SENAT_URL = 'http://www.senat.fr'
+DOSSIER_ID_RE = re.compile('dossier-legislatif/([^/]+)\.html$')
+LEGISLATURE_RE = re.compile('(\d+)-\d+')
 
 
 def parse_dossier_senat(url, html):
     soup = BeautifulSoup(html)
 
+    dossier_id = DOSSIER_ID_RE.search(url).groups()[0]
+
     return {
         'url': url,
-        'legislature': legislature_re.search(url).groups()[0],
+        'dossier_id': dossier_id,
+        'legislature': LEGISLATURE_RE.search(dossier_id).groups()[0],
         'short_title': soup.find('title').text.split(' - ')[0],
         'title': soup.find('meta', attrs={'name': 'Description'})['content'],
-        'steps': [parse_timeline_li(soup, li) for li in soup.find(id='block-timeline').find_all('li')]
+        'steps': list(step_gen(soup))
     }
 
 
-def parse_timeline_li(soup, li):
-    a = li.find('a')
-    step_id = a['href'].replace('#', '')
+def step_gen(soup):
+    current_stage = None
 
-    items = [parse_timeline_li_item(item_) for item_ in soup.find(id=step_id).find_all('li')]
+    for element in soup.find_all(id=re.compile('timeline-\d+')):
+        stage, step = find_stage_and_step(element)
 
-    ems = li.find_all('em')
+        if stage:
+            current_stage = stage
 
-    return {
-        'date': ems[-1].text,
-        'title': a['title'].split('| ')[1],
-        'items': items,
-        'name': ems[0].text if len(ems) > 1 else ''
-    }
+        documents = list(parse_documents(element))
+
+        if not documents:
+            continue
+
+        yield {
+            'stage': current_stage,
+            'step': step,
+            'documents': list(parse_documents(element)),
+            'place': find_place(documents) if current_stage != 'CMP' else 'CMP'
+        }
 
 
-def parse_timeline_li_item(item):
-    links = [link for link in item.find_all('a') if link.has_attr('href')]
+def parse_documents(element):
+    for li in element.find_all('li'):
+        if li.find_all('ul'):
+            continue
 
-    if not links:
+        for anchor in li.find_all('a'):
+            if not anchor.has_attr('href') or 'senateur' in anchor['href']:
+                continue
+
+            document_type = ''
+
+            if anchor.text.startswith('Texte'):
+                document_type = 'texte'
+            elif anchor.text.startswith('Rapport'):
+                document_type = 'rapport'
+            elif anchor.text.startswith('Avis'):
+                document_type = 'avis'
+            elif anchor.text.startswith('Amendements'):
+                document_type = 'amendement'
+            elif anchor.text.startswith('Compte'):
+                document_type = 'compte-rendu'
+            elif anchor.text.startswith(u'Résumé des débats'):
+                document_type = 'debates-summary'
+            elif anchor.text.startswith('scrutins'):
+                document_type = 'scrutin'
+
+            yield {
+                'type': document_type,
+                'url': urlparse.urljoin(SENAT_URL, anchor['href']),
+                'date': parse_date(li.text)
+            }
+
+
+def find_place(documents):
+    first_url = documents[0]['url']
+
+    if 'assemblee-nationale.fr' in first_url:
+        return 'assemblee'
+
+    if 'senat.fr' in first_url:
+        return 'senat'
+
+    if 'conseil-constitutionnel.fr' in first_url:
+        return 'conseil constitutionnel'
+
+    if 'legifrance.gouv.fr' in first_url:
+        return 'gouvernement'
+
+
+def find_stage_and_step(element):
+    picto = element.find(class_='picto')
+    stage = picto.find('em').text if picto and picto.find('em') else ''
+    src = element.find(attrs={'href': '#block-timeline'}).find('img')['src']
+
+    if src.endswith('01_on.png'):
+        return stage, 'depot'
+
+    if src.endswith('02_on.png'):
+        return stage, 'depot'
+
+    if src.endswith('03_on.png'):
+        return stage, 'commission'
+
+    if src.endswith('04_on.png'):
+        return stage, 'hemicycle'
+
+    if src.endswith('05_on.png'):
+        return 'CMP', 'CMP'
+
+    if src.endswith('06_on.png'):
+        return 'constitutionnalité', 'CC'
+
+    if src.endswith('07_on.png'):
+        return 'promulgation', 'JO'
+
+
+def parse_date(text):
+    splitted_text = text.split(' le ')
+
+    if len(splitted_text) == 1:
         return
 
-    return {
-        'url': links[0]['href'] if len(links) > 0 else '',
-        'text': item.text,
-        'name': links[0].text
-    }
+    date = dateparser.parse(splitted_text[1], languages=['fr'])
 
+    return date.strftime('%Y-%m-%d') if date else ''
+
+
+if __name__ == '__main__':
+    import json
+    import requests
+    import sys
+
+    dossier_url = sys.argv[1]
+    print json.dumps(parse_dossier_senat(dossier_url, requests.get(dossier_url).content), indent=4)
