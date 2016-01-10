@@ -2,7 +2,7 @@
 
 import codecs
 
-from lawfactory.dossier.parser import parse_dossier_senat
+from lawfactory.dossier.senat_parser import parse_dossier_senat
 
 
 def get_dossier_pjl14_406():
