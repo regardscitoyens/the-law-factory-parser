@@ -9,7 +9,7 @@ import urlparse
 SENAT_URL = 'http://www.senat.fr'
 DOSSIER_ID_RE = re.compile('dossier-legislatif/([^/]+)\.html$')
 LEGISLATURE_RE = re.compile('(\d+)-\d+')
-DATE_RE = re.compile('(?: le |\()(\d+\s+\w+\s+\d{4})', re.UNICODE)
+DATE_RE = re.compile('(?: le |\()(\d+\w*\s+\w+\s+\d{4})', re.UNICODE)
 
 
 def parse_dossier_senat(url, html):

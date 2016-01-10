@@ -5,17 +5,25 @@ import codecs
 from lawfactory.dossier.parser import parse_dossier_senat
 
 
-def test_dossier_pjl14_424():
+def get_dossier_pjl14_424():
     url = 'http://www.senat.fr/dossier-legislatif/pjl14-424.html'
     html = codecs.open('tests/dossier/resources/pjl14-424.html', encoding='iso-8859-1')
 
-    data = parse_dossier_senat(url, html)
+    return parse_dossier_senat(url, html)
+
+
+def test_global_params():
+    data = get_dossier_pjl14_424()
 
     assert data['legislature'] == '14'
     assert data['dossier_id'] == 'pjl14-424'
     assert data['short_title'] == 'Renseignement'
     assert data['title'] == 'projet de loi relatif au renseignement'
     assert len(data['steps']) == 10
+
+
+def test_first_lecture():
+    data = get_dossier_pjl14_424()
 
     expected_steps = [{
         'place': 'assemblee', 

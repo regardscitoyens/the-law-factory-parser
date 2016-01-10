@@ -5,17 +5,25 @@ import codecs
 from lawfactory.dossier.parser import parse_dossier_senat
 
 
-def test_dossier_pjl14_406():
+def get_dossier_pjl14_406():
     url = 'http://www.senat.fr/dossier-legislatif/pjl14-406.html'
     html = codecs.open('tests/dossier/resources/pjl14-406.html', encoding='iso-8859-1')
 
-    data = parse_dossier_senat(url, html)
+    return parse_dossier_senat(url, html)
+
+
+def test_global_params():
+    data = get_dossier_pjl14_406()
 
     assert data['legislature'] == '14'
     assert data['dossier_id'] == 'pjl14-406'
     assert data['short_title'] == u'Santé'
     assert data['title'] == u'projet de loi de modernisation de notre système de santé'
     assert len(data['steps']) == 15
+
+
+def test_first_lecture():
+    data = get_dossier_pjl14_406()
 
     steps = [{
         'place': 'assemblee', 
@@ -59,6 +67,14 @@ def test_dossier_pjl14_406():
         }]
     }]
 
+    assert data['steps'][0] == steps[0]
+    assert data['steps'][1] == steps[1]
+    assert data['steps'][2] == steps[2]
+
+
+def test_cmp():
+    data = get_dossier_pjl14_406()
+
     cmp_step = {
         'place': 'CMP',
         'step': 'commission',
@@ -77,6 +93,12 @@ def test_dossier_pjl14_406():
             'type': ''
         }]
     }
+
+    assert data['steps'][6] == cmp_step
+
+
+def test_new_lecture():
+    data = get_dossier_pjl14_406()
 
     assemble_new_lecture_step = {
         'place': 'assemblee',
@@ -111,10 +133,6 @@ def test_dossier_pjl14_406():
         }]
     }
 
-    assert data['steps'][0] == steps[0]
-    assert data['steps'][1] == steps[1]
-    assert data['steps'][2] == steps[2]
-    assert data['steps'][6] == cmp_step
     assert data['steps'][7] == assemble_new_lecture_step
     assert data['steps'][10] == senat_new_lecture_step
     assert data['steps'][13] == definitive_lecture_step
