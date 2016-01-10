@@ -17,7 +17,7 @@ def test_dossier_pjl14_424():
     assert data['title'] == 'projet de loi relatif au renseignement'
     assert len(data['steps']) == 10
 
-    expected_first_step = {
+    expected_steps = [{
         'place': 'assemblee', 
         'step': 'depot',
         'stage': u'1ère lecture',
@@ -26,9 +26,7 @@ def test_dossier_pjl14_424():
             'date': '2015-03-19',
             'type': 'texte'
         }]
-    }
-
-    expected_second_step = {
+    }, {
         'place': 'assemblee',
         'step': 'commission',
         'stage': u'1ère lecture',
@@ -45,7 +43,24 @@ def test_dossier_pjl14_424():
             'date': '2015-03-31',
             'type': 'avis'
         }]
-    }
+    }, {
+        'place': 'assemblee',
+        'step': 'hemicycle',
+        'stage': u'1ère lecture',
+        'documents': [{
+            'url': 'http://www.assemblee-nationale.fr/14/ta/ta0511.asp',
+            'date': '2015-05-05',
+            'type': 'texte'
+        }]
+    }, {
+        'place': 'senat',
+        'step': 'depot',
+        'stage': u'1ère lecture',
+        'documents': [{
+            'url': 'http://www.senat.fr/leg/pjl14-424.html',
+            'date': '2015-05-05',
+            'type': 'texte'
+        }]
+    }]
 
-    assert data['steps'][0] == expected_first_step
-    assert data['steps'][1] == expected_second_step
+    assert data['steps'][:4] == expected_steps
