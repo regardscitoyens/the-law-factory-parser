@@ -17,8 +17,10 @@ def simplify_sort(sort):
     sort = sort.lower()
     if sort in u"adopté favorable":
         return u"adopté"
-    if sort in u"rejeté indéfini":
-        return sort
+    if sort in u"rejeté ":
+        return u"rejeté"
+    if sort in u"indéfini":
+        return u"en attente"
     return u"non-voté"
 
 def find_groupe(amd):
