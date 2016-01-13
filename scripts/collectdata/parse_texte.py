@@ -145,7 +145,7 @@ html_replace = [
     (re.compile(r"</b>(\s*)<b>", re.I), r"\1"),
     (re.compile(r"</?sup>", re.I), ""),
     (re.compile(r"^((<[bi]>)*)\((S|AN)[12]\)\s*", re.I), r"\1"),
-    (re.compile(r"^(<b>Article )\d+\s*<s>\s*", re.I), r"\1"),
+    (re.compile(r"^(<b>Article\s*)\d+\s*<s>\s*", re.I), r"\1"),
     (re.compile(r"<s>(.*)</s>", re.I), ""),
     (re.compile(r"</?s>", re.I), ""),
     (re.compile(r"\s*</?img>\s*", re.I), ""),
@@ -155,12 +155,16 @@ html_replace = [
     (re.compile(r'<strike>[^<]*</strike>', re.I), ''),
     (re_clean_spaces, " "),
 ]
+
+
 def clean_html(t):
     for regex, repl in html_replace:
         t = regex.sub(repl, t)
     return t.strip()
 
 re_clean_et = re.compile(r'(,|\s+et)\s+', re.I)
+
+
 def pr_js(dic):
     # Clean empty articles with only "Supprimé" as text
     if not dic:
@@ -180,11 +184,13 @@ def pr_js(dic):
             return
     print json.dumps(dic, sort_keys=True, ensure_ascii=False).encode("utf-8")
 
+
 def save_text(txt):
     if "done" not in txt:
         pr_js(txt)
     txt["done"] = True
     return txt
+
 
 blank_none = lambda x: x if x else ""
 re_cl_html = re.compile(r"<[^>]+>")
@@ -193,7 +199,7 @@ re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
 re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
 re_mat_sec = re.compile(r"%s(\s+(.+)e?r?)" % section_titles, re.I)
 re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
-re_mat_art = re.compile(r"articles?\s+([^(]*)(\([^)]*\))?$", re.I)
+re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
 re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*</b>\s*$")
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
@@ -227,9 +233,10 @@ indextext = -1
 curtext = -1
 srclst = []
 section = {"type": "section", "id": ""}
+
 for text in soup.find_all("p"):
     line = clean_html(str(text))
-    #print >> sys.stderr, read, curtext, indextext, line
+
     if re_stars.match(line):
         continue
     if line == "<b>RAPPORT</b>" or line == "Mesdames, Messieurs,":

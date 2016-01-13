@@ -23,7 +23,7 @@ bash generate_data_from_senat_url.sh http://www.senat.fr/dossier-legislatif/pjl1
 ls data/pjl12-614/
 ```
 
-### Dependencies ###
+## Dependencies ##
 
 A few perl and python dependencies are required. You can install them with the following:
 
@@ -55,7 +55,7 @@ It contains :
 
 The following script generate git repository for a given law id :
 
-    bash scripts/gitlaw/git.sh <LAW_ID>
+    bash <PATH_TO_the-law-factory-parser>/scripts/gitlaw/git.sh <LAW_ID>
 
 It creates a gitlab repository, generate all the commits for the different steps and publish it on gitlab.
 
@@ -67,6 +67,13 @@ It uses *data/LAW_ID* as a working directory.
 
 To execute it :
 
-    bash scripts/gitlaw/postgit.sh <LAW_ID>
+    bash <PATH_TO_the-law-factory-parser>/scripts/gitlaw/postgit.sh <LAW_ID>
 
 It uses the data contained into *data/LAW_ID*.
+
+## Serve bills locally for the [law factory website](https://github.com/regardscitoyens/the-law-factory)
+
+To be used in the law factory app, we need to enable cors. Just install *http-server* nodejs lib and run it in data directory on a given port (8002 in the example) :
+
+    npm install -g http-server
+    cd data & http-server -p 8002 --cors
