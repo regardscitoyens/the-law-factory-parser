@@ -7,6 +7,13 @@ from common import *
 context = Context(sys.argv)
 procedure = context.get_procedure()
 
+re_short_orga = re.compile(ur'(,| et) (à |aux |d).*$')
+def clean_orga(orga):
+    orga = orga.replace(u" de l'assemblée nationale", "")
+    orga = orga.replace(u" du sénat", "")
+    orga = re_short_orga.sub('', orga)
+    return orga
+
 def init_section(dic, key, inter, order):
     if inter[key] not in dic:
         dic[inter[key]] = {
@@ -19,6 +26,8 @@ def init_section(dic, key, inter, order):
             'groupes': {},
             'order': order
         }
+        if key == 'seance_titre' and not inter['section']:
+            dic[inter[key]]['commission'] = clean_orga(inter['seance_lieu'])
         order += 1
     dic[inter[key]]['last_date'] = inter['date']
     return order
