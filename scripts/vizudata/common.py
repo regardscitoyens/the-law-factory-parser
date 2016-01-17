@@ -19,15 +19,16 @@ def open_csv(dirpath, filename, delimiter=";"):
             return data
     except Exception as e:
         print >> sys.stderr, type(e), e
-        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
+        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath.encode('utf-8')))
         exit(1)
 
 def open_json(dirpath, filename):
     try:
         with open(os.path.join(dirpath, filename), 'r') as f:
             return json.load(f)
-    except:
-        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
+    except Exception as e:
+        print >> sys.stderr, type(e), e
+        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath.encode('utf-8')))
         exit(1)
 
 def print_json(dico, filename=None):
