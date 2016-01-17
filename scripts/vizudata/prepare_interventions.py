@@ -63,16 +63,36 @@ re_gouv = re.compile(u'(ministre|garde.*sceaux|secr[eéÉ]taire.*[eéÉ]tat|haut
 re_parl = re.compile(u'(d[eéÉ]put[eéÉ]|s[eéÉ]nateur|membre du parlement|parlementaire)', re.I)
 re_rapporteur = re.compile(ur'((vice|co|pr[eéÉ]sidente?)[,\-\s]*)?rapporte', re.I)
 steps = {}
+
+re_id_laststep = re.compile(r'/[^/\d]*(\d+)\D[^/]*$')
+id_step = None
+
 for step in procedure['steps']:
     done_links = {}
+    id_laststep = id_step
+    try:
+        id_step = re_id_laststep.search(step["source_url"]).group(1)
+    except:
+        id_step = None
     if not ('has_interventions' in step and step['has_interventions']):
         continue
     intervs = []
     step['intervention_files'].sort()
     warndone = []
     for interv_file in step['intervention_files']:
-        for i in open_json(os.path.join(context.sourcedir, 'procedure', step['intervention_directory']), "%s.json" % interv_file)['seance']:
+        seance = open_json(os.path.join(context.sourcedir, 'procedure', step['intervention_directory']), "%s.json" % interv_file)['seance']
+        has_tag_loi = False
+        if id_laststep:
+            for i in seance:
+                if {"loi": id_laststep} in i['intervention']['lois']:
+                    has_tag_loi = True
+                    break
+        for i in seance:
             del(i['intervention']['contenu'])
+            if has_tag_loi and {"loi": id_laststep} not in i['intervention']['lois']:
+                if context.DEBUG:
+                    print >> sys.stderr, "SKIPPING interv " + i['intervention']['id'] + " with missing tag loi"
+                continue
             intervs.append(i)
 
     typeparl, urlapi = identify_room(intervs, 'intervention')
