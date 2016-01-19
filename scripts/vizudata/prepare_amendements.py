@@ -23,6 +23,12 @@ def simplify_sort(sort):
         return u"en attente"
     return u"non-voté"
 
+re_clean_first = re.compile(r'^(.*?)(,| et) .*$')
+def first_author(signataires):
+    if "gouvernement" in signataires.lower():
+        return ""
+    return re_clean_first.sub(ur'\1, …', signataires)
+
 def find_groupe(amd):
     if amd['signataires'] and "gouvernement" in amd['signataires'].lower():
         return "Gouvernement"
@@ -98,7 +104,8 @@ for step in procedure['steps']:
           'date': a['date'],
           'sort': simplify_sort(a['sort']),
           'groupe': gpe,
-          'id_api': a['id']
+          'id_api': a['id'],
+          'aut': first_author(a['signataires'])
         })
 
         cosign = []
