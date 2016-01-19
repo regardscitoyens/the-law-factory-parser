@@ -34,8 +34,11 @@ def open_json(dirpath, filename):
 def print_json(dico, filename=None):
     if filename:
         try:
-            with open(filename, 'w') as f:
+            with open("%s.tmp" % filename, 'w') as f:
                 f.write(json.dumps(dico, ensure_ascii=False).encode('utf8'))
+            if os.path.exists(filename):
+                os.remove(filename)
+            os.rename("%s.tmp" % filename, filename)
         except Exception as e:
             print >> sys.stderr, type(e), e
             sys.stderr.write("ERROR: Could not write in file %s" % filename)
