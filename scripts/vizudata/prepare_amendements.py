@@ -17,6 +17,8 @@ def simplify_sort(sort):
         return u"adopté"
     if sort in u"rejeté ":
         return u"rejeté"
+    if sort in u"indéfini":
+        return u"en attente"
     return u"non-voté"
 
 def find_groupe(amd):
