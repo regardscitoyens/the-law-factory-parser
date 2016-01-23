@@ -6,6 +6,7 @@ use Data::Dumper;
 use utf8;
 
 $dossier_url = shift;
+$debug = shift;
 if ($dossier_url =~ /\/([^\/]+)\.html$/) {
 	$dossiersenat = $1;
 }
@@ -20,6 +21,7 @@ if (!$dossier_url) {
 %mois = ('janvier'=>'01', 'fvrier'=>'02', 'mars'=>'03', 'avril'=>'04', 'mai'=>'05', 'juin'=>'06', 'juillet'=>'07', 'aot'=>'08', 'septembre'=>'09','octobre'=>'10','novembre'=>'11','dcembre'=>'12');
 $a = WWW::Mechanize->new();
 $a->get($dossier_url);
+print STDERR "Dossier $dossier_url downloaded\n" if($debug);
 $content = $a->content;
 $a2 = WWW::Mechanize->new(autocheck => 0);
 
@@ -34,6 +36,7 @@ if ($content =~ /Description" content="([^"]+)"/) {
     $titrelong = $1;
     utf8::encode($titrelong);
 }
+print "Titre found: $titrelong\n" if ($debug);
 
 #If no link to the texte or rapport provided, fake one
 $content =~ s/<a name="[^"]*"><\/a>//g;
@@ -57,26 +60,42 @@ if ($content =~ /timeline-1[^>]*<em>(\d{2})\/(\d{2})\/(\d{2})<\/em>/) {
 }
 @date=();
 $p = HTML::TokeParser->new(\$content);
+print STDERR "Begin caroussel\n" if ($debug);
 while ($t = $p->get_tag('div')) {
     if ($t->[1]{id} =~ /block-timeline/) {
         $p->get_tag('ul');
 	while (($t = $p->get_tag('li', '/ul')) &&  $t->[0] eq 'li') {
-	    $t = $p->get_tag('a');
+	    $t = $p->get_tag('a', '/ul');
+	    print "a or /ul tag found: ".$t->[0]."\n" if ($debug);
+            if ($t->[0] eq '/ul') {
+                print STDERR "</ul> found : end of caroussel\n" if ($debug);
+                last;
+            }
 	    if ($t->[1]{href} =~ /timeline-(\d+)/) {
 		$id = $1;
+		print STDERR "an id found: $id\n" if ($debug);
 	    }
-	    $t = $p->get_tag('em');
+	    $t = $p->get_tag('em', '/ul');
+	    if ($t->[0] eq '/ul') {
+		print STDERR "</ul> found : end of caroussel\n" if ($debug);
+		last;
+	    }
 	    $txt = $p->get_text('/em');
+	    print "em txt found: $txt\n" if ($debug);
 	    if ($txt =~ /(\d{2})\/(\d{2})\/(\d{2})/) {
 		$date[$id] = '20'.$3.'-'.$2.'-'.$1;
+		print STDERR "date found: ".$date[$id]."\n" if ($debug);
 	    }
 	}
     }
     if ($t->[1]{id} =~ /^timeline-(\d+)/) {
+	print STDERR "an id found: $id\n" if ($debug);
 	$id = $1;
 	last;
     }
 }
+
+print STDERR "Step id DONE\n" if ($debug);
 
 $date = $date[1];
 $oldstade = "";
@@ -84,6 +103,7 @@ $ok = 1;
 @lines = ();
 while ($ok) {
     $t = $p->get_tag('em', 'img', 'a', 'div', 'h3');
+    print STDERR "tag found: ".$t->[0]."\n" if ($debug);
     if($t->[0] eq 'em') {
 	$etape = $p->get_text('/em');
 	utf8::encode($etape);
@@ -101,6 +121,7 @@ while ($ok) {
 	    $chambre = "assemblee";
 	    $stade = 'depot';
 	}
+	print STDERR "step: $chambre $stade\n" if ($debug);
     }elsif($t->[0] eq 'a' && $t->[1]{href} !~ /^\#/) {
 	if ($t->[1]{href} =~ /\/(\d+)\/dossiers\/([^\.]+)\./) {
 		if ($1 !~ /_scr$/) {
@@ -110,6 +131,7 @@ while ($ok) {
 	}
     $name = $p->get_text('/a');
     $url = $t->[1]{href};
+    print STDERR "link detail: $name $url\n" if ($debug);
     if ($url !~ /\/motion/ && ($url =~ /\/leg\/p/ || $name =~ /Texte/ || ($name =~ /Rapport/ && ($url =~ /^\/rap\// || $url =~ /le.fr\/\d+\/rapports\/r\d+(-a0)?\./)) || $url =~ /(conseil-constitutionnel|legifrance)/)) {
 	    $url = "http://www.senat.fr".$url if ($url =~ /^\//);
 	    $url = "UNKNOWN" if ($url !~ /^http/);
@@ -241,6 +263,9 @@ while ($ok) {
 	    $chambre = 'CMP';
             $etape = 'CMP';
 	}
+    }elsif(!$t->[0]) {
+	print STDERR "WARN: stopped (unrecognize tag '".$t->[0]."')\n";
+	last;
     }
 }
 
