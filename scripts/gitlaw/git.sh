@@ -11,24 +11,36 @@ fi
 BILL=$1
 mkdir -p "data/"$BILL
 cd "data/"$BILL
+if ! test -e .git ; then
 git init
+fi
 
 wget -q "http://www.lafabriquedelaloi.fr/api/"$BILL"/procedure.zip"
 unzip -q procedure.zip
 rm procedure.zip
-mv procedure .procedure
+rm -rf .procedure/[0-9]*
+rsync -a procedure/ .procedure
+rm -rf procedure
+
 GITLAB_GROUP=$($GITLAB group list | grep -B 1 parlement | head -n 1 | sed 's/.* //')
 
-find . -name 'A*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/A|/Article_|')'"' ; done |sh
-find . -name 'SS*' -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/SS|/SousSection_|')'"' ; done |sh
-find . -name 'S*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/S|/Section_|')'"' ; done |sh
-find . -name 'C*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/C|/Chapitre_|')'"' ; done |sh
-find . -name 'T*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/T|/Titre_|')'"' ; done |sh
-find . -name 'L*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/L|/Livre_|')'"' ; done |sh
-find . -name 'V*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/V|/Volume_|')'"' ; done |sh
+find .procedure -name 'A*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/A|/Article_|')'"' ; done |sh
+find .procedure -name 'SS*' -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/SS|/SousSection_|')'"' ; done |sh
+find .procedure -name 'S*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/S|/Section_|')'"' ; done |sh
+find .procedure -name 'C*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/C|/Chapitre_|')'"' ; done |sh
+find .procedure -name 'T*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/T|/Titre_|')'"' ; done |sh
+find .procedure -name 'L*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/L|/Livre_|')'"' ; done |sh
+find .procedure -name 'V*'  -type d | while read dir ; do echo mv '"'$dir'"' '"'$(echo $dir | sed 's|/V|/Volume_|')'"' ; done |sh
 
+mkdir -p .procedure/lock
+LOCK=$(pwd)"/.procedure/lock/"
+
+if ! test -e $LOCK"/gitlabcreated.lock" ;  then
 echo $GITLAB project create $(head -n 1 .procedure/procedure.csv  | awk -F ';' '{print " --description=\""$2"\" --name='$BILL'"}') --namespace-id=$GITLAB_GROUP --public=true | sh
 sleep 2
+touch $LOCK"/gitlabcreated.lock"
+fi
+
 touch /tmp/ChangeLog.$$
 cat .procedure/procedure.csv | while read line; do
   MSG=$(echo $line | awk -F ';' '{if ($8 == 1) print "Dépot du texte"; if ($8 != 1 && $11 != "depot" && $7 != "XX") print "Travaux en "$11", "$9;}'); 
@@ -37,6 +49,8 @@ cat .procedure/procedure.csv | while read line; do
   DATE=$(echo $line | awk -F ';' '{print $14}')
   HDATE=$(date --date="$DATE" -R);
 
+
+  if ! test -e $LOCK"/"$ID".lock"; then
   echo ".procedure/"$ID"*/texte";
   if test -e .procedure/$ID*/texte ; then 
     rm -rf *
@@ -91,9 +105,13 @@ cat .procedure/procedure.csv | while read line; do
     git remote remove origin 
     git remote add origin "http://"$GITUSER":"$GITPASSWD"@git.lafabriquedelaloi.fr/parlement/"$BILL".git"
     git push -u origin master
+
+    touch $LOCK"/"$ID".lock"
+
+  fi
   fi
 done
 
-rm /tmp/ChangeLog.$$ /tmp/modif.$$.txt
+rm -f /tmp/ChangeLog.$$ /tmp/modif.$$.txt
 
 cd -
