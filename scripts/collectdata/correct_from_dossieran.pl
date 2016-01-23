@@ -9,13 +9,17 @@ my $debug = shift();
 my $procedure = {};
 my $i = 0;
 my @row;
-while ((@row = split(/;/, <STDIN>)) && ($#row > 10)) {
+my @STDIN = <STDIN>;
+foreach my $stdin (@STDIN) {
+	@row = split(/;/, $stdin);
+	next unless ($#row > 10);
         chomp($row[$#row]);
 	@{$procedure->{$row[6]}} = @row;
 }
 
 if (($#{$procedure->{'00'}} > -1) && (!$procedure->{'00'}[4] || !$procedure->{'00'}[3])) {
 	print STDERR "WARNING: no dossier AN found, skipping corrector\n";
+	print join('', @STDIN);
 	exit(0);
 }
 
