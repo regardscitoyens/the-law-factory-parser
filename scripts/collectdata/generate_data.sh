@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if ! test "$1"; then
-	echo "USAGE: $0 DOSSIER_DESC.CSV [DATADIR]"
+	echo "USAGE: $0 DOSSIER_DESC.CSV [DATADIR] [WITHOUTCACHE]"
 	printf "\t DOSSIER_DESC.CSV: CSV décrivant un ou plusieurs dossiers parlementaires générés via parse_dosser.pl (de NosSénateurs)\n"
 	printf "\t DATADIR: répertoire où vont être mises les données (par defaut data/)"
 fi
@@ -21,14 +21,18 @@ function download {
   cat $cache
 }
 
+if test "$3"; then
+	CACHEVAL=$(date | md5sum | sed 's/ .*//')
+fi
+
 mkdir -p $data"/../.cache/web" ; cachedir=$data"/../.cache/web"
 mkdir -p $data/.tmp/html $data/.tmp/json
 rm -f $data/.tmp/json/articles_laststep.json
 
 for url in "2007-2012.nosdeputes" "www.nosdeputes" "www.nossenateurs"; do
-  download "http://$url.fr/organismes/groupe/json?$$" > "$data/../$url-groupes.json"
+  download "http://$url.fr/organismes/groupe/json" > "$data/../$url-groupes.json"
   typeparl=$(echo $url | sed 's/^.*nos//')
-  download "http://$url.fr/$typeparl/json?$$" > "$data/../$url.parlementaires.json"
+  download "http://$url.fr/$typeparl/json?"$CACHEVAL > "$data/../$url.parlementaires.json"
 done
 
 # Fix occasional wrong order of votes post CMP
@@ -194,10 +198,10 @@ cat $1 | while read line ; do
     #Amendements export
     if [ -z "$echec" ]; then
       mkdir -p "$projectdir/amendements"
-      download "$urlchambre/amendements/$amdidtext/csv?$$" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json csv > "$projectdir/amendements/amendements.csv"
+      download "$urlchambre/amendements/$amdidtext/csv?"$CACHEVAL | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json csv > "$projectdir/amendements/amendements.csv"
       if grep [a-z] "$projectdir/amendements/amendements.csv" > /dev/null; then
-    	download "$urlchambre/amendements/$amdidtext/json?$$" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json json > "$projectdir/amendements/amendements.json"
-    	download "$urlchambre/amendements/$amdidtext/xml?$$" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json xml > "$projectdir/amendements/amendements.xml"
+    	download "$urlchambre/amendements/$amdidtext/json?"$CACHEVAL | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json json > "$projectdir/amendements/amendements.json"
+    	download "$urlchambre/amendements/$amdidtext/xml?"$CACHEVAL | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json xml > "$projectdir/amendements/amendements.xml"
       else
     	rm "$projectdir/amendements/amendements.csv"
     	rmdir $projectdir/amendements
@@ -220,15 +224,15 @@ cat $1 | while read line ; do
         loiid=$oldamdidtext
       fi
       id_seance=""
-      download "$urlchambre/seances/$loiid/csv$commission_or_hemicycle&$$" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
+      download "$urlchambre/seances/$loiid/csv$commission_or_hemicycle&"$CACHEVAL | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
         tmpseancecsv="."$id_seance".csv"
-        download "$urlchambre/seance/$id_seance/$loiid/csv?$$" > $tmpseancecsv
+        download "$urlchambre/seance/$id_seance/$loiid/csv?"$CACHEVAL > $tmpseancecsv
         if head -n 1 $tmpseancecsv | grep '[a-z]' > /dev/null; then
           seance_name=$(head -n 2 $tmpseancecsv | tail -n 1 | awk -F ';' '{print $4 "T" $5 "_" $1}' | sed 's/ //g')
           mkdir -p $inter_dir
           cat $tmpseancecsv > $inter_dir/$seance_name.csv
-          download "$urlchambre/seance/$id_seance/$loiid/json?$$" > $inter_dir/$seance_name.json
-          download "$urlchambre/seance/$id_seance/$loiid/xml?$$" > $inter_dir/$seance_name.xml
+          download "$urlchambre/seance/$id_seance/$loiid/json?"$CACHEVAL > $inter_dir/$seance_name.json
+          download "$urlchambre/seance/$id_seance/$loiid/xml?"$CACHEVAL > $inter_dir/$seance_name.xml
         fi
         rm $tmpseancecsv
       done
