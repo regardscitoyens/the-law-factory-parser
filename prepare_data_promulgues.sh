@@ -11,7 +11,7 @@ fi
 
 cat data/.cache/list_dossiers_senat.csv      |
 #grep ';"promulgu.*20\(0[8-9]\|1[0-9]\)";'    |
- grep ';"promulgu.*20\(1[4-9]\)";'  |
+ grep ';"promulgu.*20\(1[4-9]\)";'  | grep -vi "loi de finance" |
  while read line; do
   url=$(echo $line | sed 's/^.*";"\(http[^"]\+\)";.*$/\1/')
   id=$(echo $url | sed 's/.*dossier-legislatif.//' | sed 's/.html$//')
