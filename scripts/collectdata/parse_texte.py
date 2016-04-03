@@ -297,8 +297,8 @@ for text in soup.find_all("p"):
         if m.group(3) is not None:
             section_typ += "S"
 
-        if "TITRE LIMINAIRE" in line:
-            section["id"] = "TL"
+        if " LIMINAIRE" in line:
+            section_num = "L"
         else:
             section_num = re_cl_uno.sub('1', re_cl_sec_uno.sub('1', re_cl_html.sub('', m.group(5).strip())).strip())
             section_num = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), section_num)
@@ -308,9 +308,9 @@ for text in soup.find_all("p"):
                 rest = section_num.replace(m2.group(0), '')
                 section_num = romans(m2.group(0))
                 if rest: section_num = str(section_num) + rest
-            # Get parent section id to build current section id
-            section_par = re.sub(r""+section_typ+"\d.*$", "", section["id"]) if section["id"] != "TL" else "";
-            section["id"] = section_par + section_typ + str(section_num)
+        # Get parent section id to build current section id
+        section_par = re.sub(r""+section_typ+"[\dL].*$", "", section["id"])
+        section["id"] = section_par + section_typ + str(section_num)
 
     # Identify titles and new article zones
     elif (re_mat_end.match(line) or (read == 2 and re_mat_ann.match(line))):
