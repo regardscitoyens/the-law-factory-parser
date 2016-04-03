@@ -3,6 +3,8 @@
 
 import os, sys
 from common import *
+sys.path.append(os.path.join("..", "collectdata"))
+from sort_articles import compare_articles
 
 context = Context(sys.argv, load_parls=True)
 procedure = context.get_procedure()
@@ -20,6 +22,12 @@ def simplify_sort(sort):
     if sort in u"indéfini":
         return u"en attente"
     return u"non-voté"
+
+re_clean_first = re.compile(r'^(.*?)(,| et) .*$')
+def first_author(signataires):
+    if "gouvernement" in signataires.lower():
+        return ""
+    return re_clean_first.sub(ur'\1, …', signataires)
 
 def find_groupe(amd):
     if amd['signataires'] and "gouvernement" in amd['signataires'].lower():
@@ -61,6 +69,9 @@ for step in procedure['steps']:
 
     sujets = {}
     groupes = {}
+
+    fix_order = False
+    orders = []
     parls = {}
     links = {}
     idents = {}
@@ -72,12 +83,15 @@ for step in procedure['steps']:
             continue
         key = format_sujet(a['sujet'])
         if key not in sujets:
+            orders.append(key)
             sujets[key] = {
               'titre': key,
               'details': a['sujet'],
               'order': a['ordre_article'],
               'amendements': []
             }
+        if a['ordre_article'] > 9000:
+            fix_order = True
 
         gpe = find_groupe(a)
         if not gpe:
@@ -90,7 +104,8 @@ for step in procedure['steps']:
           'date': a['date'],
           'sort': simplify_sort(a['sort']),
           'groupe': gpe,
-          'id_api': a['id']
+          'id_api': a['id'],
+          'aut': first_author(a['signataires'])
         })
 
         cosign = []
@@ -118,6 +133,11 @@ for step in procedure['steps']:
             for cid in idents[hmd5]:
                 add_link(links, pid, cid)
             idents[hmd5].append(pid)
+
+    if fix_order:
+        orders.sort(compare_articles)
+        for i, k in enumerate(orders):
+            sujets[k]["order"] = i
 
     amdtsfile = os.path.join(context.sourcedir, 'viz', 'amendements_%s.json' % step['directory'])
     data = {'id_step': step['directory'],

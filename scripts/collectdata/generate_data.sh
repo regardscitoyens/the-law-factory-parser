@@ -40,24 +40,26 @@ if grep ";CMP;assemblee;hemicycle;" $1 > /dev/null && grep ";CMP;senat;hemicycle
   num_s=$(echo $line_s | awk -F ';' '{print $7}' | sed 's/^0//')
   min_num=$(($num_a<$num_s?$num_a:$num_s))
   url=$(echo $line_a | awk -F ';' '{print $12}')
-  escape=$(escapeit "$url")
-  download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape
-  if grep -i 'Texte d\(&eacute;\|.\)finitif' $data/.tmp/html/$escape > /dev/null && [ $min_num -ne $num_s ]; then
-    reorder=true
-  else
-    url=$(echo $line_s | awk -F ';' '{print $12}')
+  if [ ! -z "$url" ]; then
     escape=$(escapeit "$url")
     download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape
-    if grep -i "Texte d\(&eacute;\|.\)finitif" $data/.tmp/html/$escape > /dev/null && [ $min_num -ne $num_a ]; then
+    if grep -i 'Texte d\(&eacute;\|.\)finitif' $data/.tmp/html/$escape > /dev/null && [ $min_num -ne $num_s ]; then
       reorder=true
+    else
+      url=$(echo $line_s | awk -F ';' '{print $12}')
+      escape=$(escapeit "$url")
+      download $url | sed 's/iso-?8859-?1/UTF-8/i' > $data/.tmp/html/$escape
+      if grep -i "Texte d\(&eacute;\|.\)finitif" $data/.tmp/html/$escape > /dev/null && [ $min_num -ne $num_a ]; then
+        reorder=true
+      fi
     fi
-  fi
-  if $reorder; then
-    echo "INFO: Reordering CMP hemicycle steps to handle renumbered texte définitif last"
-    grep -v ";CMP;[a-z]*;hemicycle;" $1 > $1.tmp
-    echo "$line_a" | sed "s/\(;0*\)$num_a\(;[0-9]\+;CMP\)/\1$num_s\2/" >> $1.tmp
-    echo "$line_s" | sed "s/\(;0*\)$num_s\(;[0-9]\+;CMP\)/\1$num_a\2/" >> $1.tmp
-    sort $1.tmp > $1
+    if $reorder; then
+      echo "INFO: Reordering CMP hemicycle steps to handle renumbered texte définitif last"
+      grep -v ";CMP;[a-z]*;hemicycle;" $1 > $1.tmp
+      echo "$line_a" | sed "s/\(;0*\)$num_a\(;[0-9]\+;CMP\)/\1$num_s\2/" >> $1.tmp
+      echo "$line_s" | sed "s/\(;0*\)$num_s\(;[0-9]\+;CMP\)/\1$num_a\2/" >> $1.tmp
+      sort $1.tmp > $1
+    fi
   fi
 fi
 
@@ -81,7 +83,7 @@ cat $1 | while read line ; do
 	echo "$line;" >>  "$data/$dossier/procedure.csv"
     python procedure2json.py "$data/$dossier/procedure.csv" > "$data/$dossier/procedure.json"
     olddossier=$dossier
-	continue;
+	continue
   fi
   if echo $line | grep ';renvoi en commission;' > /dev/null ; then
     if ! test -s $data/.tmp/json/articles_antelaststep.json; then
@@ -90,6 +92,8 @@ cat $1 | while read line ; do
     fi
     head -n 1 $data/.tmp/json/articles_antelaststep.json | sed 's/^{\("expose": "\).*"\(, "id": "\)\([0-9]\+\)\(_[^"]*", \)/{"echec": true, \1Le texte est renvoyé en commission."\2'"$etapid"'\4/' > $data/.tmp/json/$escape
     tail -n $(($(cat $data/.tmp/json/articles_antelaststep.json | wc -l) - 1)) $data/.tmp/json/articles_antelaststep.json >> $data/.tmp/json/$escape
+  elif test -z "$url"; then
+    echo "MISSING URL $line"
   else
     depot="false"
     if [ "$stage" = "depot" ]; then
@@ -102,6 +106,9 @@ cat $1 | while read line ; do
       exit 1
     fi
   fi
+
+ if ! test -z "$url"; then # START AVOIDED PART WHEN MISSING TEXT
+
   # Complete missing intermediate depots from last step
   if [ $(cat $data/.tmp/json/$escape  | wc -l) -lt 2 ] && [ "$stage" = "depot" ] && [ "$order" != "00" ]; then
     echo "WARNING: creating depot step $projectdir from last step since no data found"
@@ -111,7 +118,7 @@ cat $1 | while read line ; do
   # Complete articles with missing "conforme" or "non-modifié" text for all steps except depots 1ère lecture
   if [ "$norder" != "1" ] && [ "$norder" != 4 ] && test -s $data/.tmp/json/articles_laststep.json; then
     anteprevious=""
-    if echo "$etape" | grep hemicycle > /dev/null; then
+    if echo "$etape" | grep hemicycle > /dev/null && test -s "$data/.tmp/json/articles_antelaststep.json"; then
       anteprevious="$data/.tmp/json/articles_antelaststep.json"
     fi
     previous="$data/.tmp/json/articles_laststep.json"
@@ -139,27 +146,35 @@ cat $1 | while read line ; do
       echec="échec"
     fi
   fi
+  if ! python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"; then
+    rm -rf "$projectdir"
+    echo "$line;$echec"
+    echo "ERROR creating arbo from $data/.tmp/json/$escape"
+    exit 1
+  fi
+ else
+  rm -f $data/.tmp/json/articles_laststep.json
+ fi # END AVOIDED PART WHEN MISSING TEXT
+
+  if test -s $data/.tmp/json/articles_laststep.json; then
+    cp -f $data/.tmp/json/articles_laststep.json $data/.tmp/json/articles_antelaststep.json
+  fi
+  if test -f $data/.tmp/json/$escape; then
+    if [ "$norder" != "1" ] || [ "$order" = "00" ]; then
+      cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
+    fi
+    if echo "$etape" | grep "_nouv.lect._assemblee_hemicycle" > /dev/null; then
+     cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_nouvlect.json
+    fi
+  fi
+
+
   if test "$dossier" = "$olddossier"; then
 	echo "$line;$echec" >>  "$data/$dossier/procedure.csv"
   else
     echo "$line;$echec" >  "$data/$dossier/procedure.csv"
   fi
   python procedure2json.py "$data/$dossier/procedure.csv" > "$data/$dossier/procedure.json"
-
-  if ! python json2arbo.py $data/.tmp/json/$escape "$projectdir/texte"; then
-    rm -rf "$projectdir"
-    echo "ERROR creating arbo from $data/.tmp/json/$escape"
-    exit 1
-  fi
-  if test -s $data/.tmp/json/articles_laststep.json; then
-    cp -f $data/.tmp/json/articles_laststep.json $data/.tmp/json/articles_antelaststep.json
-  fi
-  if [ "$norder" != "1" ] || [ "$order" = "00" ]; then
-    cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_laststep.json
-  fi
-  if echo "$etape" | grep "_nouv.lect._assemblee_hemicycle" > /dev/null; then
-   cp -f $data/.tmp/json/$escape $data/.tmp/json/articles_nouvlect.json
-  fi
 
   if echo $line | grep ';CMP;assemblee;' > /dev/null; then
     amdidtext=$amdidtextcmpa
@@ -179,10 +194,10 @@ cat $1 | while read line ; do
     #Amendements export
     if [ -z "$echec" ]; then
       mkdir -p "$projectdir/amendements"
-      download "$urlchambre/amendements/$amdidtext/csv" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json csv > "$projectdir/amendements/amendements.csv"
+      download "$urlchambre/amendements/$amdidtext/csv?$$" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json csv > "$projectdir/amendements/amendements.csv"
       if grep [a-z] "$projectdir/amendements/amendements.csv" > /dev/null; then
-    	download "$urlchambre/amendements/$amdidtext/json" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json json > "$projectdir/amendements/amendements.json"
-    	download "$urlchambre/amendements/$amdidtext/xml" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json xml > "$projectdir/amendements/amendements.xml"
+    	download "$urlchambre/amendements/$amdidtext/json?$$" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json json > "$projectdir/amendements/amendements.json"
+    	download "$urlchambre/amendements/$amdidtext/xml?$$" | perl sort_amendements.pl $data/.tmp/json/articles_antelaststep.json xml > "$projectdir/amendements/amendements.xml"
       else
     	rm "$projectdir/amendements/amendements.csv"
     	rmdir $projectdir/amendements
@@ -205,15 +220,15 @@ cat $1 | while read line ; do
         loiid=$oldamdidtext
       fi
       id_seance=""
-      download "$urlchambre/seances/$loiid/csv$commission_or_hemicycle" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
+      download "$urlchambre/seances/$loiid/csv$commission_or_hemicycle&$$" | grep "[0-9]" | sed 's/;//g' | while read id_seance; do
         tmpseancecsv="."$id_seance".csv"
-        download "$urlchambre/seance/$id_seance/$loiid/csv" > $tmpseancecsv
+        download "$urlchambre/seance/$id_seance/$loiid/csv?$$" > $tmpseancecsv
         if head -n 1 $tmpseancecsv | grep '[a-z]' > /dev/null; then
           seance_name=$(head -n 2 $tmpseancecsv | tail -n 1 | awk -F ';' '{print $4 "T" $5 "_" $1}' | sed 's/ //g')
           mkdir -p $inter_dir
           cat $tmpseancecsv > $inter_dir/$seance_name.csv
-          download "$urlchambre/seance/$id_seance/$loiid/json" > $inter_dir/$seance_name.json
-          download "$urlchambre/seance/$id_seance/$loiid/xml" > $inter_dir/$seance_name.xml
+          download "$urlchambre/seance/$id_seance/$loiid/json?$$" > $inter_dir/$seance_name.json
+          download "$urlchambre/seance/$id_seance/$loiid/xml?$$" > $inter_dir/$seance_name.xml
         fi
         rm $tmpseancecsv
       done

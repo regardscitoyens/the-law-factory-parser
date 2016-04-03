@@ -19,13 +19,16 @@ for _, a in articles.iteritems():
         if stepid not in good_steps:
             good_steps[stepid] = int(s['id_step'][:2])
 
-for s in procedure['steps']:
+for i, s in enumerate(procedure['steps']):
     s['debats_order'] = None
     if 'has_interventions' in s and s['has_interventions'] and s['directory'] not in intervs:
         print >> sys.stderr, "WARNING: removing nearly empty interventions steps for %s" % s['directory'].encode('utf-8')
         s['has_interventions'] = False
     if 'directory' in s:
-        s['debats_order'] = good_steps.get(s['directory'], None)
+        if i == len(procedure['steps'])-1 and not s['enddate']:
+            s['debats_order'] = max(good_steps.values()) + 1
+        else:
+            s['debats_order'] = good_steps.get(s['directory'], None)
     if s.get('step', '') == 'depot' and s['debats_order'] != None:
         if '/propositions/' in s.get('source_url', ''):
             s['auteur_depot'] = u"Députés"

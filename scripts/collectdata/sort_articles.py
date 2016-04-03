@@ -17,10 +17,12 @@ re_bister = re.compile(bister)
 
 re_article = re.compile(r'(\d+)e?r?(( ([A-Z]+|%s))*)' % bister)
 
+re_clean_befaft = re.compile(ur"^(a(vant|près)\s*l'|article\s*)+", re.I)
+
 re_add_spaces = re.compile(r'([A-Z])\s*')
 add_spaces = lambda x: re_add_spaces.sub(r'\1 ', x)
 def split_article(a):
-    if not re_article.match(a):
+    if not re_article.match(re_clean_befaft.sub('', a)):
         return [0, a]
     m = re_article.search(a)
     res = [int(m.group(1))]
@@ -85,7 +87,20 @@ def compare_articles(a, b):
     elif len(na) < len(nb):
         na += [None] * (len(nb) - len(na))
     # compare details
-    return compare_details(na[1:], nb[1:])
+    res = compare_details(na[1:], nb[1:])
+    if res != 0:
+        return res
+    ia = na[0]
+    if 'avant' in a.lower():
+        ia -= 1
+    elif u'après' in a.lower():
+        ia += 1
+    ib = nb[0]
+    if 'avant' in b.lower():
+        ib -= 1
+    elif u'après' in b.lower():
+        ib += 1
+    return ia - ib
 
 def article_is_lower(a, b):
     return compare_articles(a, b) < 0
@@ -113,8 +128,13 @@ if __name__ == "__main__":
       "1er A bis A",
       "1er A bis",
       "1er B",
+      "Après l'article 1er B",
+      "Avant l'article 1er C",
       "1er C",
+      "Après l'article 1er D",
+      "avant l'article 1er",
       "1er",
+      "Avant l'article 10 quater",
       "13",
       "14 AAA",
       "14 AA",
