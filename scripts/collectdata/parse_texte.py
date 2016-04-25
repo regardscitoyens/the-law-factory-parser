@@ -89,6 +89,7 @@ else:
 
 texte["titre"] = re_clean_title_legif.sub('', soup.title.string.strip())
 texte["expose"] = ""
+expose = False
 
 # Convert from roman numbers
 re_mat_romans = re.compile(r"[IVXCLDM]+", re.I)
@@ -281,6 +282,7 @@ for text in soup.find_all("p"):
         texte = save_text(texte)
     elif re_mat_exp.match(line):
         read = -1 # Deactivate description lecture
+        expose = True
     elif re_echec_cmp.search(cl_line) or re_echec_com.search(cl_line) or re_echec_hemi.match(cl_line) or re_echec_hemi2.search(cl_line):
         texte = save_text(texte)
         pr_js({"type": "echec", "texte": cl_line})
@@ -313,7 +315,7 @@ for text in soup.find_all("p"):
         section["id"] = section_par + section_typ + str(section_num)
 
     # Identify titles and new article zones
-    elif (re_mat_end.match(line) or (read == 2 and re_mat_ann.match(line))):
+    elif (not expose and re_mat_end.match(line)) or (read == 2 and re_mat_ann.match(line)):
         break
     elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line) or re.match(r"^Article ", line):
         line = cl_line
@@ -323,6 +325,7 @@ for text in soup.find_all("p"):
                 texte = save_text(texte)
                 pr_js(article)
             read = 2 # Activate alineas lecture
+            expose = False
             art_num += 1
             ali_num = 0
             article = {"type": "article", "order": art_num, "alineas": {}, "statut": "none"}
