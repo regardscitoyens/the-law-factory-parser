@@ -81,7 +81,11 @@ for step in procedure['steps']:
             print >> sys.stderr, a
         if a["sort"] == u"Rectifié":
             continue
-        key = format_sujet(a['sujet'])
+        try:
+            key = format_sujet(a['sujet'])
+        except:
+            sys.stderr.write('WARNING: amendment has no subject %s\n' % a['url_nos%ss' % typeparl])
+            continue
         if key not in sujets:
             orders.append(key)
             sujets[key] = {
