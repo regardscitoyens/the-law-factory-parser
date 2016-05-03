@@ -168,7 +168,8 @@ html_replace = [
     (re.compile(r'^((<[^>]*>)*")%s ' % section_titles, re.I), lower_inner_title),
     (re.compile(r' pr..?liminaire', re.I), ' préliminaire'),
     (re.compile(r'<strike>[^<]*</strike>', re.I), ''),
-    (re_clean_spaces, " "),
+    (re.compile(r'^<a>(\w)', re.I), r"\1"),
+    (re_clean_spaces, " ")
 ]
 
 
