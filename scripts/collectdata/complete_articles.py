@@ -94,7 +94,7 @@ def get_mark_from_last(text, s, l="", sep="", force=False):
     res = []
     try:
         start = make_sta_reg(s)
-    except:
+    except Exception as e:
         print >> sys.stderr, 'ERROR', type(e), e, s.encode('utf-8'), l.encode('utf-8')
         exit()
     rich = re_mat_complex.match(s) or not re_mat_simple.match(s)
