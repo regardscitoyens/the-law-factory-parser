@@ -81,13 +81,15 @@ elif re.search(r"assemblee-?nationale", url, re.I):
     texte["id"] += str(numero)
 else:
     m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})\d?\.", url, re.I)
+    if m is None:
+        m = re.search(r"/(-)?20(\d+)-\d+/(\d+).html", url, re.I)
     numero = int(m.group(3))
     texte["id"] = ORDER+"S" + m.group(2) + "-"
     if m.group(1) is not None:
         texte["id"] += m.group(1)
     texte["id"] += "%03d" % numero
 
-texte["titre"] = re_clean_title_legif.sub('', soup.title.string.strip())
+texte["titre"] = re_clean_title_legif.sub('', soup.title.string.strip()) if soup.title else ""
 texte["expose"] = ""
 expose = False
 
