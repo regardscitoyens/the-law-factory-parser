@@ -15,6 +15,10 @@ function download {
       echo > $cache.tmp
     else
       curl -sL $1 > $cache.tmp
+      if echo $1 | grep "petite-loi-ameli" > /dev/null; then
+        iconv $cache.tmp -f "windows-1252" -t "utf-8" > $cache.enc
+        mv $cache.{enc,tmp}
+      fi
     fi
     mv $cache.tmp $cache
   fi
