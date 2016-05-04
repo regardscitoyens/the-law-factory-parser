@@ -320,7 +320,7 @@ for text in soup.find_all("p"):
     # Identify titles and new article zones
     elif (not expose and re_mat_end.match(line)) or (read == 2 and re_mat_ann.match(line)):
         break
-    elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line) or re.match(r"^Article ", line):
+    elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line) or re.match(r"^Articles? ", line):
         line = cl_line
         # Read a new article
         if re_mat_art.match(line):
