@@ -90,15 +90,14 @@ for step in procedure['steps']:
     warndone = []
     for interv_file in step['intervention_files']:
         seance = open_json(os.path.join(context.sourcedir, 'procedure', step['intervention_directory']), "%s.json" % interv_file)['seance']
-        has_tag_loi = False
+        has_tag_loi = 0
         if id_laststep:
             for i in seance:
                 if {"loi": id_laststep} in i['intervention']['lois']:
-                    has_tag_loi = True
-                    break
+                    has_tag_loi += 1
         for i in seance:
             del(i['intervention']['contenu'])
-            if has_tag_loi and {"loi": id_laststep} not in i['intervention']['lois']:
+            if has_tag_loi > 2 and {"loi": id_laststep} not in i['intervention']['lois']:
                 if context.DEBUG:
                     print >> sys.stderr, "SKIPPING interv " + i['intervention']['id'] + " with missing tag loi"
                 continue
