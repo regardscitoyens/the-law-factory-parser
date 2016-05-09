@@ -111,8 +111,8 @@ class Context(object):
 
     def get_parlementaires(self):
         for f in os.listdir(os.path.join(self.sourcedir, '..')):
-            if f.endswith('-parlementaires.json'):
-                url = f.replace('-parlementaires.json', '').lower()
+            if f.endswith('.parlementaires.json'):
+                url = f.replace('.parlementaires.json', '').lower()
                 try:
                     with open(os.path.join(self.sourcedir, '..', f), "r") as parls:
                         self.parlementaires[url] = {}
@@ -125,10 +125,14 @@ class Context(object):
                     sys.stderr.write('%s: %s\n' % (type(e), e))
 
     def get_parlementaire(self, urlapi, slug):
-        if self.parlementaires:
+        try:
             return self.parlementaires[urlapi][slug]
-        typeparl = "depute" if "deputes" in urlapi else "senateur"
-        return requests.get(parl_link(slug, urlapi)+"/json").json()[typeparl]
+        except:
+            typeparl = "depute" if "deputes" in urlapi else "senateur"
+            if urlapi not in self.parlementaires:
+                self.parlementaires[urlapi] = {}
+            self.parlementaires[urlapi][slug] = requests.get(parl_link(slug, urlapi)+"/json").json()[typeparl]
+            return self.parlementaires[urlapi][slug]
 
     def get_groupes(self):
         for f in os.listdir(os.path.join(self.sourcedir, '..')):
