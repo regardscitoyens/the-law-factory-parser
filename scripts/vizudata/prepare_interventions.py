@@ -15,7 +15,7 @@ def clean_orga(orga):
     return orga
 
 def init_section(dic, key, inter, order):
-    if key == 'seance_titre' and not inter['section']:
+    if inter[key] and inter['seance_lieu'] != u'Hémicycle':
         inter[key] = clean_orga(inter['seance_lieu']) + " <br/> " + inter[key]
     if inter[key] not in dic:
         dic[inter[key]] = {
