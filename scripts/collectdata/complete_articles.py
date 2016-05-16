@@ -145,6 +145,7 @@ re_clean_virg = re.compile(r'\s*,\s*')
 re_suppr = re.compile(r'\W*suppr(ess|im)', re.I)
 re_confo = re.compile(r'\W*(conforme|non[\s\-]*modifi)', re.I)
 re_confo_with_txt = re.compile(r'\s*\(\s*(conforme|non[\s\-]*modifié)\s*\)\s*([\W]*\w+)', re.I)
+re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]+)\s*([^\s\)])', re.I)
 order = 1
 cursec = {'id': ''}
 done_titre = False
@@ -305,6 +306,7 @@ for l in f:
                 sys.stderr.write("WARNING: found repeated article missing %s from previous step %s: %s\n" % (line['titre'], FILE, text))
             elif re_confo_with_txt.search(text):
                 text = re_confo_with_txt.sub(r' \2', text)
+                text = re_clean_subsec_space.sub(r'\1\4 \5', text)
                 gd_text.append(text)
             elif "(Non modifi" in text:
                 part = re.split("\s*([\.°\-]+\s*)+\s*\(Non", text)
