@@ -298,9 +298,10 @@ for l in f:
                 log("DEBUG: get back Art %s" % line['titre'])
                 alineas = oldstep[oldid][line['titre']]
         gd_text = []
+        oldid = 1 if grdoldarts else 0
         for j, text in enumerate(alineas):
             text = text.encode('utf-8')
-            if "(Non modifi" in text and not line['titre'] in oldstep[0]:
+            if "(Non modifi" in text and not line['titre'] in oldstep[oldid]:
                 sys.stderr.write("WARNING: found repeated article missing %s from previous step %s: %s\n" % (line['titre'], FILE, text))
             elif re_confo_with_txt.search(text):
                 text = re_confo_with_txt.sub(r' \2', text)
@@ -318,10 +319,10 @@ for l in f:
                     if " à " in todo:
                         start = re.split(" à ", todo)[0]
                         end = re.split(" à ", todo)[1]
-                        piece.extend(get_mark_from_last(oldstep[0][line['titre']], start, end, sep=part[1:]))
+                        piece.extend(get_mark_from_last(oldstep[oldid][line['titre']], start, end, sep=part[1:]))
     # Extract set of non-modified subsections of articles from previous version.
                     elif todo:
-                        piece.extend(get_mark_from_last(oldstep[0][line['titre']], todo, sep=part[1:]))
+                        piece.extend(get_mark_from_last(oldstep[oldid][line['titre']], todo, sep=part[1:]))
                 gd_text.extend(piece)
             else:
                 gd_text.append(text.decode('utf-8'))
