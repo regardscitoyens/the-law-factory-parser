@@ -34,13 +34,13 @@ A few perl and python dependencies are required. You can install them with the f
  sudo pip install -r requirements.txt
  ```
 
-##Generate git version for a bill
+## Generate git version for a bill
 
 Once the bill is published on *http://www.LaFabriqueDeLaLoi.fr/api/*, you can generate a git repository of it. The git is published on a gitlab instance.
 
 The scripts need to be executed on the machine that hosts the gitlab instance.
 
-###Check the configuration
+### Check the configuration
 
 The configuration file used is *scripts/gitlaw/config.inc*.
 
@@ -51,7 +51,7 @@ It contains :
 - **MYSQL_USER** : the mysql user used by gitlab
 - **MYSQL_PASS** : the mysql pass used by gitlab
 
-###Generate the git repository
+### Generate the git repository
 
 The following script generate git repository for a given law id :
 
@@ -61,7 +61,7 @@ It creates a gitlab repository, generate all the commits for the different steps
 
 It uses *data/LAW_ID* as a working directory.
 
-###Change dates on gitlab interface
+### Change dates on gitlab interface
 
 *script/gitlaw/postgit.sh* changes the date on the gitlab interface to use the parliament ones instead of the pushed one.
 
