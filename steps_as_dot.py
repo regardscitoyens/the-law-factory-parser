@@ -10,15 +10,19 @@ all_senat_jo = json.load(open(sys.argv[1]))
 
 nodes_names_size = {}
 step_trans = {}
+steps_logs = ""
 for dos in all_senat_jo:
     last_step = ''
     for step in dos.get('steps', []):
         step_name = '%s %s %s' % (step['stage'], step.get('institution'), step.get('step',''))
+        # step_name = step['stage']
+        # step_name = step['institution']
         if step_name != last_step:
             if last_step not in step_trans:
                 step_trans[last_step] = {}
             step_trans[last_step][step_name] = step_trans[last_step].get(step_name, 0) + 1
-            nodes_names_size[step_name] = nodes_names_size.get(step_name, 0) + 1
+            nodes_names_size[step_name] = nodes_names_size.get(step_name, set()).union(set([dos['url_dossier_senat']]))
+            steps_logs += '%s->%s:%s\n' % (last_step, step_name, dos['url_dossier_senat'])
         last_step = step_name
 
 dot_result = 'digraph g { '
@@ -41,9 +45,11 @@ for prev, nexts in step_trans.items():
                 prev_id, next_id, next_v, next_v // 150 + 1)
 
 for name, id in nodes_names.items():
-    dot_result += '\n %s [label="%s - %d", penwidth="%d"];' % (id, name, nodes_names_size[name], nodes_names_size[name] // 100 + 1)
+    dot_result += '\n %s [label="%s - %d", penwidth="%d"];' % (id, name, len(nodes_names_size[name]), len(nodes_names_size[name]) // 100 + 1)
 
 dot_result += '\n}'
+
+open('steps.log', 'w').write(steps_logs)
 
 print(dot_result)
 # open('steps.dot','w').write(dot_result)
