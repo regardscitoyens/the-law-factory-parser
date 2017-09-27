@@ -25,7 +25,11 @@ for dos in all_senat_jo:
             steps_logs += '%s->%s:%s\n' % (last_step, step_name, dos['url_dossier_senat'])
         last_step = step_name
 
-dot_result = 'digraph g { '
+dot_result = """digraph g {
+    node  [style="rounded,filled,bold", shape=box, fontname="xkcd"];
+    edge  [style=bold, fontname="xkcd"];
+
+"""
 
 nodes_names_i = 0
 nodes_names = {}
@@ -42,14 +46,24 @@ for prev, nexts in step_trans.items():
         for next, next_v in nexts.items():
             next_id = get_node_id(next)
             dot_result += '\n   %s -> %s [label="%s", penwidth="%d"];' % (
-                prev_id, next_id, next_v, next_v // 150 + 1)
+                prev_id, next_id, next_v, next_v // 200 + 1)
 
 for name, id in nodes_names.items():
-    dot_result += '\n %s [label="%s - %d", penwidth="%d"];' % (id, name, len(nodes_names_size[name]), len(nodes_names_size[name]) // 100 + 1)
+    fillcolor = "#f3f3f3"
+    if 'assemblee' in name:
+        fillcolor = '#B3E5FD'
+    if 'senat' in name:
+        fillcolor = '#f48fb1'
+    dot_result += '\n %s [label="%s - %d", penwidth="%d", fillcolor="%s"];' % (id, name,
+        len(nodes_names_size[name]), len(nodes_names_size[name]) // 300 + 1, fillcolor)
 
 dot_result += '\n}'
 
-open('steps.log', 'w').write(steps_logs)
+open('_steps.log', 'w').write(steps_logs)
+open('steps_transitions.json', 'w').write(json.dumps(step_trans, ensure_ascii=False, indent=2, sort_keys=True))
 
 print(dot_result)
 # open('steps.dot','w').write(dot_result)
+
+
+# improve layout: https://stackoverflow.com/questions/11588667/how-to-influence-layout-of-graph-items
