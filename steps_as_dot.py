@@ -2,6 +2,7 @@
 # use "python steps_as_dot.py <path_to_json>| dot -Tpng > steps.png" to produce the diagram
 import json, sys, os
 
+
 if len(sys.argv) < 2:
     print('USAGE: `steps_as_dot.py <path_to_json>`')
     os.exit()
@@ -14,21 +15,21 @@ steps_logs = ""
 for dos in all_senat_jo:
     last_step = ''
     for step in dos.get('steps', []):
-        step_name = '%s %s %s' % (step['stage'], step.get('institution'), step.get('step',''))
+        step_name = '%s • %s • %s' % (step.get('stage'), step.get('institution'), step.get('step',''))
         # step_name = step['stage']
         # step_name = step['institution']
         if step_name != last_step:
             if last_step not in step_trans:
                 step_trans[last_step] = {}
             step_trans[last_step][step_name] = step_trans[last_step].get(step_name, 0) + 1
-            nodes_names_size[step_name] = nodes_names_size.get(step_name, set()).union(set([dos['url_dossier_senat']]))
-            steps_logs += '%s->%s:%s\n' % (last_step, step_name, dos['url_dossier_senat'])
+            nodes_names_size[step_name] = nodes_names_size.get(step_name, set()).union(set([dos.get('url_dossier_senat')]))
+            steps_logs += '%s->%s:%s\n' % (last_step, step_name, dos.get('url_dossier_senat'))
         last_step = step_name
 
 dot_result = """digraph g {
     node  [style="rounded,filled,bold", shape=box, fontname="xkcd"];
     edge  [style=bold, fontname="xkcd"];
-
+    ranksep=0;
 """
 
 nodes_names_i = 0
@@ -46,7 +47,7 @@ for prev, nexts in step_trans.items():
         for next, next_v in nexts.items():
             next_id = get_node_id(next)
             dot_result += '\n   %s -> %s [label="%s", penwidth="%d"];' % (
-                prev_id, next_id, next_v, next_v // 200 + 1)
+                prev_id, next_id, next_v, next_v // 400 + 1)
 
 for name, id in nodes_names.items():
     fillcolor = "#f3f3f3"
@@ -54,8 +55,13 @@ for name, id in nodes_names.items():
         fillcolor = '#B3E5FD'
     if 'senat' in name:
         fillcolor = '#f48fb1'
-    dot_result += '\n %s [label="%s - %d", penwidth="%d", fillcolor="%s"];' % (id, name,
-        len(nodes_names_size[name]), len(nodes_names_size[name]) // 300 + 1, fillcolor)
+    dot_result += '\n %s [label="%s %d", penwidth="%d", fillcolor="%s"];' % (id, name, len(nodes_names_size[name]), len(nodes_names_size[name]) // 600 + 1, fillcolor)
+
+dot_result += ("""
+  {
+    rank=source; %s; %s;
+  }
+""" % (get_node_id('1ère lecture • assemblee • depot'), get_node_id('1ère lecture • senat • depot')) if True else '')
 
 dot_result += '\n}'
 

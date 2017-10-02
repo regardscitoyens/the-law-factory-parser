@@ -1,189 +1,178 @@
 {
   "": {
-    "1ère lecture assemblee depot": 1368,
-    "1ère lecture senat depot": 1109
+    "1ère lecture • assemblee • depot": 1839,
+    "1ère lecture • senat • depot": 5403
   },
-  " assemblee ": {
-    " conseil constitutionnel ": 1
+  "1ère lecture • assemblee • commission": {
+    "1ère lecture • assemblee • hemicycle": 3193,
+    "1ère lecture • senat • depot": 2,
+    "1ère lecture • senat • hemicycle": 1,
+    "promulgation • gouvernement • ": 1
   },
-  " conseil constitutionnel ": {
-    " assemblee ": 1,
-    " senat ": 1
+  "1ère lecture • assemblee • depot": {
+    "1ère lecture • assemblee • commission": 3215,
+    "1ère lecture • assemblee • hemicycle": 12,
+    "1ère lecture • senat • commission": 1,
+    "1ère lecture • senat • hemicycle": 3,
+    "promulgation • gouvernement • ": 9
   },
-  " senat ": {
-    "promulgation gouvernement ": 1
+  "1ère lecture • assemblee • hemicycle": {
+    "1ère lecture • assemblee • depot": 1,
+    "1ère lecture • senat • depot": 1854,
+    "1ère lecture • senat • hemicycle": 1,
+    "2ème lecture • senat • depot": 308,
+    "CMP • CMP • commission": 132,
+    "constitutionnalité • conseil constitutionnel • ": 34,
+    "promulgation • gouvernement • ": 873
   },
-  "1ère lecture assemblee commission": {
-    "1ère lecture assemblee hemicycle": 2462,
-    "1ère lecture senat depot": 2,
-    "1ère lecture senat hemicycle": 1,
-    "promulgation gouvernement ": 1
+  "1ère lecture • senat • commission": {
+    "1ère lecture • senat • hemicycle": 3500
   },
-  "1ère lecture assemblee depot": {
-    "1ère lecture assemblee commission": 2466,
-    "1ère lecture assemblee hemicycle": 11,
-    "1ère lecture senat commission": 1,
-    "promulgation gouvernement ": 9
+  "1ère lecture • senat • depot": {
+    "1ère lecture • senat • commission": 3775,
+    "1ère lecture • senat • hemicycle": 81
   },
-  "1ère lecture assemblee hemicycle": {
-    "1ère lecture assemblee depot": 1,
-    "1ère lecture senat depot": 1370,
-    "1ère lecture senat hemicycle": 1,
-    "2ème lecture senat depot": 271,
-    "CMP CMP commission": 119,
-    "constitutionnalité conseil constitutionnel ": 29,
-    "promulgation gouvernement ": 683
+  "1ère lecture • senat • hemicycle": {
+    " • congrés • ": 1,
+    "1ère lecture • assemblee • depot": 1665,
+    "1ère lecture • assemblee • hemicycle": 1,
+    "1ère lecture • senat • commission": 7,
+    "1ère lecture • senat • depot": 1,
+    "2ème lecture • assemblee • depot": 378,
+    "CMP • CMP • commission": 458,
+    "congrès • congrés • congrès": 12,
+    "constitutionnalité • conseil constitutionnel • ": 49,
+    "promulgation • gouvernement • ": 816
   },
-  "1ère lecture senat commission": {
-    "1ère lecture senat hemicycle": 2479
+  "2ème lecture • assemblee • commission": {
+    "2ème lecture • assemblee • hemicycle": 507,
+    "2ème lecture • senat • hemicycle": 1,
+    "CMP • CMP • commission": 6,
+    "promulgation • gouvernement • ": 1
   },
-  "1ère lecture senat depot": {
-    "1ère lecture senat commission": 2476,
-    "1ère lecture senat hemicycle": 6
+  "2ème lecture • assemblee • depot": {
+    "2ème lecture • assemblee • commission": 516,
+    "2ème lecture • assemblee • hemicycle": 1
   },
-  "1ère lecture senat hemicycle": {
-    "1ère lecture assemblee depot": 1118,
-    "1ère lecture assemblee hemicycle": 1,
-    "1ère lecture senat commission": 2,
-    "1ère lecture senat depot": 1,
-    "2ème lecture assemblee depot": 326,
-    "CMP CMP commission": 414,
-    "CMP senat depot": 1,
-    "congrès congrés congrès": 12,
-    "constitutionnalité conseil constitutionnel ": 42,
-    "promulgation gouvernement ": 570
+  "2ème lecture • assemblee • hemicycle": {
+    "2ème lecture • senat • depot": 208,
+    "3ème lecture • senat • depot": 20,
+    "CMP • CMP • commission": 88,
+    "congrès • congrés • congrès": 1,
+    "constitutionnalité • conseil constitutionnel • ": 27,
+    "promulgation • gouvernement • ": 164
   },
-  "2ème lecture assemblee commission": {
-    "2ème lecture assemblee hemicycle": 462,
-    "2ème lecture senat hemicycle": 1,
-    "CMP CMP commission": 6,
-    "promulgation gouvernement ": 1
+  "2ème lecture • senat • commission": {
+    "2ème lecture • senat • hemicycle": 495
   },
-  "2ème lecture assemblee depot": {
-    "2ème lecture assemblee commission": 470,
-    "2ème lecture assemblee hemicycle": 1
+  "2ème lecture • senat • depot": {
+    "2ème lecture • senat • commission": 497,
+    "2ème lecture • senat • hemicycle": 6
   },
-  "2ème lecture assemblee hemicycle": {
-    "2ème lecture senat depot": 183,
-    "3ème lecture senat depot": 18,
-    "CMP CMP commission": 83,
-    "congrès congrés congrès": 1,
-    "constitutionnalité conseil constitutionnel ": 27,
-    "promulgation gouvernement ": 152
+  "2ème lecture • senat • hemicycle": {
+    " • congrés • ": 1,
+    "2ème lecture • assemblee • depot": 160,
+    "2ème lecture • assemblee • hemicycle": 1,
+    "3ème lecture • assemblee • depot": 26,
+    "CMP • CMP • commission": 118,
+    "congrès • congrés • congrès": 3,
+    "constitutionnalité • conseil constitutionnel • ": 26,
+    "promulgation • gouvernement • ": 166
   },
-  "2ème lecture senat commission": {
-    "2ème lecture senat hemicycle": 449
+  "3ème lecture • assemblee • commission": {
+    "3ème lecture • assemblee • hemicycle": 28
   },
-  "2ème lecture senat depot": {
-    "2ème lecture senat commission": 449,
-    "2ème lecture senat hemicycle": 5
+  "3ème lecture • assemblee • depot": {
+    "3ème lecture • assemblee • commission": 28,
+    "3ème lecture • assemblee • hemicycle": 1
   },
-  "2ème lecture senat hemicycle": {
-    "2ème lecture assemblee depot": 145,
-    "2ème lecture assemblee hemicycle": 1,
-    "3ème lecture assemblee depot": 23,
-    "CMP CMP commission": 106,
-    "congrès congrés congrès": 3,
-    "constitutionnalité conseil constitutionnel ": 25,
-    "promulgation gouvernement ": 152
+  "3ème lecture • assemblee • hemicycle": {
+    "3ème lecture • senat • depot": 3,
+    "CMP • CMP • commission": 1,
+    "congrès • congrés • congrès": 1,
+    "constitutionnalité • conseil constitutionnel • ": 4,
+    "promulgation • gouvernement • ": 19
   },
-  "3ème lecture assemblee commission": {
-    "3ème lecture assemblee hemicycle": 25
+  "3ème lecture • senat • commission": {
+    "3ème lecture • senat • hemicycle": 22
   },
-  "3ème lecture assemblee depot": {
-    "3ème lecture assemblee commission": 25,
-    "3ème lecture assemblee hemicycle": 1
+  "3ème lecture • senat • depot": {
+    "3ème lecture • senat • commission": 22,
+    "3ème lecture • senat • hemicycle": 1
   },
-  "3ème lecture assemblee hemicycle": {
-    "3ème lecture senat depot": 3,
-    "CMP CMP commission": 1,
-    "congrès congrés congrès": 1,
-    "constitutionnalité conseil constitutionnel ": 4,
-    "promulgation gouvernement ": 17
+  "3ème lecture • senat • hemicycle": {
+    "3ème lecture • assemblee • depot": 3,
+    "CMP • CMP • commission": 1,
+    "congrès • congrés • congrès": 1,
+    "constitutionnalité • conseil constitutionnel • ": 4,
+    "promulgation • gouvernement • ": 14
   },
-  "3ème lecture senat commission": {
-    "3ème lecture senat hemicycle": 20
+  "CMP • CMP • commission": {
+    "CMP • CMP • hemicycle": 8,
+    "CMP • assemblee • hemicycle": 202,
+    "CMP • senat • hemicycle": 371,
+    "nouv. lect. • assemblee • depot": 221
   },
-  "3ème lecture senat depot": {
-    "3ème lecture senat commission": 20,
-    "3ème lecture senat hemicycle": 1
+  "CMP • CMP • hemicycle": {
+    "CMP • assemblee • hemicycle": 8
   },
-  "3ème lecture senat hemicycle": {
-    "3ème lecture assemblee depot": 3,
-    "CMP CMP commission": 1,
-    "congrès congrés congrès": 1,
-    "constitutionnalité conseil constitutionnel ": 3,
-    "promulgation gouvernement ": 13
+  "CMP • assemblee • hemicycle": {
+    "CMP • senat • hemicycle": 202,
+    "constitutionnalité • conseil constitutionnel • ": 115,
+    "nouv. lect. • assemblee • depot": 20,
+    "promulgation • gouvernement • ": 244
   },
-  "CMP CMP commission": {
-    "CMP CMP hemicycle": 5,
-    "CMP assemblee hemicycle": 188,
-    "CMP senat hemicycle": 347,
-    "nouv. lect. assemblee depot": 190
+  "CMP • senat • hemicycle": {
+    "CMP • assemblee • hemicycle": 371,
+    "constitutionnalité • conseil constitutionnel • ": 79,
+    "nouv. lect. • assemblee • depot": 2,
+    "promulgation • gouvernement • ": 121
   },
-  "CMP CMP hemicycle": {
-    "CMP assemblee hemicycle": 5
+  "None • nouv. délib. • ": {
+    "1ère lecture • assemblee • depot": 1
   },
-  "CMP assemblee hemicycle": {
-    "CMP senat hemicycle": 188,
-    "constitutionnalité conseil constitutionnel ": 110,
-    "nouv. lect. assemblee depot": 12,
-    "promulgation gouvernement ": 230
+  "congrès • congrés • congrès": {
+    "congrès • congrés • hemicycle": 18
   },
-  "CMP senat commission": {
-    "nouv. lect. assemblee depot": 1
+  "congrès • congrés • hemicycle": {
+    "constitutionnalité • conseil constitutionnel • ": 1,
+    "promulgation • gouvernement • ": 17
   },
-  "CMP senat depot": {
-    "CMP senat commission": 1
+  "constitutionnalité • conseil constitutionnel • ": {
+    "None • nouv. délib. • ": 1,
+    "promulgation • gouvernement • ": 474
   },
-  "CMP senat hemicycle": {
-    "CMP assemblee hemicycle": 347,
-    "constitutionnalité conseil constitutionnel ": 77,
-    "nouv. lect. assemblee depot": 2,
-    "promulgation gouvernement ": 109
+  "l. définitive • assemblee • commission": {
+    "l. définitive • assemblee • hemicycle": 216
   },
-  "congrès congrés congrès": {
-    "congrès congrés hemicycle": 18
+  "l. définitive • assemblee • depot": {
+    "l. définitive • assemblee • commission": 216,
+    "l. définitive • assemblee • hemicycle": 20
   },
-  "congrès congrés hemicycle": {
-    "constitutionnalité conseil constitutionnel ": 1,
-    "promulgation gouvernement ": 17
+  "l. définitive • assemblee • hemicycle": {
+    "constitutionnalité • conseil constitutionnel • ": 144,
+    "promulgation • gouvernement • ": 92
   },
-  "constitutionnalité conseil constitutionnel ": {
-    " conseil constitutionnel ": 1,
-    "promulgation gouvernement ": 439
+  "nouv. lect. • assemblee • commission": {
+    "nouv. lect. • assemblee • hemicycle": 242
   },
-  "l. définitive assemblee commission": {
-    "l. définitive assemblee hemicycle": 186
+  "nouv. lect. • assemblee • depot": {
+    "nouv. lect. • assemblee • commission": 242,
+    "nouv. lect. • assemblee • hemicycle": 1
   },
-  "l. définitive assemblee depot": {
-    "l. définitive assemblee commission": 186,
-    "l. définitive assemblee hemicycle": 14
+  "nouv. lect. • assemblee • hemicycle": {
+    "nouv. lect. • senat • depot": 243
   },
-  "l. définitive assemblee hemicycle": {
-    "constitutionnalité conseil constitutionnel ": 120,
-    "promulgation gouvernement ": 80
+  "nouv. lect. • senat • commission": {
+    "nouv. lect. • senat • hemicycle": 235
   },
-  "nouv. lect. assemblee commission": {
-    "nouv. lect. assemblee hemicycle": 204
+  "nouv. lect. • senat • depot": {
+    "nouv. lect. • senat • commission": 235,
+    "nouv. lect. • senat • hemicycle": 8
   },
-  "nouv. lect. assemblee depot": {
-    "nouv. lect. assemblee commission": 204,
-    "nouv. lect. assemblee hemicycle": 1
-  },
-  "nouv. lect. assemblee hemicycle": {
-    "nouv. lect. senat depot": 205
-  },
-  "nouv. lect. senat commission": {
-    "nouv. lect. senat hemicycle": 201
-  },
-  "nouv. lect. senat depot": {
-    "nouv. lect. senat commission": 201,
-    "nouv. lect. senat hemicycle": 4
-  },
-  "nouv. lect. senat hemicycle": {
-    "constitutionnalité conseil constitutionnel ": 2,
-    "l. définitive assemblee depot": 200,
-    "promulgation gouvernement ": 3
+  "nouv. lect. • senat • hemicycle": {
+    "constitutionnalité • conseil constitutionnel • ": 2,
+    "l. définitive • assemblee • depot": 237,
+    "promulgation • gouvernement • ": 4
   }
 }
