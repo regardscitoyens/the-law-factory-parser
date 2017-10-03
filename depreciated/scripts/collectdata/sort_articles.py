@@ -17,7 +17,7 @@ re_bister = re.compile(bister)
 
 re_article = re.compile(r'(\d+)e?r?(( ([A-Z]+|%s))*)' % bister)
 
-re_clean_befaft = re.compile(ur"^(a(vant|près)\s*l'|article\s*)+", re.I)
+re_clean_befaft = re.compile(r"^(a(vant|près)\s*l'|article\s*)+", re.I)
 
 re_add_spaces = re.compile(r'([A-Z])\s*')
 add_spaces = lambda x: re_add_spaces.sub(r'\1 ', x)
@@ -93,12 +93,12 @@ def compare_articles(a, b):
     ia = na[0]
     if 'avant' in a.lower():
         ia -= 1
-    elif u'après' in a.lower():
+    elif 'après' in a.lower():
         ia += 1
     ib = nb[0]
     if 'avant' in b.lower():
         ib -= 1
-    elif u'après' in b.lower():
+    elif 'après' in b.lower():
         ib += 1
     return ia - ib
 
@@ -108,18 +108,18 @@ def article_is_lower(a, b):
 if __name__ == "__main__":
 
     # Test split articles
-    print "[TEST] Splitting article 1er A bis AA'"
+    print("[TEST] Splitting article 1er A bis AA'")
     assert(split_article('1er A bis AA') == [1, 'A', 'bis', 'A', 'A'])
-    print " -> Success!"
+    print(" -> Success!")
 
     # Test convert bis to numbers for 2 to 27
-    print "[TEST] Converting bis expressions to numbers for 2 to 27:"
+    print("[TEST] Converting bis expressions to numbers for 2 to 27:")
     for i, v in enumerate(bis_27):
         assert(quantify_bis(v) == i + 2)
-    print " -> Success!"
+    print(" -> Success!")
 
     # Test sorting an array of articles
-    print "[TEST] Sorting randomized array of articles:"
+    print("[TEST] Sorting randomized array of articles:")
     sorted_arts = [
       "wrong name 1",
       "wrong name 2",
@@ -165,11 +165,11 @@ if __name__ == "__main__":
     random_arts = list(sorted_arts)
     random.shuffle(random_arts)
 
-    print "- Randomized array:"
+    print("- Randomized array:")
     pprint(random_arts)
     random_arts.sort(compare_articles)
     pprint(random_arts)
-    print "- Sorted array:"
+    print("- Sorted array:")
     assert(random_arts == sorted_arts)
-    print " -> Success!"
+    print(" -> Success!")
 

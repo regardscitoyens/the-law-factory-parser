@@ -17,7 +17,7 @@ from sort_articles import bister
 # Warning changing parenthesis in this regexp has multiple consequences throughout the code
 section_titles = "((chap|t)itre|volume|livre|tome|(sous-)?section)"
 
-re_definitif = re.compile(ur'<p[^>]*align[=:\s\-]*center"?>\(?<(b|strong)>\(?texte d[^f]*finitif\)?</(b|strong)>\)?</p>', re.I)
+re_definitif = re.compile(r'<p[^>]*align[=:\s\-]*center"?>\(?<(b|strong)>\(?texte d[^f]*finitif\)?</(b|strong)>\)?</p>', re.I)
 
 clean_texte_regexps = [
     (re.compile(r'[\n\t\r\s]+'), ' '),
@@ -38,25 +38,30 @@ clean_legifrance_regexps = [
 
 FILE = sys.argv[1]
 try:
-    with open(FILE, 'r') as f:
-        string = f.read()
-        try:
-            string = string.decode('utf-8')
-        except:
+    try:
+        import requests
+        string = requests.get(FILE).text
+    except:
+        with open(FILE, 'r') as f:
+            string = f.read()
             try:
-                string = string.decode('iso-8859-15')
+                string = string.decode('utf-8')
             except:
-                pass
-        if 'legifrance.gouv.fr' in FILE:
-            for reg, res in clean_legifrance_regexps:
-                string = reg.sub(res, string)
-        else:
-            for reg, res in clean_texte_regexps:
-                string = reg.sub(res, string)
+                try:
+                    string = string.decode('iso-8859-15')
+                except:
+                    pass
+    if 'legifrance.gouv.fr' in FILE:
+        for reg, res in clean_legifrance_regexps:
+            string = reg.sub(res, string)
+    else:
+        for reg, res in clean_texte_regexps:
+            string = reg.sub(res, string)
 
     definitif = re_definitif.search(string) is not None
     soup = BeautifulSoup(string, "html5lib")
-except:
+except Exception as e:
+    print(e)
     sys.stderr.write("ERROR: Cannot open file %s" % FILE)
     exit(1)
 
@@ -95,10 +100,10 @@ expose = False
 
 # Convert from roman numbers
 re_mat_romans = re.compile(r"[IVXCLDM]+", re.I)
-romans_map = zip(
+romans_map = list(zip(
     (1000,  900, 500, 400 , 100,  90 , 50 ,  40 , 10 ,   9 ,  5 ,  4  ,  1),
     ( 'M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I')
-)
+))
 
 
 def romans(n):
@@ -137,7 +142,7 @@ re_clean_premier = re.compile(r'((PREM)?)(1|I)ER?')
 re_clean_bister = re.compile(r'([IXV\d]+e?r?)\s+(%s)' % bister, re.I)
 re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]+)\s*([^\s\)])', re.I)
 re_clean_subsec_space2 = re.compile(r'^("?[IVX0-9]{1,4})\s*([a-z]*)\s*([A-H]{1,4})([\.°\-])', re.I)
-re_clean_punc_space = re.compile(u'([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])')
+re_clean_punc_space = re.compile('([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])')
 re_clean_spaces = re.compile(r'\s+')
 re_clean_coord = re.compile(r'^["\(]*(pour)?\s*coordination[\)\s\.]*$', re.I)
 # Clean html and special chars
@@ -198,9 +203,9 @@ def pr_js(dic):
             for d in multiples:
                 new = dict(dic)
                 new['titre'] = d
-                print json.dumps(new, sort_keys=True, ensure_ascii=False).encode("utf-8")
+                print(json.dumps(new, sort_keys=True, ensure_ascii=False, indent=2))
             return
-    print json.dumps(dic, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    print(json.dumps(dic, sort_keys=True, ensure_ascii=False, indent=2))
 
 
 def save_text(txt):
@@ -379,7 +384,7 @@ for text in soup.find_all("p"):
                 tmp = line.decode('iso-8859-1')
             except:
                 tmp = line
-        line = re_clean_punc_space.sub(r'\1 \2', tmp).encode('utf-8')
+        line = re_clean_punc_space.sub(r'\1 \2', tmp)
         line = re_clean_spaces.sub(' ', line)
         line = re_mat_sec.sub(lambda x: lower_but_first(x.group(1))+x.group(4) if re_mat_n.match(x.group(4)) else x.group(0), line)
         line = re_clean_footer_notes.sub(".", line)

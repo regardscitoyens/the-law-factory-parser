@@ -15,10 +15,10 @@ steps_logs = ""
 for dos in all_senat_jo:
     last_step = ''
     for step in dos.get('steps', []):
-        step_name = '%s • %s • %s' % (step.get('stage'), step.get('institution'), step.get('step',''))
+        step_name = ' • '.join((x for x in (step.get('stage'), step.get('institution'), step.get('step','')) if x))
         # step_name = step['stage']
         # step_name = step['institution']
-        if step_name != last_step:
+        if step_name != last_step or True:
             if last_step not in step_trans:
                 step_trans[last_step] = {}
             step_trans[last_step][step_name] = step_trans[last_step].get(step_name, 0) + 1
