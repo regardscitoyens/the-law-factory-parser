@@ -10,16 +10,22 @@ URLS = [
     'http://www.assemblee-nationale.fr/15/documents/index-dossier.asp',
     'http://www.assemblee-nationale.fr/14/documents/index-dossier.asp',
     'http://www.assemblee-nationale.fr/13/documents/index-dossier.asp',
+
+    'http://www.assemblee-nationale.fr/15/documents/index-conventions.asp',
+    'http://www.assemblee-nationale.fr/14/documents/index-conventions.asp',
+    'http://www.assemblee-nationale.fr/13/documents/index-conventions.asp',
 ]
 
 OUTPUT_DIR = sys.argv[1]
 
 for index_url in URLS:
-    for link in bs4.BeautifulSoup(requests.get(index_url).text, 'lxml').select('p > a'):
+    print('finding links in', index_url)
+    for link in bs4.BeautifulSoup(requests.get(index_url).text, 'lxml').select('a'):
         url = 'http://www.assemblee-nationale.fr' + link.attrs.get('href', '')
-        if '/dossiers/' in url:
+        if '/dossiers/' in url or '/projets/' in url:
             filepath = OUTPUT_DIR + '/' + slugify.slugify(url) + '.json'
-            print(url)
+            filepath = filepath.replace('http-www-assemblee-nationale-fr-', '')
+            print('parsing', url)
             if os.path.exists(filepath):
                 continue
             try:

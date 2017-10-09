@@ -13,7 +13,8 @@ for dossier in DATA['export']['dossiersLegislatifs']['dossier']:
     url = 'http://www.assemblee-nationale.fr/{}/dossiers/{}.asp'.format(
         dossier['dossierParlementaire']['legislature'], dossier['dossierParlementaire']['titreDossier']['titreChemin'])
     
-    filepath = 'an_dossiers/' + slugify.slugify(url) + '.json'
+    filepath = sys.argv[2] + slugify.slugify(url) + '.json'
+    filepath = filepath.replace('http-www-assemblee-nationale-fr-', '')
     print(url)
     if os.path.exists(filepath):
         continue
