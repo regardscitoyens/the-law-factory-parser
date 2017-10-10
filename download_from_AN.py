@@ -22,21 +22,17 @@ for index_url in URLS:
     print('finding links in', index_url)
     for link in bs4.BeautifulSoup(requests.get(index_url).text, 'lxml').select('a'):
         url = 'http://www.assemblee-nationale.fr' + link.attrs.get('href', '')
-        if '/dossiers/' in url or '/projets/' in url:
-            filepath = OUTPUT_DIR + '/' + slugify.slugify(url) + '.json'
+        if '/dossiers/' in url:
+            filepath = OUTPUT_DIR + '/' + slugify.slugify(url)
             filepath = filepath.replace('http-www-assemblee-nationale-fr-', '')
-            print('parsing', url)
             if os.path.exists(filepath):
                 continue
-            try:
-                result = Dossier.download_and_build(url)
-            except InvalidResponseException as e:
-                print(e)
-                print()
-                continue
-            except Exception as e:
-                print(e)
-                print()
-                continue
-            result = result.to_dict()
-            open(filepath, 'w').write(json_dumps(result, indent=4, sort_keys=True, ensure_ascii=False))
+            print('downloading', url)
+            resp = requests.get(url)
+            if resp.status_code < 300:
+                if "vous prie d'accepter toutes ses excuses pour le" in resp.text:
+                    print('ERROR IN RESP', resp.status_code)
+                else:
+                    open(filepath, 'w').write(resp.text + '\n\n<!-- URL=%s -->' % url)
+            else:
+                print('INVALID RESPONSE:', resp.status_code)
