@@ -23,6 +23,7 @@ for index_url in URLS:
     for link in bs4.BeautifulSoup(requests.get(index_url).text, 'lxml').select('a'):
         url = 'http://www.assemblee-nationale.fr' + link.attrs.get('href', '')
         if '/dossiers/' in url:
+            url = url.split('#')[0]
             filepath = OUTPUT_DIR + '/' + slugify.slugify(url)
             filepath = filepath.replace('http-www-assemblee-nationale-fr-', '')
             if os.path.exists(filepath):
