@@ -3,8 +3,8 @@
 
 import requests, json, sys, slugify, os, bs4
 
-from anpy.dossier import Dossier, InvalidResponseException
-from anpy.utils import json_dumps
+from urllib.parse import urljoin
+
 
 URLS = [
     'http://www.assemblee-nationale.fr/15/documents/index-dossier.asp',
@@ -14,6 +14,18 @@ URLS = [
     'http://www.assemblee-nationale.fr/15/documents/index-conventions.asp',
     'http://www.assemblee-nationale.fr/14/documents/index-conventions.asp',
     'http://www.assemblee-nationale.fr/13/documents/index-conventions.asp',
+
+    'http://www.assemblee-nationale.fr/15/documents/index-proposition.asp',
+    'http://www.assemblee-nationale.fr/14/documents/index-proposition.asp',
+    'http://www.assemblee-nationale.fr/13/documents/index-proposition.asp',
+
+    'http://www.assemblee-nationale.fr/15/documents/index-projets.asp',
+    'http://www.assemblee-nationale.fr/14/documents/index-projets.asp',
+    'http://www.assemblee-nationale.fr/13/documents/index-projets.asp',
+
+    'http://www.assemblee-nationale.fr/13/documents/index-depots.asp',
+
+    # TODO: http://www2.assemblee-nationale.fr/documents/liste/%28type%29/propositions-loi
 ]
 
 OUTPUT_DIR = sys.argv[1]
@@ -24,7 +36,7 @@ if not os.path.exists(OUTPUT_DIR):
 for index_url in URLS:
     print('finding links in', index_url)
     for link in bs4.BeautifulSoup(requests.get(index_url).text, 'lxml').select('a'):
-        url = 'http://www.assemblee-nationale.fr' + link.attrs.get('href', '')
+        url = urljoin('http://www.assemblee-nationale.fr', link.attrs.get('href', ''))
         if '/dossiers/' in url:
             url = url.split('#')[0]
             filepath = OUTPUT_DIR + '/' + slugify.slugify(url)

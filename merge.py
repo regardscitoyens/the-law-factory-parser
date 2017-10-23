@@ -1,4 +1,4 @@
-import glob, json, sys, copy
+import glob, json, sys, copy, os
 
 
 def dedup_by_key(list, key, alt_key=None, alt_key2=None, verbose=False):
@@ -61,8 +61,8 @@ all_an = [dos for dos in dedup_by_key(all_an, 'url_dossier_senat')]
 
 print('an loaded', len(all_an))
 
-json.dump(all_senat, open('all_senat.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-json.dump(all_an, open('all_an.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+json.dump(all_senat, open(OUTPUT_DIR + 'all_senat.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+json.dump(all_an, open(OUTPUT_DIR + 'all_an.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
 
 """
 ALL = all_an + all_senat
@@ -101,10 +101,10 @@ print('match', len(matched))
 print('no match', len(not_matched))
 print('no match && assemblee_id', len(not_matched_and_assemblee_id))
 
-json.dump(matched + not_matched, open('all.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-json.dump(matched, open('matched.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-json.dump(not_matched, open('not_matched.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-json.dump(not_matched_and_assemblee_id, open('not_matched_and_assemblee_id.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+json.dump(matched + not_matched, open(OUTPUT_DIR + 'all.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+json.dump(matched, open(OUTPUT_DIR + 'matched.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+json.dump(not_matched, open(OUTPUT_DIR + 'not_matched.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+json.dump(not_matched_and_assemblee_id, open(OUTPUT_DIR + 'not_matched_and_assemblee_id.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
 
 
 """
