@@ -8,6 +8,9 @@ from anpy.dossier2 import parse
 INPUT_GLOB = sys.argv[1]
 OUTPUT_DIR = sys.argv[2]
 
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
+
 files = glob.glob(INPUT_GLOB)
 print(len(files), 'files to parse')
 for file in tqdm.tqdm(files):

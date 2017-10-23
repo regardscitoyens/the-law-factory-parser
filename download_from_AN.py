@@ -17,6 +17,9 @@ URLS = [
 ]
 
 OUTPUT_DIR = sys.argv[1]
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
+
 
 for index_url in URLS:
     print('finding links in', index_url)

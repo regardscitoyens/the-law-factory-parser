@@ -42,6 +42,10 @@ def merge(senat, an):
 
 SENAT_GLOB = sys.argv[1] # ex: 'senat_dossiers/*
 AN_GLOB = sys.argv[2] # ex: 'an_dossiers/*'
+OUTPUT_DIR = sys.argv[3]
+
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
 
 all_senat = [json.load(open(f)) for f in glob.glob(SENAT_GLOB)]
 all_senat = [x for x in all_senat if x and date_is_after_2008_reform(x.get('beginning','1900-0-0'))]

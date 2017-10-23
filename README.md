@@ -23,8 +23,8 @@ python download_from_AN_json.py downloads/an_json/
 python parse_AN_directory.py "downloads/an_*/" parsed/an/
 
 # now it's the big merge (consolidate data from both sources)
-python merge.py "parsed/senat/*" "parsed/an/*"
+python merge.py "parsed/senat/*" "parsed/an/*" parsed/merged/
 
 # fun stuff
-python steps_as_dot.py all.json | dot -Tsvg > steps_senat.svg
+python steps_as_dot.py parsed/merged/all.json | dot -Tsvg > steps_senat.svg
 ```

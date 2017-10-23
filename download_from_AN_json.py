@@ -7,15 +7,20 @@ from io import BytesIO
 from anpy.dossier import Dossier, InvalidResponseException
 from anpy.utils import json_dumps
 
+print('downloading Dossiers_Legislatifs_XIV.json...')
 doslegs_resp = requests.get('http://data.assemblee-nationale.fr/static/openData/repository/LOI/dossiers_legislatifs/Dossiers_Legislatifs_XIV.json.zip')
 doslegs_zip = zipfile.ZipFile(BytesIO(doslegs_resp.content))
 DATA = json.loads(doslegs_zip.open('Dossiers_Legislatifs_XIV.json').read().decode('utf-8'))
+
+OUTPUT_DIR = sys.argv[1]
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
 
 for dossier in DATA['export']['dossiersLegislatifs']['dossier']:
     url = 'http://www.assemblee-nationale.fr/{}/dossiers/{}.asp'.format(
         dossier['dossierParlementaire']['legislature'], dossier['dossierParlementaire']['titreDossier']['titreChemin'])
     
-    filepath = sys.argv[1] + slugify.slugify(url)
+    filepath = OUTPUT_DIR + slugify.slugify(url)
     filepath = filepath.replace('http-www-assemblee-nationale-fr-', '')
     print('downloading', url)
     if os.path.exists(filepath):
