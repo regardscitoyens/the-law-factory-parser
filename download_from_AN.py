@@ -3,7 +3,7 @@
 
 import requests, json, sys, slugify, os, bs4
 
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 
 URLS = [
@@ -28,6 +28,13 @@ URLS = [
     # TODO: http://www2.assemblee-nationale.fr/documents/liste/%28type%29/propositions-loi
 ]
 
+
+def normalized_filename(url):
+    scheme, netloc, path, params, query, fragment = urlparse(url)
+    return slugify.slugify(path.replace('dossiers/', '') \
+        .replace('.asp', ''))
+
+
 OUTPUT_DIR = sys.argv[1]
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
@@ -39,7 +46,7 @@ for index_url in URLS:
         url = urljoin('http://www.assemblee-nationale.fr', link.attrs.get('href', ''))
         if '/dossiers/' in url:
             url = url.split('#')[0]
-            filepath = OUTPUT_DIR + '/' + slugify.slugify(url)
+            filepath = OUTPUT_DIR + '/' + normalized_filename(url)
             filepath = filepath.replace('http-www-assemblee-nationale-fr-', '')
             if os.path.exists(filepath):
                 continue

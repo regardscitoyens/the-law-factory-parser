@@ -3,9 +3,17 @@
 # usage: python download_from_json.py downloads/an_json/
 
 import requests, json, sys, slugify, os, zipfile
+from urllib.parse import urlparse
 from io import BytesIO
-from anpy.dossier import Dossier, InvalidResponseException
+
 from anpy.utils import json_dumps
+
+
+def normalized_filename(url):
+    scheme, netloc, path, params, query, fragment = urlparse(url)
+    return slugify.slugify(path.replace('/dossiers/', '/') \
+        .replace('.asp', ''))
+
 
 print('downloading Dossiers_Legislatifs_XIV.json...')
 doslegs_resp = requests.get('http://data.assemblee-nationale.fr/static/openData/repository/LOI/dossiers_legislatifs/Dossiers_Legislatifs_XIV.json.zip')
@@ -20,8 +28,7 @@ for dossier in DATA['export']['dossiersLegislatifs']['dossier']:
     url = 'http://www.assemblee-nationale.fr/{}/dossiers/{}.asp'.format(
         dossier['dossierParlementaire']['legislature'], dossier['dossierParlementaire']['titreDossier']['titreChemin'])
     
-    filepath = OUTPUT_DIR + slugify.slugify(url)
-    filepath = filepath.replace('http-www-assemblee-nationale-fr-', '')
+    filepath = os.path.join(OUTPUT_DIR, normalized_filename(url))
     print('downloading', url)
     if os.path.exists(filepath):
         continue
