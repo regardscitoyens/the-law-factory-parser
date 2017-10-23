@@ -16,15 +16,16 @@ for dos in all_senat_jo:
     last_step = ''
     for step in dos.get('steps', []):
         step_name = ' • '.join((x for x in (step.get('stage'), step.get('institution'), step.get('step','')) if x))
-        # step_name = step['stage']
-        # step_name = step['institution']
-        if step_name != last_step or True:
-            if last_step not in step_trans:
-                step_trans[last_step] = {}
-            step_trans[last_step][step_name] = step_trans[last_step].get(step_name, 0) + 1
-            nodes_names_size[step_name] = nodes_names_size.get(step_name, set()).union(set([dos.get('url_dossier_senat')]))
-            steps_logs += '%s->%s:%s\n' % (last_step, step_name, dos.get('url_dossier_senat'))
-        last_step = step_name
+        # step_name = step.get('stage')
+        if step_name:
+            # step_name = step['institution']
+            if step_name != last_step or True:
+                if last_step not in step_trans:
+                    step_trans[last_step] = {}
+                step_trans[last_step][step_name] = step_trans[last_step].get(step_name, 0) + 1
+                nodes_names_size[step_name] = nodes_names_size.get(step_name, set()).union(set([dos.get('url_dossier_senat')]))
+                steps_logs += '%s->%s:%s\n' % (last_step, step_name, dos.get('url_dossier_assemblee'))
+            last_step = step_name
 
 dot_result = """digraph g {
     node  [style="rounded,filled,bold", shape=box, fontname="xkcd"];
@@ -55,13 +56,17 @@ for name, id in nodes_names.items():
         fillcolor = '#B3E5FD'
     if 'senat' in name:
         fillcolor = '#f48fb1'
-    dot_result += '\n %s [label="%s %d", penwidth="%d", fillcolor="%s"];' % (id, name, len(nodes_names_size[name]), len(nodes_names_size[name]) // 600 + 1, fillcolor)
+    dot_result += '\n %s [label="%s %s", penwidth="%d", fillcolor="%s"];' % (
+        id, name, len(nodes_names_size[name]),
+        len(nodes_names_size[name]) // 600 + 1,
+        fillcolor)
 
-dot_result += ("""
-  {
-    rank=source; %s; %s;
-  }
-""" % (get_node_id('1ère lecture • assemblee • depot'), get_node_id('1ère lecture • senat • depot')) if True else '')
+if '1ère lecture • assemblee • depot' in nodes_names:
+    dot_result += ("""
+      {
+        rank=source; %s; %s;
+      }
+    """ % (get_node_id('1ère lecture • assemblee • depot'), get_node_id('1ère lecture • senat • depot')))
 
 dot_result += '\n}'
 

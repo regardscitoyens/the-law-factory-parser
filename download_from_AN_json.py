@@ -1,19 +1,21 @@
 # Download all the ANPY dosleg in the json at
 # data.assemblee-nationale.fr/travaux-parlementaires/dossiers-legislatifs
-# usage: python download_from_json.py dosleg.json
+# usage: python download_from_json.py downloads/an_json/
 
-import requests, json, sys, slugify, os
-
+import requests, json, sys, slugify, os, zipfile
+from io import BytesIO
 from anpy.dossier import Dossier, InvalidResponseException
 from anpy.utils import json_dumps
 
-DATA = json.load(open(sys.argv[1]))
+doslegs_resp = requests.get('http://data.assemblee-nationale.fr/static/openData/repository/LOI/dossiers_legislatifs/Dossiers_Legislatifs_XIV.json.zip')
+doslegs_zip = zipfile.ZipFile(BytesIO(doslegs_resp.content))
+DATA = json.loads(doslegs_zip.open('Dossiers_Legislatifs_XIV.json').read().decode('utf-8'))
 
 for dossier in DATA['export']['dossiersLegislatifs']['dossier']:
     url = 'http://www.assemblee-nationale.fr/{}/dossiers/{}.asp'.format(
         dossier['dossierParlementaire']['legislature'], dossier['dossierParlementaire']['titreDossier']['titreChemin'])
     
-    filepath = sys.argv[2] + slugify.slugify(url)
+    filepath = sys.argv[1] + slugify.slugify(url)
     filepath = filepath.replace('http-www-assemblee-nationale-fr-', '')
     print('downloading', url)
     if os.path.exists(filepath):
