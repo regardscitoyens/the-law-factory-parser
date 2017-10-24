@@ -17,10 +17,10 @@ senapy-cli download_recent data/html/senat/
 senapy-cli parse_directory "data/html/senat/*" data/parsed/senat/
 
 # download the AN pages
-python download_from_AN.py data/html/an/
-python download_from_AN_json.py data/html/an/
+anpy-cli download_recents_dossiers_from_website data/html/an/
+anpy-cli download_recents_dossiers_from_opendata data/html/an/
 # and parse them
-python parse_AN_directory.py "data/html/an/*" data/parsed/an/
+anpy-cli parse_dossier_directory "data/html/an/*" data/parsed/an/
 
 # now it's the big merge (consolidate data from both sources)
 python merge.py "data/parsed/senat/*" "data/parsed/an/*" data/parsed/merged/
