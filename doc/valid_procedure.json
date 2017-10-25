@@ -1,0 +1,147 @@
+{
+  "": {
+    "1ère lecture • assemblee • depot": "AN_first",
+    "1ère lecture • senat • depot": "Sénat_first"
+  },
+  "1ère lecture • assemblee • depot": {
+    "1ère lecture • assemblee • depot": "Sénat_first + new_législature",
+    "1ère lecture • assemblee • commission": "",
+    "1ère lecture • assemblee • hemicycle": "old_procédure"
+  },
+  "1ère lecture • assemblee • commission": {
+    "1ère lecture • assemblee • hemicycle": ""
+  },
+  "1ère lecture • assemblee • hemicycle": {
+    "1ère lecture • senat • depot": "AN_first",
+    "2ème lecture • senat • depot": "Sénat_first",
+    "CMP • CMP • commission": "Sénat_first + urgence",
+    "congrès • congrès • congrès": "Sénat_first + conforme + constit",
+    "constitutionnalité • conseil constitutionnel": "Sénat_first + conforme + saisine",
+    "promulgation • gouvernement": "Sénat_first + conforme"
+  },
+  "1ère lecture • senat • depot": {
+    "1ère lecture • senat • depot": "depot_multiple",
+    "1ère lecture • assemblee • depot": "AN_first + depot_multiple",
+    "1ère lecture • senat • commission": "",
+    "1ère lecture • senat • hemicycle": "old_procédure"
+  },
+  "1ère lecture • senat • commission": {
+    "1ère lecture • senat • hemicycle": ""
+  },
+  "1ère lecture • senat • hemicycle": {
+    "1ère lecture • assemblee • depot": "Sénat_first",
+    "1ère lecture • senat • commission": "renvoi",
+    "2ème lecture • assemblee • depot": "AN_first",
+    "CMP • CMP • commission": "AN_first + urgence",
+    "congrès • congrès • congrès": "AN_first + conforme + constit",
+    "constitutionnalité • conseil constitutionnel": "AN_first + conforme + saisine",
+    "promulgation • gouvernement": "AN_first + conforme"
+  },
+  "2ème lecture • assemblee • depot": {
+    "2ème lecture • assemblee • depot": "Sénat_first + new_législature",
+    "2ème lecture • assemblee • commission": "",
+    "2ème lecture • assemblee • hemicycle": "old_procédure"
+  },
+  "2ème lecture • assemblee • commission": {
+    "2ème lecture • assemblee • hemicycle": ""
+  },
+  "2ème lecture • assemblee • hemicycle": {
+    "2ème lecture • senat • depot": "AN_first",
+    "3ème lecture • senat • depot": "Sénat_first",
+    "CMP • CMP • commission": "Sénat_first",
+    "congrès • congrès • congrès": "Sénat_first + conforme + constit",
+    "constitutionnalité • conseil constitutionnel": "Sénat_first + conforme + saisine",
+    "promulgation • gouvernement": "Sénat_first + conforme"
+  },
+  "2ème lecture • senat • depot": {
+    "2ème lecture • senat • commission": "",
+    "2ème lecture • senat • hemicycle": "old_procédure"
+  },
+  "2ème lecture • senat • commission": {
+    "2ème lecture • senat • hemicycle": ""
+  },
+  "2ème lecture • senat • hemicycle": {
+    "2ème lecture • assemblee • depot": "Sénat_first",
+    "3ème lecture • assemblee • depot": "AN_first",
+    "CMP • CMP • commission": "AN_first",
+    "congrès • congrès • congrès": "AN_first + conforme + constit",
+    "constitutionnalité • conseil constitutionnel": "AN_first + conforme + saisine",
+    "promulgation • gouvernement": "AN_first + conforme"
+  },
+  "3ème lecture • assemblee • depot": {
+    "3ème lecture • assemblee • commission": "",
+    "3ème lecture • assemblee • hemicycle": "old_procédure"
+  },
+  "3ème lecture • assemblee • commission": {
+    "3ème lecture • assemblee • hemicycle": ""
+  },
+  "3ème lecture • assemblee • hemicycle": {
+    "constitutionnalité • conseil constitutionnel": "conforme + saisine",
+    "promulgation • gouvernement": "conforme"
+  },
+  "3ème lecture • senat • depot": {
+    "3ème lecture • senat • commission": "",
+    "3ème lecture • senat • hemicycle": "old_procédure"
+  },
+  "3ème lecture • senat • commission": {
+    "3ème lecture • senat • hemicycle": ""
+  },
+  "3ème lecture • senat • hemicycle": {
+    "constitutionnalité • conseil constitutionnel": "conforme + saisine",
+    "promulgation • gouvernement": "conforme"
+  },
+  "congrès • congrès • congrès": {
+    "congrès • congrès • hemicycle": 2
+  },
+  "congrès • congrès • hemicycle": {
+    "promulgation • gouvernement": 2
+  },
+  "CMP • CMP • commission": {
+    "CMP • assemblee • hemicycle": "",
+    "CMP • senat • hemicycle": "",
+    "nouv. lect. • assemblee • depot": "echec"
+  },
+  "CMP • assemblee • hemicycle": {
+    "CMP • senat • hemicycle": "",
+    "nouv. lect. • assemblee • depot": "rejet",
+    "constitutionnalité • conseil constitutionnel": "saisine",
+    "promulgation • gouvernement": ""
+  },
+  "CMP • senat • hemicycle": {
+    "CMP • assemblee • hemicycle": "",
+    "nouv. lect. • assemblee • depot": "rejet",
+    "constitutionnalité • conseil constitutionnel": "saisine",
+    "promulgation • gouvernement": ""
+  },
+  "nouv. lect. • assemblee • depot": {
+    "nouv. lect. • assemblee • commission": ""
+  },
+  "nouv. lect. • assemblee • commission": {
+    "nouv. lect. • assemblee • hemicycle": ""
+  },
+  "nouv. lect. • assemblee • hemicycle": {
+    "nouv. lect. • senat • depot": ""
+  },
+  "nouv. lect. • senat • depot": {
+    "nouv. lect. • senat • commission": ""
+  },
+  "nouv. lect. • senat • commission": {
+    "nouv. lect. • senat • hemicycle": ""
+  },
+  "nouv. lect. • senat • hemicycle": {
+    "l. définitive • assemblee • depot": "",
+    "constitutionnalité • conseil constitutionnel": "conforme + saisine",
+    "promulgation • gouvernement": "conforme"
+  },
+  "l. définitive • assemblee • depot": {
+    "l. définitive • assemblee • hemicycle": ""
+  },
+  "l. définitive • assemblee • hemicycle": {
+    "constitutionnalité • conseil constitutionnel": "saisine",
+    "promulgation • gouvernement": ""
+  },
+  "constitutionnalité • conseil constitutionnel": {
+    "promulgation • gouvernement": ""
+  },
+  "promulgation • gouvernement": {}
+}
