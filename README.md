@@ -27,4 +27,8 @@ python merge.py "data/parsed/senat/*" "data/parsed/an/*" data/parsed/merged/
 
 # fun stuff
 python steps_as_dot.py data/parsed/merged/all.json | dot -Tsvg > steps.svg
+
+# (debug) compare with verified data
+git clone git@github.com:mdamien/lafabrique-export.git lafabrique
+python tools/compare_all_thelawfactory_and_me.py "lafabrique/*" data/parsed/merged/all.json
 ```
