@@ -15,12 +15,17 @@ senapy-cli download_from_csv data/html/senat/
 senapy-cli download_recent data/html/senat/
 # then parse them
 senapy-cli parse_directory "data/html/senat/*" data/parsed/senat/
+# download and parse one senat dossier (no cache & output to shell)
+senapy-cli parse pjl15-610
+
 
 # download the AN pages
 anpy-cli download_recents_dossiers_from_website data/html/an/
 anpy-cli download_recents_dossiers_from_opendata data/html/an/
 # and parse them
 anpy-cli parse_dossier_directory "data/html/an/*" data/parsed/an/
+# download and parse one AN dossier (no cache & output to shell)
+senapy-cli show_dossier_like_senapy http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp
 
 # now it's the big merge (consolidate data from both sources)
 python merge.py "data/parsed/senat/*" "data/parsed/an/*" data/parsed/merged/
