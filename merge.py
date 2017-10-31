@@ -72,25 +72,16 @@ ALL = [x for x in dedup_by_key(ALL, 'url_dossier_senat')]
 print('ALL (basic dedup)', len(ALL))
 """
 
+all_an_hash_an = {an['url_dossier_assemblee']: an for an in all_an if 'url_dossier_assemblee' in an and an['url_dossier_assemblee']}
+all_an_hash_se = {an['url_dossier_senat']: an for an in all_an if 'url_dossier_senat' in an and an['url_dossier_senat']}
 matched, not_matched = [], []
 not_matched_and_assemblee_id = []
 for dos in all_senat:
-    an_match = None
-    for an in all_an:
-        if an.get('url_dossier_senat') == dos.get('url_dossier_senat') or \
-            an.get('url_dossier_senat','')\
-                .replace('/dossierleg/', '/dossier-legislatif/') \
-                == dos.get('url_dossier_senat'):
-            an_match = an
-            continue
+    if dos['url_dossier_senat'] in all_an_hash_se:
+        matched.append(merge(dos, all_an_hash_se[dos['url_dossier_senat']]))
     # look at a common url for AN after senat since the senat individualize their doslegs
-    if not an_match:
-        for an in all_an:
-            if an.get('url_dossier_assemblee') == dos.get('url_dossier_assemblee'):
-                an_match = an
-                continue
-    if an_match:
-        matched.append(merge(dos, an_match))
+    elif 'url_dossier_assemblee' in dos and dos['url_dossier_assemblee'] in all_an_hash_an:
+        matched.append(merge(dos, all_an_hash_an[dos['url_dossier_assemblee']]))
     else:
         not_matched.append(dos)
         if 'assemblee_id' in dos:
