@@ -21,8 +21,11 @@ def compare(proc, me, verbose=True):
                 if type(obj) is str:
                     # http == https
                     obj = obj.replace('https://', 'http://')
+                    obj = obj.replace('/www.legifrance.gouv.fr', '/legifrance.gouv.fr')
                     # old senat url
                     obj = obj.replace('/dossierleg/', '/dossier-legislatif/')
+                    obj = obj.replace('&categorieLien=id', '')
+                    obj = obj.replace('/./', '/')
                     # 1ère lecture VS 1ere lecture, should be standardized
                     return obj.replace('è', 'e')
                 return obj
@@ -100,17 +103,18 @@ if __name__ == '__main__':
         print(file)
         me = None
         proc = json.load(open(file))
+        proc_url_senat = proc.get('url_dossier_senat', '').replace('http://', 'https://').replace('/dossierleg/', '/dossier-legislatif/')
         for dos in all_doslegs:
-            if dos.get('url_dossier_senat') == proc.get('url_dossier_senat') or \
-                dos.get('url_dossier_senat','').replace('/dossierleg/', '/dossier-legislatif/') == proc.get('url_dossier_senat'):
+            dos_url_senat = dos.get('url_dossier_senat', '').replace('http://', 'https://').replace('/dossierleg/', '/dossier-legislatif/')
+            if dos_url_senat == proc_url_senat:
                 me = dos
-                continue
+                break
         # look at a common url for AN after senat since the senat individualize their doslegs
         if not me:
             for dos in all_doslegs:
                 if dos.get('url_dossier_assemblee') == proc.get('url_dossier_assemblee'):
                     me = dos
-                    continue
+                    break
         if not me:
             missing += 1
             print(file)
