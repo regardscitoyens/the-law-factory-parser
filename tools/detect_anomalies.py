@@ -1,8 +1,14 @@
-import json, sys
+import json, sys, os
 
-procedure = json.load(open('doc/valid_procedure.json'))
+procedure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'doc/valid_procedure.json')
+procedure = json.load(open(procedure_file))
 
-dossiers = json.load(open(sys.argv[1]))
+if not os.isatty(0):
+    dossiers = json.loads(sys.stdin.read())
+    if type(dossiers) is not list:
+        dossiers = [dossiers]
+else:
+    dossiers = json.load(open(sys.argv[1]))
 
 anomalies = 0
 for dos in dossiers:
@@ -11,7 +17,7 @@ for dos in dossiers:
         step_name = ' • '.join((x for x in (step.get('stage'), step.get('institution'), step.get('step','')) if x))
         if procedure.get(prev_step, {}).get(step_name, False) is False:
             print('INCORRECT', prev_step, '->', step_name)
-            print(dos.get('url_dossier_senat', dos.get('url_dossier_assemblee')))
+            print(dos.get('url_dossier_senat'), '|',dos.get('url_dossier_assemblee'))
             print()
             anomalies += 1
         
