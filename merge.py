@@ -18,6 +18,13 @@ def dedup_by_key(list, key, alt_key=None, alt_key2=None, verbose=False):
         elif verbose:
             print('dedup', v)
 
+def is_after_13_legislature(dos):
+    try:
+        legislature = int(dos['url_dossier_assemblee'].split('.fr/')[1].split('/')[0])
+        return legislature >= 13
+    except:
+        pass
+    return False
 
 def date_is_after_2008_reform(date):
     # https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000019237256&dateTexte=&categorieLien=id
@@ -28,7 +35,45 @@ def date_is_after_2008_reform(date):
     # return year > 2008 or (year == 2008 and month >= 9) # we take september 2008
 
 
+def merge_previous_works_an(doslegs):
+    """
+    Takes the AN doslegs and merge those that goes over multiple legislature with
+    the previous ones
+    """
+    all_an_hash_an = {an['url_dossier_assemblee']: an for an in all_an if 'url_dossier_assemblee' in an and an['url_dossier_assemblee']}
+    
+    merged_dos_urls = set()
+    for dos in doslegs:
+        if dos['url_dossier_assemblee'] not in merged_dos_urls:
+            try:
+                legislature = int(dos['url_dossier_assemblee'].split('.fr/')[1].split('/')[0])
+            except:
+                print("INVALID URL AN -", dos['url_dossier_assemblee'])
+                continue
+
+            for i in (1, 2, 3, 4):
+                older_url = dos['url_dossier_assemblee'].replace(str(legislature), str(legislature - i))
+                if older_url in all_an_hash_an:
+                    older_dos = all_an_hash_an[older_url]
+
+                    # remove promulgation step
+                    if older_dos['steps'] and older_dos['steps'][-1].get('stage') == 'promulgation':
+                        older_dos['steps'] = older_dos['steps'][:-1]
+
+                    if dos['steps'] and older_dos['steps'] and older_dos['steps'][-1]['source_url'] == dos['steps'][0]['source_url']:
+                        dos['steps'] = older_dos['steps'][:-1] + dos['steps']
+                    elif dos['steps'] and len(older_dos['steps']) > 1 and older_dos['steps'][-2]['source_url'] == dos['steps'][0]['source_url']:
+                        dos['steps'] = older_dos['steps'][:-2] + dos['steps']
+                    else:
+                        dos['steps'] = older_dos['steps'] + dos['steps']
+                    merged_dos_urls.add(older_url)
+
+    print(len(merged_dos_urls), 'AN doslegs merged with previous ones')
+
+    return [dos for dos in doslegs if dos.get('url_dossier_assemblee') not in merged_dos_urls]
+
 def merge(senat, an):
+    """Takes a senat dosleg and an AN dosleg and returns a merged version"""
     dos = copy.deepcopy(senat)
     dos['steps'] = []
     for i, step in enumerate(senat['steps']):
@@ -91,6 +136,8 @@ all_an = [json.load(open(f)) for f in glob.glob(AN_GLOB)]
 all_an = [x for x in all_an if x]
 # all_an = [x for x in all_an if x and date_is_after_2008_reform(x.get('beginning','1900-0-0'))]
 # TODO: dedup by url_dossier_assemblee but multiple doslegs in assemblee pages
+all_an = merge_previous_works_an(all_an)
+all_an = [dos for dos in all_an if is_after_13_legislature(dos)]
 all_an = [dos for dos in dedup_by_key(all_an, 'url_dossier_senat')]
 
 print('an loaded', len(all_an))
