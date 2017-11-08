@@ -91,15 +91,18 @@ def merge(senat, an):
     dos['url_dossier_assemblee'] = an['url_dossier_assemblee']
 
     dos['steps'] = []
+
+    an_offset = 0
     for i, step in enumerate(senat['steps']):
         steps_to_add = []
         # get source_url from AN in priority
         if step.get('institution') == 'assemblee':
-            if len(an['steps']) > i:
-                an_step = an['steps'][i]
+            an_index = i + an_offset
+            if len(an['steps']) > an_index:
+                an_step = an['steps'][an_index]
                 if an_step.get('stage') == step.get('stage') \
                     and an_step.get('step') == step.get('step'):
-                    steps_to_add.append(an['steps'][i])
+                    steps_to_add.append(an['steps'][an_index])
 
                 """
                 try to find "holes":
@@ -107,20 +110,23 @@ def merge(senat, an):
                     - next step is different
                     - a few steps later, it's the same !
                 """
-                if len(an['steps']) > i+1 and len(senat['steps']) > i+1:
-                    next_step_an = an['steps'][i+1]
+                if len(an['steps']) > an_index+1 and len(senat['steps']) > i+1:
+                    next_step_an = an['steps'][an_index+1]
                     next_step = senat['steps'][i+1]
                     if next_step_an.get('stage') != next_step.get('stage') \
                         or next_step_an.get('step') != next_step.get('step'):
 
                         found_same_step_at = None
-                        for j, next_an in enumerate(an['steps'][i+1:]):
+                        for j, next_an in enumerate(an['steps'][an_index+1:]):
                             if next_an.get('institution') != 'senat' and next_an.get('stage') == next_step.get('stage') \
                                 and next_an.get('step') == next_step.get('step'):
                                 found_same_step_at = j
+                                break
 
                         if found_same_step_at is not None:
-                            steps_to_add += an['steps'][i+1:i+1+j]
+                            steps_to_add = an['steps'][an_index:an_index+j+1]
+
+                        an_offset += j
 
         if len(steps_to_add) == 0:
             steps_to_add = [step]
@@ -128,11 +134,11 @@ def merge(senat, an):
         dos['steps'] += steps_to_add
     return dos
 
-""" TODO: proper test for merging
-from pprint import pprint as pp
-pp(merge(json.load(open('data/parsed/senat/pjl10-515')), json.load(open('data/parsed/an/13-accord-fiscal-dominique'))))
-"""
-
+# """ TODO: proper test for merging
+# from pprint import pprint as pp
+# pp(merge(json.load(open('data/parsed/senat/pjl08-248')), json.load(open('data/parsed/an/13-kenya-imposition-fraude'))))
+# pp(merge(json.load(open('data/parsed/senat/pjl10-515')), json.load(open('data/parsed/an/13-accord-fiscal-dominique'))))
+# """
 
 SENAT_GLOB = sys.argv[1] # ex: 'senat_dossiers/*
 AN_GLOB = sys.argv[2] # ex: 'an_dossiers/*'
