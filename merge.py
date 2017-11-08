@@ -1,7 +1,7 @@
 import glob, json, sys, copy, os
 
 from lawfactory_utils.urls import clean_url
-
+from tools.detect_anomalies import find_anomalies
 
 def dedup_by_key(list, key, alt_key=None, alt_key2=None, verbose=False):
     uniqs = set()
@@ -151,7 +151,12 @@ def merge(senat, an):
             steps_to_add = [step]
 
         dos['steps'] += steps_to_add
+
+    if find_anomalies([senat], verbose=False) < find_anomalies([dos], verbose=False) or \
+        find_anomalies([an], verbose=False) < find_anomalies([dos], verbose=False):
+        print('REGRESSION DURING MERGE:', dos['url_dossier_senat'])
     return dos
+
 
 """ TODO: proper test for merging
 from pprint import pprint as pp
@@ -172,6 +177,7 @@ pp(merge(json.load(open('data/parsed/senat/pjl11-187')), json.load(open('data/pa
 sys.exit()
 # """
 
+
 SENAT_GLOB = sys.argv[1] # ex: 'senat_dossiers/*
 AN_GLOB = sys.argv[2] # ex: 'an_dossiers/*'
 OUTPUT_DIR = sys.argv[3]
@@ -179,12 +185,17 @@ OUTPUT_DIR = sys.argv[3]
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
+print('loading senat...')
 all_senat = [json.load(open(f)) for f in glob.glob(SENAT_GLOB)]
 all_senat = [x for x in all_senat if x and date_is_after_2008_reform(x.get('beginning','1900-0-0'))]
 all_senat = [dos for dos in dedup_by_key(all_senat, 'url_dossier_senat')]
 
 print('senat loaded', len(all_senat))
+print('  - anomalies', find_anomalies(all_senat, verbose=False)) 
+print()
 
+
+print('loading AN...')
 all_an = [json.load(open(f)) for f in glob.glob(AN_GLOB)]
 all_an = [x for x in all_an if x]
 # all_an = [x for x in all_an if x and date_is_after_2008_reform(x.get('beginning','1900-0-0'))]
@@ -194,7 +205,11 @@ all_an = [dos for dos in all_an if is_after_13_legislature(dos)]
 all_an = [dos for dos in dedup_by_key(all_an, 'url_dossier_senat')]
 
 print('an loaded', len(all_an))
+print('  - anomalies', find_anomalies(all_an, verbose=False)) 
+print()
 
+
+print('merging....')
 all_an_hash_an = {clean_url(an['url_dossier_assemblee']): an for an in all_an if 'url_dossier_assemblee' in an and an['url_dossier_assemblee']}
 all_an_hash_se = {clean_url(an['url_dossier_senat']): an for an in all_an if 'url_dossier_senat' in an and an['url_dossier_senat']}
 all_an_hash_legifrance = {clean_url(an['url_jo']): an for an in all_an if 'url_jo' in an and an['url_jo']}
@@ -204,7 +219,7 @@ for dos in all_senat:
     clean_senat = clean_url(dos['url_dossier_senat'])
     clean_an = clean_url(dos['url_dossier_assemblee']) if 'url_dossier_assemblee' in dos else None
     clean_legi = clean_url(dos['url_jo']) if 'url_jo' in dos else None
-    
+
     if clean_senat in all_an_hash_se:
         matched.append(merge(dos, all_an_hash_se[clean_senat]))
     # look at a common url for AN after senat since the senat individualize their doslegs
@@ -221,7 +236,7 @@ print()
 print('match', len(matched))
 print('no match', len(not_matched))
 print('no match && assemblee_id', len(not_matched_and_assemblee_id))
-
+print('  - anomalies (ALL)', find_anomalies(matched+not_matched, verbose=False)) 
 
 json.dump(all_senat, open(OUTPUT_DIR + 'all_senat.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
 json.dump(all_an, open(OUTPUT_DIR + 'all_an.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
