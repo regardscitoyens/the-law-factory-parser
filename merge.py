@@ -215,32 +215,48 @@ all_an_hash_se = {clean_url(an['url_dossier_senat']): an for an in all_an if 'ur
 all_an_hash_legifrance = {clean_url(an['url_jo']): an for an in all_an if 'url_jo' in an and an['url_jo']}
 matched, not_matched = [], []
 not_matched_and_assemblee_id = []
+an_not_matched = all_an
+
 for dos in all_senat:
     clean_senat = clean_url(dos['url_dossier_senat'])
     clean_an = clean_url(dos['url_dossier_assemblee']) if 'url_dossier_assemblee' in dos else None
     clean_legi = clean_url(dos['url_jo']) if 'url_jo' in dos else None
 
+    def merge_an_dos(dos, an):
+        global an_not_matched
+        matched.append(merge(dos, an))
+        an_not_matched = [an2 for an2 in an_not_matched if an != an2]
+
     if clean_senat in all_an_hash_se:
-        matched.append(merge(dos, all_an_hash_se[clean_senat]))
+        merge_an_dos(dos, all_an_hash_se[clean_senat])
     # look at a common url for AN after senat since the senat individualize their doslegs
     elif clean_an and clean_an in all_an_hash_an:
-        matched.append(merge(dos, all_an_hash_an[clean_an]))
+        merge_an_dos(dos, all_an_hash_an[clean_an])
     elif clean_legi and clean_legi in all_an_hash_legifrance:
-        matched.append(merge(dos, all_an_hash_legifrance[clean_legi]))
+        merge_an_dos(dos, all_an_hash_legifrance[clean_legi])
     else:
         not_matched.append(dos)
         if 'assemblee_id' in dos:
             not_matched_and_assemblee_id.append(dos)
 
+ALL = matched + not_matched + an_not_matched
+
 print()
-print('match', len(matched))
-print('no match', len(not_matched))
-print('no match && assemblee_id', len(not_matched_and_assemblee_id))
-print('  - anomalies (ALL)', find_anomalies(matched+not_matched, verbose=False)) 
+print('match (senat)', len(matched))
+print('no match (senat)', len(not_matched))
+print('no match (senat) && assemblee_id', len(not_matched_and_assemblee_id))
+print('  - anomalies (senat merged)', find_anomalies(matched+not_matched, verbose=False)) 
+print('no match (AN)', len(an_not_matched))
+print('  - anomalies (AN)', find_anomalies(an_not_matched, verbose=False)) 
+print('all (matched and not matched)', len(ALL))
+print('  - anomalies (ALL)', find_anomalies(ALL, verbose=False)) 
 
 json.dump(all_senat, open(OUTPUT_DIR + 'all_senat.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
 json.dump(all_an, open(OUTPUT_DIR + 'all_an.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-json.dump(matched + not_matched, open(OUTPUT_DIR + 'all.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+json.dump(ALL, open(OUTPUT_DIR + 'all.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
 json.dump(matched, open(OUTPUT_DIR + 'matched.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
 json.dump(not_matched, open(OUTPUT_DIR + 'not_matched.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
 json.dump(not_matched_and_assemblee_id, open(OUTPUT_DIR + 'not_matched_and_assemblee_id.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+
+print()
+print('output in', OUTPUT_DIR, 'have fun !')
