@@ -20,6 +20,7 @@ def dedup_by_key(list, key, alt_key=None, alt_key2=None, verbose=False):
         elif verbose:
             print('dedup', v)
 
+
 def is_after_13_legislature(dos):
     try:
         legislature = int(dos['url_dossier_assemblee'].split('.fr/')[1].split('/')[0])
@@ -27,6 +28,7 @@ def is_after_13_legislature(dos):
     except:
         pass
     return False
+
 
 def date_is_after_2008_reform(date):
     # https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000019237256&dateTexte=&categorieLien=id
@@ -80,6 +82,7 @@ def merge_previous_works_an(doslegs):
     print(len(merged_dos_urls), 'AN doslegs merged with previous ones')
 
     return [dos for dos in doslegs if dos.get('url_dossier_assemblee') not in merged_dos_urls]
+
 
 def merge(senat, an):
     """Takes a senat dosleg and an AN dosleg and returns a merged version"""
@@ -154,17 +157,6 @@ all_an = [dos for dos in dedup_by_key(all_an, 'url_dossier_senat')]
 
 print('an loaded', len(all_an))
 
-json.dump(all_senat, open(OUTPUT_DIR + 'all_senat.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-json.dump(all_an, open(OUTPUT_DIR + 'all_an.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-
-"""
-ALL = all_an + all_senat
-print('ALL (before dedup)', len(ALL))
-ALL = [x for x in dedup_by_key(ALL, 'url_dossier_assemblee')]
-ALL = [x for x in dedup_by_key(ALL, 'url_dossier_senat')]
-print('ALL (basic dedup)', len(ALL))
-"""
-
 all_an_hash_an = {clean_url(an['url_dossier_assemblee']): an for an in all_an if 'url_dossier_assemblee' in an and an['url_dossier_assemblee']}
 all_an_hash_se = {clean_url(an['url_dossier_senat']): an for an in all_an if 'url_dossier_senat' in an and an['url_dossier_senat']}
 all_an_hash_legifrance = {clean_url(an['url_jo']): an for an in all_an if 'url_jo' in an and an['url_jo']}
@@ -187,49 +179,15 @@ for dos in all_senat:
         if 'assemblee_id' in dos:
             not_matched_and_assemblee_id.append(dos)
 
-"""
-all_senat_hash = {an['url_dossier_senat']: an for an in all_senat if 'url_dossier_senat' in an and an['url_dossier_senat']}
-c = 0
-for dos in all_an:
-    if dos.get('url_dossier_senat'):
-        if dos.get('url_dossier_senat') not in all_senat_hash:
-            print('NOT IN AN', dos['url_dossier_senat'])
-            c += 1
-print(c)
-"""
-
 print()
 print('match', len(matched))
 print('no match', len(not_matched))
 print('no match && assemblee_id', len(not_matched_and_assemblee_id))
 
+
+json.dump(all_senat, open(OUTPUT_DIR + 'all_senat.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+json.dump(all_an, open(OUTPUT_DIR + 'all_an.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
 json.dump(matched + not_matched, open(OUTPUT_DIR + 'all.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
 json.dump(matched, open(OUTPUT_DIR + 'matched.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
 json.dump(not_matched, open(OUTPUT_DIR + 'not_matched.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
 json.dump(not_matched_and_assemblee_id, open(OUTPUT_DIR + 'not_matched_and_assemblee_id.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-
-
-"""
-# only on senat => find all doslegs from all_senat that are not in all_an
-
-all_an_urls = set([x['assemblee_id'] for x in all_an_converted])
-all_senat_an_urls = set([x.get('assemblee_id') for x in all_senat])
-print('strange stuff', len(all_senat_an_urls - all_an_urls))
-
-# for x in all_senat_an_urls - all_an_urls: print(x)
-
-
-# legislature seems not unique, assemblee id can change
-
-
-json.dump(all_senat, open('all_senat.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-# json.dump(all_legi, open('all_legi.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-json.dump(all_an, open('all_an.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-json.dump(ALL, open('all.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-json.dump(all_an_converted, open('all_an_converted.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-
-all_senat_jo = [dos for dos in all_senat if dos.get('end_jo')]
-
-print('all_senat_jo', len(all_senat_jo))
-json.dump(all_senat_jo, open('all_senat_jo.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-"""
