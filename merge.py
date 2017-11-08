@@ -1,5 +1,7 @@
 import glob, json, sys, copy, os
 
+from lawfactory_utils.urls import clean_url
+
 
 def dedup_by_key(list, key, alt_key=None, alt_key2=None, verbose=False):
     uniqs = set()
@@ -51,22 +53,29 @@ def merge_previous_works_an(doslegs):
                 print("INVALID URL AN -", dos['url_dossier_assemblee'])
                 continue
 
+            current_last_dos = dos
             for i in (1, 2, 3, 4):
-                older_url = dos['url_dossier_assemblee'].replace(str(legislature), str(legislature - i))
-                if older_url in all_an_hash_an:
-                    older_dos = all_an_hash_an[older_url]
+                if dos.get('previous_works'):
+                    older_url = dos['url_dossier_assemblee'].replace(str(legislature), str(legislature - i))
+                    if older_url in all_an_hash_an:
+                        older_dos = all_an_hash_an[older_url]
 
-                    # remove promulgation step
-                    if older_dos['steps'] and older_dos['steps'][-1].get('stage') == 'promulgation':
-                        older_dos['steps'] = older_dos['steps'][:-1]
+                        # remove promulgation step
+                        if older_dos['steps'] and older_dos['steps'][-1].get('stage') == 'promulgation':
+                            older_dos['steps'] = older_dos['steps'][:-1]
 
-                    if dos['steps'] and older_dos['steps'] and older_dos['steps'][-1]['source_url'] == dos['steps'][0]['source_url']:
-                        dos['steps'] = older_dos['steps'][:-1] + dos['steps']
-                    elif dos['steps'] and len(older_dos['steps']) > 1 and older_dos['steps'][-2]['source_url'] == dos['steps'][0]['source_url']:
-                        dos['steps'] = older_dos['steps'][:-2] + dos['steps']
-                    else:
-                        dos['steps'] = older_dos['steps'] + dos['steps']
-                    merged_dos_urls.add(older_url)
+                        if dos['steps'] and older_dos['steps'] and older_dos['steps'][-1]['source_url'] == dos['steps'][0]['source_url']:
+                            dos['steps'] = older_dos['steps'][:-1] + dos['steps']
+                        elif dos['steps'] and len(older_dos['steps']) > 1 and older_dos['steps'][-2]['source_url'] == dos['steps'][0]['source_url']:
+                            dos['steps'] = older_dos['steps'][:-2] + dos['steps']
+                        else:
+                            dos['steps'] = older_dos['steps'] + dos['steps']
+                        merged_dos_urls.add(older_url)
+
+                        if 'url_dossier_senat' in older_dos and not 'url_dossier_senat' in dos:
+                            dos['url_dossier_senat'] = older_dos['url_dossier_senat']
+
+                        current_last_dos = older_dos
 
     print(len(merged_dos_urls), 'AN doslegs merged with previous ones')
 
@@ -75,6 +84,9 @@ def merge_previous_works_an(doslegs):
 def merge(senat, an):
     """Takes a senat dosleg and an AN dosleg and returns a merged version"""
     dos = copy.deepcopy(senat)
+
+    dos['url_dossier_assemblee'] = an['url_dossier_assemblee']
+
     dos['steps'] = []
     for i, step in enumerate(senat['steps']):
         steps_to_add = []
@@ -153,20 +165,38 @@ ALL = [x for x in dedup_by_key(ALL, 'url_dossier_senat')]
 print('ALL (basic dedup)', len(ALL))
 """
 
-all_an_hash_an = {an['url_dossier_assemblee']: an for an in all_an if 'url_dossier_assemblee' in an and an['url_dossier_assemblee']}
-all_an_hash_se = {an['url_dossier_senat']: an for an in all_an if 'url_dossier_senat' in an and an['url_dossier_senat']}
+all_an_hash_an = {clean_url(an['url_dossier_assemblee']): an for an in all_an if 'url_dossier_assemblee' in an and an['url_dossier_assemblee']}
+all_an_hash_se = {clean_url(an['url_dossier_senat']): an for an in all_an if 'url_dossier_senat' in an and an['url_dossier_senat']}
+all_an_hash_legifrance = {clean_url(an['url_jo']): an for an in all_an if 'url_jo' in an and an['url_jo']}
 matched, not_matched = [], []
 not_matched_and_assemblee_id = []
 for dos in all_senat:
-    if dos['url_dossier_senat'] in all_an_hash_se:
-        matched.append(merge(dos, all_an_hash_se[dos['url_dossier_senat']]))
+    clean_senat = clean_url(dos['url_dossier_senat'])
+    clean_an = clean_url(dos['url_dossier_assemblee']) if 'url_dossier_assemblee' in dos else None
+    clean_legi = clean_url(dos['url_jo']) if 'url_jo' in dos else None
+
+    if clean_senat in all_an_hash_se:
+        matched.append(merge(dos, all_an_hash_se[clean_senat]))
     # look at a common url for AN after senat since the senat individualize their doslegs
-    elif 'url_dossier_assemblee' in dos and dos['url_dossier_assemblee'] in all_an_hash_an:
-        matched.append(merge(dos, all_an_hash_an[dos['url_dossier_assemblee']]))
+    elif clean_an and clean_an in all_an_hash_an:
+        matched.append(merge(dos, all_an_hash_an[clean_an]))
+    elif clean_legi and clean_legi in all_an_hash_legifrance:
+        matched.append(merge(dos, all_an_hash_legifrance[clean_legi]))
     else:
         not_matched.append(dos)
         if 'assemblee_id' in dos:
             not_matched_and_assemblee_id.append(dos)
+
+"""
+all_senat_hash = {an['url_dossier_senat']: an for an in all_senat if 'url_dossier_senat' in an and an['url_dossier_senat']}
+c = 0
+for dos in all_an:
+    if dos.get('url_dossier_senat'):
+        if dos.get('url_dossier_senat') not in all_senat_hash:
+            print('NOT IN AN', dos['url_dossier_senat'])
+            c += 1
+print(c)
+"""
 
 print()
 print('match', len(matched))
