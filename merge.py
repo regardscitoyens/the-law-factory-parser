@@ -92,41 +92,60 @@ def merge(senat, an):
 
     dos['steps'] = []
 
+    def same_stage_step_instit(a, b):
+        return a.get('stage') == b.get('stage') and a.get('step') == b.get('step') \
+            and a.get('institution') == b.get('institution')
+
+    # TODO: detect CMP.hemicycle and do re-ordering as a pre-processing step
+
     an_offset = 0
     for i, step in enumerate(senat['steps']):
         steps_to_add = []
-        # get source_url from AN in priority
+
+        # generate an offset when steps are missing on the AN side
+        if step.get('institution') == 'senat':
+            an_index = i + an_offset
+            if len(an['steps']) > an_index and an_index > 0:
+                an_step = an['steps'][an_index]
+                if not same_stage_step_instit(an_step, step):
+                    found_same_step_at = None
+                    for j, next_senat in enumerate(senat['steps'][i:]):
+                        if same_stage_step_instit(next_senat, an_step) \
+                            and next_senat.get('source_url') == an_step.get('source_url'):
+                            found_same_step_at = j
+                            break
+                    if found_same_step_at:
+                        an_offset -= found_same_step_at
+
+        # complete senat data from AN
         if step.get('institution') == 'assemblee':
             an_index = i + an_offset
-            if len(an['steps']) > an_index:
+            if len(an['steps']) > an_index and an_index > 0:
                 an_step = an['steps'][an_index]
-                if an_step.get('stage') == step.get('stage') \
-                    and an_step.get('step') == step.get('step'):
+
+                # get data from AN even if there's data on the senat side
+                if same_stage_step_instit(an_step, step):
                     steps_to_add.append(an['steps'][an_index])
 
-                """
-                try to find "holes":
-                    - we are in an AN step
-                    - next step is different
-                    - a few steps later, it's the same !
-                """
-                if len(an['steps']) > an_index+1 and len(senat['steps']) > i+1:
-                    next_step_an = an['steps'][an_index+1]
-                    next_step = senat['steps'][i+1]
-                    if next_step_an.get('stage') != next_step.get('stage') \
-                        or next_step_an.get('step') != next_step.get('step'):
+                    """
+                    try to find "holes":
+                        - we are in an AN step
+                        - next step is different
+                        - a few steps later, it's the same !
+                    """
+                    if len(an['steps']) > an_index+1 and len(senat['steps']) > i+1:
+                        next_step_an = an['steps'][an_index+1]
+                        next_step = senat['steps'][i+1]
+                        if not same_stage_step_instit(next_step_an, next_step):
+                            found_same_step_at = None
+                            for j, next_an in enumerate(an['steps'][an_index+1:]):
+                                if next_an.get('institution') != 'senat' and same_stage_step_instit(next_an, next_step):
+                                    found_same_step_at = j
+                                    break
 
-                        found_same_step_at = None
-                        for j, next_an in enumerate(an['steps'][an_index+1:]):
-                            if next_an.get('institution') != 'senat' and next_an.get('stage') == next_step.get('stage') \
-                                and next_an.get('step') == next_step.get('step'):
-                                found_same_step_at = j
-                                break
-
-                        if found_same_step_at is not None:
-                            steps_to_add = an['steps'][an_index:an_index+j+1]
-
-                        an_offset += j
+                            if found_same_step_at is not None:
+                                steps_to_add = an['steps'][an_index:an_index+j+1]
+                                an_offset += found_same_step_at
 
         if len(steps_to_add) == 0:
             steps_to_add = [step]
@@ -134,10 +153,23 @@ def merge(senat, an):
         dos['steps'] += steps_to_add
     return dos
 
-# """ TODO: proper test for merging
-# from pprint import pprint as pp
+""" TODO: proper test for merging
+from pprint import pprint as pp
+
+# strange CMP.commission double
+pp(merge(json.load(open('data/parsed/senat/pjl13-215')), json.load(open('data/parsed/an/14-collectif-budgetaire-2013'))))
+
+# strange CMP.hemicycle overwrite: assemblee CMP url stay void
+pp(merge(json.load(open('data/parsed/senat/pjl11-187')), json.load(open('data/parsed/an/13-limite-age-magistrats-ordre-judiciaire'))))
+
+# complete AN urls
+# pp(merge(json.load(open('data/parsed/senat/pjl11-497')), json.load(open('data/parsed/an/14-accord-serbie-cooperation-policiere'))))
+
+# complete AN steps
 # pp(merge(json.load(open('data/parsed/senat/pjl08-248')), json.load(open('data/parsed/an/13-kenya-imposition-fraude'))))
 # pp(merge(json.load(open('data/parsed/senat/pjl10-515')), json.load(open('data/parsed/an/13-accord-fiscal-dominique'))))
+
+sys.exit()
 # """
 
 SENAT_GLOB = sys.argv[1] # ex: 'senat_dossiers/*
@@ -172,7 +204,7 @@ for dos in all_senat:
     clean_senat = clean_url(dos['url_dossier_senat'])
     clean_an = clean_url(dos['url_dossier_assemblee']) if 'url_dossier_assemblee' in dos else None
     clean_legi = clean_url(dos['url_jo']) if 'url_jo' in dos else None
-
+    
     if clean_senat in all_an_hash_se:
         matched.append(merge(dos, all_an_hash_se[clean_senat]))
     # look at a common url for AN after senat since the senat individualize their doslegs
