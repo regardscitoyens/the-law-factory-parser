@@ -2,3 +2,5 @@
 /data/
 *.log
 /lafabrique/
+*.sqlite
+*.pyc

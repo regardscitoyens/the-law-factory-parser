@@ -14,10 +14,7 @@ import simplejson as json
 from bs4 import BeautifulSoup
 from sort_articles import bister
 
-def parse(url, ORDER=''):
-    if ORDER:
-        ORDER = "%02d_" % int(ORDER)
-    
+def parse(url):
     # Warning changing parenthesis in this regexp has multiple consequences throughout the code
     section_titles = "((chap|t)itre|volume|livre|tome|(sous-)?section)"
 
