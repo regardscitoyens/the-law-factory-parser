@@ -1,4 +1,4 @@
-import sys, json, time
+import sys, json, time, random
 
 from lawfactory_utils.urls import clean_url
 
@@ -50,8 +50,31 @@ def find_good_url(url):
             return False
         if '/dossiers/' in url:
             return False
+
         if url.endswith('.pdf'):
             url = url.replace('/pdf/', '/propositions/').replace('.pdf', '.asp')
+
+        if '/ta-commission/' in url:
+            text_id = url.split('/')[-1].split('-')[0].replace('r', '')
+            new_url = url.split('/ta-commission/')[0] + '/textes/' + text_id + '.asp'
+            if test_status(new_url):
+                return new_url
+
+        if '/projets/' in url:
+            new_url = url.replace('/projets/pl', '/textes/')
+            if test_status(new_url):
+                return new_url
+
+        if '/propositions/' in url:
+            new_url = url.replace('/propositions/pion', '/textes/')
+            if test_status(new_url):
+                return new_url
+
+        if '/ta/' in url:
+            new_url = url.replace('/ta/ta', '/textes/')
+            if test_status(new_url):
+                return new_url
+
         resp = test_status(url)
         if not resp or "n'est pas encore édité" in resp.text:
             return False
@@ -73,9 +96,17 @@ if __name__ == '__main__':
     # senat multi-page
     assert find_good_url('https://www.senat.fr/rap/l08-584/l08-584.html') == 'https://www.senat.fr/rap/l08-584/l08-584_mono.html'
 
+    # AN improve link
+    assert find_good_url('http://www.assemblee-nationale.fr/15/ta-commission/r0268-a0.asp') == 'http://www.assemblee-nationale.fr/15/textes/0268.asp'
+    assert find_good_url('http://www.assemblee-nationale.fr/15/projets/pl0315.asp') == 'http://www.assemblee-nationale.fr/15/textes/0315.asp'
+    assert find_good_url('http://www.assemblee-nationale.fr/14/propositions/pion4347.asp') == 'http://www.assemblee-nationale.fr/14/textes/4347.asp'
+    assert find_good_url('http://www.assemblee-nationale.fr/15/ta/ta0021.asp') == 'http://www.assemblee-nationale.fr/15/textes/0021.asp'
+
+    print("tests passed..let's fix some links !")
 
     try:
         doslegs = json.load(open(sys.argv[1]))
+        random.shuffle(doslegs)
         ok, nok = 0, 0
         for dos in doslegs:
             for step in dos['steps']:
@@ -122,6 +153,7 @@ Non-géré par parse_texte:
  - http://www.assemblee-nationale.fr/13/rapports/r1151.asp
     "Suivant les conclusions du rapporteur, la commission adopte les projets de loi (nos 1038, 1039 et 1040)."
  - PLF - https://www.legifrance.gouv.fr/eli/loi/2016/7/22/FCPX1613153L/jo/texte
+ - encoding - http://www.assemblee-nationale.fr/15/textes/0019.asp
 
 Cas difficiles:
  - tomes: http://www.assemblee-nationale.fr/13/rapports/r1211.asp

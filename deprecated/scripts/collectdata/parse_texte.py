@@ -14,10 +14,10 @@ import simplejson as json
 from bs4 import BeautifulSoup
 from sort_articles import bister
 
-def parse(url, ORDER=''):
+def parse(url, ORDER='', verbose=False):
     if ORDER:
         ORDER = "%02d_" % int(ORDER)
-    
+
     # Warning changing parenthesis in this regexp has multiple consequences throughout the code
     section_titles = "((chap|t)itre|volume|livre|tome|(sous-)?section)"
 
@@ -175,9 +175,11 @@ def parse(url, ORDER=''):
                 for d in multiples:
                     new = dict(dic)
                     new['titre'] = d
-                    #print(json.dumps(new, sort_keys=True, ensure_ascii=False, indent=2))
+                    if verbose:
+                        print(json.dumps(new, sort_keys=True, ensure_ascii=False, indent=2))
                 return
-       #print(json.dumps(dic, sort_keys=True, ensure_ascii=False, indent=2))
+        if verbose:
+            print(json.dumps(dic, sort_keys=True, ensure_ascii=False, indent=2))
 
 
     def save_text(txt):
@@ -376,4 +378,4 @@ def parse(url, ORDER=''):
     pr_js(article)
 
 if __name__ == '__main__':
-    parse(sys.argv[1])
+    parse(sys.argv[1], verbose=True)
