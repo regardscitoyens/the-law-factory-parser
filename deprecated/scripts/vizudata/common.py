@@ -3,7 +3,7 @@
 
 import sys, os, re, requests
 from datetime import date
-from htmlentitydefs import name2codepoint
+from html.entities import name2codepoint
 from csv import DictReader
 try:
     import json
@@ -15,10 +15,10 @@ def open_csv(dirpath, filename, delimiter=";"):
         data = []
         with open(os.path.join(dirpath, filename), 'r') as f:
             for row in DictReader(f, delimiter=delimiter):
-                data.append(dict([(k.decode('utf-8'), v.decode('utf-8')) for k, v in row.iteritems()]))
+                data.append(dict([(k.decode('utf-8'), v.decode('utf-8')) for k, v in row.items()]))
             return data
     except Exception as e:
-        print >> sys.stderr, type(e), e
+        print(type(e), e, file=sys.stderr)
         sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath.encode('utf-8')))
         exit(1)
 
@@ -27,7 +27,7 @@ def open_json(dirpath, filename):
         with open(os.path.join(dirpath, filename), 'r') as f:
             return json.load(f)
     except Exception as e:
-        print >> sys.stderr, type(e), e
+        print(type(e), e, file=sys.stderr)
         sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath.encode('utf-8')))
         exit(1)
 
@@ -40,11 +40,11 @@ def print_json(dico, filename=None):
                 os.remove(filename)
             os.rename("%s.tmp" % filename, filename)
         except Exception as e:
-            print >> sys.stderr, type(e), e
+            print(type(e), e, file=sys.stderr)
             sys.stderr.write("ERROR: Could not write in file %s" % filename)
             exit(1)
     else:
-        print json.dumps(dico, ensure_ascii=False).encode('utf8')
+        print(json.dumps(dico, ensure_ascii=False).encode('utf8'))
 
 datize = lambda d: date(*tuple([int(a) for a in d.split('-')]))
 def format_date(d):
@@ -55,7 +55,7 @@ def format_date(d):
 upper_first = lambda t: t[0].upper() + t[1:]
 
 re_entities = re.compile(r'&([^;]+)(;|$)')
-decode_char = lambda x: unichr(int(x.group(1)[1:]) if x.group(1).startswith('#') else name2codepoint[x.group(1)])
+decode_char = lambda x: chr(int(x.group(1)[1:]) if x.group(1).startswith('#') else name2codepoint[x.group(1)])
 decode_html = lambda text: re_entities.sub(decode_char, text)
 
 def identify_room(data, datatype):
@@ -166,16 +166,16 @@ class Context(object):
                 groupes[gpid]['order'] = 10 + self.allgroupes[urlapi][gpid]['order']
                 groupes[gpid]['color'] = self.allgroupes[urlapi][gpid]['color']
                 groupes[gpid]['link'] = groupe_link({'slug': gpid}, urlapi)
-            elif gpid == u"Présidence":
+            elif gpid == "Présidence":
                 groupes[gpid]['color'] = "#bfbbcc"
                 groupes[gpid]['order'] = 0
-            elif gpid == u"Rapporteurs":
+            elif gpid == "Rapporteurs":
                 groupes[gpid]['color'] = "#b9ccc0"
                 groupes[gpid]['order'] = 50
-            elif gpid == u"Gouvernement":
+            elif gpid == "Gouvernement":
                 groupes[gpid]['color'] = "#cccbb3"
                 groupes[gpid]['order'] = 60
-            elif gpid == u"Auditionnés":
+            elif gpid == "Auditionnés":
                 groupes[gpid]['color'] = "#ccb7b6"
                 groupes[gpid]['order'] = 70
             else:
@@ -185,5 +185,5 @@ class Context(object):
 
 
 def amendementIsFromGouvernement(amdt):
-    return amdt["amendement"]["signataires"].lower() == u"le gouvernement"
+    return amdt["amendement"]["signataires"].lower() == "le gouvernement"
 
