@@ -15,6 +15,8 @@ from bs4 import BeautifulSoup
 from sort_articles import bister
 
 def parse(url, ORDER='', verbose=False):
+    ALL_ARTICLES = []
+
     if ORDER:
         ORDER = "%02d_" % int(ORDER)
 
@@ -40,8 +42,10 @@ def parse(url, ORDER='', verbose=False):
         (re.compile(r'<div[^>]*class="titreArt[^>]*>(.*?)\s*</div>', re.I), r'<p><b>\1</b></p>'),
     ]
 
-    ORDER = ''
-    string = requests.get(url).text
+    resp = requests.get(url)
+    if '/textes/'in url:
+        resp.encoding = 'utf-8'
+    string = resp.text
     definitif = re_definitif.search(string) is not None
     soup = BeautifulSoup(string, "html5lib")
     texte = {"type": "texte", "source": url, "definitif": definitif}
@@ -161,6 +165,7 @@ def parse(url, ORDER='', verbose=False):
 
 
     def pr_js(dic):
+        nonlocal ALL_ARTICLES
         # Clean empty articles with only "Supprimé" as text
         if not dic:
             return
@@ -175,11 +180,9 @@ def parse(url, ORDER='', verbose=False):
                 for d in multiples:
                     new = dict(dic)
                     new['titre'] = d
-                    if verbose:
-                        print(json.dumps(new, sort_keys=True, ensure_ascii=False, indent=2))
+                    ALL_ARTICLES.append(new)
                 return
-        if verbose:
-            print(json.dumps(dic, sort_keys=True, ensure_ascii=False, indent=2))
+        ALL_ARTICLES.append(dic)
 
 
     def save_text(txt):
@@ -351,13 +354,8 @@ def parse(url, ORDER='', verbose=False):
             line = re_clean_coord.sub('', line)
             line = re_clean_subsec_space.sub(r'\1\4 \5', line)
             line = re_clean_subsec_space2.sub(r'\1 \2 \3\4', line)
-            try:
-                tmp = line.decode('utf-8')
-            except:
-                try:
-                    tmp = line.decode('iso-8859-1')
-                except:
-                    tmp = line
+            
+            tmp = line
             line = re_clean_punc_space.sub(r'\1 \2', tmp)
             line = re_clean_spaces.sub(' ', line)
             line = re_mat_sec.sub(lambda x: lower_but_first(x.group(1))+x.group(4) if re_mat_n.match(x.group(4)) else x.group(0), line)
@@ -374,8 +372,10 @@ def parse(url, ORDER='', verbose=False):
             #metas
             continue
 
-    # save_text(texte)
+    save_text(texte)
     pr_js(article)
 
+    return ALL_ARTICLES
+
 if __name__ == '__main__':
-    parse(sys.argv[1], verbose=True)
+    print(json.dumps(parse(sys.argv[1]), sort_keys=True, ensure_ascii=False, indent=2))
