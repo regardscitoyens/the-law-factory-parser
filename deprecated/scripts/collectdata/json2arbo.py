@@ -72,7 +72,7 @@ def write_text(t, p):
     except:
         log_err("Cannot write to file %s" % p)
         return
-    f.write(t.encode("utf-8"))
+    f.write(t)
     f.close()
 
 try:
@@ -84,10 +84,7 @@ except:
     sys.exit(1)
 
 textid = ""
-for l in f:
-    if not l.strip():
-        continue
-    data = json.loads(l)
+for data in json.load(f):
     if not data or not "type" in data:
         log_err("JSON %s badly formatted, missing field type: %s" % (f, data))
         sys.exit(1)
