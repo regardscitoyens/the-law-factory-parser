@@ -10,21 +10,14 @@ To get the parsed doslegs:
 # NOTE: this is python 3 only for now
 pip install -r requirements.txt
 
-# download the senat pages
-senapy-cli download_from_csv data/html/senat/
-senapy-cli download_recent data/html/senat/
-# then parse them
-senapy-cli parse_directory "data/html/senat/*" data/parsed/senat/
-# download and parse one senat dossier (no cache & output to shell)
+# parse all the senat doslegs
+senapy-cli doslegs_urls | senapy-cli parse_many data/parsed/senat/
+# (optional) download and parse one senat dossier (no cache & output to shell)
 senapy-cli parse pjl15-610
 
-
-# download the AN pages
-anpy-cli download_recents_dossiers_from_website data/html/an/
-anpy-cli download_recents_dossiers_from_opendata data/html/an/
-# and parse them
-anpy-cli parse_dossier_directory "data/html/an/*" data/parsed/an/
-# download and parse one AN dossier (no cache & output to shell)
+# parse all the AN doslegs
+anpy-cli doslegs_urls | anpy-cli parse_many_doslegs data/parsed/an/
+# (optional) download and parse one AN dossier (no cache & output to shell)
 senapy-cli show_dossier_like_senapy http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp
 
 # now it's the big merge (consolidate data from both sources)
@@ -36,4 +29,9 @@ python steps_as_dot.py data/parsed/merged/all.json | dot -Tsvg > steps.svg
 # (debug) compare with verified data
 git clone git@github.com:mdamien/lafabrique-export.git lafabrique
 python tools/compare_all_thelawfactory_and_me.py "lafabrique/*" data/parsed/merged/all.json
+
+# (debug) detect anomalies
+python tools/detect_anomalies data/parsed/merged/all.json
+# detect only in one
+senapy-cli parse pjl15-610 | python tools/detect_anomalies
 ```
