@@ -378,4 +378,4 @@ def parse(url, ORDER='', verbose=False):
     return ALL_ARTICLES
 
 if __name__ == '__main__':
-    print(json.dumps(parse(sys.argv[1]), sort_keys=True, ensure_ascii=False, indent=2))
+    print(json.dumps(parse(sys.argv[1], verbose=True), sort_keys=True, ensure_ascii=False, indent=2))

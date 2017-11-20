@@ -10,14 +10,12 @@ def complete(current, previous=[], anteprevious=[]):
     previous = copy.deepcopy(previous)
     anteprevious = copy.deepcopy(anteprevious)
 
-    DEBUG = True # if len(sys.argv) > 4 else False
+    DEBUG = True if len(sys.argv) > 4 else False
     def log(text):
         if DEBUG:
             print(text, file=sys.stderr)
 
     def exit():
-        import pudb;pu.db
-        # sys.exit(1)
         raise Exception('oops, parsing exploded')
 
     find_num = re.compile(r'-[a-z]*(\d+)\D?$')

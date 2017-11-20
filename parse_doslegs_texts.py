@@ -1,25 +1,16 @@
-import sys, json, time, random
+import sys, json, time, random, os
 
-from lawfactory_utils.urls import clean_url
+from lawfactory_utils.urls import clean_url, download, enable_requests_cache
+
+enable_requests_cache()
 
 from bs4 import BeautifulSoup
-import requests, requests_cache
-
-requests_cache.install_cache('texts_cache')
-
+import requests
 
 sys.path.append('deprecated/scripts/collectdata')
 import parse_texte
+import complete_articles
 
-
-def download(url, retry=5):
-    try:
-        return requests.get(url)
-    except requests.exceptions.ConnectionError as e:
-        if retry:
-            time.sleep(1)
-            return download(url, retry-1)
-        raise e
 
 
 def test_status(url):
@@ -31,9 +22,13 @@ def test_status(url):
     return resp
 
 
-def find_good_url(url):
-    # TODO: clean /textes/ urls
+def get_previous_step(steps, curr_step_index):
+    for i in reversed(range(curr_step_index)):
+        if not steps[i].get('echec'):
+            return i
 
+
+def find_good_url(url):
     if 'senat.fr' in url:
         if '/leg/' in url and url.endswith('.html'):
             resp = test_status(url)
@@ -54,6 +49,8 @@ def find_good_url(url):
         if url.endswith('.pdf'):
             url = url.replace('/pdf/', '/propositions/').replace('.pdf', '.asp')
 
+        """
+        # /textes/ URL are not supported yet in parse_text
         if '/ta-commission/' in url:
             text_id = url.split('/')[-1].split('-')[0].replace('r', '')
             new_url = url.split('/ta-commission/')[0] + '/textes/' + text_id + '.asp'
@@ -74,6 +71,7 @@ def find_good_url(url):
             new_url = url.replace('/ta/ta', '/textes/')
             if test_status(new_url):
                 return new_url
+        """
 
         resp = test_status(url)
         if not resp or "n'est pas encore édité" in resp.text:
@@ -87,6 +85,10 @@ def find_good_url(url):
     return False
 
 
+def _dos_id(dos):
+    return dos.get('senat_id', dos.get('assemblee_id'))
+
+
 if __name__ == '__main__':
     ### some tests
     # AN .pdf
@@ -97,49 +99,86 @@ if __name__ == '__main__':
     assert find_good_url('https://www.senat.fr/rap/l08-584/l08-584.html') == 'https://www.senat.fr/rap/l08-584/l08-584_mono.html'
 
     # AN improve link
+    """
     assert find_good_url('http://www.assemblee-nationale.fr/15/ta-commission/r0268-a0.asp') == 'http://www.assemblee-nationale.fr/15/textes/0268.asp'
     assert find_good_url('http://www.assemblee-nationale.fr/15/projets/pl0315.asp') == 'http://www.assemblee-nationale.fr/15/textes/0315.asp'
     assert find_good_url('http://www.assemblee-nationale.fr/14/propositions/pion4347.asp') == 'http://www.assemblee-nationale.fr/14/textes/4347.asp'
     assert find_good_url('http://www.assemblee-nationale.fr/15/ta/ta0021.asp') == 'http://www.assemblee-nationale.fr/15/textes/0021.asp'
+    """
 
     print("tests passed..let's fix some links !")
 
-    try:
-        doslegs = json.load(open(sys.argv[1]))
-        random.shuffle(doslegs)
-        ok, nok = 0, 0
-        for dos in doslegs:
-            for step in dos['steps']:
-                url = step.get('source_url')
+    doslegs = json.load(open(sys.argv[1]))
+    if type(doslegs) is not list:
+        doslegs = [doslegs]
 
-                if url is None:
-                    # TODO: stats of None urls
-                    continue
-                    print(step)
-                # we do not parse CC texts
-                elif 'conseil-constitutionnel' in url:
+    output_dir = sys.argv[2]
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    random.shuffle(doslegs)
+    ok, nok = 0, 0
+    for dos in doslegs:
+        dos_id = _dos_id(dos)
+        filepath = os.path.join(output_dir, dos_id)
+        if os.path.exists(filepath):
+            continue
+
+        steps = dos['steps']
+        for step_index, step in enumerate(steps):
+            url = step.get('source_url')
+
+            if url is None:
+                # TODO: stats of None urls
+                continue
+                print(step)
+            # we do not parse CC texts
+            elif 'conseil-constitutionnel' in url:
+                continue
+            else:
+                fixed_url = find_good_url(url)
+                if fixed_url:
+                    ok += 1
+                    try:
+                        step['articles'] = parse_texte.parse(fixed_url)
+                        step['articles'][0]['depot'] = step['step'] == 'depot'
+
+                        # echec detected in the text content ? we update the step then
+                        if any([1 for article in step['articles'] if article.get('type') == 'echec']):
+                            step['echec'] = True
+                            step['articles'] = []
+                    except Exception as e:
+                        print('parsing failed for', fixed_url)
+                        print('   ', e)
+                    prev_step_index = get_previous_step(steps, step_index)
+                    if prev_step_index and not step.get('echec'):
+                        ante_step_index = get_previous_step(steps, prev_step_index)
+                        if ante_step_index is None:
+                            ante_step_articles = []
+                        else:
+                            ante_step_articles = steps[ante_step_index].get('articles_completed', steps[ante_step_index].get('articles', []))
+                        try:
+                            step['articles_completed'] = complete_articles.complete(
+                                step.get('articles', []),
+                                steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
+                                ante_step_articles,
+                            )
+                            assert 'Non modifié' not in str(step['articles_completed'])
+                            print('complete completed :)')
+                        except Exception as e:
+                            print('complete failed :(', e)
+                            break
+                    if ok % 100 == 0:
+                        print('ok..100')
                     continue
                 else:
-                    fixed_url = find_good_url(url)
-                    if fixed_url:
-                        ok += 1
-                        try:
-                            parse_texte.parse(fixed_url)
-                        except Exception as e:
-                            print('parsing failed for', fixed_url)
-                            print('   ', e)
-                        if ok % 100 == 0:
-                            print('ok..100')
-                        continue
-                    else:
-                        print('INVALID RESP', url, '\t\t-->', dos.get('url_dossier_senat'))
-                nok += 1
-    except KeyboardInterrupt:
-        pass
+                    print('INVALID RESP', url, '\t\t-->', dos.get('url_dossier_senat'))
+            nok += 1
+
+        json.dump(dos, open(filepath, 'w'), ensure_ascii=False, indent=2, sort_keys=True)
     print('ok', ok)
     print('nok', nok)
     print(r'%%%', ok/(nok+ok) * 100)
-    json.dump(doslegs, open(sys.argv[2], 'w'), indent=2, ensure_ascii=False, sort_keys=False)
 
 
 """
@@ -153,7 +192,8 @@ Non-géré par parse_texte:
  - http://www.assemblee-nationale.fr/13/rapports/r1151.asp
     "Suivant les conclusions du rapporteur, la commission adopte les projets de loi (nos 1038, 1039 et 1040)."
  - PLF - https://www.legifrance.gouv.fr/eli/loi/2016/7/22/FCPX1613153L/jo/texte
- - encoding - http://www.assemblee-nationale.fr/15/textes/0019.asp
+ - tableaux comparatif - http://www.assemblee-nationale.fr/13/rapports/r0771.asp
+ - old proc
 
 Cas difficiles:
  - tomes: http://www.assemblee-nationale.fr/13/rapports/r1211.asp
