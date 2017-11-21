@@ -5,18 +5,11 @@ import re, csv, os, sys
 from difflib import ndiff, SequenceMatcher
 from common import json, open_json, print_json
 
-sourcedir = sys.argv[1]
-if not sourcedir:
-    sys.stderr.write('Error, no input directory given')
-    exit(1)
-procedure = open_json(sourcedir, 'procedure.json')
-
 def getParentFolder(root, f):
     abs = os.path.abspath(os.path.join(root, f))
     return os.path.basename(os.path.abspath(os.path.join(abs, os.pardir)))
 
 def unifyStatus(status):
-    status = status.encode('utf-8')
     status = status.lstrip().rstrip('s. ')
     if status.endswith('constitution') or status.startswith('sup'):
         return "sup"
@@ -45,51 +38,62 @@ def create_step(step_id, directory, article=None, echec_type=None):
         s['order'] = 1
     return s
 
-title = procedure.get("long_title", "Missing title").replace(procedure.get("short_title", "").lower(), procedure.get("short_title", ""))
-title = title[0].upper() + title[1:]
-out = {'law_title': title, 'articles': {}, 'sections': {}, 'short_title': procedure.get("short_title", "")}
 
-# Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
-dossier_id = sourcedir.split(os.path.sep)[-2]
-first = None
-steps = []
-latersteps = []
-for step in procedure['steps']:
-    if step.get('step', '') == 'depot':
-        if not first and (step.get('institution', '') == 'assemblee' or step.get('source_url', '').endswith("/%s.html" % dossier_id)):
-            first = step
-        elif first and first.get('institution', '') == 'assemblee' and step.get('source_url', '').endswith("/%s.html" % dossier_id):
-            continue
-        elif step.get('institution', '') == 'senat' and "/ppl" in step.get('source_url', '') and step.get('stage', u'') == u'1ère lecture':
-            steps.append(step)
+def process(procedure):
+    title = procedure.get("long_title", "Missing title").replace(procedure.get("short_title", "").lower(), procedure.get("short_title", ""))
+    title = title[0].upper() + title[1:]
+    out = {'law_title': title, 'articles': {}, 'sections': {}, 'short_title': procedure.get("short_title", "")}
+
+    # Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
+    dossier_id = procedure.get('senat_id')
+    first = None
+    steps = []
+    latersteps = []
+    for step in procedure['steps']:
+        if step.get('step', '') == 'depot':
+            if not first and (step.get('institution', '') == 'assemblee' or step.get('source_url', '').endswith("/%s.html" % dossier_id)):
+                first = step
+            elif first and first.get('institution', '') == 'assemblee' and step.get('source_url', '').endswith("/%s.html" % dossier_id):
+                continue
+            elif step.get('institution', '') == 'senat' and "/ppl" in step.get('source_url', '') and step.get('stage', '') == '1ère lecture':
+                steps.append(step)
+            else:
+                continue
         else:
+            latersteps.append(step)
+    steps.append(first)
+    depots = len(steps)
+    steps += latersteps
+
+    # skip step presently happening
+    # if not steps[-1].get('enddate'):
+    #   steps.pop(-1)
+
+    bister = '(un|duo|tre|bis|qua|quin[tqu]*|sex|sept|octo?|novo?|non|dec|vic|ter|ies)+'
+    re_alin_sup = re.compile(r'supprimés?\)$', re.I)
+    re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
+    re_upper_first = re.compile(r'^(.)(.*)$')
+    step_id = ''
+    old_step_id = ''
+    for nstep, step in enumerate(steps):
+        data = step['texte.json']
+        if step['stage'] in ["promulgation", "constitutionnalité"]:
             continue
-    else:
-        latersteps.append(step)
-steps.append(first)
-depots = len(steps)
-steps += latersteps
+        """
+        if not 'resulting_text_directory' in step:
+            if step['stage'] not in ["promulgation", "constitutionnalité"]:
+                sys.stderr.write("WARNING no directory found for step %s\n" % step['stage'])
+            continue
+        """
+        # try:
+        # path = os.path.join(sourcedir, step['resulting_text_directory'])
+        # step_id = "%02d%s" % (nstep, step['directory'][2:])
+        # with open(os.path.join(path, 'texte.json'), "r") as texte:
+        #     data = json.load(texte)
 
-# skip step presently happening
-if not steps[-1]['enddate']:
-   steps.pop(-1)
-
-bister = '(un|duo|tre|bis|qua|quin[tqu]*|sex|sept|octo?|novo?|non|dec|vic|ter|ies)+'
-re_alin_sup = re.compile(ur'supprimés?\)$', re.I)
-re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
-re_upper_first = re.compile(r'^(.)(.*)$')
-step_id = ''
-old_step_id = ''
-for nstep, step in enumerate(steps):
-    if not 'resulting_text_directory' in step:
-        if step['stage'] not in [u"promulgation", u"constitutionnalité"]:
-            sys.stderr.write("WARNING no directory found for step %s\n" % step['stage'])
-        continue
-    try:
-        path = os.path.join(sourcedir, step['resulting_text_directory'])
-        step_id = "%02d%s" % (nstep, step['directory'][2:])
-        with open(os.path.join(path, 'texte.json'), "r") as texte:
-            data = json.load(texte)
+        step_id = '%s_%s_%s_%s' % (nstep, step.get('stage'), step.get('institution'), step.get('step'))
+        step['echec'] = step.get('echec')
+        step['directory'] = step_id
 
         echec = (step['echec'] and step['echec'] != "renvoi en commission")
         if echec:
@@ -176,15 +180,26 @@ for nstep, step in enumerate(steps):
         if 'step' in step and not echec:
             old_step_id = step_id
 
-    except Exception as e:
-        sys.stderr.write("ERROR parsing step %s:\n%s: %s\n" % (step, type(e), e))
-        exit(1)
+        # except Error as e:
+        #     sys.stderr.write("ERROR parsing step %s:\n%s: %s\n" % (str(step)[:50], type(e), e))
+        #    exit(1)
 
-for a in out['articles']:
-    new_steps = []
-    for s in out['articles'][a]['steps']:
-        del(s['text'])
-        new_steps.append(s)
-    out['articles'][a]['steps'] = new_steps
+    for a in out['articles']:
+        new_steps = []
+        for s in out['articles'][a]['steps']:
+            del(s['text'])
+            if len(new_steps) > 0 and new_steps[-1]['id_step'] == s['id_step']:
+                print('same id_step', s['id_step'], file=sys.stderr)
+                continue
+            new_steps.append(s)
+        out['articles'][a]['steps'] = new_steps
 
-print_json(out)
+    return out
+
+
+if __name__ == '__main__':
+    print((
+        json.dumps(
+            process(json.load(open(sys.argv[1]))),
+            indent=2, sort_keys=True, ensure_ascii=False
+        )))

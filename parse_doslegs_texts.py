@@ -152,22 +152,26 @@ if __name__ == '__main__':
                         print('   ', e)
                     prev_step_index = get_previous_step(steps, step_index)
                     if prev_step_index and not step.get('echec'):
-                        ante_step_index = get_previous_step(steps, prev_step_index)
-                        if ante_step_index is None:
-                            ante_step_articles = []
+                        # multiple-depots
+                        if steps[prev_step_index]['step'] == 'depot':
+                            step['articles_completed'] = step['articles']
                         else:
-                            ante_step_articles = steps[ante_step_index].get('articles_completed', steps[ante_step_index].get('articles', []))
-                        try:
-                            step['articles_completed'] = complete_articles.complete(
-                                step.get('articles', []),
-                                steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
-                                ante_step_articles,
-                            )
-                            assert 'Non modifié' not in str(step['articles_completed'])
-                            print('complete completed :)')
-                        except Exception as e:
-                            print('complete failed :(', e)
-                            break
+                            ante_step_index = get_previous_step(steps, prev_step_index)
+                            if ante_step_index is None:
+                                ante_step_articles = []
+                            else:
+                                ante_step_articles = steps[ante_step_index].get('articles_completed', steps[ante_step_index].get('articles', []))
+                            try:
+                                step['articles_completed'] = complete_articles.complete(
+                                    step.get('articles', []),
+                                    steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
+                                    ante_step_articles,
+                                )
+                                assert 'Non modifié' not in str(step['articles_completed'])
+                                print('complete completed :)')
+                            except Exception as e:
+                                print('complete failed :(', e)
+                                break
                     if ok % 100 == 0:
                         print('ok..100')
                     continue
