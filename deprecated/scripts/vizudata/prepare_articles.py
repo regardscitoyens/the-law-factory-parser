@@ -76,8 +76,11 @@ def process(procedure):
     step_id = ''
     old_step_id = ''
     for nstep, step in enumerate(steps):
-        data = step['texte.json']
+        data = step.get('texte.json')
         if step['stage'] in ["promulgation", "constitutionnalité"]:
+            continue
+        if not data:
+            print('no data for', step.get('stage'), step.get('step'), step.get('institution'), file=sys.stderr)
             continue
         """
         if not 'resulting_text_directory' in step:
@@ -93,7 +96,7 @@ def process(procedure):
 
         step_id = '%s_%s_%s_%s' % (nstep, step.get('stage'), step.get('institution'), step.get('step'))
         step['echec'] = step.get('echec')
-        step['directory'] = step_id
+        step['directory'] = str(nstep)
 
         echec = (step['echec'] and step['echec'] != "renvoi en commission")
         if echec:

@@ -24,7 +24,7 @@ def sec_path(s):
     return re_sec_path.sub(r"\1/\2", s)
 
 def write_json(j, p):
-    write_text(json.dumps(j, sort_keys=True, indent=1, ensure_ascii=False), p)
+    write_text(json.dumps(j, sort_keys=True, indent=2, ensure_ascii=False), p)
 
 def orderabledir(titre):
     extrazero = ''
@@ -60,6 +60,7 @@ except:
     sys.exit(1)
 
 def log_err(txt, arg=None):
+    raise Exception()
     txt = "ERROR: %s" % txt
     if arg:
         txt += " %s" % arg
@@ -67,30 +68,31 @@ def log_err(txt, arg=None):
     sys.stderr.write(txt)
 
 def write_text(t, p):
-    try:
-        f = open(p, "w")
+    print('         write to', p)
+    #try:
+    f = open(p, "w")
+    f.write(t)
+    """
     except:
         log_err("Cannot write to file %s" % p)
         return
     f.write(t)
     f.close()
-
-"""
-try:
-    project = sys.argv[2]
-    mkdirs(project)
-    os.chdir(project)
-except:
-    log_err("Cannot create dir for project %s" % project)
-    sys.exit(1)
-"""
+    """
 
 textid = ""
 dos = json.load(f)
-for step in dos['steps']:
+for step_i, step in enumerate(dos['steps']):
+
+    step_dir = os.path.join(sys.argv[2], str(step_i) + '/texte')
+    mkdirs(step_dir)
+    os.chdir(step_dir)
+
+    print(step_dir)
+
     articles = step.get('articles_completed', step.get('articles'))
     if not articles:
-        print('no article for step')
+        print('no articles for step')
         continue
     for data in articles:
         if not data or not "type" in data:
@@ -99,7 +101,7 @@ for step in dos['steps']:
         if data["type"] == "texte":
             textid = data["id"]
     #   textid = date_formatted+"_"+data["id"]
-            # write_text(clean_text(data["titre"]), textid+".titre")
+            write_text(clean_text(data["titre"]), textid+".titre")
             alldata = dict(data)
             alldata['sections'] = []
             alldata['articles'] = []
@@ -108,27 +110,31 @@ for step in dos['steps']:
             sys.exit(1)
         elif data["type"] == "section":
             path = sec_path(data["id"])
-            # mkdirs(path)
+            mkdirs(path)
             alldata['sections'].append(data)
-            # write_json(data, path+"/"+textid+".json")
-            # write_text(clean_text(data["titre"]), path+"/"+textid+".titre")
+            write_json(data, path+"/"+textid+".json")
+            write_text(clean_text(data["titre"]), path+"/"+textid+".titre")
         elif data["type"] == "article":
             path = ""
             if "section" in data:
                 path = sec_path(data["section"])+"/"
             path += "A"+orderabledir(data["titre"])+"/"
-            # mkdirs(path)
+            mkdirs(path)
             alldata['articles'].append(data)
-            # write_json(data, path+textid+".json")
+            write_json(data, path+textid+".json")
             text = ""
             for i in range(len(data["alineas"])):
                 if text != "":
                     text += "\n"
                 text += clean_text(data["alineas"]["%03d" % (i+1)])
-            # write_text(text, path+textid+".alineas")
+            write_text(text, path+textid+".alineas")
 
-    f.close()
+    write_json(alldata, 'texte.json')
+
+    os.chdir('../../../..')
 
     step['texte.json'] = alldata
 
-write_json(dos, sys.argv[2])
+    f.close()
+
+write_json(dos, sys.argv[3])

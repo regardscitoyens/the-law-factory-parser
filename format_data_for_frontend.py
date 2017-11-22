@@ -1,15 +1,19 @@
-import os, glob, sys
+import os, glob, sys, json
+
+sys.path.append('deprecated/scripts/collectdata')
+import json2arbo
 
 print('coming soon...')
-sys.exit(1)
 
 for file in glob.glob(sys.argv[1]):
-    dos = json.load(open(file))
+    print()
+    try:
+        dos = json.load(open(file))
+    except json.decoder.JSONDecodeError:
+        print('invalid JSON', file)
+        continue
+    print(file)
 
-    procedure = dos # TODO: add 'order'
-
-    dos = json2arbo.process(dos) # dos with texte.json
-
+    dos = json2arbo.process(dos)
     articles_etapes = prepare_articles.process(dos)
-
-    # TODO: dump articles_etapes.json, procedure.json and steps directories
+    procedure = update_procedure.process(dos)
