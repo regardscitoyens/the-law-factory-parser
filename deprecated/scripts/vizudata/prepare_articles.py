@@ -121,7 +121,7 @@ def process(procedure):
                 if 'newtitre' in article:
                     s['newnum'] = article['newtitre']
                 txt = "\n".join([re_clean_alin.sub('', v) for v in s['text'] if not re_alin_sup.search(v)])
-                oldtext = None
+                oldtext = []
                 for st in out['articles'][id]['steps']:
                     if st['id_step'] == old_step_id:
                         oldtext = [re_clean_alin.sub('', v) for v in st['text'] if not re_alin_sup.search(v)]

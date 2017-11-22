@@ -16,6 +16,9 @@ except:
     import simplejson as json
 
 def mkdirs(d):
+    if len(d) > 120:
+        print('filename too long', d)
+        return
     if not os.path.exists(d):
         os.makedirs(d)
 
@@ -52,89 +55,71 @@ def clean_text(t):
 #  return t
     return t.strip()
 
-try:
-    FILE = sys.argv[1]
-    f = open(FILE, "r")
-except:
-    sys.stderr.write("ERROR: Cannot open json file %s\n" % FILE)
-    sys.exit(1)
-
-def log_err(txt, arg=None):
-    raise Exception()
-    txt = "ERROR: %s" % txt
-    if arg:
-        txt += " %s" % arg
-    txt = "%s while working on %s\n" % (txt[:20], FILE)
-    sys.stderr.write(txt)
-
 def write_text(t, p):
-    print('         write to', p)
-    #try:
+    if len(p) > 120:
+        print('filename too long', p)
+        return
+    # print('         write to', p)
     f = open(p, "w")
     f.write(t)
-    """
-    except:
-        log_err("Cannot write to file %s" % p)
-        return
-    f.write(t)
-    f.close()
-    """
 
-textid = ""
-dos = json.load(f)
-for step_i, step in enumerate(dos['steps']):
+def process(dos, OUTPUT_DIR):
+    def log_err(txt, arg=None):
+        raise Exception()
+        txt = "ERROR: %s" % txt
+        if arg:
+            txt += " %s" % arg
+        txt = "%s while working on %s\n" % (txt[:20], OUT)
+        sys.stderr.write(txt)
 
-    step_dir = os.path.join(sys.argv[2], str(step_i) + '/texte')
-    mkdirs(step_dir)
-    os.chdir(step_dir)
+    for step_i, step in enumerate(dos['steps']):
 
-    print(step_dir)
+        step_dir = os.path.join(OUTPUT_DIR, str(step_i) + '/texte')
+        mkdirs(step_dir)
 
-    articles = step.get('articles_completed', step.get('articles'))
-    if not articles:
-        print('no articles for step')
-        continue
-    for data in articles:
-        if not data or not "type" in data:
-            log_err("JSON %s badly formatted, missing field type: %s" % (f, data))
-            sys.exit(1)
-        if data["type"] == "texte":
-            textid = data["id"]
-    #   textid = date_formatted+"_"+data["id"]
-            write_text(clean_text(data["titre"]), textid+".titre")
-            alldata = dict(data)
-            alldata['sections'] = []
-            alldata['articles'] = []
-        elif textid == "":
-            log_err("JSON missing first line with text infos")
-            sys.exit(1)
-        elif data["type"] == "section":
-            path = sec_path(data["id"])
-            mkdirs(path)
-            alldata['sections'].append(data)
-            write_json(data, path+"/"+textid+".json")
-            write_text(clean_text(data["titre"]), path+"/"+textid+".titre")
-        elif data["type"] == "article":
-            path = ""
-            if "section" in data:
-                path = sec_path(data["section"])+"/"
-            path += "A"+orderabledir(data["titre"])+"/"
-            mkdirs(path)
-            alldata['articles'].append(data)
-            write_json(data, path+textid+".json")
-            text = ""
-            for i in range(len(data["alineas"])):
-                if text != "":
-                    text += "\n"
-                text += clean_text(data["alineas"]["%03d" % (i+1)])
-            write_text(text, path+textid+".alineas")
+        # print(step_dir)
 
-    write_json(alldata, 'texte.json')
+        articles = step.get('articles_completed', step.get('articles'))
+        if not articles:
+            # print('no articles for step')
+            continue
+        for data in articles:
+            if not data or not "type" in data:
+                log_err("JSON %s badly formatted, missing field type: %s" % (f, data))
+                sys.exit(1)
+            if data["type"] == "texte":
+                textid = data["id"]
+        #   textid = date_formatted+"_"+data["id"]
+                write_text(clean_text(data["titre"]), step_dir + '/' + textid+".titre")
+                alldata = dict(data)
+                alldata['sections'] = []
+                alldata['articles'] = []
+            elif textid == "":
+                log_err("JSON missing first line with text infos")
+                sys.exit(1)
+            elif data["type"] == "section":
+                path = step_dir + '/' + sec_path(data["id"])
+                mkdirs(path)
+                alldata['sections'].append(data)
+                write_json(data, path+"/"+textid+".json")
+                write_text(clean_text(data["titre"]), path+"/"+textid+".titre")
+            elif data["type"] == "article":
+                path = step_dir + '/'
+                if "section" in data:
+                    path += sec_path(data["section"])+"/"
+                path += "A"+orderabledir(data["titre"])+"/"
+                mkdirs(path)
+                alldata['articles'].append(data)
+                write_json(data, path+textid+".json")
+                text = ""
+                for i in range(len(data["alineas"])):
+                    if text != "":
+                        text += "\n"
+                    text += clean_text(data["alineas"]["%03d" % (i+1)])
+                write_text(text, path+textid+".alineas")
 
-    os.chdir('../../../..')
+        write_json(alldata, step_dir + '/texte.json')
 
-    step['texte.json'] = alldata
+        step['texte.json'] = alldata
 
-    f.close()
-
-write_json(dos, sys.argv[3])
+    return dos
