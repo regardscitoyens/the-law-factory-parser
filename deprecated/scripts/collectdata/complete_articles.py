@@ -5,7 +5,7 @@ import sys, re, copy
 import simplejson as json
 from sort_articles import bister, article_is_lower
 
-def complete(current, previous=[], anteprevious=[]):
+def complete(current, previous, anteprevious, step):
     current = copy.deepcopy(current)
     previous = copy.deepcopy(previous)
     anteprevious = copy.deepcopy(anteprevious)
@@ -52,25 +52,13 @@ def complete(current, previous=[], anteprevious=[]):
 
 
     grdoldarts = {}
-    """
-    # anteprevious only for TA ?
-    if "%2Fta" in FILE and len(sys.argv) > 3 and sys.argv[3]:
-      try:
-        with open(sys.argv[3], 'r') as f3:
-            for line in json.load(f3):
-                if not line or not "type" in line:
-                    log("JSON %s badly formatted, missing field type: %s" % (source, line))
-                    exit()
-                if line["type"] == "article":
-                    keys = list(line['alineas'].keys())
-                    keys.sort()
-                    oldstep[1][line["titre"]] = [line['alineas'][k] for k in keys]
-                    grdoldarts[line["titre"]] = line
-      except Exception as e:
-        print(type(e), e, file=sys.stderr)
-        log("No grand previous step found at %s" % sys.argv[2])
-        exit()
-    """
+    if '/ta' in step.get('source_url', ''):
+        for line in anteprevious:
+            if line["type"] == "article":
+                keys = list(line['alineas'].keys())
+                keys.sort()
+                oldstep[1][line["titre"]] = [line['alineas'][k] for k in keys]
+                grdoldarts[line["titre"]] = line
 
     ALL_ARTICLES = []
     def write_json(data):
