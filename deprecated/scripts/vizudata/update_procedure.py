@@ -20,7 +20,11 @@ def process(procedure, articles, intervs={}):
 
         # hacks
         s['enddate'] = s.get('date')
-        s['directory'] = str(i)
+
+        if 'texte.json' in s \
+            and (i == 0 or (s.get('step') == 'depot' and procedure['steps'][i-1].get('step') == 'depot')) \
+            or s.get('step') != 'depot':
+            s['directory'] = str(i)
 
         s['debats_order'] = None
         if 'has_interventions' in s and s['has_interventions'] and s['directory'] not in intervs:
