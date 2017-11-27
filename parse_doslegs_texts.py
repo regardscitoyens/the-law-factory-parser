@@ -151,7 +151,7 @@ if __name__ == '__main__':
                     ok += 1
                     try:
                         step['articles'] = parse_texte.parse(fixed_url)
-                        step['articles'][0]['depot'] = step['step'] == 'depot'
+                        step['articles'][0]['depot'] = step.get('step') == 'depot'
 
                         # echec detected in the text content ? we update the step then
                         if any([1 for article in step['articles'] if article.get('type') == 'echec']):
@@ -163,7 +163,7 @@ if __name__ == '__main__':
                     prev_step_index = get_previous_step(steps, step_index)
                     if prev_step_index and not step.get('echec'):
                         # multiple-depots
-                        if steps[prev_step_index]['step'] == 'depot':
+                        if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):
                             step['articles_completed'] = step['articles']
                         else:
                             ante_step_index = get_previous_step(steps, prev_step_index)
@@ -176,7 +176,9 @@ if __name__ == '__main__':
                                     step.get('articles', []),
                                     steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
                                     ante_step_articles,
+                                    step,
                                 )
+
                                 assert 'Non modifié' not in str(step['articles_completed'])
                                 print('complete completed :)')
                             except Exception as e:
