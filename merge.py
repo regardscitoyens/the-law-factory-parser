@@ -125,7 +125,11 @@ def merge(senat, an):
 
                 # get data from AN even if there's data on the senat side
                 if same_stage_step_instit(an_step, step):
-                    steps_to_add.append(an['steps'][an_index])
+                    # only take source_url from the AN, we've got better infos for now
+                    # from the senat
+                    common_step = copy.deepcopy(step)
+                    common_step['source_url'] = an_step.get('source_url')
+                    steps_to_add.append(common_step)
 
                     """
                     try to find "holes":
