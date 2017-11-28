@@ -123,10 +123,14 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
+    dos_filter = sys.argv[3] if len(sys.argv) > 3 else ''
+
     random.shuffle(doslegs)
     ok, nok = 0, 0
     for dos in doslegs:
         dos_id = _dos_id(dos)
+        if dos_filter not in dos_id:
+            continue
         filepath = os.path.join(output_dir, dos_id)
         if os.path.exists(filepath):
             continue
