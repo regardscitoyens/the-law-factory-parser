@@ -34,7 +34,7 @@ def get_previous_step(steps, curr_step_index):
                 return i
 
     for i in reversed(range(curr_step_index)):
-        if not steps[i].get('echec'):
+        if not steps[i].get('echec') or steps[i].get('echec') == 'renvoi en commission':
             return i
 
 
@@ -139,6 +139,13 @@ if __name__ == '__main__':
             url = step.get('source_url')
 
             if url is None:
+
+                if step.get('echec') == 'renvoi en commission':
+                    step['articles_completed'] = steps[step_index-2].get('articles_completed',
+                        steps[step_index-2].get('articles'))
+
+                # TODO: texte retire
+
                 # TODO: stats of None urls
                 continue
                 print(step)
@@ -147,6 +154,7 @@ if __name__ == '__main__':
                 continue
             else:
                 fixed_url = find_good_url(url)
+                    
                 if fixed_url:
                     ok += 1
                     try:
@@ -155,8 +163,10 @@ if __name__ == '__main__':
 
                         # echec detected in the text content ? we update the step then
                         if any([1 for article in step['articles'] if article.get('type') == 'echec']):
-                            step['echec'] = True
-                            step['articles'] = []
+                            if step.get('stage') == 'CMP':
+                                step['echec'] = 'echec'
+                            else:
+                                step['echec'] = 'rejet'
                     except Exception as e:
                         print('parsing failed for', fixed_url)
                         print('   ', e)
