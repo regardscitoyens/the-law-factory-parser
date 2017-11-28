@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re, csv, os, sys, json
-from common import open_json, print_json
-
+from .common import open_json, print_json
 
 
 def process(procedure, articles, intervs={}):

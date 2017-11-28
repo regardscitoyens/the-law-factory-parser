@@ -1,11 +1,7 @@
 import os, glob, sys, json, csv, random
 
-sys.path.append('deprecated/scripts/collectdata')
-import json2arbo
+from tools import json2arbo, prepare_articles, update_procedure
 
-sys.path.append('deprecated/scripts/vizudata')
-import prepare_articles
-import update_procedure
 
 INPUT_GLOB = sys.argv[1]
 OUTPUT_DIR = sys.argv[2]

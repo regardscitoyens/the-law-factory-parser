@@ -3,7 +3,7 @@
 
 import re, csv, os, sys
 from difflib import ndiff, SequenceMatcher
-from common import json, open_json, print_json
+from .common import json, open_json, print_json
 
 def getParentFolder(root, f):
     abs = os.path.abspath(os.path.join(root, f))

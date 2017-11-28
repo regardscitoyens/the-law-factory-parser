@@ -7,10 +7,7 @@ enable_requests_cache()
 from bs4 import BeautifulSoup
 import requests
 
-sys.path.append('deprecated/scripts/collectdata')
-import parse_texte
-import complete_articles
-
+from tools import parse_texte, complete_articles
 
 
 def test_status(url):

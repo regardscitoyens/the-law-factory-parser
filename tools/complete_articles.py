@@ -3,7 +3,7 @@
 
 import sys, re, copy
 import simplejson as json
-from sort_articles import bister, article_is_lower
+from .sort_articles import bister, article_is_lower
 
 def complete(current, previous, anteprevious, step):
     current = copy.deepcopy(current)
