@@ -27,7 +27,7 @@ python merge.py "data/parsed/senat/*" "data/parsed/an/*" data/parsed/merged/
 python parse_doslegs_texts.py data/parsed/merged/all.json data/parsed/with_texts/
 
 # produce the frontend data
-python format_data_for_frontend.py data/parsed/with_texts/ data/parsed/formatted/
+python format_data_for_frontend.py "data/parsed/with_texts/*" data/parsed/formatted/
 
 # ---- and now you've got the data ready to be served ! :) -----
 
