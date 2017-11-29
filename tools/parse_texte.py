@@ -46,6 +46,14 @@ def parse(url, ORDER=''):
     if '/textes/'in url:
         resp.encoding = 'utf-8'
     string = resp.text
+
+    if 'legifrance.gouv.fr' in url:
+        for reg, res in clean_legifrance_regexps:
+            string = reg.sub(res, string)
+    else:
+        for reg, res in clean_texte_regexps:
+            string = reg.sub(res, string)
+
     definitif = re_definitif.search(string) is not None
     soup = BeautifulSoup(string, "html5lib")
     texte = {"type": "texte", "source": url, "definitif": definitif}
