@@ -61,7 +61,7 @@ def parse(url, ORDER=''):
             string = reg.sub(res, string)
 
     definitif = re_definitif.search(string) is not None
-    soup = BeautifulSoup(string, "html5lib")
+    soup = BeautifulSoup(string, "lxml")
     texte = {"type": "texte", "source": url, "definitif": definitif}
     # Generate Senat or AN ID from URL
     if "legifrance.gouv.fr" in url:
