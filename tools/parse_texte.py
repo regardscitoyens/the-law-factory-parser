@@ -9,7 +9,7 @@ Outputs results to stdout
 Dependencies :
 html5lib, beautifulsoup4, simplejson"""
 
-import sys, re, html5lib, requests
+import sys, re, html5lib, requests, copy
 import simplejson as json
 from bs4 import BeautifulSoup
 from .sort_articles import bister
@@ -180,9 +180,9 @@ def parse(url, ORDER=''):
                 for d in multiples:
                     new = dict(dic)
                     new['titre'] = d
-                    ALL_ARTICLES.append(new)
+                    ALL_ARTICLES.append(copy.deepcopy(new))
                 return
-        ALL_ARTICLES.append(dic)
+        ALL_ARTICLES.append(copy.deepcopy(dic))
 
 
     def save_text(txt):
