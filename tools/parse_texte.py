@@ -12,7 +12,12 @@ html5lib, beautifulsoup4, simplejson"""
 import sys, re, html5lib, requests, copy
 import simplejson as json
 from bs4 import BeautifulSoup
-from .sort_articles import bister
+
+try:
+    from .sort_articles import bister
+except SystemError:
+    from sort_articles import bister
+
 
 def parse(url, ORDER=''):
     ALL_ARTICLES = []
