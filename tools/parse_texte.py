@@ -230,6 +230,7 @@ def parse(url, ORDER=''):
     re_echec_hemi = re.compile(r"L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
     re_echec_hemi2 = re.compile(r"de loi a été rejetée? par l('Assemblée nationale|e Sénat)\.$", re.I)
     re_echec_com = re.compile(r" la commission .*(effet est d'entraîner le rejet|demande de rejeter|a rejeté|n'a pas adopté)[dleau\s]*(projet|proposition|texte)[.\s]", re.I)
+    re_echec_com2 = re.compile(r"L'ensemble de la proposition de loi est rejeté dans la rédaction issue des travaux de la commission.", re.I)
     re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*parven(u[es]?|ir) à (élaborer )?un texte commun)", re.I)
     re_rap_mult = re.compile(r'[\s<>/ai]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
     re_src_mult = re.compile(r'^- L(?:A PROPOSITION|E PROJET) DE LOI n°\s*(\d+)\D')
@@ -277,7 +278,11 @@ def parse(url, ORDER=''):
         elif re_mat_exp.match(line):
             read = -1 # Deactivate description lecture
             expose = True
-        elif re_echec_cmp.search(cl_line) or re_echec_com.search(cl_line) or re_echec_hemi.match(cl_line) or re_echec_hemi2.search(cl_line):
+        elif re_echec_cmp.search(cl_line) \
+            or re_echec_com.search(cl_line) \
+            or re_echec_com2.search(cl_line) \
+            or re_echec_hemi.match(cl_line) \
+            or re_echec_hemi2.search(cl_line):
             texte = save_text(texte)
             pr_js({"type": "echec", "texte": cl_line})
             break
