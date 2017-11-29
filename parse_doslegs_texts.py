@@ -150,8 +150,11 @@ if __name__ == '__main__':
                 # TODO: stats of None urls
                 continue
                 print(step)
-            # we do not parse CC texts
+            # we do not parse CC
             elif 'conseil-constitutionnel' in url:
+                continue
+            # also ignore legifrance for now
+            elif 'legifrance' in url:
                 continue
             else:
                 fixed_url = find_good_url(url)
