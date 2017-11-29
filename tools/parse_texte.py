@@ -70,9 +70,9 @@ def parse(url, ORDER=''):
             texte["id"] += m.group(2)
         texte["id"] += str(numero)
     else:
-        m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})\d?\.", url, re.I)
+        m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})\d?(_mono)?\.", url, re.I)
         if m is None:
-            m = re.search(r"/(-)?20(\d+)-\d+/(\d+).html", url, re.I)
+            m = re.search(r"/(-)?20(\d+)-\d+/(\d+)(_mono)?.html", url, re.I)
         numero = int(m.group(3))
         texte["id"] = ORDER+"S" + m.group(2) + "-"
         if m.group(1) is not None:
