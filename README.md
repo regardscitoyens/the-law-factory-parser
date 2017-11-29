@@ -34,7 +34,7 @@ python format_data_for_frontend.py "data/parsed/with_texts/*" data/parsed/format
 # > and now for some fun stuff
 
 # generate a graph of the steps
-python steps_as_dot.py data/parsed/merged/all.json | dot -Tsvg > steps.svg
+python tools/steps_as_dot.py data/parsed/merged/all.json | dot -Tsvg > steps.svg
 
 # compare with previously-generated data
 git clone git@github.com:mdamien/lafabrique-export.git lafabrique
