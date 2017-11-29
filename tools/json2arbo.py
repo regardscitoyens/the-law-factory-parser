@@ -77,8 +77,6 @@ def process(dos, OUTPUT_DIR):
         step_dir = os.path.join(OUTPUT_DIR, str(step_i) + '/texte')
         mkdirs(step_dir)
 
-        # print(step_dir)
-
         articles = step.get('articles_completed', step.get('articles'))
         if not articles:
             # print('no articles for step')
@@ -117,6 +115,8 @@ def process(dos, OUTPUT_DIR):
                         text += "\n"
                     text += clean_text(data["alineas"]["%03d" % (i+1)])
                 # write_text(text, path+textid+".alineas")
+            elif data["type"] == "echec":
+                alldata['expose'] = data['texte']
 
         write_json(alldata, step_dir + '/texte.json')
 
