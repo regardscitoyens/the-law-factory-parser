@@ -161,7 +161,7 @@ if __name__ == '__main__':
                         print('parsing failed for', fixed_url)
                         print('   ', e)
 
-                    prev_step_index = _step_logic._step_logicget_previous_step(steps, step_index)
+                    prev_step_index = _step_logic.get_previous_step(steps, step_index)
                     if prev_step_index is not None and not step.get('echec'):
                         # multiple-depots
                         if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):
