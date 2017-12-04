@@ -63,6 +63,17 @@ def write_text(t, p):
     f = open(p, "w")
     f.write(t)
 
+
+def get_step_id(nstep, step):
+    clean = lambda x: x.replace(' ', '').replace('è','e').lower() if x else ''
+    return '%s_%s_%s_%s' % (
+        str(nstep).zfill(1),
+        clean(step.get('stage')),
+        clean(step.get('institution')),
+        clean(step.get('step')),
+    )
+
+
 def process(dos, OUTPUT_DIR):
     def log_err(txt, arg=None):
         raise Exception()
@@ -74,7 +85,8 @@ def process(dos, OUTPUT_DIR):
 
     for step_i, step in enumerate(dos['steps']):
 
-        step_dir = os.path.join(OUTPUT_DIR, str(step_i) + '/texte')
+        step['directory'] = get_step_id(step_i, step)
+        step_dir = os.path.join(OUTPUT_DIR, os.path.join(step['directory'], 'texte'))
         mkdirs(step_dir)
 
         articles = step.get('articles_completed', step.get('articles'))

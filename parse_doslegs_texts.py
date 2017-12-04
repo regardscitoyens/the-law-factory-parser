@@ -7,7 +7,7 @@ enable_requests_cache()
 from bs4 import BeautifulSoup
 import requests
 
-from tools import parse_texte, complete_articles
+from tools import parse_texte, complete_articles, get_previous_step
 
 
 def test_status(url):
@@ -17,22 +17,6 @@ def test_status(url):
         return False
 
     return resp
-
-
-def get_previous_step(steps, curr_step_index):
-    curr_step = steps[curr_step_index]
-
-    # if 'nouv. lect depot' and last step failed, take last depot
-    if curr_step.get('stage') == 'nouv. lect.' and curr_step.get('step') == 'depot' and \
-        steps[curr_step_index-1].get('echec'):
-        print('[parse_doslegs_texts] fetching last depot instead of last non-failed text')
-        for i in reversed(range(curr_step_index)):
-            if steps[i].get('step') == 'depot':
-                return i
-
-    for i in reversed(range(curr_step_index)):
-        if not steps[i].get('echec') or steps[i].get('echec') == 'renvoi en commission':
-            return i
 
 
 def find_good_url(url):

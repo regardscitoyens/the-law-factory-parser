@@ -4,6 +4,8 @@
 import re, csv, os, sys
 from difflib import ndiff, SequenceMatcher
 from .common import json, open_json, print_json
+from tools import get_previous_step
+
 
 def getParentFolder(root, f):
     abs = os.path.abspath(os.path.join(root, f))
@@ -74,7 +76,6 @@ def process(procedure):
     re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
     re_upper_first = re.compile(r'^(.)(.*)$')
     step_id = ''
-    old_step_id = ''
     for nstep, step in enumerate(steps):
         data = step.get('texte.json')
         if step['stage'] in ["promulgation", "constitutionnalité"]:
@@ -82,21 +83,11 @@ def process(procedure):
         if not data:
             print('no data for', step.get('stage'), step.get('step'), step.get('institution'), file=sys.stderr)
             continue
-        """
-        if not 'resulting_text_directory' in step:
-            if step['stage'] not in ["promulgation", "constitutionnalité"]:
-                sys.stderr.write("WARNING no directory found for step %s\n" % step['stage'])
-            continue
-        """
-        # try:
-        # path = os.path.join(sourcedir, step['resulting_text_directory'])
-        # step_id = "%02d%s" % (nstep, step['directory'][2:])
-        # with open(os.path.join(path, 'texte.json'), "r") as texte:
-        #     data = json.load(texte)
 
-        step_id = '%s_%s_%s_%s' % (nstep, step.get('stage'), step.get('institution'), step.get('step'))
+        #step['directory'] = str(nstep)
+        step_id = step['directory']
+        # step_id = "%02d%s" % (nstep, step['directory'][2:])
         step['echec'] = step.get('echec')
-        step['directory'] = str(nstep)
 
         echec = (step['echec'] and step['echec'] != "renvoi en commission")
         if echec:
@@ -121,11 +112,15 @@ def process(procedure):
                 if 'newtitre' in article:
                     s['newnum'] = article['newtitre']
                 txt = "\n".join([re_clean_alin.sub('', v) for v in s['text'] if not re_alin_sup.search(v)])
+                
+                old_step_index = get_previous_step(steps, nstep)
+                old_step_id = steps[old_step_index]['directory']
                 oldtext = []
                 for st in out['articles'][id]['steps']:
                     if st['id_step'] == old_step_id:
                         oldtext = [re_clean_alin.sub('', v) for v in st['text'] if not re_alin_sup.search(v)]
                         break
+
                 if txt and (not oldtext or nstep < depots):
                     s['status'] = 'new' if nstep >= depots else 'none'
                     s['diff'] = 'add'
@@ -180,8 +175,6 @@ def process(procedure):
             else:
                 s['length'] = len(txt)
             out['articles'][id]['steps'].append(s)
-        if 'step' in step and not echec:
-            old_step_id = step_id
 
         # except Error as e:
         #     sys.stderr.write("ERROR parsing step %s:\n%s: %s\n" % (str(step)[:50], type(e), e))
