@@ -10,7 +10,7 @@ Dependencies :
 html5lib, beautifulsoup4, simplejson"""
 
 import sys, re, html5lib, requests, copy
-import simplejson as json
+import json
 from bs4 import BeautifulSoup
 
 try:
