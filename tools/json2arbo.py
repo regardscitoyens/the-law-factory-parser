@@ -10,10 +10,7 @@ Dependencies :
 simplejson"""
 
 import os, sys, re
-try:
-    import json
-except:
-    import simplejson as json
+import json
 
 def mkdirs(d):
     if len(d) > 120:

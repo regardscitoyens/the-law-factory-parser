@@ -5,10 +5,7 @@ import sys, os, re, requests
 from datetime import date
 from html.entities import name2codepoint
 from csv import DictReader
-try:
-    import json
-except:
-    import simplejson as json
+import json
 
 def open_csv(dirpath, filename, delimiter=";"):
     try:

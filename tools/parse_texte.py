@@ -7,7 +7,7 @@ where LAW_FILE results from perl download_loi.pl URL > LAW_FILE
 Outputs results to stdout
 
 Dependencies :
-html5lib, beautifulsoup4, simplejson"""
+html5lib, beautifulsoup4"""
 
 import sys, re, html5lib, requests, copy
 import json

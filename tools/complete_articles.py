@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys, re, copy
-import simplejson as json
+import json
 from .sort_articles import bister, article_is_lower
 
 def complete(current, previous, anteprevious, step):
