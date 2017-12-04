@@ -4,7 +4,7 @@
 import re, csv, os, sys
 from difflib import ndiff, SequenceMatcher
 from .common import json, open_json, print_json
-from tools import get_previous_step
+from ._step_logic import get_previous_step
 
 
 def getParentFolder(root, f):

@@ -7,7 +7,7 @@ enable_requests_cache()
 from bs4 import BeautifulSoup
 import requests
 
-from tools import parse_texte, complete_articles, get_previous_step
+from tools import parse_texte, complete_articles, _step_logic
 
 
 def test_status(url):
@@ -161,13 +161,13 @@ if __name__ == '__main__':
                         print('parsing failed for', fixed_url)
                         print('   ', e)
 
-                    prev_step_index = get_previous_step(steps, step_index)
+                    prev_step_index = _step_logic._step_logicget_previous_step(steps, step_index)
                     if prev_step_index is not None and not step.get('echec'):
                         # multiple-depots
                         if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):
                             step['articles_completed'] = step['articles']
                         else:
-                            ante_step_index = get_previous_step(steps, prev_step_index)
+                            ante_step_index = _step_logic.get_previous_step(steps, prev_step_index)
                             if ante_step_index is None:
                                 ante_step_articles = []
                             else:
