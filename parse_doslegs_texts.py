@@ -135,12 +135,14 @@ if __name__ == '__main__':
         if os.path.exists(filepath):
             continue
 
+        print('** parsing texts of', dos_id)
+
         steps = dos['steps']
         for step_index, step in enumerate(steps):
             url = step.get('source_url')
+            print('    ^ text: ', url)
 
             if url is None:
-
                 if step.get('echec') == 'renvoi en commission':
                     step['articles_completed'] = steps[step_index-2].get('articles_completed',
                         steps[step_index-2].get('articles'))
@@ -158,7 +160,7 @@ if __name__ == '__main__':
                 continue
             else:
                 fixed_url = find_good_url(url)
-                    
+
                 if fixed_url:
                     ok += 1
                     try:
@@ -174,6 +176,7 @@ if __name__ == '__main__':
                     except Exception as e:
                         print('parsing failed for', fixed_url)
                         print('   ', e)
+
                     prev_step_index = get_previous_step(steps, step_index)
                     if prev_step_index is not None and not step.get('echec'):
                         # multiple-depots
@@ -194,9 +197,9 @@ if __name__ == '__main__':
                                 )
 
                                 assert 'Non modifié' not in str(step['articles_completed'])
-                                print('complete completed :)')
+                                print('             complete OK')
                             except Exception as e:
-                                print('complete failed :(', e)
+                                print('             complete FAIL', e)
                                 break
                     if ok % 100 == 0:
                         print('ok..100')

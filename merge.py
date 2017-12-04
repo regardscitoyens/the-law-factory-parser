@@ -97,6 +97,7 @@ def merge(senat, an):
             and a.get('institution') == b.get('institution')
 
     # TODO: detect CMP.hemicycle and do re-ordering as a pre-processing step
+    # also detect missing AN CMP step in senat data
 
     an_offset = 0
     for i, step in enumerate(senat['steps']):

@@ -21,9 +21,11 @@ for i, file in enumerate(all_files):
         continue
     print(file, ' - ', i, '/', len(all_files))
 
+    """
     if not (dos.get('url_jo') and len(dos['steps']) > 8):
         print('     - passed')
         continue
+    """
 
     dos_id = file.split('/')[-1]
 
