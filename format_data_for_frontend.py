@@ -6,6 +6,9 @@ from tools import json2arbo, prepare_articles, update_procedure
 INPUT_GLOB = sys.argv[1]
 OUTPUT_DIR = sys.argv[2]
 
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
+
 csvfile = csv.writer(open(OUTPUT_DIR + '/dossiers_promulgues.csv', 'w'), delimiter=';')
 
 csvfile.writerow('id;Titre;Type de dossier;Date initiale;URL du dossier;État du dossier;Décision du CC;Date de la décision;Date de promulgation;Numéro de la loi;Thèmes;total_amendements;total_mots;short_title'.split(';'))
@@ -33,7 +36,7 @@ for i, file in enumerate(all_files):
     print('     out:', output_dir)
 
     if os.path.exists(output_dir):
-        print('alread_done')
+        print('already_done')
         continue
     else:
         # add texte.json and write all the text files tree
