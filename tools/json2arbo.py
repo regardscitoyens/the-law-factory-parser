@@ -13,9 +13,6 @@ import os, sys, re
 import json
 
 def mkdirs(d):
-    if len(d) > 120:
-        print('filename too long', d)
-        return
     if not os.path.exists(d):
         os.makedirs(d)
 
@@ -53,9 +50,6 @@ def clean_text(t):
     return t.strip()
 
 def write_text(t, p):
-    if len(p) > 120:
-        print('filename too long', p)
-        return
     # print('         write to', p)
     f = open(p, "w")
     f.write(t)
