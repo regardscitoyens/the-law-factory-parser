@@ -16,21 +16,27 @@ API_DIRECTORY = sys.argv[2]
 enable_requests_cache() # TODO: make this optional
 if not url.startswith('http'):
     url = "http://www.senat.fr/dossier-legislatif/%s.html" % url
+
+print('  [] download SENAT version')
 html = download(url).text
+print('  [] parse SENAT version')
 senat_dos = senapy_parse(html, url)
 
 # Add AN version if there's one
 if 'url_dossier_assemblee' in senat_dos:
     an_url = senat_dos['url_dossier_assemblee']
+    print('  [] download AN version')
     html = download(an_url).text
+    print('  [] parse AN version')
     an_dos = anpy_parse(html, an_url)
     an_dos = an_dos[0] # TODO: detect which dos is the good one
+    print('  [] merge AN and SENAT version')
     dos = merge_senat_with_an(senat_dos, an_dos)
 else:
     dos = senat_dos
 
-# parse the texts
+print('  [] parse the texts')
 dos_with_texts = parse_doslegs_texts.process(dos)
 
-# generate the data files
+print('  [] format data for the frontend')
 format_data_for_frontend.process(dos_with_texts, API_DIRECTORY)
