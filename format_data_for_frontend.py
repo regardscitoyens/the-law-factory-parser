@@ -6,8 +6,7 @@ from tools import json2arbo, prepare_articles, update_procedure
 INPUT_GLOB = sys.argv[1]
 OUTPUT_DIR = sys.argv[2]
 
-if not os.path.exists(OUTPUT_DIR):
-    os.makedirs(OUTPUT_DIR)
+json2arbo.mkdirs(OUTPUT_DIR)
 
 csvfile = csv.writer(open(OUTPUT_DIR + '/dossiers_promulgues.csv', 'w'), delimiter=';')
 
@@ -29,6 +28,9 @@ for i, file in enumerate(all_files):
         print('     - passed')
         continue
     """
+    if len(dos.get('steps', [])) < 2:
+        print ('  -> pass single step dossier')
+        continue
 
     dos_id = file.split('/')[-1]
 
