@@ -16,7 +16,6 @@ def process(procedure, articles, intervs={}):
                 good_steps[stepid] = int(s['directory'].split('_')[0])
 
     for i, s in enumerate(procedure['steps']):
-
         # hacks
         s['enddate'] = s.get('date')
         
@@ -26,7 +25,11 @@ def process(procedure, articles, intervs={}):
             s['has_interventions'] = False
         if 'directory' in s:
             if i == len(procedure['steps'])-1 and not s['enddate']:
-                s['debats_order'] = max(good_steps.values()) + 1
+                # no good steps, it means the parsing failed
+                if good_steps:
+                    s['debats_order'] = max(good_steps.values()) + 1
+                else:
+                    print('[update_procedure] no good steps, parsing must have failed')
             else:
                 s['debats_order'] = good_steps.get(s['directory'], None)
         if s.get('step', '') == 'depot' and s['debats_order'] != None:
