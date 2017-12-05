@@ -114,12 +114,13 @@ def process(procedure):
                 txt = "\n".join([re_clean_alin.sub('', v) for v in s['text'] if not re_alin_sup.search(v)])
                 
                 old_step_index = get_previous_step(steps, nstep)
-                old_step_id = steps[old_step_index]['directory']
                 oldtext = []
-                for st in out['articles'][id]['steps']:
-                    if st['id_step'] == old_step_id:
-                        oldtext = [re_clean_alin.sub('', v) for v in st['text'] if not re_alin_sup.search(v)]
-                        break
+                if old_step_index:
+                    old_step_id = steps[old_step_index]['directory']
+                    for st in out['articles'][id]['steps']:
+                        if st['id_step'] == old_step_id:
+                            oldtext = [re_clean_alin.sub('', v) for v in st['text'] if not re_alin_sup.search(v)]
+                            break
 
                 if txt and (not oldtext or nstep < depots):
                     s['status'] = 'new' if nstep >= depots else 'none'

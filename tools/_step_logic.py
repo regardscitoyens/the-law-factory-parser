@@ -13,6 +13,7 @@ def get_previous_step(steps, curr_step_index):
         if not steps[i].get('echec') or steps[i].get('echec') == 'renvoi en commission':
             # do not take previous depot but hemicycle version instead if in the
             # middle of the procedure
-            if i > 0 and steps[i].get('step') == 'depot' and steps[i-1].get('step') != 'depot':
-                return i-1
+            # TODO: this is not working well, find why and enable it
+            # if i > 0 and steps[i].get('step') == 'depot' and steps[i-1].get('step') != 'depot':
+            #    return i-1
             return i

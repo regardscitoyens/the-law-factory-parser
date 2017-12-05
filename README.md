@@ -27,7 +27,7 @@ python merge.py "data/parsed/senat/*" "data/parsed/an/*" data/parsed/merged/
 python parse_doslegs_texts.py data/parsed/merged/all.json data/parsed/with_texts/
 
 # produce the frontend data
-python format_data_for_frontend.py "data/parsed/with_texts/*" data/parsed/formatted/
+python format_data_for_frontend.py "data/parsed/with_texts/*" data/parsed/api/
 
 
 # ---- and now you've got the data ready to be served ! :) -----
@@ -35,7 +35,7 @@ python format_data_for_frontend.py "data/parsed/with_texts/*" data/parsed/format
 # > and now for some fun stuff
 
 # do all those things but only for one dosleg
-python parse_one.py pjl12-688
+python parse_one.py pjl12-688 data/parsed/api/
 
 # generate a graph of the steps
 python tools/steps_as_dot.py data/parsed/merged/all.json | dot -Tsvg > steps.svg

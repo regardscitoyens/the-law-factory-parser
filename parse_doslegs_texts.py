@@ -80,6 +80,77 @@ def _dos_id(dos):
     return dos.get('senat_id', dos.get('assemblee_id'))
 
 
+def process(dos):
+    dos_id = _dos_id(dos)
+    print('** parsing texts of', dos_id)
+
+    steps = dos['steps']
+    for step_index, step in enumerate(steps):
+        url = step.get('source_url')
+        print('    ^ text: ', url)
+
+        if url is None:
+            if step.get('echec') == 'renvoi en commission':
+                step['articles_completed'] = steps[step_index-2].get('articles_completed',
+                    steps[step_index-2].get('articles'))
+            # TODO: texte retire
+            # TODO: stats of None urls
+            continue
+            print(step)
+        # we do not parse CC
+        elif 'conseil-constitutionnel' in url:
+            continue
+        # also ignore legifrance for now
+        elif 'legifrance' in url:
+            continue
+        else:
+            fixed_url = find_good_url(url)
+
+            if fixed_url:
+                try:
+                    step['articles'] = parse_texte.parse(fixed_url)
+                    step['articles'][0]['depot'] = step.get('step') == 'depot'
+
+                    # echec detected in the text content ? we update the step then
+                    if any([1 for article in step['articles'] if article.get('type') == 'echec']):
+                        if step.get('stage') == 'CMP':
+                            step['echec'] = 'echec'
+                        else:
+                            step['echec'] = 'rejet'
+                except Exception as e:
+                    print('parsing failed for', fixed_url)
+                    print('   ', e)
+
+                prev_step_index = _step_logic.get_previous_step(steps, step_index)
+                if prev_step_index is not None and not step.get('echec'):
+                    # multiple-depots
+                    if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):
+                        step['articles_completed'] = step['articles']
+                    else:
+                        ante_step_index = _step_logic.get_previous_step(steps, prev_step_index)
+                        if ante_step_index is None:
+                            ante_step_articles = []
+                        else:
+                            ante_step_articles = steps[ante_step_index].get('articles_completed', steps[ante_step_index].get('articles', []))
+                        try:
+                            step['articles_completed'] = complete_articles.complete(
+                                step.get('articles', []),
+                                steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
+                                ante_step_articles,
+                                step,
+                            )
+
+                            assert 'Non modifié' not in str(step['articles_completed'])
+                            print('             complete OK')
+                        except Exception as e:
+                            print('             complete FAIL', e)
+                            break
+                continue
+            else:
+                print('INVALID RESP', url, '\t\t-->', dos.get('url_dossier_senat'))
+    return dos
+
+
 if __name__ == '__main__':
     ### some tests
     # AN .pdf
@@ -107,95 +178,17 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    dos_filter = sys.argv[3] if len(sys.argv) > 3 else ''
-
-    random.shuffle(doslegs)
-    ok, nok = 0, 0
+    # random.shuffle(doslegs)
     for dos in doslegs:
-        dos_id = _dos_id(dos)
-        if dos_filter not in dos_id:
-            continue
-        filepath = os.path.join(output_dir, dos_id)
+        filepath = os.path.join(output_dir, _dos_id(dos))
+        print('generating', filepath)
+
         if os.path.exists(filepath):
+            print('  - already done')
             continue
 
-        print('** parsing texts of', dos_id)
-
-        steps = dos['steps']
-        for step_index, step in enumerate(steps):
-            url = step.get('source_url')
-            print('    ^ text: ', url)
-
-            if url is None:
-                if step.get('echec') == 'renvoi en commission':
-                    step['articles_completed'] = steps[step_index-2].get('articles_completed',
-                        steps[step_index-2].get('articles'))
-
-                # TODO: texte retire
-
-                # TODO: stats of None urls
-                continue
-                print(step)
-            # we do not parse CC
-            elif 'conseil-constitutionnel' in url:
-                continue
-            # also ignore legifrance for now
-            elif 'legifrance' in url:
-                continue
-            else:
-                fixed_url = find_good_url(url)
-
-                if fixed_url:
-                    ok += 1
-                    try:
-                        step['articles'] = parse_texte.parse(fixed_url)
-                        step['articles'][0]['depot'] = step.get('step') == 'depot'
-
-                        # echec detected in the text content ? we update the step then
-                        if any([1 for article in step['articles'] if article.get('type') == 'echec']):
-                            if step.get('stage') == 'CMP':
-                                step['echec'] = 'echec'
-                            else:
-                                step['echec'] = 'rejet'
-                    except Exception as e:
-                        print('parsing failed for', fixed_url)
-                        print('   ', e)
-
-                    prev_step_index = _step_logic.get_previous_step(steps, step_index)
-                    if prev_step_index is not None and not step.get('echec'):
-                        # multiple-depots
-                        if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):
-                            step['articles_completed'] = step['articles']
-                        else:
-                            ante_step_index = _step_logic.get_previous_step(steps, prev_step_index)
-                            if ante_step_index is None:
-                                ante_step_articles = []
-                            else:
-                                ante_step_articles = steps[ante_step_index].get('articles_completed', steps[ante_step_index].get('articles', []))
-                            try:
-                                step['articles_completed'] = complete_articles.complete(
-                                    step.get('articles', []),
-                                    steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
-                                    ante_step_articles,
-                                    step,
-                                )
-
-                                assert 'Non modifié' not in str(step['articles_completed'])
-                                print('             complete OK')
-                            except Exception as e:
-                                print('             complete FAIL', e)
-                                break
-                    if ok % 100 == 0:
-                        print('ok..100')
-                    continue
-                else:
-                    print('INVALID RESP', url, '\t\t-->', dos.get('url_dossier_senat'))
-            nok += 1
-
-        json.dump(dos, open(filepath, 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-    print('ok', ok)
-    print('nok', nok)
-    print(r'%%%', ok/(nok+ok) * 100)
+        json.dump(process(dos), open(filepath, 'w'),
+            ensure_ascii=False, indent=2, sort_keys=True)
 
 
 """
