@@ -88,10 +88,6 @@ def fix_an_cmp_step_url(senat, an):
     # adetect missing AN CMP step in senat data
     dos = copy.deepcopy(senat)
 
-    # TODO: detect CMP.hemicycle and do re-ordering as a pre-processing step
-    # => this should be done in parse_doslegs_texts since we need to
-    #    detect the "texte définitif"
-
     # if CMP.assemblee.hemicycle is empty in senat data but ok in AN data
     # complete from AN data
     an_cmp_step_from_senat = [i for i, step in enumerate(senat['steps']) if

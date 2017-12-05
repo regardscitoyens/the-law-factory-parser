@@ -32,7 +32,7 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
                 pass
 
     open(output_dir + '/viz/procedure.json', 'w').write(
-        json.dumps(procedure, indent=2, sort_keys=True, ensure_ascii=True))
+        json.dumps(procedure, indent=2, sort_keys=True, ensure_ascii=False))
 
     print(output_dir, 'done')
 

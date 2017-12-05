@@ -85,6 +85,8 @@ def process(dos):
     print('** parsing texts of', dos_id)
 
     steps = dos['steps']
+
+    # first parse the texts
     for step_index, step in enumerate(steps):
         url = step.get('source_url')
         print('    ^ text: ', url)
@@ -117,6 +119,7 @@ def process(dos):
                             step['echec'] = 'echec'
                         else:
                             step['echec'] = 'rejet'
+
                 except Exception as e:
                     print('parsing failed for', fixed_url)
                     print('   ', e)
@@ -148,6 +151,19 @@ def process(dos):
                 continue
             else:
                 print('INVALID RESP', url, '\t\t-->', dos.get('url_dossier_senat'))
+    
+    # re-order CMPs via texte définitif detection
+    cmp_hemi_steps = [i for i, step in enumerate(dos['steps']) if
+        step.get('stage') == 'CMP' and step.get('step') == 'hemicycle']
+    if cmp_hemi_steps and len(cmp_hemi_steps) == 2:
+        first, second = [dos['steps'][i] for i in cmp_hemi_steps]
+        first_i, second_i = cmp_hemi_steps
+        if first.get('articles',{}).get('definitif'):
+            steps = dos['steps']
+            steps[first_i], steps[second_i] = steps[second_i], steps[first_i]
+
+    # TODO complete articles after re-order here to get the completion right
+
     return dos
 
 
