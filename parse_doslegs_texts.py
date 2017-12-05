@@ -92,13 +92,9 @@ def process(dos):
         print('    ^ text: ', url)
 
         if url is None:
-            if step.get('echec') == 'renvoi en commission':
-                step['articles_completed'] = steps[step_index-2].get('articles_completed',
-                    steps[step_index-2].get('articles'))
             # TODO: texte retire
             # TODO: stats of None urls
             continue
-            print(step)
         # we do not parse CC
         elif 'conseil-constitutionnel' in url:
             continue
@@ -107,7 +103,6 @@ def process(dos):
             continue
         else:
             fixed_url = find_good_url(url)
-
             if fixed_url:
                 try:
                     step['articles'] = parse_texte.parse(fixed_url)
@@ -123,47 +118,58 @@ def process(dos):
                 except Exception as e:
                     print('parsing failed for', fixed_url)
                     print('   ', e)
-
-                prev_step_index = _step_logic.get_previous_step(steps, step_index)
-                if prev_step_index is not None and not step.get('echec'):
-                    # multiple-depots
-                    if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):
-                        step['articles_completed'] = step['articles']
-                    else:
-                        ante_step_index = _step_logic.get_previous_step(steps, prev_step_index)
-                        if ante_step_index is None:
-                            ante_step_articles = []
-                        else:
-                            ante_step_articles = steps[ante_step_index].get('articles_completed', steps[ante_step_index].get('articles', []))
-                        try:
-                            step['articles_completed'] = complete_articles.complete(
-                                step.get('articles', []),
-                                steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
-                                ante_step_articles,
-                                step,
-                            )
-
-                            assert 'Non modifié' not in str(step['articles_completed'])
-                            print('             complete OK')
-                        except Exception as e:
-                            print('             complete FAIL', e)
-                            break
-                continue
             else:
                 print('INVALID RESP', url, '\t\t-->', dos.get('url_dossier_senat'))
     
+
     # re-order CMPs via texte définitif detection
     cmp_hemi_steps = [i for i, step in enumerate(dos['steps']) if
         step.get('stage') == 'CMP' and step.get('step') == 'hemicycle']
     if cmp_hemi_steps and len(cmp_hemi_steps) == 2:
         first, second = [dos['steps'][i] for i in cmp_hemi_steps]
         first_i, second_i = cmp_hemi_steps
-        if first.get('articles',{}).get('definitif'):
+        if first.get('articles',[{}])[0].get('definitif'):
+            print('     * re-ordered CMP steps')
             steps = dos['steps']
             steps[first_i], steps[second_i] = steps[second_i], steps[first_i]
 
-    # TODO complete articles after re-order here to get the completion right
 
+    # TODO complete articles after re-order here to get the completion right
+    for step_index, step in enumerate(steps):
+        print('    ^ complete text: ', step.get('source_url'))
+
+        if step.get('echec') == 'renvoi en commission':
+            step['articles_completed'] = steps[step_index-2].get('articles_completed',
+                steps[step_index-2].get('articles'))
+            # TODO: texte retire
+            # TODO: stats of None urls
+            continue
+        if 'articles' in step:
+            prev_step_index = _step_logic.get_previous_step(steps, step_index)
+            if prev_step_index is not None and not step.get('echec'):
+                # multiple-depots
+                if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):
+                    step['articles_completed'] = step['articles']
+                else:
+                    ante_step_index = _step_logic.get_previous_step(steps, prev_step_index)
+                    if ante_step_index is None:
+                        ante_step_articles = []
+                    else:
+                        ante_step_articles = steps[ante_step_index].get('articles_completed', steps[ante_step_index].get('articles', []))
+                    try:
+                        step['articles_completed'] = complete_articles.complete(
+                            step.get('articles', []),
+                            steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
+                            ante_step_articles,
+                            step,
+                        )
+
+                        assert 'Non modifié' not in str(step['articles_completed'])
+                        print('             complete OK')
+                    except Exception as e:
+                        print('             complete FAIL', e)
+                        break
+    
     return dos
 
 

@@ -101,6 +101,7 @@ def fix_an_cmp_step_url(senat, an):
 
     return dos
 
+
 def merge_senat_with_an(senat, an):
     """Takes a senat dosleg and an AN dosleg and returns a merged version"""
     dos = copy.deepcopy(senat)
@@ -112,8 +113,6 @@ def merge_senat_with_an(senat, an):
     def same_stage_step_instit(a, b):
         return a.get('stage') == b.get('stage') and a.get('step') == b.get('step') \
             and a.get('institution') == b.get('institution')
-
-    senat = fix_an_cmp_step_url(senat, an)
 
     an_offset = 0
     for i, step in enumerate(senat['steps']):
@@ -173,9 +172,14 @@ def merge_senat_with_an(senat, an):
 
         dos['steps'] += steps_to_add
 
+    dos = fix_an_cmp_step_url(dos, an)
+
     if find_anomalies([senat], verbose=False) < find_anomalies([dos], verbose=False) or \
         find_anomalies([an], verbose=False) < find_anomalies([dos], verbose=False):
-        print('REGRESSION DURING MERGE:', dos['url_dossier_senat'])
+        print('REGRESSION DURING MERGE (ANOMALIES NUMBER):', dos['url_dossier_senat'])
+    if len([1 for step in dos['steps'] if step.get('stage') == 'CMP']) \
+        and len([1 for step in senat['steps'] if step.get('stage') == 'CMP']):
+        print('REGRESSION DURING MERGE (MORE CMP STEPS):', dos['url_dossier_senat'])
     return dos
 
 
