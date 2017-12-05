@@ -84,6 +84,27 @@ def merge_previous_works_an(doslegs):
     return [dos for dos in doslegs if dos.get('url_dossier_assemblee') not in merged_dos_urls]
 
 
+def fix_an_cmp_step_url(senat, an):
+    # adetect missing AN CMP step in senat data
+    dos = copy.deepcopy(senat)
+
+    # TODO: detect CMP.hemicycle and do re-ordering as a pre-processing step
+    # => this should be done in parse_doslegs_texts since we need to
+    #    detect the "texte définitif"
+
+    # if CMP.assemblee.hemicycle is empty in senat data but ok in AN data
+    # complete from AN data
+    an_cmp_step_from_senat = [i for i, step in enumerate(senat['steps']) if
+        step.get('stage') == 'CMP' and step.get('institution') == 'assemblee']
+    an_cmp_step_from_an = [i for i, step in enumerate(an['steps']) if
+        step.get('stage') == 'CMP' and step.get('institution') == 'assemblee']
+    if an_cmp_step_from_an:
+        if an_cmp_step_from_senat:
+            dos['steps'][an_cmp_step_from_senat[0]]['source_url'] = \
+                an['steps'][an_cmp_step_from_an[0]].get('source_url')
+
+    return dos
+
 def merge_senat_with_an(senat, an):
     """Takes a senat dosleg and an AN dosleg and returns a merged version"""
     dos = copy.deepcopy(senat)
@@ -96,8 +117,7 @@ def merge_senat_with_an(senat, an):
         return a.get('stage') == b.get('stage') and a.get('step') == b.get('step') \
             and a.get('institution') == b.get('institution')
 
-    # TODO: detect CMP.hemicycle and do re-ordering as a pre-processing step
-    # also detect missing AN CMP step in senat data
+    senat = fix_an_cmp_step_url(senat, an)
 
     an_offset = 0
     for i, step in enumerate(senat['steps']):
