@@ -178,7 +178,7 @@ def merge_senat_with_an(senat, an):
         find_anomalies([an], verbose=False) < find_anomalies([dos], verbose=False):
         print('REGRESSION DURING MERGE (ANOMALIES NUMBER):', dos['url_dossier_senat'])
     if len([1 for step in dos['steps'] if step.get('stage') == 'CMP']) \
-        and len([1 for step in senat['steps'] if step.get('stage') == 'CMP']):
+        != len([1 for step in senat['steps'] if step.get('stage') == 'CMP']):
         print('REGRESSION DURING MERGE (MORE CMP STEPS):', dos['url_dossier_senat'])
     return dos
 
