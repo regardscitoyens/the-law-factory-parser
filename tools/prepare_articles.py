@@ -115,7 +115,7 @@ def process(procedure):
                 
                 old_step_index = get_previous_step(steps, nstep)
                 oldtext = []
-                if old_step_index:
+                if old_step_index is not None:
                     old_step_id = steps[old_step_index]['directory']
                     for st in out['articles'][id]['steps']:
                         if st['id_step'] == old_step_id:
