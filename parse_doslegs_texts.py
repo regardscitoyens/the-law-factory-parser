@@ -137,13 +137,11 @@ def process(dos):
     # TODO complete articles after re-order here to get the completion right
     for step_index, step in enumerate(steps):
         print('    ^ complete text: ', step.get('source_url'))
-
+        
         if step.get('echec') == 'renvoi en commission':
-            step['articles_completed'] = steps[step_index-2].get('articles_completed',
-                steps[step_index-2].get('articles'))
+            step['articles'] = steps[step_index-2].get('articles')
             # TODO: texte retire
             # TODO: stats of None urls
-            continue
         if 'articles' in step:
             prev_step_index = _step_logic.get_previous_step(steps, step_index)
             if prev_step_index is not None and not step.get('echec'):
@@ -165,7 +163,6 @@ def process(dos):
                         )
 
                         assert 'Non modifié' not in str(step['articles_completed'])
-                        print('             complete OK')
                     except Exception as e:
                         print('             complete FAIL', e)
                         break
