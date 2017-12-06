@@ -1,4 +1,4 @@
-import os, glob, sys, json, csv, random
+import os, glob, sys, json, csv, random, shutil
 
 from tools import json2arbo, prepare_articles, update_procedure
 
@@ -6,13 +6,14 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
     dos_id = dos.get('senat_id', dos.get('assemblee_id'))
     print('processing', dos_id)
     
-    # TODO: rm -rf output dir
     output_dir = os.path.join(OUTPUT_DIR, dos_id)
     print('     writing to:', output_dir)
 
     if skip_already_done and os.path.exists(output_dir):
         print(' - already done')
         return
+
+    shutil.rmtree(output_dir, ignore_errors=True)
 
     # add texte.json and write all the text files tree
     dos = json2arbo.process(dos, output_dir + '/procedure')

@@ -78,12 +78,13 @@ def process(dos, OUTPUT_DIR):
 
         step['directory'] = get_step_id(step_i, step)
         step_dir = os.path.join(OUTPUT_DIR, os.path.join(step['directory'], 'texte'))
-        mkdirs(step_dir)
 
         articles = step.get('articles_completed', step.get('articles'))
         if not articles:
             # print('no articles for step')
             continue
+        
+        mkdirs(step_dir)
         for data in articles:
             if not data or not "type" in data:
                 log_err("JSON %s badly formatted, missing field type: %s" % (f, data))
