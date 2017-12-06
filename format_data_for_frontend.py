@@ -4,7 +4,6 @@ from tools import json2arbo, prepare_articles, update_procedure
 
 def process(dos, OUTPUT_DIR, skip_already_done=False):
     dos_id = dos.get('senat_id', dos.get('assemblee_id'))
-    print('processing', dos_id)
     
     output_dir = os.path.join(OUTPUT_DIR, dos_id)
     print('     writing to:', output_dir)
@@ -35,8 +34,6 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
     open(output_dir + '/viz/procedure.json', 'w').write(
         json.dumps(procedure, indent=2, sort_keys=True, ensure_ascii=False))
 
-    print(output_dir, 'done')
-
 
 if __name__ == '__main__':
     INPUT_GLOB = sys.argv[1]
@@ -61,6 +58,7 @@ if __name__ == '__main__':
             print ('  -> pass single step dossier')
             continue
 
+        print('processing', file)
         process(dos, OUTPUT_DIR, skip_already_done=True)
 
         csvfile.writerow([

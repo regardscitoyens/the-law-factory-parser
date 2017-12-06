@@ -1,0 +1,59 @@
+{
+  "articles": {
+    "1er": {
+      "id": "1er",
+      "section": "A1er",
+      "steps": [
+        {
+          "diff": "add",
+          "directory": "00_1erelecture_assemblee_depot",
+          "id_step": "00_1erelecture_assemblee_depot",
+          "length": 266,
+          "n_diff": 1,
+          "order": 1,
+          "status": "depot"
+        },
+        {
+          "diff": "none",
+          "directory": "01_1erelecture_assemblee_commission",
+          "id_step": "01_1erelecture_assemblee_commission",
+          "length": 266,
+          "n_diff": 0,
+          "order": 1,
+          "status": "none"
+        },
+        {
+          "diff": "both",
+          "directory": "02_1erelecture_assemblee_hemicycle",
+          "id_step": "02_1erelecture_assemblee_hemicycle",
+          "length": 267,
+          "n_diff": 0.0037453183520599342,
+          "order": 1,
+          "status": "none"
+        },
+        {
+          "diff": "none",
+          "directory": "04_1erelecture_senat_commission",
+          "id_step": "04_1erelecture_senat_commission",
+          "length": 267,
+          "n_diff": 0,
+          "order": 1,
+          "status": "none"
+        },
+        {
+          "diff": "none",
+          "directory": "05_1erelecture_senat_hemicycle",
+          "id_step": "05_1erelecture_senat_hemicycle",
+          "length": 267,
+          "n_diff": 0,
+          "order": 1,
+          "status": "none"
+        }
+      ],
+      "titre": "1er"
+    }
+  },
+  "law_title": "Loi autorisant l'approbation de l'accord entre le Gouvernement de la R\u00e9publique fran\u00e7aise et le Gouvernement du Mont\u00e9n\u00e9gro relatif \u00e0 la mobilit\u00e9 des jeunes",
+  "sections": {},
+  "short_title": "Mont\u00e9n\u00e9gro : mobilit\u00e9 des jeunes"
+}

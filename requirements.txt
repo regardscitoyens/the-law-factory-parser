@@ -1,2 +1,2 @@
-git+https://github.com/regardscitoyens/senapy.git
-git+https://github.com/regardscitoyens/anpy.git
+-e git+https://github.com/regardscitoyens/senapy.git#egg=senapy
+-e git+https://github.com/regardscitoyens/anpy.git#egg=anpy
