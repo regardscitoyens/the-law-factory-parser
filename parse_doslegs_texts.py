@@ -26,7 +26,8 @@ def find_good_url(url):
             if resp:
                 return url
         if '/rap/' in url: # and step.get('institution') == 'CMP':
-            for page in '_mono', '3', '2', '1', '0':
+            # TODO: look into using _mono when no text is found
+            for page in '3', '2', '1', '0':
                 new_url = url.replace('.html', page + '.html')
                 if test_status(new_url):
                     return new_url
