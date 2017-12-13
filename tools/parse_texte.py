@@ -234,6 +234,7 @@ def parse(url, ORDER=''):
     re_clean_supr = re.compile(r'\((dispositions?\s*d..?clar..?es?\s*irrecevable.*article 4.*Constitution.*|(maintien de la )?suppr(ession|im..?s?)(\s*(conforme|maintenue|par la commission mixte paritaire))*)\)["\s]*$', re.I)
     re_echec_hemi = re.compile(r"L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
     re_echec_hemi2 = re.compile(r"de loi a été rejetée? par l('Assemblée nationale|e Sénat)\.$", re.I)
+    re_echec_hemi3 = re.compile(r"le Sénat décide qu'il n'y a pas lieu de poursuivre la délibération", re.I)
     re_echec_com = re.compile(r" la commission .*(effet est d'entraîner le rejet|demande de rejeter|a rejeté|n'a pas adopté)[dleau\s]*(projet|proposition|texte)[.\s]", re.I)
     re_echec_com2 = re.compile(r"L'ensemble de la proposition de loi est rejeté dans la rédaction issue des travaux de la commission.", re.I)
     re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*parven(u[es]?|ir) à (élaborer )?un texte commun)", re.I)
@@ -287,7 +288,8 @@ def parse(url, ORDER=''):
             or re_echec_com.search(cl_line) \
             or re_echec_com2.search(cl_line) \
             or re_echec_hemi.match(cl_line) \
-            or re_echec_hemi2.search(cl_line):
+            or re_echec_hemi2.search(cl_line) \
+            or re_echec_hemi3.search(cl_line):
             texte = save_text(texte)
             pr_js({"type": "echec", "texte": cl_line})
             break
