@@ -35,7 +35,8 @@ python format_data_for_frontend.py "data/parsed/with_texts/*" data/parsed/api/
 # > and now for some fun stuff
 
 # do all those things but only for one dosleg
-python parse_one.py pjl12-688 data/parsed/api/
+python parse_one.py data/parsed/api/ pjl12-688
+python parse_one.py data/parsed/api/ http://www.assemblee-nationale.fr/15/dossiers/securite_interieure_lutte_terrorisme.asp
 
 # generate a graph of the steps
 python tools/steps_as_dot.py data/parsed/merged/all.json | dot -Tsvg > steps.svg
