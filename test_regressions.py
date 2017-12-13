@@ -19,7 +19,7 @@ for directory in glob.glob('tests/*'):
     print()
     print('****** testing', senat_id, '*******')
     print()
-    parse_one.process(senat_id, 'tests_tmp')
+    parse_one.process('tests_tmp', senat_id)
     comp = filecmp.dircmp(directory, 'tests_tmp/' + senat_id)
     if _is_same_helper(comp):
         print()
