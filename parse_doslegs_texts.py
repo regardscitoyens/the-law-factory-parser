@@ -1,4 +1,4 @@
-import sys, json, time, random, os
+import sys, json, time, random, os, re
 
 from lawfactory_utils.urls import clean_url, download, enable_requests_cache
 
@@ -26,11 +26,28 @@ def find_good_url(url):
             if resp:
                 return url
         if '/rap/' in url: # and step.get('institution') == 'CMP':
-            # TODO: look into using _mono when no text is found
+            # we try to use the last page to get a clean text
+            clean_url = None
             for page in '3', '2', '1', '0':
                 new_url = url.replace('.html', page + '.html')
-                if test_status(new_url):
-                    return new_url
+                resp = test_status(new_url)
+                if resp:
+                    text = resp.text.replace('<br>', '\n')
+                    # look for the "TEXTE ÉLABORÉ PAR .."" TITLE
+                    if re.match(r'.*TEXTE\s+&Eacute;LABOR&Eacute;\s+PAR.*', text, re.M | re.DOTALL):
+                        # if the previous page was valid also, then the text is multi-page
+                        if clean_url:
+                            clean_url = None
+                            break
+                        clean_url = new_url
+
+            if clean_url:
+                return clean_url
+            else:
+                # use _mono as last resort
+                mono_url = url.replace('.html', '_mono.html')
+                if test_status(mono_url):
+                    return mono_url
 
     if 'assemblee-nationale.fr' in url:
         if '/cr-' in url:
@@ -177,7 +194,11 @@ if __name__ == '__main__':
     assert find_good_url('http://www.assemblee-nationale.fr/13/pdf/pion1895.pdf') == 'http://www.assemblee-nationale.fr/13/propositions/pion1895.asp'
     # senat simple
     assert find_good_url('https://www.senat.fr/leg/tas11-040.html') == 'https://www.senat.fr/leg/tas11-040.html'
-    # senat multi-page
+    # senat multi-page but not last page
+    assert find_good_url('https://www.senat.fr/rap/l07-485/l07-485.html') == 'https://www.senat.fr/rap/l07-485/l07-4851.html'
+    # senat multi-page but not mono
+    assert find_good_url('http://www.senat.fr/rap/l09-654/l09-654.html') == 'http://www.senat.fr/rap/l09-654/l09-6542.html'
+    # senat multi-page text
     assert find_good_url('https://www.senat.fr/rap/l08-584/l08-584.html') == 'https://www.senat.fr/rap/l08-584/l08-584_mono.html'
 
     # AN improve link
