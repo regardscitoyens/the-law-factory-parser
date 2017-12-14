@@ -186,7 +186,7 @@ def complete(current, previous, anteprevious, step):
                     log("DEBUG: Recovering art conformes %s à %s" % (st, ed))
                     mult_type = "conf"
                 else:
-                    print("ERROR: Found multiple article which I don't knwo what to do with", line['titre'], line, file=sys.stderr)
+                    print("ERROR: Found multiple article which I don't know what to do with", line['titre'], line, file=sys.stderr)
                     exit()
                 line['titre'] = st
             cur = ""
@@ -213,7 +213,7 @@ def complete(current, previous, anteprevious, step):
                 a = SequenceMatcher(None, oldtxt, txt).get_matching_blocks()
                 similarity = float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
                 if similarity < 0.75 and not olddepot:
-                    print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len("".join(txt)), "diffchars, similarity;", similarity, file=sys.stderr)
+                    print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len("".join(txt)), "diffchars, similarity; %.2f" % similarity, file=sys.stderr)
                 if line['titre'] != oldart['titre']:
                     line['newtitre'] = line['titre']
                     line['titre'] = oldart['titre']
