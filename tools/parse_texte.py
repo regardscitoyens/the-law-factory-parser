@@ -61,7 +61,7 @@ def parse(url, ORDER=''):
             string = reg.sub(res, string)
 
     definitif = re_definitif.search(string) is not None
-    soup = BeautifulSoup(string, "lxml")
+    soup = BeautifulSoup(string, "html5lib")
     texte = {"type": "texte", "source": url, "definitif": definitif}
     # Generate Senat or AN ID from URL
     if "legifrance.gouv.fr" in url:
@@ -235,10 +235,10 @@ def parse(url, ORDER=''):
     re_echec_hemi = re.compile(r"L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
     re_echec_hemi2 = re.compile(r"de loi (a été rejetée?|n'a pas été adopté) par l('Assemblée nationale|e Sénat)\.$", re.I)
     re_echec_hemi3 = re.compile(r"le Sénat décide qu'il n'y a pas lieu de poursuivre la délibération", re.I)
-    re_echec_com = re.compile(r"la commission .*(effet est d'entraîner le rejet|demande de rejeter|a rejeté|n'a pas adopté|rejette l'ensemble)[dleau\s]*(projet|proposition|texte)[.\s]", re.I)
+    re_echec_com = re.compile(r"la commission .*(effet est d'entraîner le rejet|demande de rejeter|a rejeté|n'a pas adopté|rejette l'ensemble|ne pas établir)[dleau\s]*(projet|proposition|texte)[.\s]", re.I)
     re_echec_com2 = re.compile(r"L'ensemble de la proposition de loi est rejeté dans la rédaction issue des travaux de la commission.", re.I)
     re_echec_com3 = re.compile(r"la commission a décidé de déposer une motion tendant à opposer la question préalable", re.I)
-    re_echec_com4 = re.compile(r"(la|votre) commission a décidé de ne pas adopter de texte", re.I)
+    re_echec_com4 = re.compile(r"(la|votre) commission a décidé de ne pas adopter [dleau\s]*(projet|proposition|texte)", re.I)
     re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*parven(u[es]?|ir) à (élaborer )?un texte commun)", re.I)
     re_rap_mult = re.compile(r'[\s<>/ai]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
     re_src_mult = re.compile(r'^- L(?:A PROPOSITION|E PROJET) DE LOI n°\s*(\d+)\D')
