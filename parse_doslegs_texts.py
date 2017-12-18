@@ -28,13 +28,14 @@ def find_good_url(url):
         if '/rap/' in url: # and step.get('institution') == 'CMP':
             # we try to use the last page to get a clean text
             clean_url = None
-            for page in '3', '2', '1', '0':
+            for page in '9', '8', '7', '6', '5', '4', '3', '2', '1', '0':
                 new_url = url.replace('.html', page + '.html')
                 resp = test_status(new_url)
                 if resp:
                     text = resp.text.replace('<br>', '\n')
                     # look for the "TEXTE ÉLABORÉ PAR .."" TITLE
-                    if re.match(r'.*TEXTE\s+&Eacute;LABOR&Eacute;\s+PAR.*', text, re.M | re.DOTALL):
+                    if re.match(r'.*TEXTE\s+&Eacute;LABOR&Eacute;\s+PAR.*', text, re.M | re.DOTALL) \
+                        or re.match(r'.*EXAMEN\s+EN\s+COMMISSION.*', text, re.M | re.DOTALL):
                         # if the previous page was valid also, then the text is multi-page
                         if clean_url:
                             clean_url = None
@@ -152,7 +153,6 @@ def process(dos):
             steps[first_i], steps[second_i] = steps[second_i], steps[first_i]
 
 
-    # TODO complete articles after re-order here to get the completion right
     for step_index, step in enumerate(steps):
         print('    ^ complete text: ', step.get('source_url'))
         
@@ -189,18 +189,6 @@ def process(dos):
 
 
 if __name__ == '__main__':
-    ### some tests
-    # AN .pdf
-    assert find_good_url('http://www.assemblee-nationale.fr/13/pdf/pion1895.pdf') == 'http://www.assemblee-nationale.fr/13/propositions/pion1895.asp'
-    # senat simple
-    assert find_good_url('https://www.senat.fr/leg/tas11-040.html') == 'https://www.senat.fr/leg/tas11-040.html'
-    # senat multi-page but not last page
-    assert find_good_url('https://www.senat.fr/rap/l07-485/l07-485.html') == 'https://www.senat.fr/rap/l07-485/l07-4851.html'
-    # senat multi-page but not mono
-    assert find_good_url('http://www.senat.fr/rap/l09-654/l09-654.html') == 'http://www.senat.fr/rap/l09-654/l09-6542.html'
-    # senat multi-page text
-    assert find_good_url('https://www.senat.fr/rap/l08-584/l08-584.html') == 'https://www.senat.fr/rap/l08-584/l08-584_mono.html'
-
     # AN improve link
     """
     assert find_good_url('http://www.assemblee-nationale.fr/15/ta-commission/r0268-a0.asp') == 'http://www.assemblee-nationale.fr/15/textes/0268.asp'
