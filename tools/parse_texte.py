@@ -217,7 +217,7 @@ def parse(url, ORDER=''):
     re_mat_sec = re.compile(r"%s(\s+(.+)e?r?)" % section_titles, re.I)
     re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
     re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
-    re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
+    re_mat_ppl = re.compile(r"((<b>)?pro.* loi|(<h2>\s*pro.* loi\s*</h2>))", re.I)
     re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*(</b>\s*$|\(.*\))")
     re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
     re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|<a>\*</a>\s*(<i>)?1)", re.I)
@@ -256,8 +256,13 @@ def parse(url, ORDER=''):
     srclst = []
     section = {"type": "section", "id": ""}
 
-    for text in soup.find_all("p"):
+
+    for text in soup.find_all(lambda x: x.name == 'p' or x.name == 'h2'):
         line = clean_html(str(text))
+
+        # limit h2 matches to PPL headers
+        if text.name == 'h2' and not re_mat_ppl.match(line):
+            continue
         if re_stars.match(line):
             continue
         if line == "<b>RAPPORT</b>" or line == "Mesdames, Messieurs,":
