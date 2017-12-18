@@ -217,7 +217,7 @@ def parse(url, ORDER=''):
     re_mat_sec = re.compile(r"%s(\s+(.+)e?r?)" % section_titles, re.I)
     re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
     re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
-    re_mat_ppl = re.compile(r"((<b>)?pro.* loi|(<h2>\s*pro.* loi\s*</h2>))", re.I)
+    re_mat_ppl = re.compile(r"((<b>)?pro.* loi|<h2>\s*pro.* loi\s*</h2>)", re.I)
     re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*(</b>\s*$|\(.*\))")
     re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
     re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|<a>\*</a>\s*(<i>)?1)", re.I)
@@ -233,9 +233,9 @@ def parse(url, ORDER=''):
     re_clean_conf = re.compile(r"\((conforme|non[\s-]*modifi..?)s?\)", re.I)
     re_clean_supr = re.compile(r'\((dispositions?\s*d..?clar..?es?\s*irrecevable.*article 4.*Constitution.*|(maintien de la )?suppr(ession|im..?s?)(\s*(conforme|maintenue|par la commission mixte paritaire))*)\)["\s]*$', re.I)
     re_echec_hemi = re.compile(r"L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
-    re_echec_hemi2 = re.compile(r"de loi (a été rejetée?|n'a pas été adopté) par l('Assemblée nationale|e Sénat)\.$", re.I)
+    re_echec_hemi2 = re.compile(r"de loi (a été rejetée?|n'a pas été adoptée?) par l('Assemblée nationale|e Sénat)\.$", re.I)
     re_echec_hemi3 = re.compile(r"le Sénat décide qu'il n'y a pas lieu de poursuivre la délibération", re.I)
-    re_echec_com = re.compile(r"la commission .*(effet est d'entraîner le rejet|demande de rejeter|a rejeté|n'a pas adopté|rejette l'ensemble|ne pas établir)[dleau\s]*(projet|proposition|texte)[.\s]", re.I)
+    re_echec_com = re.compile(r"(la commission|elle) .*(effet est d'entraîner le rejet|demande de rejeter|a rejeté|n'a pas adopté|rejette l'ensemble|ne pas établir)[dleau\s]*(projet|proposition|texte)[.\s]", re.I)
     re_echec_com2 = re.compile(r"L'ensemble de la proposition de loi est rejeté dans la rédaction issue des travaux de la commission.", re.I)
     re_echec_com3 = re.compile(r"la commission a décidé de déposer une motion tendant à opposer la question préalable", re.I)
     re_echec_com4 = re.compile(r"(la|votre) commission a décidé de ne pas adopter [dleau\s]*(projet|proposition|texte)", re.I)
@@ -331,7 +331,7 @@ def parse(url, ORDER=''):
         # Identify titles and new article zones
         elif (not expose and re_mat_end.match(line)) or (read == 2 and re_mat_ann.match(line)):
             break
-        elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(line) or re.match(r"^Articles? ", line):
+        elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(cl_line) or re.match(r"^Articles? ", line):
             line = cl_line
             # Read a new article
             if re_mat_art.match(line):
