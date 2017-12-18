@@ -61,7 +61,7 @@ def parse(url, ORDER=''):
             string = reg.sub(res, string)
 
     definitif = re_definitif.search(string) is not None
-    soup = BeautifulSoup(string, "html5lib")
+    soup = BeautifulSoup(string, "lxml")
     texte = {"type": "texte", "source": url, "definitif": definitif}
     # Generate Senat or AN ID from URL
     if "legifrance.gouv.fr" in url:
@@ -218,7 +218,7 @@ def parse(url, ORDER=''):
     re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
     re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
     re_mat_ppl = re.compile(r"(<b>)?pro.* loi", re.I)
-    re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*</b>\s*$")
+    re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*(</b>\s*$|\(.*\))")
     re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
     re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|<a>\*</a>\s*(<i>)?1)", re.I)
     re_mat_ann = re.compile(r"\s*<b>\s*ANNEXES?[\s<]+")
@@ -258,7 +258,6 @@ def parse(url, ORDER=''):
 
     for text in soup.find_all("p"):
         line = clean_html(str(text))
-
         if re_stars.match(line):
             continue
         if line == "<b>RAPPORT</b>" or line == "Mesdames, Messieurs,":

@@ -2,8 +2,7 @@ import glob, shutil, os, filecmp
 
 import parse_one
 from parse_doslegs_texts import find_good_url
-
-""" test url fixing """
+from tools import parse_texte
 
 print('****** testing url fixing... ******')
 # AN .pdf
@@ -19,6 +18,11 @@ assert find_good_url('https://www.senat.fr/rap/l08-584/l08-584.html') == 'https:
 # senat multipage examen en commission
 assert find_good_url('https://www.senat.fr/rap/l09-535/l09-535.html') == 'https://www.senat.fr/rap/l09-535/l09-5358.html'
 print('****** => url fixing OK ******')
+
+print()
+print('*** testing parse_texte ****')
+assert len(parse_texte.parse('http://www.assemblee-nationale.fr/13/rapports/r2568.asp')) == 5
+print('****** => parse_texte OK ******')
 
 
 """ test full data generation """
