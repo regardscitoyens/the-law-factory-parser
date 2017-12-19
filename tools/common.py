@@ -7,16 +7,17 @@ from html.entities import name2codepoint
 from csv import DictReader
 import json
 
+
 def open_csv(dirpath, filename, delimiter=";"):
     try:
         data = []
         with open(os.path.join(dirpath, filename), 'r') as f:
             for row in DictReader(f, delimiter=delimiter):
-                data.append(dict([(k.decode('utf-8'), v.decode('utf-8')) for k, v in row.items()]))
+                data.append(dict([(k, v) for k, v in row.items()]))
             return data
     except Exception as e:
         print(type(e), e, file=sys.stderr)
-        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath.encode('utf-8')))
+        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
         exit(1)
 
 def open_json(dirpath, filename):
@@ -25,14 +26,14 @@ def open_json(dirpath, filename):
             return json.load(f)
     except Exception as e:
         print(type(e), e, file=sys.stderr)
-        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath.encode('utf-8')))
+        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
         exit(1)
 
 def print_json(dico, filename=None):
     if filename:
         try:
             with open("%s.tmp" % filename, 'w') as f:
-                f.write(json.dumps(dico, ensure_ascii=False).encode('utf8'))
+                f.write(json.dumps(dico, ensure_ascii=False))
             if os.path.exists(filename):
                 os.remove(filename)
             os.rename("%s.tmp" % filename, filename)
@@ -41,7 +42,7 @@ def print_json(dico, filename=None):
             sys.stderr.write("ERROR: Could not write in file %s" % filename)
             exit(1)
     else:
-        print(json.dumps(dico, ensure_ascii=False).encode('utf8'))
+        print(json.dumps(dico, ensure_ascii=False))
 
 datize = lambda d: date(*tuple([int(a) for a in d.split('-')]))
 def format_date(d):
@@ -100,7 +101,7 @@ class Context(object):
 
     def get_procedure(self):
         try:
-            with open(os.path.join(self.sourcedir, 'procedure', 'procedure.json'), "r") as procedure:
+            with open(os.path.join(self.sourcedir, 'viz', 'procedure.json'), "r") as procedure:
                 return json.load(procedure)
         except:
             sys.stderr.write('ERROR: could not find procedure data in directory %s\n' % self.sourcedir)
