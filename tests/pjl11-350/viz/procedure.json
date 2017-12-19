@@ -86,6 +86,11 @@
       "stage": "promulgation"
     }
   ],
+  "themes": [
+    "Société",
+    "Affaires étrangères et coopération",
+    "Traités et conventions"
+  ],
   "urgence": false,
   "url_dossier_assemblee": "http://www.assemblee-nationale.fr/13/dossiers/accord_Montenegro_mobilite_jeunes.asp",
   "url_dossier_senat": "https://www.senat.fr/dossier-legislatif/pjl11-350.html",

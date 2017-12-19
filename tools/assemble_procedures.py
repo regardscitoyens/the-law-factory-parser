@@ -6,7 +6,7 @@ from common import *
 from aggregates_data import DossierWalker,CountAmendementComputation
 from difflib import ndiff, SequenceMatcher
 
-sourcedir = os.path.join(sys.argv[1], 'data')
+sourcedir = sys.argv[1]
 if not sourcedir:
     sys.stderr.write('ERROR: no input directory given\n')
     exit(1)
@@ -38,7 +38,7 @@ dossiers.sort(key=lambda k: format_date(k['Date de promulgation']), reverse=True
 
 namefile = lambda npage: "dossiers_%s_%s.json" % (pagesize*npage, min(total, pagesize*(npage+1))-1)
 def save_json_page(tosave, done):
-    npage = (done - 1) / pagesize
+    npage = (done - 1) // pagesize
     data = {"total": total,
             "min_date": mindate,
             "max_date": maxdate,
@@ -55,7 +55,7 @@ done = 0
 tosave = []
 
 def read_text(text_id, step_id):
-    articles = open_json(os.path.join(sourcedir, text_id.encode('utf-8'), 'procedure', step_id.encode('utf-8'), 'texte'), 'texte.json')['articles']
+    articles = open_json(os.path.join(sourcedir, text_id, 'procedure', step_id, 'texte'), 'texte.json')['articles']
     texte = []
     for art in articles:
         for key in sorted(art['alineas'].keys()):
@@ -64,9 +64,8 @@ def read_text(text_id, step_id):
     return texte
 
 for d in dossiers:
-
     computation = CountAmendementComputation()
-    myWalker = DossierWalker(d["id"],computation)
+    myWalker = DossierWalker(d["id"], computation, sourcedir)
     myWalker.walk()
 
     proc = open_json(os.path.join(sourcedir, d['id'], 'viz'), 'procedure.json')
@@ -74,9 +73,9 @@ for d in dossiers:
     proc["beginning"] = format_date(d["Date initiale"])
     proc["end"] = format_date(d["Date de promulgation"])
     proc["total_days"] = (datize(proc["end"]) - datize(proc["beginning"])).days + 1
-    proc["procedure"] = proc["type"]
+    # proc["procedure"] = proc["type"]
     proc["type"] = d["Type de dossier"]
-    proc["themes"] = [a.strip().lower() for a in d[u"Thèmes"].split(',')]
+    proc["themes"] = [a.strip().lower() for a in d["Thèmes"].split(',')]
     proc["total_amendements"] = int(d["total_amendements"])
     proc["total_amendements_adoptes"] = computation.countAmdtAdoptes
     proc["total_amendements_parlementaire"] = computation.countAmdtParl

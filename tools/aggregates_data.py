@@ -10,16 +10,16 @@ from common import open_json, print_json, amendementIsFromGouvernement
 #######################################################
 class BasicComputation(object):
     def computeAmendements(self,amdt):
-        print ">>%s"% amdt["amendement"]["id"]
+        print(">>%s"% amdt["amendement"]["id"])
         return
     def computeInterventions(self,interv):
-        print "Compute interv"
+        print("Compute interv")
         return
     def computeText(self,text):
-        print "Compute Text"
+        print("Compute Text")
         return
     def finalize(self):
-        print "Finalize"
+        print("Finalize")
 
 
 #######################################################
@@ -58,7 +58,7 @@ class CountAmendementComputation(object):
         if not amendementIsFromGouvernement(amdt):
             self.countAmdtParl += 1
         
-        if amdt["amendement"]["sort"] == u"Adopté":
+        if amdt["amendement"]["sort"] == "Adopté":
             self.countAmdtAdoptes += 1
             if not amendementIsFromGouvernement(amdt):
                 self.countAmdtParlAdoptes += 1
@@ -86,7 +86,7 @@ class CountAmendementComputation(object):
 
     def computeStep(self, step):
         #print "Compute Step"
-        if step["echec"] != None or step["source_url"] == "renvoi en commission":
+        if step.get("echec") != None or step.get("echec") == "renvoi en commission":
             self.countAccidentProcedure += 1
         if self.firstStep == "":
             self.firstStep = step["directory"]
@@ -140,22 +140,20 @@ class CountAmendementComputation(object):
 #######################################################
 #######################################################
 
-class  DossierWalker(object):
-
-    def __init__(self, id, computationClass):
+class DossierWalker(object):
+    def __init__(self, id, computationClass, sourcedir='data'):
         self.id = id;
         self.computationClass = computationClass
-        self.procedurePath = os.path.join("data",self.id, "procedure")
-        self.vizPath = os.path.join("data",self.id, "viz")
+        self.procedurePath = os.path.join(sourcedir, self.id, "procedure")
+        self.vizPath = os.path.join(sourcedir, self.id, "viz")
 
     def step_walker(self,step):
-
         #Amendement treatment    
         if "amendement_directory" in step:
             amdtDir = os.path.join(self.procedurePath, 
                 step["amendement_directory"])
             if not os.path.exists(amdtDir):
-                print "ERROR > No Amendements Directory "
+                print("ERROR > No Amendements Directory ")
                 return;
 
             amendements = open_json(amdtDir, "amendements.json")
@@ -168,7 +166,7 @@ class  DossierWalker(object):
             intervDir = os.path.join(self.procedurePath, 
                 step["intervention_directory"])
             if not os.path.exists(intervDir):
-                print ">No Intervention Directory "
+                print(">No Intervention Directory ")
                 return;
 
             #interventions = open_json(amdtDir, "amendements.json")
@@ -184,7 +182,7 @@ class  DossierWalker(object):
             textDir = os.path.join(self.procedurePath,
                     step["working_text_directory"])
             if not os.path.exists(textDir):
-                print "ERROR > no Text directory"
+                print("ERROR > no Text directory")
                 return;
 
             text = open_json(textDir, "texte.json")
@@ -199,7 +197,7 @@ class  DossierWalker(object):
 ####################################################
 
     def walk(self):
-        procedure = open_json(self.procedurePath, "procedure.json")
+        procedure = open_json(self.vizPath, "procedure.json")
 
         for step in procedure['steps'] :
            self.step_walker(step)
