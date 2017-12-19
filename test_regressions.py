@@ -1,8 +1,11 @@
-import glob, shutil, os, filecmp
+import glob, shutil, os, filecmp, sys
 
 import parse_one
 from parse_doslegs_texts import find_good_url
 from tools import parse_texte
+
+# use `test_regressions.py regen` to update the tests/ directory
+REGEN_TESTS = sys.argv[1] == 'regen' if len(sys.argv) == 2 else False
 
 print('****** testing url fixing... ******')
 # AN .pdf
@@ -44,8 +47,13 @@ for directory in glob.glob('tests/*'):
     print()
     print('****** testing', senat_id, '*******')
     print()
-    parse_one.process('tests_tmp', senat_id)
-    comp = filecmp.dircmp(directory, 'tests_tmp/' + senat_id)
+
+    output_dir = 'tests_tmp'
+    if REGEN_TESTS:
+        output_dir = 'tests'
+
+    parse_one.process(output_dir, senat_id)
+    comp = filecmp.dircmp(directory, output_dir + '/' + senat_id)
     if _is_same_helper(comp):
         print()
         print('  -> test passed')
