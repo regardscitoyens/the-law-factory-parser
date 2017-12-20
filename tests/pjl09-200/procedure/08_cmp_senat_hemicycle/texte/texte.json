@@ -421,7 +421,7 @@
         "013": "\"L'Observatoire des distorsions évalue, à la demande des organisations visées au troisième alinéa, l'impact des mesures législatives ou réglementaires affectant les modes de production agricole. Cette expertise comporte une analyse comparative entre la France, les États membres de l'Union européenne et les pays tiers, une étude d'impact économique, social et environnemental et le chiffrage des coûts et bénéfices attendus de ces mesures.\" ;",
         "014": "d) Il est ajouté un chapitre II ainsi rédigé :",
         "015": "\"Chapitre II",
-        "016": "\"Observatoire de la formation des prixet des marges des produits alimentaires",
+        "016": "\"Observatoire de la formation des prix et des marges des produits alimentaires",
         "017": "\"Art. L. 692-1. - L'Observatoire de la formation des prix et des marges des produits alimentaires, placé auprès du ministre chargé de l'alimentation et du ministre chargé de la consommation, a pour mission d'éclairer les acteurs économiques et les pouvoirs publics sur la formation des prix et des marges au cours des transactions au sein de la chaîne de commercialisation des produits alimentaires, qu'il s'agisse de produits de l'agriculture, de la pêche ou de l'aquaculture.",
         "018": "\"Les modalités de désignation du président de l'observatoire, le fonctionnement de l'observatoire ainsi que sa composition sont définis par décret.",
         "019": "\"L'observatoire analyse les données nécessaires à l'exercice de ses missions, recueillies auprès de l'établissement mentionné à l'article L. 621-1 et du service statistique public.",
@@ -1962,7 +1962,7 @@
   "sections": [
     {
       "id": "T1",
-      "titre": "Définir et mettre en oeuvreune politique publique de l'alimentation",
+      "titre": "Définir et mettre en oeuvre une politique publique de l'alimentation",
       "type": "section",
       "type_section": "titre"
     },
@@ -1989,21 +1989,21 @@
     {
       "id": "T3",
       "newid": "T5",
-      "titre": "Inscrire l'agriculture et la forêtdans un développement durabledes territoires",
+      "titre": "Inscrire l'agriculture et la forêt dans un développement durable des territoires",
       "type": "section",
       "type_section": "titre"
     },
     {
       "id": "T3 bis",
       "newid": "T6",
-      "titre": "Simplifier les procédureset adapter le droit",
+      "titre": "Simplifier les procédures et adapter le droit",
       "type": "section",
       "type_section": "titre"
     },
     {
       "id": "T4",
       "newid": "T7",
-      "titre": "Moderniser la gouvernance de la pêchemaritime et de l'aquaculture",
+      "titre": "Moderniser la gouvernance de la pêche maritime et de l'aquaculture",
       "type": "section",
       "type_section": "titre"
     },

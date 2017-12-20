@@ -146,7 +146,7 @@
         "007": "a) Son intitulé est remplacé par l'intitulé suivant : \"Titre IX - Observatoires\" ;",
         "008": "b) Il est créé un chapitre Ier intitulé \"Observatoire des distorsions\" comprenant l'article L. 691-1 et un chapitre II, ainsi rédigé :",
         "009": "\"Chapitre II",
-        "010": "\"Observatoire de la formation des prixet des marges des produits alimentaires",
+        "010": "\"Observatoire de la formation des prix et des marges des produits alimentaires",
         "011": "\"Art. L. 692-1. - L'observatoire de la formation des prix et des marges des produits alimentaires, placé auprès du ministre chargé de l'alimentation et du ministre chargé de la consommation, est chargé d'éclairer les acteurs économiques et les pouvoirs publics sur la formation des prix et des marges au cours des transactions au sein de la chaîne alimentaire, qu'il s'agisse de produits de l'agriculture, de la pêche ou de l'aquaculture. Il étudie également les coûts de production au stade de la production agricole. Il remet chaque année un rapport au Parlement.\""
       },
       "order": 6,
@@ -653,7 +653,7 @@
   "sections": [
     {
       "id": "T1",
-      "titre": "Définir et mettre en oeuvre une politiquepublique de l'alimentation",
+      "titre": "Définir et mettre en oeuvre une politique publique de l'alimentation",
       "type": "section",
       "type_section": "titre"
     },
@@ -665,13 +665,13 @@
     },
     {
       "id": "T3",
-      "titre": "Inscrire l'activité l'agriculture et la forêtdans un développement durable des territoires",
+      "titre": "Inscrire l'activité l'agriculture et la forêt dans un développement durable des territoires",
       "type": "section",
       "type_section": "titre"
     },
     {
       "id": "T4",
-      "titre": "Moderniser la gouvernance de la pêchemaritime et de l'aquaculture",
+      "titre": "Moderniser la gouvernance de la pêche maritime et de l'aquaculture",
       "type": "section",
       "type_section": "titre"
     },

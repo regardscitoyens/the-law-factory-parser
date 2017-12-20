@@ -5830,7 +5830,7 @@
           "diff": "add",
           "directory": "00_1erelecture_senat_depot",
           "id_step": "00_1erelecture_senat_depot",
-          "length": 1513,
+          "length": 1514,
           "n_diff": 1,
           "order": 6,
           "status": "depot"
@@ -5839,8 +5839,8 @@
           "diff": "rem",
           "directory": "01_1erelecture_senat_commission",
           "id_step": "01_1erelecture_senat_commission",
-          "length": 2582,
-          "n_diff": 0.6018590240123936,
+          "length": 2583,
+          "n_diff": 0.6016260162601625,
           "order": 10,
           "status": "none"
         },
@@ -5848,8 +5848,8 @@
           "diff": "rem",
           "directory": "02_1erelecture_senat_hemicycle",
           "id_step": "02_1erelecture_senat_hemicycle",
-          "length": 3180,
-          "n_diff": 0.2446540880503144,
+          "length": 3181,
+          "n_diff": 0.24457717698836845,
           "order": 12,
           "status": "none"
         },
@@ -5858,7 +5858,7 @@
           "directory": "04_1erelecture_assemblee_commission",
           "id_step": "04_1erelecture_assemblee_commission",
           "length": 3545,
-          "n_diff": 0.3785613540197461,
+          "n_diff": 0.37827926657263755,
           "order": 14,
           "status": "none"
         },
@@ -5875,8 +5875,8 @@
           "diff": "rem",
           "directory": "06_cmp_cmp_commission",
           "id_step": "06_cmp_cmp_commission",
-          "length": 3531,
-          "n_diff": 0.0019818799546998944,
+          "length": 3532,
+          "n_diff": 0.001698754246885592,
           "order": 20,
           "status": "none"
         },
@@ -5885,16 +5885,16 @@
           "directory": "07_cmp_assemblee_hemicycle",
           "id_step": "07_cmp_assemblee_hemicycle",
           "length": 3532,
-          "n_diff": 0.000849377123442796,
+          "n_diff": 0.0005662514156284937,
           "order": 19,
           "status": "none"
         },
         {
-          "diff": "both",
+          "diff": "none",
           "directory": "08_cmp_senat_hemicycle",
           "id_step": "08_cmp_senat_hemicycle",
-          "length": 3531,
-          "n_diff": 0.00028312570781430235,
+          "length": 3532,
+          "n_diff": 0,
           "newnum": "19",
           "order": 19,
           "status": "none"
@@ -6464,7 +6464,7 @@
   "sections": {
     "T1": {
       "00_1erelecture_senat_depot": {
-        "title": "D\u00e9finir et mettre en oeuvre une politiquepublique de l'alimentation",
+        "title": "D\u00e9finir et mettre en oeuvre une politique publique de l'alimentation",
         "type": "Titre"
       },
       "01_1erelecture_senat_commission": {
@@ -6472,7 +6472,7 @@
         "type": "Titre"
       },
       "02_1erelecture_senat_hemicycle": {
-        "title": "D\u00e9finir et mettre en oeuvreune politique publique de l'alimentation",
+        "title": "D\u00e9finir et mettre en oeuvre une politique publique de l'alimentation",
         "type": "Titre"
       },
       "04_1erelecture_assemblee_commission": {
@@ -6484,7 +6484,7 @@
         "type": "Titre"
       },
       "06_cmp_cmp_commission": {
-        "title": "D\u00e9finir et mettre en oeuvreune politique publique de l'alimentation",
+        "title": "D\u00e9finir et mettre en oeuvre une politique publique de l'alimentation",
         "type": "Titre"
       },
       "07_cmp_assemblee_hemicycle": {
@@ -6492,7 +6492,7 @@
         "type": "Titre"
       },
       "08_cmp_senat_hemicycle": {
-        "title": "D\u00e9finir et mettre en oeuvreune politique publique de l'alimentation",
+        "title": "D\u00e9finir et mettre en oeuvre une politique publique de l'alimentation",
         "type": "Titre"
       }
     },
@@ -6586,15 +6586,15 @@
     },
     "T3": {
       "00_1erelecture_senat_depot": {
-        "title": "Inscrire l'activit\u00e9 l'agriculture et la for\u00eatdans un d\u00e9veloppement durable des territoires",
+        "title": "Inscrire l'activit\u00e9 l'agriculture et la for\u00eat dans un d\u00e9veloppement durable des territoires",
         "type": "Titre"
       },
       "01_1erelecture_senat_commission": {
-        "title": "Inscrire l'agriculture et la for\u00eatdans un d\u00e9veloppement durable des territoires",
+        "title": "Inscrire l'agriculture et la for\u00eat dans un d\u00e9veloppement durable des territoires",
         "type": "Titre"
       },
       "02_1erelecture_senat_hemicycle": {
-        "title": "Inscrire l'agriculture et la for\u00eatdans un d\u00e9veloppement durabledes territoires",
+        "title": "Inscrire l'agriculture et la for\u00eat dans un d\u00e9veloppement durable des territoires",
         "type": "Titre"
       },
       "04_1erelecture_assemblee_commission": {
@@ -6606,7 +6606,7 @@
         "type": "Titre"
       },
       "06_cmp_cmp_commission": {
-        "title": "Inscrire l'agriculture et la for\u00eatdans un d\u00e9veloppement durabledes territoires",
+        "title": "Inscrire l'agriculture et la for\u00eat dans un d\u00e9veloppement durable des territoires",
         "type": "Titre"
       },
       "07_cmp_assemblee_hemicycle": {
@@ -6615,7 +6615,7 @@
       },
       "08_cmp_senat_hemicycle": {
         "newnum": "T5",
-        "title": "Inscrire l'agriculture et la for\u00eatdans un d\u00e9veloppement durabledes territoires",
+        "title": "Inscrire l'agriculture et la for\u00eat dans un d\u00e9veloppement durable des territoires",
         "type": "Titre"
       }
     },
@@ -6638,21 +6638,21 @@
       },
       "08_cmp_senat_hemicycle": {
         "newnum": "T6",
-        "title": "Simplifier les proc\u00e9dureset adapter le droit",
+        "title": "Simplifier les proc\u00e9dures et adapter le droit",
         "type": "Titre"
       }
     },
     "T4": {
       "00_1erelecture_senat_depot": {
-        "title": "Moderniser la gouvernance de la p\u00eachemaritime et de l'aquaculture",
+        "title": "Moderniser la gouvernance de la p\u00eache maritime et de l'aquaculture",
         "type": "Titre"
       },
       "01_1erelecture_senat_commission": {
-        "title": "Moderniser la gouvernance de la p\u00eachemaritime et de l'aquaculture",
+        "title": "Moderniser la gouvernance de la p\u00eache maritime et de l'aquaculture",
         "type": "Titre"
       },
       "02_1erelecture_senat_hemicycle": {
-        "title": "Moderniser la gouvernance de la p\u00eachemaritime et de l'aquaculture",
+        "title": "Moderniser la gouvernance de la p\u00eache maritime et de l'aquaculture",
         "type": "Titre"
       },
       "04_1erelecture_assemblee_commission": {
@@ -6664,7 +6664,7 @@
         "type": "Titre"
       },
       "06_cmp_cmp_commission": {
-        "title": "Moderniser la gouvernance de la p\u00eachemaritime et de l'aquaculture",
+        "title": "Moderniser la gouvernance de la p\u00eache maritime et de l'aquaculture",
         "type": "Titre"
       },
       "07_cmp_assemblee_hemicycle": {
@@ -6673,7 +6673,7 @@
       },
       "08_cmp_senat_hemicycle": {
         "newnum": "T7",
-        "title": "Moderniser la gouvernance de la p\u00eachemaritime et de l'aquaculture",
+        "title": "Moderniser la gouvernance de la p\u00eache maritime et de l'aquaculture",
         "type": "Titre"
       }
     },

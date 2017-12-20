@@ -25,22 +25,22 @@
       "step": "depot"
     },
     {
-      "date": "2010-01-13",
+      "date": "2010-05-06",
       "debats_order": 1,
       "directory": "01_1erelecture_senat_commission",
       "echec": null,
-      "enddate": "2010-01-13",
+      "enddate": "2010-05-06",
       "institution": "senat",
       "source_url": "https://www.senat.fr/leg/pjl09-437.html",
       "stage": "1ère lecture",
       "step": "commission"
     },
     {
-      "date": "2010-05-18",
+      "date": "2010-05-29",
       "debats_order": 2,
       "directory": "02_1erelecture_senat_hemicycle",
       "echec": null,
-      "enddate": "2010-05-18",
+      "enddate": "2010-05-29",
       "institution": "senat",
       "source_url": "https://www.senat.fr/leg/tas09-112.html",
       "stage": "1ère lecture",

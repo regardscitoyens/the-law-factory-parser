@@ -242,7 +242,7 @@
         "011": "\"L'Observatoire des distorsions évalue, à la demande des organismes visés au troisième alinéa, l'impact des mesures législatives ou réglementaires affectant les modes de production agricole. Cette expertise comporte une analyse comparative entre la France, les Etats membres de l'Union européenne et les pays tiers, une étude d'impact économique, social, et environnemental et le chiffrage des coûts et bénéfices attendus de cette mesure.\" ;",
         "012": "d) Il est inséré un chapitre II ainsi rédigé :",
         "013": "\"Chapitre II",
-        "014": "\"Observatoire de la formation des prixet des marges des produits alimentaires",
+        "014": "\"Observatoire de la formation des prix et des marges des produits alimentaires",
         "015": "\"Art. L. 692-1. - L'Observatoire de la formation des prix et des marges des produits alimentaires, placé auprès du ministre chargé de l'alimentation et du ministre chargé de la consommation, est chargé d'éclairer les acteurs économiques et les pouvoirs publics sur la formation des prix et des marges au cours des transactions au sein de la chaîne alimentaire, qu'il s'agisse de produits de l'agriculture, de la pêche ou de l'aquaculture.",
         "016": "\"Les modalités de désignation du Président de l'observatoire, le fonctionnement de l'observatoire ainsi que sa composition sont fixées par arrêté.",
         "017": "\"Il recueille les données nécessaires à l'exercice de ses missions auprès de l'établissement mentionné à l'article L. 621-1 et bénéficie du concours du service de statistique public.\"",
@@ -1067,13 +1067,13 @@
     },
     {
       "id": "T3",
-      "titre": "Inscrire l'agriculture et la forêtdans un développement durable des territoires",
+      "titre": "Inscrire l'agriculture et la forêt dans un développement durable des territoires",
       "type": "section",
       "type_section": "titre"
     },
     {
       "id": "T4",
-      "titre": "Moderniser la gouvernance de la pêchemaritime et de l'aquaculture",
+      "titre": "Moderniser la gouvernance de la pêche maritime et de l'aquaculture",
       "type": "section",
       "type_section": "titre"
     },
