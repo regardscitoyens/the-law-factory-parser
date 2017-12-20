@@ -84,7 +84,9 @@ def find_good_url(url):
         """
 
         resp = test_status(url)
-        if not resp or "n'est pas encore édité" in resp.text:
+        if not resp \
+            or "n'est pas encore édité" in resp.text \
+            or ">Cette division n'est pas encore distribuée<" in resp.text:
             return False
         else:
             return url
