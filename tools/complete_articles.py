@@ -50,7 +50,6 @@ def complete(current, previous, anteprevious, step):
         log("No previous step found at %s" % sys.argv[2])
         exit()
 
-
     grdoldarts = {}
     if '/ta' in step.get('source_url', ''):
         for line in anteprevious:
@@ -59,11 +58,25 @@ def complete(current, previous, anteprevious, step):
                 keys.sort()
                 oldstep[1][line["titre"]] = [line['alineas'][k] for k in keys]
                 grdoldarts[line["titre"]] = line
-
     ALL_ARTICLES = []
     def write_json(data):
         nonlocal ALL_ARTICLES
         ALL_ARTICLES.append(data)
+
+    def add_section_if_missing(a):
+        nonlocal ALL_ARTICLES, oldsects
+        # if the article introduces a new section and we don't have the section infos,
+        # find it in the previous text
+        if 'section' in a:
+            if len(ALL_ARTICLES) > 0 \
+                and ALL_ARTICLES[-1]['type'] != 'section' \
+                and a['section'] != ALL_ARTICLES[-1]['section']:
+                prev_section = [s for s in oldsects if s['id'] == a['section']]
+                if prev_section:
+                    ALL_ARTICLES.append(prev_section[0])
+                else:
+                    print("WARNING: could not retrieve section of article", a['section'], file=sys.stderr)
+
 
     null_reg = re.compile(r'^$')
     re_mat_uno = re.compile(r'[I1]$')
@@ -131,6 +144,7 @@ def complete(current, previous, anteprevious, step):
     re_confo_with_txt = re.compile(r'\s*\(\s*(conforme|non[\s\-]*modifié)\s*\)\s*([\W]*\w+)', re.I)
     re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]+)\s*([^\s\)])', re.I)
     order = 1
+
     cursec = {'id': ''}
     done_titre = False
     for line in current:
@@ -157,8 +171,11 @@ def complete(current, previous, anteprevious, step):
           if line["type"] != "article":
             if texte['definitif']:
                 try:
-                    cursec = oldsects.pop(0)
-                    assert(cursec["type_section"] == line["type_section"])
+                    if oldsects:
+                        cursec = oldsects.pop(0)
+                        assert(cursec["type_section"] == line["type_section"])
+                    else:
+                        print("ERROR: No old sections left at", line['id'], file=sys.stderr)
                 except:
                     print("ERROR: Problem while renumbering sections", line['titre'], "\n", cursec, file=sys.stderr)
                     exit()
@@ -235,6 +252,7 @@ def complete(current, previous, anteprevious, step):
                         a["statut"] = "conforme"
                         a["order"] = order
                         order += 1
+                        add_section_if_missing(a)
                         write_json(a)
                     elif not re_suppr.match(a["statut"]):
                         log("DEBUG: Marking art %s as supprimé" % cur)
@@ -242,6 +260,7 @@ def complete(current, previous, anteprevious, step):
                         a["alineas"] = dict()
                         a["order"] = order
                         order += 1
+                        add_section_if_missing(a)
                         write_json(a)
             if is_mult:
                 if ed not in oldartids or cur != line['titre']:
@@ -257,6 +276,7 @@ def complete(current, previous, anteprevious, step):
                         a["alineas"] = dict()
                         a["order"] = order
                         order += 1
+                        add_section_if_missing(a)
                         write_json(a)
                     elif mult_type == "conf":
                         if oldid:
@@ -265,6 +285,7 @@ def complete(current, previous, anteprevious, step):
                         a["statut"] = "conforme"
                         a["order"] = order
                         order += 1
+                        add_section_if_missing(a)
                         write_json(a)
                     if cur == ed or not oldarts:
                         break
@@ -298,12 +319,12 @@ def complete(current, previous, anteprevious, step):
                     log("EXTRACT non-modifiés for "+line['titre']+": " + pieces)
                     piece = []
                     for todo in pieces.split(','):
-        # Extract series of non-modified subsections of articles from previous version.
+                        # Extract series of non-modified subsections of articles from previous version.
                         if " à " in todo:
                             start = re.split(" à ", todo)[0]
                             end = re.split(" à ", todo)[1]
                             piece.extend(get_mark_from_last(oldstep[oldid][line['titre']], start, end, sep=part[1:]))
-        # Extract set of non-modified subsections of articles from previous version.
+                        # Extract set of non-modified subsections of articles from previous version.
                         elif todo:
                             piece.extend(get_mark_from_last(oldstep[oldid][line['titre']], todo, sep=part[1:]))
                     gd_text.extend(piece)
@@ -331,6 +352,7 @@ def complete(current, previous, anteprevious, step):
             a["statut"] = "conforme"
             a["order"] = order
             order += 1
+            add_section_if_missing(a)
             write_json(a)
         elif not re_suppr.match(a["statut"]) or texte.get('echec', ''):
             log("DEBUG: Marking art %s as supprimé" % cur)
@@ -338,6 +360,7 @@ def complete(current, previous, anteprevious, step):
             a["alineas"] = dict()
             a["order"] = order
             order += 1
+            add_section_if_missing(a)
             write_json(a)
 
     return ALL_ARTICLES
