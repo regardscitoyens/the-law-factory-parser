@@ -20,7 +20,7 @@ def download_an(url):
     print('  [] download AN version')
     html = download(url).text
     print('  [] parse AN version')
-    # TODO: detect which dos is the good one
+    # TODO: do both instead of first
     return anpy_parse(html, url)[0]
 
 
@@ -54,6 +54,13 @@ def process(API_DIRECTORY, url, disable_cache=False):
             dos = an_dos
     else:
         print(' INVALID URL:', url)
+        return
+
+    if not dos.get('url_jo'):
+        print('    ----- passed: no JO link')
+        return
+    if dos.get('use_old_procedure'):
+        print('    ----- passed: budget law')
         return
 
     print('  [] parse the texts')

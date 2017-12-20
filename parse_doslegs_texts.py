@@ -111,6 +111,8 @@ def process(dos):
         print('    ^ text: ', url)
 
         if url is None:
+            if step.get('echec') is None:
+                raise Exception('empty url for step: %s.%s.%s' % (step.get('institution'), step.get('stage'), step.get('step')))
             # TODO: texte retire
             # TODO: stats of None urls
             continue
@@ -123,22 +125,25 @@ def process(dos):
         else:
             fixed_url = find_good_url(url)
             if fixed_url:
-                try:
-                    step['articles'] = parse_texte.parse(fixed_url)
-                    step['articles'][0]['depot'] = step.get('step') == 'depot'
+                if fixed_url != url:
+                    print('        ^ text url fixed:', fixed_url)
 
-                    # echec detected in the text content ? we update the step then
-                    if any([1 for article in step['articles'] if article.get('type') == 'echec']):
-                        if step.get('stage') == 'CMP':
-                            step['echec'] = 'echec'
-                        else:
-                            step['echec'] = 'rejet'
+                step['articles'] = parse_texte.parse(fixed_url)
+                step['articles'][0]['depot'] = step.get('step') == 'depot'
 
-                except Exception as e:
-                    print('parsing failed for', fixed_url)
-                    print('   ', e)
+                # echec detected in the text content ? we update the step then
+                echec_line = [article for article in step['articles'] if article.get('type') == 'echec']
+                if echec_line:
+                    echec_line = echec_line[0]
+                    if step.get('stage') == 'CMP':
+                        step['echec'] = 'echec'
+                    else:
+                        step['echec'] = 'rejet'
+
+                if not step.get('echec') and len(step['articles']) < 2:
+                    raise Exception('parsing failed for %s (no text)' % fixed_url)
             else:
-                print('INVALID RESP', url, '\t\t-->', dos.get('url_dossier_senat'))
+                raise Exception('INVALID RESPONSE %s' % url)
     
 
     # re-order CMPs via texte définitif detection
@@ -172,19 +177,13 @@ def process(dos):
                         ante_step_articles = []
                     else:
                         ante_step_articles = steps[ante_step_index].get('articles_completed', steps[ante_step_index].get('articles', []))
-                    try:
-                        step['articles_completed'] = complete_articles.complete(
-                            step.get('articles', []),
-                            steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
-                            ante_step_articles,
-                            step,
-                        )
-
-                        assert 'Non modifié' not in str(step['articles_completed'])
-                    except Exception as e:
-                        print('             complete FAIL', e)
-                        break
-    
+                    step['articles_completed'] = complete_articles.complete(
+                        step.get('articles', []),
+                        steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
+                        ante_step_articles,
+                        step,
+                    )
+                    assert 'Non modifié' not in str(step['articles_completed'])
     return dos
 
 
