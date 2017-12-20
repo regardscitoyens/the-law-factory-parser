@@ -143,6 +143,13 @@ def process(dos):
                 if not step.get('echec') and len(step['articles']) < 2:
                     raise Exception('parsing failed for %s (no text)' % fixed_url)
             else:
+                # ignore missing intermediate depot
+                if step.get('step') == 'depot':
+                    if step_index > 0:
+                        last_step = steps[step_index-1]
+                        if not last_step.get('echec') and last_step.get('step') == 'hemicycle':
+                            print('     * ignore missing depot', url)
+                            continue
                 raise Exception('INVALID RESPONSE %s' % url)
     
 
