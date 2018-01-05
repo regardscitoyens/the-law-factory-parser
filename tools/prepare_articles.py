@@ -80,8 +80,8 @@ def process(procedure):
         data = step.get('texte.json')
         if step['stage'] in ["promulgation", "constitutionnalité"]:
             continue
-        if not data:
-            print('no data for', step.get('stage'), step.get('step'), step.get('institution'), file=sys.stderr)
+        if not data and not step.get('echec'):
+            print('     prepare_articles: no data for', step.get('stage'), step.get('step'), step.get('institution'), file=sys.stderr)
             continue
 
         #step['directory'] = str(nstep)
@@ -97,7 +97,7 @@ def process(procedure):
             out['articles']['echec']['steps'].append(next_step)
             if not 'echec' in out['sections']:
                 out['sections']['echec'] = {}
-            out['sections']['echec'][step_id] = {'title': data['expose'], 'type': step['echec'].upper()}
+            out['sections']['echec'][step_id] = {'title': data['expose'] if data else '', 'type': step['echec'].upper()}
             continue
         for section in data['sections']:
             if not section['id'] in out['sections']:

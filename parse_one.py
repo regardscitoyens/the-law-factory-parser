@@ -1,4 +1,4 @@
-import sys
+import sys, json
 
 from senapy.dosleg.parser import parse as senapy_parse
 from anpy.dossier_like_senapy import parse as anpy_parse
@@ -24,7 +24,12 @@ def download_an(url):
     return anpy_parse(html, url)[0]
 
 
-def process(API_DIRECTORY, url, disable_cache=False):
+def _dump_json(data, filename):
+    json.dump(data, open(filename, 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+    print('   DEBUG - dumped', filename)
+
+
+def process(API_DIRECTORY, url, disable_cache=False, debug_intermediary_files=False):
     # Download senat version
     if not disable_cache:
         enable_requests_cache()
@@ -56,12 +61,15 @@ def process(API_DIRECTORY, url, disable_cache=False):
         print(' INVALID URL:', url)
         return
 
-    if not dos.get('url_jo'):
+    if not dos.get('url_jo') and False:
         print('    ----- passed: no JO link')
         return
     if dos.get('use_old_procedure'):
         print('    ----- passed: budget law')
         return
+
+    if debug_intermediary_files:
+        _dump_json(dos, 'debug_dos.json')
 
     print('  [] parse the texts')
     dos_with_texts = parse_doslegs_texts.process(dos)
@@ -72,5 +80,6 @@ def process(API_DIRECTORY, url, disable_cache=False):
 if __name__ == '__main__':
     API_DIRECTORY = sys.argv[1]
     url = sys.argv[2]
-    disable_cache = sys.argv[3] == '--disable-cache' if len(sys.argv) > 3 else False
-    process(API_DIRECTORY, url, disable_cache)
+    disable_cache = '--disable-cache' in sys.argv
+    debug_intermediary_files = '--debug' in sys.argv
+    process(API_DIRECTORY, url, disable_cache, debug_intermediary_files)
