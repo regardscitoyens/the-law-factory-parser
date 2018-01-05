@@ -19,11 +19,8 @@ except SystemError:
     from sort_articles import bister
 
 
-def parse(url, ORDER=''):
+def parse(url):
     ALL_ARTICLES = []
-
-    if ORDER:
-        ORDER = "%02d_" % int(ORDER)
 
     # Warning changing parenthesis in this regexp has multiple consequences throughout the code
     section_titles = "((chap|t)itre|volume|livre|tome|(sous-)?section)"
@@ -32,8 +29,8 @@ def parse(url, ORDER=''):
 
     clean_texte_regexps = [
         (re.compile(r'[\n\t\r\s]+'), ' '),
-        (re.compile(r'(<t[rdh][^>]*>) ?<p [^>]*> ?'), r'\1'),
-        (re.compile(r' ?</p> ?(</t[rdh]>)'), r'\1'),
+        # (re.compile(r'(<t[rdh][^>]*>) ?<p [^>]*> ?'), r'\1'), # warning: this was to clean tables but the
+        # (re.compile(r' ?</p> ?(</t[rdh]>)'), r'\1'),          #          conclusion of report can be in a table too
         (re.compile(r'(>%s\s*[\dIVXLCDM]+(<sup>[eE][rR]?</sup>)?)\s+-\s+([^<]*?)\s*</p>' % section_titles.upper()), r'\1</p><p><b>\6</b></p>'),
         (re.compile(r'(<sup>[eE][rR]?</sup>)(\w+)'), r'\1 \2'), # add missing space, ex: "1<sup>er</sup>A "
         (re.compile(r'(\w)<br/?>(\w)'),  r'\1 \2'), # a <br/> should be transformed as a ' ' only if there's text around it (visual break)
@@ -68,11 +65,11 @@ def parse(url, ORDER=''):
     # Generate Senat or AN ID from URL
     if "legifrance.gouv.fr" in url:
         m = re.search(r"cidTexte=(JORFTEXT\d+)(\D|$)", url, re.I)
-        texte["id"] = ORDER + m.group(1)
+        texte["id"] = m.group(1)
     elif re.search(r"assemblee-?nationale", url, re.I):
         m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
         numero = int(m.group(3))
-        texte["id"] = ORDER+"A" + m.group(1) + "-"
+        texte["id"] = "A" + m.group(1) + "-"
         if m.group(2) is not None:
             texte["id"] += m.group(2)
         texte["id"] += str(numero)
@@ -81,7 +78,7 @@ def parse(url, ORDER=''):
         if m is None:
             m = re.search(r"/(-)?20(\d+)-\d+/(\d+)(_mono)?.html", url, re.I)
         numero = int(m.group(3))
-        texte["id"] = ORDER+"S" + m.group(2) + "-"
+        texte["id"] = "S" + m.group(2) + "-"
         if m.group(1) is not None:
             texte["id"] += m.group(1)
         texte["id"] += "%03d" % numero
@@ -237,7 +234,7 @@ def parse(url, ORDER=''):
     re_echec_hemi = re.compile(r"L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
     re_echec_hemi2 = re.compile(r"de loi (a été rejetée?|n'a pas été adoptée?) par l('Assemblée nationale|e Sénat)\.$", re.I)
     re_echec_hemi3 = re.compile(r"le Sénat décide qu'il n'y a pas lieu de poursuivre la délibération", re.I)
-    re_echec_com = re.compile(r"(la commission|elle) .*(effet est d'entraîner le rejet|demande de rejeter|a rejeté|n'a pas adopté|rejette l'ensemble|ne pas établir|ne pas adopter)[dleau\s]*(projet|proposition|texte)[.\s]", re.I)
+    re_echec_com = re.compile(r"(la commission|elle) .*(effet est d'entraîner le rejet|demande de rejeter|a rejeté|n'a pas adopté|n'a pas élapteboré|rejette l'ensemble|ne pas établir|ne pas adopter)[dleau\s]*(projet|proposition|texte)[.\s]", re.I)
     re_echec_com2 = re.compile(r"L'ensemble de la proposition de loi est rejeté dans la rédaction issue des travaux de la commission.", re.I)
     re_echec_com3 = re.compile(r"la commission (a décidé de déposer une|adopte la) motion tendant à opposer la question préalable", re.I)
     re_echec_com4 = re.compile(r"(la|votre) commission a décidé de ne pas adopter [dleau\s]*(projet|proposition|texte)", re.I)
