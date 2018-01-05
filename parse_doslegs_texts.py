@@ -7,15 +7,18 @@ enable_requests_cache()
 from bs4 import BeautifulSoup
 import requests
 
-from tools import parse_texte, complete_articles, _step_logic
+from tools import parse_texte, complete_articles, _step_logic, common
+
+
+def _dump_json(data, filename):
+    json.dump(data, open(filename, 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+    print('   DEBUG - dumped', filename)
 
 
 def test_status(url):
     resp = download(url)
-
     if resp.status_code != 200:
         return False
-
     return resp
 
 
@@ -101,7 +104,7 @@ def _dos_id(dos):
     return dos.get('senat_id', dos.get('assemblee_id'))
 
 
-def process(dos):
+def process(dos, debug_intermediary_files=False):
     dos_id = _dos_id(dos)
     print('** parsing texts of', dos_id)
 
@@ -153,6 +156,9 @@ def process(dos):
                             print('     * ignore missing depot', url)
                             continue
                 raise Exception('INVALID RESPONSE %s' % url)
+
+        if debug_intermediary_files:
+            _dump_json(step.get('articles'), 'debug_parsed_text_step_%d.json' % step_index)
     
 
     # re-order CMPs via texte définitif detection
@@ -191,22 +197,17 @@ def process(dos):
                         steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
                         ante_step_articles,
                         step,
+                        dos.get('table_concordance', {}),
                     )
                     assert 'Non modifié' not in str(step['articles_completed'])
+
+        if debug_intermediary_files:
+            _dump_json(step.get('articles_completed'), 'debug_completed_text_step_%d.json' % step_index)
+
     return dos
 
 
 if __name__ == '__main__':
-    # AN improve link
-    """
-    assert find_good_url('http://www.assemblee-nationale.fr/15/ta-commission/r0268-a0.asp') == 'http://www.assemblee-nationale.fr/15/textes/0268.asp'
-    assert find_good_url('http://www.assemblee-nationale.fr/15/projets/pl0315.asp') == 'http://www.assemblee-nationale.fr/15/textes/0315.asp'
-    assert find_good_url('http://www.assemblee-nationale.fr/14/propositions/pion4347.asp') == 'http://www.assemblee-nationale.fr/14/textes/4347.asp'
-    assert find_good_url('http://www.assemblee-nationale.fr/15/ta/ta0021.asp') == 'http://www.assemblee-nationale.fr/15/textes/0021.asp'
-    """
-
-    print("tests passed..let's fix some links !")
-
     doslegs = json.load(open(sys.argv[1]))
     if type(doslegs) is not list:
         doslegs = [doslegs]

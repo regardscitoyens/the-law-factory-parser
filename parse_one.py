@@ -29,7 +29,8 @@ def _dump_json(data, filename):
     print('   DEBUG - dumped', filename)
 
 
-def process(API_DIRECTORY, url, disable_cache=False, debug_intermediary_files=False, only_promulgated=False):
+def process(API_DIRECTORY, url, disable_cache=False,
+        debug_intermediary_files=False, only_promulgated=False):
     # Download senat version
     if not disable_cache:
         enable_requests_cache()
@@ -72,7 +73,7 @@ def process(API_DIRECTORY, url, disable_cache=False, debug_intermediary_files=Fa
         _dump_json(dos, 'debug_dos.json')
 
     print('  [] parse the texts')
-    dos_with_texts = parse_doslegs_texts.process(dos)
+    dos_with_texts = parse_doslegs_texts.process(dos, debug_intermediary_files=debug_intermediary_files)
 
     print('  [] format data for the frontend')
     format_data_for_frontend.process(dos_with_texts, API_DIRECTORY)

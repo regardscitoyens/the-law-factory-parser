@@ -5,7 +5,7 @@ import sys, re, copy
 import json
 from .sort_articles import bister, article_is_lower
 
-def complete(current, previous, anteprevious, step):
+def complete(current, previous, anteprevious, step, table_concordance):
     current = copy.deepcopy(current)
     previous = copy.deepcopy(previous)
     anteprevious = copy.deepcopy(anteprevious)
@@ -195,6 +195,19 @@ def complete(current, previous, anteprevious, step):
                     goon = True
                     while goon:
                         _, oldart = oldarts[0]
+
+                        if oldart['titre'].lower() in table_concordance:
+                            new_art = table_concordance[oldart['titre'].lower()]
+                            if 'suppr' in new_art:
+                                c, a = oldarts.pop(0)
+                                oldartids.remove(c)
+                                if olddepot:
+                                    log("DEBUG: Marking art %s as supprimé (thanks to concordance table)" % c)
+                                    a["order"] = order
+                                    order += 1
+                                    write_json(a)
+                                continue
+
                         if re_suppr.match(oldart['statut']):
                             c, a = oldarts.pop(0)
                             oldartids.remove(c)
@@ -214,6 +227,14 @@ def complete(current, previous, anteprevious, step):
                 similarity = float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
                 if similarity < 0.75 and not olddepot:
                     print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len("".join(txt)), "diffchars, similarity; %.2f" % similarity, file=sys.stderr)
+                
+                log("DEBUG: concordance detected between '%s' et '%s'" % (line['titre'], oldart['titre']))
+                if oldart['titre'].lower() in table_concordance:
+                    new_art = table_concordance[oldart['titre'].lower()]
+                    if new_art != line['titre']:
+                        log("DEBUG: true concordance is different: '%s' instead of '%s'" % (new_art, line['titre']))
+                        exit()
+
                 if line['titre'] != oldart['titre']:
                     line['newtitre'] = line['titre']
                     line['titre'] = oldart['titre']
@@ -295,7 +316,7 @@ def complete(current, previous, anteprevious, step):
                         log("ERROR trying to get non-modifiés")
                         exit()
                     pieces = re_clean_et.sub(',', part[0])
-                    log("EXTRACT non-modifiés for "+line['titre']+": " + pieces)
+                    # log("EXTRACT non-modifiés for "+line['titre']+": " + pieces)
                     piece = []
                     for todo in pieces.split(','):
         # Extract series of non-modified subsections of articles from previous version.

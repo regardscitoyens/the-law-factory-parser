@@ -33,7 +33,7 @@ def print_json(dico, filename=None):
     if filename:
         try:
             with open("%s.tmp" % filename, 'w') as f:
-                f.write(json.dumps(dico, ensure_ascii=False))
+                f.write(json.dumps(dico, ensure_ascii=False, sort_keys=True, indent=2))
             if os.path.exists(filename):
                 os.remove(filename)
             os.rename("%s.tmp" % filename, filename)
