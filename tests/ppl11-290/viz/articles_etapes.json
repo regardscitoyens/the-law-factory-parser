@@ -1,0 +1,389 @@
+{
+  "articles": {
+    "1er": {
+      "id": "1er",
+      "section": "A1er",
+      "steps": [
+        {
+          "diff": "add",
+          "directory": "00_1erelecture_assemblee_depot",
+          "id_step": "00_1erelecture_assemblee_depot",
+          "length": 163,
+          "n_diff": 1,
+          "order": 1,
+          "status": "depot"
+        },
+        {
+          "diff": "rem",
+          "directory": "01_1erelecture_assemblee_commission",
+          "id_step": "01_1erelecture_assemblee_commission",
+          "length": 50,
+          "n_diff": 0,
+          "order": 1,
+          "status": "sup"
+        }
+      ],
+      "titre": "1er"
+    },
+    "2": {
+      "id": "2",
+      "section": "A2",
+      "steps": [
+        {
+          "diff": "add",
+          "directory": "00_1erelecture_assemblee_depot",
+          "id_step": "00_1erelecture_assemblee_depot",
+          "length": 2288,
+          "n_diff": 1,
+          "order": 2,
+          "status": "depot"
+        },
+        {
+          "diff": "rem",
+          "directory": "01_1erelecture_assemblee_commission",
+          "id_step": "01_1erelecture_assemblee_commission",
+          "length": 5013,
+          "n_diff": 0.665868741272691,
+          "order": 2,
+          "status": "none"
+        },
+        {
+          "diff": "rem",
+          "directory": "02_1erelecture_assemblee_hemicycle",
+          "id_step": "02_1erelecture_assemblee_hemicycle",
+          "length": 7395,
+          "n_diff": 0.34874915483434754,
+          "order": 2,
+          "status": "none"
+        },
+        {
+          "diff": "both",
+          "directory": "08_nouv.lect._assemblee_commission",
+          "id_step": "08_nouv.lect._assemblee_commission",
+          "length": 7605,
+          "n_diff": 0.03484549638395795,
+          "order": 2,
+          "status": "none"
+        },
+        {
+          "diff": "both",
+          "directory": "09_nouv.lect._assemblee_hemicycle",
+          "id_step": "09_nouv.lect._assemblee_hemicycle",
+          "length": 7675,
+          "n_diff": 0.1474918566775244,
+          "order": 2,
+          "status": "none"
+        },
+        {
+          "diff": "both",
+          "directory": "14_l.d\u00e9finitive_assemblee_hemicycle",
+          "id_step": "14_l.d\u00e9finitive_assemblee_hemicycle",
+          "length": 7664,
+          "n_diff": 0.001954397394136831,
+          "order": 2,
+          "status": "none"
+        }
+      ],
+      "titre": "2"
+    },
+    "2_A": {
+      "id": "2_A",
+      "section": "A2 A",
+      "steps": [
+        {
+          "diff": "add",
+          "directory": "02_1erelecture_assemblee_hemicycle",
+          "id_step": "02_1erelecture_assemblee_hemicycle",
+          "length": 215,
+          "n_diff": 1,
+          "order": 1,
+          "status": "new"
+        },
+        {
+          "diff": "none",
+          "directory": "08_nouv.lect._assemblee_commission",
+          "id_step": "08_nouv.lect._assemblee_commission",
+          "length": 202,
+          "n_diff": 0,
+          "order": 1,
+          "status": "none"
+        },
+        {
+          "diff": "none",
+          "directory": "09_nouv.lect._assemblee_hemicycle",
+          "id_step": "09_nouv.lect._assemblee_hemicycle",
+          "length": 202,
+          "n_diff": 0,
+          "order": 1,
+          "status": "none"
+        },
+        {
+          "diff": "none",
+          "directory": "14_l.d\u00e9finitive_assemblee_hemicycle",
+          "id_step": "14_l.d\u00e9finitive_assemblee_hemicycle",
+          "length": 202,
+          "n_diff": 0,
+          "newnum": "1er",
+          "order": 1,
+          "status": "none"
+        }
+      ],
+      "titre": "2 A"
+    },
+    "2_bis": {
+      "id": "2_bis",
+      "section": "A2 bis",
+      "steps": [
+        {
+          "diff": "add",
+          "directory": "02_1erelecture_assemblee_hemicycle",
+          "id_step": "02_1erelecture_assemblee_hemicycle",
+          "length": 341,
+          "n_diff": 1,
+          "order": 3,
+          "status": "new"
+        },
+        {
+          "diff": "none",
+          "directory": "08_nouv.lect._assemblee_commission",
+          "id_step": "08_nouv.lect._assemblee_commission",
+          "length": 333,
+          "n_diff": 0,
+          "order": 3,
+          "status": "none"
+        },
+        {
+          "diff": "none",
+          "directory": "09_nouv.lect._assemblee_hemicycle",
+          "id_step": "09_nouv.lect._assemblee_hemicycle",
+          "length": 333,
+          "n_diff": 0,
+          "order": 3,
+          "status": "none"
+        },
+        {
+          "diff": "none",
+          "directory": "14_l.d\u00e9finitive_assemblee_hemicycle",
+          "id_step": "14_l.d\u00e9finitive_assemblee_hemicycle",
+          "length": 333,
+          "n_diff": 0,
+          "newnum": "3",
+          "order": 3,
+          "status": "none"
+        }
+      ],
+      "titre": "2 bis"
+    },
+    "2_quater": {
+      "id": "2_quater",
+      "section": "A2 quater",
+      "steps": [
+        {
+          "diff": "add",
+          "directory": "02_1erelecture_assemblee_hemicycle",
+          "id_step": "02_1erelecture_assemblee_hemicycle",
+          "length": 1072,
+          "n_diff": 1,
+          "order": 5,
+          "status": "new"
+        },
+        {
+          "diff": "both",
+          "directory": "08_nouv.lect._assemblee_commission",
+          "id_step": "08_nouv.lect._assemblee_commission",
+          "length": 989,
+          "n_diff": 0.025278058645096024,
+          "order": 5,
+          "status": "none"
+        },
+        {
+          "diff": "both",
+          "directory": "09_nouv.lect._assemblee_hemicycle",
+          "id_step": "09_nouv.lect._assemblee_hemicycle",
+          "length": 1228,
+          "n_diff": 0.19462540716612375,
+          "order": 5,
+          "status": "none"
+        },
+        {
+          "diff": "none",
+          "directory": "14_l.d\u00e9finitive_assemblee_hemicycle",
+          "id_step": "14_l.d\u00e9finitive_assemblee_hemicycle",
+          "length": 1228,
+          "n_diff": 0,
+          "newnum": "5",
+          "order": 5,
+          "status": "none"
+        }
+      ],
+      "titre": "2 quater"
+    },
+    "2_ter": {
+      "id": "2_ter",
+      "section": "A2 ter",
+      "steps": [
+        {
+          "diff": "add",
+          "directory": "02_1erelecture_assemblee_hemicycle",
+          "id_step": "02_1erelecture_assemblee_hemicycle",
+          "length": 280,
+          "n_diff": 1,
+          "order": 4,
+          "status": "new"
+        },
+        {
+          "diff": "both",
+          "directory": "08_nouv.lect._assemblee_commission",
+          "id_step": "08_nouv.lect._assemblee_commission",
+          "length": 277,
+          "n_diff": 0.0577617328519856,
+          "order": 4,
+          "status": "none"
+        },
+        {
+          "diff": "none",
+          "directory": "09_nouv.lect._assemblee_hemicycle",
+          "id_step": "09_nouv.lect._assemblee_hemicycle",
+          "length": 277,
+          "n_diff": 0,
+          "order": 4,
+          "status": "none"
+        },
+        {
+          "diff": "both",
+          "directory": "14_l.d\u00e9finitive_assemblee_hemicycle",
+          "id_step": "14_l.d\u00e9finitive_assemblee_hemicycle",
+          "length": 263,
+          "n_diff": 0.0830324909747292,
+          "newnum": "4",
+          "order": 4,
+          "status": "none"
+        }
+      ],
+      "titre": "2 ter"
+    },
+    "3": {
+      "id": "3",
+      "section": "A3",
+      "steps": [
+        {
+          "diff": "add",
+          "directory": "00_1erelecture_assemblee_depot",
+          "id_step": "00_1erelecture_assemblee_depot",
+          "length": 941,
+          "n_diff": 1,
+          "order": 3,
+          "status": "depot"
+        },
+        {
+          "diff": "rem",
+          "directory": "01_1erelecture_assemblee_commission",
+          "id_step": "01_1erelecture_assemblee_commission",
+          "length": 50,
+          "n_diff": 0,
+          "order": 3,
+          "status": "sup"
+        }
+      ],
+      "titre": "3"
+    },
+    "4": {
+      "id": "4",
+      "section": "A4",
+      "steps": [
+        {
+          "diff": "add",
+          "directory": "00_1erelecture_assemblee_depot",
+          "id_step": "00_1erelecture_assemblee_depot",
+          "length": 392,
+          "n_diff": 1,
+          "order": 4,
+          "status": "depot"
+        },
+        {
+          "diff": "rem",
+          "directory": "01_1erelecture_assemblee_commission",
+          "id_step": "01_1erelecture_assemblee_commission",
+          "length": 50,
+          "n_diff": 0,
+          "order": 4,
+          "status": "sup"
+        }
+      ],
+      "titre": "4"
+    },
+    "echec": {
+      "id": "echec",
+      "section": "echec",
+      "steps": [
+        {
+          "directory": "04_1erelecture_senat_commission",
+          "id_step": "04_1erelecture_senat_commission",
+          "length": 0,
+          "n_diff": 0,
+          "order": 1,
+          "status": "REJET"
+        },
+        {
+          "directory": "05_1erelecture_senat_hemicycle",
+          "id_step": "05_1erelecture_senat_hemicycle",
+          "length": 0,
+          "n_diff": 0,
+          "order": 1,
+          "status": "REJET"
+        },
+        {
+          "directory": "06_cmp_cmp_commission",
+          "id_step": "06_cmp_cmp_commission",
+          "length": 0,
+          "n_diff": 0,
+          "order": 1,
+          "status": "ECHEC"
+        },
+        {
+          "directory": "11_nouv.lect._senat_commission",
+          "id_step": "11_nouv.lect._senat_commission",
+          "length": 0,
+          "n_diff": 0,
+          "order": 1,
+          "status": "REJET"
+        },
+        {
+          "directory": "12_nouv.lect._senat_hemicycle",
+          "id_step": "12_nouv.lect._senat_hemicycle",
+          "length": 0,
+          "n_diff": 0,
+          "order": 1,
+          "status": "REJET"
+        }
+      ],
+      "titre": "rejet"
+    }
+  },
+  "law_title": "Loi relative \u00e0 l'organisation du service et \u00e0 l'information des passagers dans les entreprises de Transport a\u00e9rien de passagers et \u00e0 diverses dispositions dans le domaine des transports",
+  "sections": {
+    "echec": {
+      "04_1erelecture_senat_commission": {
+        "title": "R\u00e9unie le mercredi 8 f\u00e9vrier 2012, sous la pr\u00e9sidence d'Annie David, pr\u00e9sidente, la commission a d\u00e9cid\u00e9 de ne pas adopter de texte pour cette proposition de loi, afin qu'elle soit d\u00e9battue, en s\u00e9ance publique, dans la r\u00e9daction initiale voulue par ses auteurs, conform\u00e9ment \u00e0 l'accord politique pass\u00e9 entre les pr\u00e9sidents de groupes pour ce qui concerne l'examen des textes inscrits \u00e0 l'ordre du jour du S\u00e9nat sur proposition d'un groupe d'opposition ou minoritaire.",
+        "type": "REJET"
+      },
+      "05_1erelecture_senat_hemicycle": {
+        "title": "En application de l'article 44, alin\u00e9a 3, du R\u00e8glement, le S\u00e9nat d\u00e9cide qu'il n'y a pas lieu de poursuivre la d\u00e9lib\u00e9ration sur la proposition de loi, adopt\u00e9e par l'Assembl\u00e9e nationale apr\u00e8s engagement de la proc\u00e9dure acc\u00e9l\u00e9r\u00e9e, relative \u00e0 l'organisation du service et \u00e0 l'information des passagers dans les entreprises de transport a\u00e9rien de passagers et \u00e0 diverses dispositions dans le domaine des transports (n\u00b0 290, 2011-2012).",
+        "type": "REJET"
+      },
+      "06_cmp_cmp_commission": {
+        "title": "La commission mixte paritaire a constat\u00e9 qu'elle ne pouvait parvenir \u00e0 \u00e9laborer un texte commun.",
+        "type": "ECHEC"
+      },
+      "11_nouv.lect._senat_commission": {
+        "title": "La motion n\u00b0 1 tendant \u00e0 opposer la question pr\u00e9alable est adopt\u00e9e.",
+        "type": "REJET"
+      },
+      "12_nouv.lect._senat_hemicycle": {
+        "title": "En cons\u00e9quence, conform\u00e9ment \u00e0 l'article 44, alin\u00e9a 3 du R\u00e8glement, la proposition de loi a \u00e9t\u00e9 rejet\u00e9e par le S\u00e9nat.",
+        "type": "REJET"
+      }
+    }
+  },
+  "short_title": "Transport a\u00e9rien de passagers"
+}

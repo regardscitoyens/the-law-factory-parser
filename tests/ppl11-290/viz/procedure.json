@@ -1,0 +1,213 @@
+{
+  "assemblee_id": "information_passagers_transport_aerien",
+  "assemblee_legislature": 13,
+  "beginning": "2011-11-22",
+  "end": "2012-03-19",
+  "end_jo": "2012-03-20",
+  "legifrance_cidTexte": "JORFTEXT000025540947",
+  "long_title": "Loi relative à l'organisation du service et à l'information des passagers dans les entreprises de transport aérien de passagers et à diverses dispositions dans le domaine des transports",
+  "long_title_descr": "proposition de loi relative à l'organisation du service et à l'information des passagers dans les entreprises de transport aérien de passagers et à diverses dispositions dans le domaine des transports",
+  "proposal_type": "PPL",
+  "senat_id": "ppl11-290",
+  "short_title": "Transport aérien de passagers",
+  "steps": [
+    {
+      "auteur_depot": "Députés",
+      "date": "2011-11-22",
+      "debats_order": 0,
+      "directory": "00_1erelecture_assemblee_depot",
+      "echec": null,
+      "enddate": "2011-11-22",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/propositions/pion3991.asp",
+      "stage": "1ère lecture",
+      "step": "depot"
+    },
+    {
+      "date": "2012-01-11",
+      "debats_order": 1,
+      "directory": "01_1erelecture_assemblee_commission",
+      "echec": null,
+      "enddate": "2012-01-11",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/ta-commission/r4157-a0.asp",
+      "stage": "1ère lecture",
+      "step": "commission"
+    },
+    {
+      "date": "2012-01-24",
+      "debats_order": 2,
+      "directory": "02_1erelecture_assemblee_hemicycle",
+      "echec": null,
+      "enddate": "2012-01-24",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/ta/ta0829.asp",
+      "stage": "1ère lecture",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2012-01-25",
+      "debats_order": null,
+      "directory": "03_1erelecture_senat_depot",
+      "enddate": "2012-01-25",
+      "institution": "senat",
+      "source_url": "https://www.senat.fr/leg/ppl11-290.html",
+      "stage": "1ère lecture",
+      "step": "depot"
+    },
+    {
+      "date": "2012-02-08",
+      "debats_order": 4,
+      "directory": "04_1erelecture_senat_commission",
+      "echec": "rejet",
+      "enddate": "2012-02-08",
+      "institution": "senat",
+      "source_url": "https://www.senat.fr/rap/l11-337/l11-337.html",
+      "stage": "1ère lecture",
+      "step": "commission"
+    },
+    {
+      "date": "2012-02-15",
+      "debats_order": 5,
+      "directory": "05_1erelecture_senat_hemicycle",
+      "echec": "rejet",
+      "enddate": "2012-02-15",
+      "institution": "senat",
+      "source_url": "https://www.senat.fr/leg/tas11-074.html",
+      "stage": "1ère lecture",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2012-02-21",
+      "debats_order": 6,
+      "directory": "06_cmp_cmp_commission",
+      "echec": "echec",
+      "enddate": "2012-02-21",
+      "institution": "CMP",
+      "source_url": "https://www.senat.fr/rap/l11-392/l11-392.html",
+      "stage": "CMP",
+      "step": "commission"
+    },
+    {
+      "date": "2012-02-15",
+      "debats_order": null,
+      "directory": "07_nouv.lect._assemblee_depot",
+      "echec": "rejet",
+      "enddate": "2012-02-15",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/propositions/pion4362.asp",
+      "stage": "nouv. lect.",
+      "step": "depot"
+    },
+    {
+      "date": "2012-02-21",
+      "debats_order": 8,
+      "directory": "08_nouv.lect._assemblee_commission",
+      "echec": null,
+      "enddate": "2012-02-21",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/ta-commission/r4388-a0.asp",
+      "stage": "nouv. lect.",
+      "step": "commission"
+    },
+    {
+      "date": "2012-02-22",
+      "debats_order": 9,
+      "directory": "09_nouv.lect._assemblee_hemicycle",
+      "echec": null,
+      "enddate": "2012-02-22",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/ta/ta0864.asp",
+      "stage": "nouv. lect.",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2012-02-23",
+      "debats_order": null,
+      "directory": "10_nouv.lect._senat_depot",
+      "enddate": "2012-02-23",
+      "institution": "senat",
+      "source_url": "https://www.senat.fr/leg/ppl11-428.html",
+      "stage": "nouv. lect.",
+      "step": "depot"
+    },
+    {
+      "date": "2012-02-28",
+      "debats_order": 11,
+      "directory": "11_nouv.lect._senat_commission",
+      "echec": "rejet",
+      "enddate": "2012-02-28",
+      "institution": "senat",
+      "source_url": "https://www.senat.fr/rap/l11-438/l11-438.html",
+      "stage": "nouv. lect.",
+      "step": "commission"
+    },
+    {
+      "date": "2012-02-29",
+      "debats_order": 12,
+      "directory": "12_nouv.lect._senat_hemicycle",
+      "echec": "rejet",
+      "enddate": "2012-02-29",
+      "institution": "senat",
+      "source_url": "https://www.senat.fr/leg/tas11-101.html",
+      "stage": "nouv. lect.",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2012-02-29",
+      "debats_order": null,
+      "directory": "13_l.définitive_assemblee_depot",
+      "enddate": "2012-02-29",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/propositions/pion4425.asp",
+      "stage": "l. définitive",
+      "step": "depot"
+    },
+    {
+      "date": "2012-02-29",
+      "debats_order": 14,
+      "directory": "14_l.définitive_assemblee_hemicycle",
+      "echec": null,
+      "enddate": "2012-02-29",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/ta/ta0874.asp",
+      "stage": "l. définitive",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2012-03-15",
+      "debats_order": null,
+      "directory": "15_constitutionnalité_conseilconstitutionnel_",
+      "enddate": "2012-03-15",
+      "institution": "conseil constitutionnel",
+      "source_url": "http://www.conseil-constitutionnel.fr/conseil-constitutionnel/francais/les-decisions/acces-par-date/decisions-depuis-1959/2012/2012-650-dc/decision-n-2012-650-dc-du-15-mars-2012.105010.html",
+      "stage": "constitutionnalité"
+    },
+    {
+      "date": "2012-03-19",
+      "debats_order": null,
+      "directory": "16_promulgation_gouvernement_",
+      "enddate": "2012-03-19",
+      "institution": "gouvernement",
+      "source_url": "https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000025540947&categorieLien=id",
+      "stage": "promulgation"
+    }
+  ],
+  "table_concordance": {
+    "1er": "supprimé",
+    "2": "2",
+    "2 a": "1er",
+    "2 bis": "3",
+    "2 quater": "5",
+    "2 ter": "4",
+    "3": "supprimé",
+    "4": "supprimé"
+  },
+  "themes": [
+    "Transports"
+  ],
+  "urgence": true,
+  "url_dossier_assemblee": "http://www.assemblee-nationale.fr/13/dossiers/information_passagers_transport_aerien.asp",
+  "url_dossier_senat": "https://www.senat.fr/dossier-legislatif/ppl11-290.html",
+  "url_jo": "https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000025540947&categorieLien=id"
+}
