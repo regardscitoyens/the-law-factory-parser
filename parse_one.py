@@ -29,7 +29,7 @@ def _dump_json(data, filename):
     print('   DEBUG - dumped', filename)
 
 
-def process(API_DIRECTORY, url, disable_cache=False, debug_intermediary_files=False):
+def process(API_DIRECTORY, url, disable_cache=False, debug_intermediary_files=False, only_promulgated=False):
     # Download senat version
     if not disable_cache:
         enable_requests_cache()
@@ -61,7 +61,7 @@ def process(API_DIRECTORY, url, disable_cache=False, debug_intermediary_files=Fa
         print(' INVALID URL:', url)
         return
 
-    if not dos.get('url_jo') and False:
+    if not dos.get('url_jo') and only_promulgated:
         print('    ----- passed: no JO link')
         return
     if dos.get('use_old_procedure'):
@@ -82,4 +82,5 @@ if __name__ == '__main__':
     url = sys.argv[2]
     disable_cache = '--disable-cache' in sys.argv
     debug_intermediary_files = '--debug' in sys.argv
-    process(API_DIRECTORY, url, disable_cache, debug_intermediary_files)
+    only_promulgated = '--only-promulgated' in sys.argv
+    process(API_DIRECTORY, url, disable_cache, debug_intermediary_files, only_promulgated)
