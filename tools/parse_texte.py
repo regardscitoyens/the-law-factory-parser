@@ -237,7 +237,8 @@ def parse(url):
     re_echec_com = re.compile(r"(la commission|elle) .*(effet est d'entraîner le rejet|demande de rejeter|a rejeté|n'a pas adopté|n'a pas élaboré|rejette l'ensemble|ne pas établir|ne pas adopter)[dleau\s]*(projet|proposition|texte)[.\s]", re.I)
     re_echec_com2 = re.compile(r"L'ensemble de la proposition de loi est rejeté dans la rédaction issue des travaux de la commission.", re.I)
     re_echec_com3 = re.compile(r"la commission (a décidé de déposer une|adopte la) motion tendant à opposer la question préalable", re.I)
-    re_echec_com4 = re.compile(r"(la|votre) commission a décidé de ne pas adopter [dleau\s]*(projet|proposition|texte)", re.I)
+    re_echec_com4 = re.compile(r"la motion .{0,5} tendant à opposer la question préalable est adoptée", re.I)
+    re_echec_com5 = re.compile(r"(la|votre) commission a décidé de ne pas adopter [dleau\s]*(projet|proposition|texte)", re.I)
     re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*parven(u[es]?|ir) à (élaborer )?un texte commun)", re.I)
     re_rap_mult = re.compile(r'[\s<>/ai]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
     re_src_mult = re.compile(r'^- L(?:A PROPOSITION|E PROJET) DE LOI n°\s*(\d+)\D')
@@ -294,6 +295,7 @@ def parse(url):
             or re_echec_com2.search(cl_line) \
             or re_echec_com3.search(cl_line) \
             or re_echec_com4.search(cl_line) \
+            or re_echec_com5.search(cl_line) \
             or re_echec_hemi.match(cl_line) \
             or re_echec_hemi2.search(cl_line) \
             or re_echec_hemi3.search(cl_line):
