@@ -186,8 +186,13 @@ def parse(url):
             if len(dic['alineas']) == 1 and dic['alineas']['001'].startswith("(Supprimé)"):
                 dic['statut'] = "supprimé"
                 dic['alineas'] = {'001': ''}
-            # assume an article is non-modifié if it's empty
-            elif dic['statut'].startswith('conforme') or not len(dic['alineas']):
+            elif dic['statut'].startswith('conforme') and not len(dic['alineas']):
+                dic['alineas'] = {'001': '(Non modifié)'}
+            # Assume an article is non-modifié if it's empty (but check if it's supprimé)
+            # but there's a know side-effect, it may generate non-modifié articles of deleted
+            # articles like in the text for article 35 bis:
+            #   https://www.senat.fr/rap/l09-567/l09-5671.html
+            elif not dic['statut'].startswith('suppr') and not len(dic['alineas']):
                 dic['alineas'] = {'001': '(Non modifié)'}
             multiples = re_clean_et.sub(',', dic['titre']).split(',')
             if len(multiples) > 1:
@@ -376,19 +381,22 @@ def parse(url):
                 pr_js(section)
                 read = 0
 
-        # Read articles with alineas
-        if read == 2 and not m:
-            line = re_clean_coord.sub('', line)
-            # Find extra status information
-            if ali_num == 0 and re_mat_st.match(line):
-                article["statut"] = re_cl_html.sub("", re_cl_par.sub("", real_lower(line)).strip())
-                continue
+        # detect dots, used as hints for later completion
+        if read != -1 and len(ALL_ARTICLES) > 0:
             if re_mat_dots.match(line):
                 if article is not None:
                     texte = save_text(texte)
                     pr_js(article)
                     article = None
                 pr_js({"type": "dots"})
+                continue
+
+        # Read articles with alineas
+        if read == 2 and not m:
+            line = re_clean_coord.sub('', line)
+            # Find extra status information
+            if ali_num == 0 and re_mat_st.match(line):
+                article["statut"] = re_cl_html.sub("", re_cl_par.sub("", real_lower(line)).strip())
                 continue
             if "<table>" in line:
                 cl_line = cl_html_except_tables(line)

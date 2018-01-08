@@ -93,7 +93,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
         record = False
         for n, i in enumerate(text):
             matc = start.match(i)
-            log("    TEST: " + i[:50])
+            # log("    TEST: " + i[:50])
             if re_end and (re_end.match(i) or re_sect_chg.match(i)):
                 if l:
                     re_end = make_end_reg(sep, rich)
@@ -138,7 +138,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
     order = 1
     cursec = {'id': ''}
     done_titre = False
-    for line in current:
+    for line_i, line in enumerate(current):
         if not line or not "type" in line:
             sys.stderr.write("JSON %s badly formatted, missing field type: %s\n" % (FILE, line))
             exit()
@@ -219,7 +219,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
                             c, a = oldarts.pop(0)
                             oldartids.remove(c)
                             if olddepot:
-                                log("DEBUG: Marking art %s as supprimé" % c)
+                                log("DEBUG: Marking art %s as supprimé (recovered)" % c)
                                 a["order"] = order
                                 order += 1
                                 write_json(a)
@@ -228,18 +228,25 @@ def complete(current, previous, anteprevious, step, table_concordance):
                 except:
                     print("ERROR: Problem while renumbering articles", line, "\n", oldart, file=sys.stderr)
                     exit()
+                
+                # detect matching errors
+                if oldart['titre'].lower() in table_concordance:
+                    new_art = table_concordance[oldart['titre'].lower()]
+                    if new_art != line['titre']:
+                        print("ERROR: true concordance is different: when parsing article '%s', we matched it with '%s' which should be matched to '%s' (from concordance table) " % (line['titre'] , oldart['titre'], new_art))
+                        for oldart_title, newart_title in table_concordance.items():
+                            if newart_title.lower() == line['titre']:
+                                print('    -> it should have been matched with article %s' % oldart_title)
+                                break
+                        exit()
+                print("DEBUG: article '%s' matched with old article '%s'" % (line['titre'] , oldart['titre']))
+                
                 oldtxt = [re_clean_alin.sub('', v) for v in list(oldart["alineas"].values()) if not re_alin_sup.search(v)]
                 txt = [re_clean_alin.sub('', v) for v in list(line["alineas"].values()) if not re_alin_sup.search(v)]
                 a = SequenceMatcher(None, oldtxt, txt).get_matching_blocks()
                 similarity = float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
                 if similarity < 0.75 and not olddepot:
                     print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len("".join(txt)), "diffchars, similarity; %.2f" % similarity, file=sys.stderr)
-                
-                if oldart['titre'].lower() in table_concordance:
-                    new_art = table_concordance[oldart['titre'].lower()]
-                    if new_art != line['titre']:
-                        print("DEBUG: true concordance is different: '%s' instead of '%s' (for '%s')" % (new_art, line['titre'], oldart['titre']))
-                        exit()
 
                 if line['titre'] != oldart['titre']:
                     line['newtitre'] = line['titre']
@@ -256,7 +263,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
                         break
                     if cur == line['titre']:
                         break
-                    #print >> sys.stderr, cur, line['titre'], a["statut"]
+
                     if a["statut"].startswith("conforme"):
                         log("DEBUG: Recovering art conforme %s" % cur)
                         a["statut"] = "conforme"
@@ -264,12 +271,29 @@ def complete(current, previous, anteprevious, step, table_concordance):
                         order += 1
                         write_json(a)
                     elif not re_suppr.match(a["statut"]):
-                        log("DEBUG: Marking art %s as supprimé" % cur)
-                        a["statut"] = "supprimé"
-                        a["alineas"] = dict()
-                        a["order"] = order
-                        order += 1
-                        write_json(a)
+                        # if the last line of text was some dots, it means that we should keep
+                        # the articles as-is if they are not deleted
+                        last_block_was_dots_and_not_an_article = False
+                        for block in reversed(current[:line_i]):
+                            if block['type'] == 'dots':
+                                last_block_was_dots_and_not_an_article = True
+                                break
+                            if block['type'] == 'article':
+                                break
+                        if last_block_was_dots_and_not_an_article:
+                            # ex: https://www.senat.fr/leg/ppl09-304.html
+                            log("DEBUG: Recovering art as non-modifié via dots %s" % cur)
+                            a["statut"] = "non modifié"
+                            a["order"] = order
+                            order += 1
+                            write_json(a)
+                        else:
+                            log("DEBUG: Marking art %s as supprimé" % cur)
+                            a["statut"] = "supprimé"
+                            a["alineas"] = dict()
+                            a["order"] = order
+                            order += 1
+                            write_json(a)
             if is_mult:
                 if ed not in oldartids or cur != line['titre']:
                     if mult_type == "sup":
@@ -279,7 +303,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
                     exit()
                 while True:
                     if mult_type == "sup" and not re_suppr.match(a["statut"]):
-                        log("DEBUG: Marking art %s as supprimé" % cur)
+                        log("DEBUG: Marking art %s as supprimé (mult)" % cur)
                         a["statut"] = "supprimé"
                         a["alineas"] = dict()
                         a["order"] = order
@@ -288,7 +312,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
                     elif mult_type == "conf":
                         if oldid:
                             a = grdoldarts[a['titre']]
-                        log("DEBUG: Recovering art conforme %s" % cur)
+                        log("DEBUG: Recovering art conforme %s (mult)" % cur)
                         a["statut"] = "conforme"
                         a["order"] = order
                         order += 1
@@ -302,7 +326,9 @@ def complete(current, previous, anteprevious, step, table_concordance):
             # Clean empty articles with only "Non modifié" and include text from previous step
             if alineas and re_confo.match(alineas[0]) and alineas[0].endswith(')'):
                 if not line['titre'] in oldstep[oldid]:
-                    sys.stderr.write("WARNING: found repeated article %s missing from previous step: %s\n" % (line['titre'], line['alineas']))
+                    sys.stderr.write("WARNING: found repeated article %s missing from previous step: %s (article is ignored)\n" % (line['titre'], line['alineas']))
+                    # ignore empty non-modified
+                    continue
                 else:
                     log("DEBUG: get back Art %s" % line['titre'])
                     alineas = oldstep[oldid][line['titre']]
@@ -322,15 +348,15 @@ def complete(current, previous, anteprevious, step, table_concordance):
                         log("ERROR trying to get non-modifiés")
                         exit()
                     pieces = re_clean_et.sub(',', part[0])
-                    # log("EXTRACT non-modifiés for "+line['titre']+": " + pieces)
+                    log("EXTRACT non-modifiés for "+line['titre']+": " + pieces)
                     piece = []
                     for todo in pieces.split(','):
-        # Extract series of non-modified subsections of articles from previous version.
+                        # Extract series of non-modified subsections of articles from previous version.
                         if " à " in todo:
                             start = re.split(" à ", todo)[0]
                             end = re.split(" à ", todo)[1]
                             piece.extend(get_mark_from_last(oldstep[oldid][line['titre']], start, end, sep=part[1:]))
-        # Extract set of non-modified subsections of articles from previous version.
+                        # Extract set of non-modified subsections of articles from previous version.
                         elif todo:
                             piece.extend(get_mark_from_last(oldstep[oldid][line['titre']], todo, sep=part[1:]))
                     gd_text.extend(piece)
@@ -353,7 +379,8 @@ def complete(current, previous, anteprevious, step, table_concordance):
         if texte['definitif'] and not re_suppr.match(a["statut"]):
             print("ERROR: %s articles left:\n%s %s" % (len(oldarts)+1, cur, oldartids), file=sys.stderr)
             exit()
-        elif not texte.get('echec', '') and a["statut"].startswith("conforme"):
+
+        if not texte.get('echec', '') and a["statut"].startswith("conforme"):
             log("DEBUG: Recovering art conforme %s (leftovers)" % cur)
             a["statut"] = "conforme"
             a["order"] = order
@@ -364,6 +391,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
             # if the last line of text was some dots, it means that we should keep
             # the articles as-is if they are not deleted
             if line['type'] == 'dots':
+                # ex: https://www.senat.fr/leg/ppl09-304.html
                 log("DEBUG: Recovering art as non-modifié via dots %s (leftovers)" % cur)
                 a["statut"] = "non modifié"
                 a["order"] = order
@@ -381,4 +409,5 @@ def complete(current, previous, anteprevious, step, table_concordance):
 
 if __name__ == '__main__':
     serialized = json.load(open(sys.argv[1]))
-    print(json.dumps(complete(**serialized), indent=2, sort_keys=True, ensure_ascii=False))
+    result = complete(**serialized)
+    # print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
