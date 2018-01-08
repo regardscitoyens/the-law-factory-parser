@@ -200,13 +200,17 @@ def process(dos, debug_intermediary_files=False):
                         ante_step_articles = []
                     else:
                         ante_step_articles = steps[ante_step_index].get('articles_completed', steps[ante_step_index].get('articles', []))
-                    step['articles_completed'] = complete_articles.complete(
-                        step.get('articles', []),
-                        steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
-                        ante_step_articles,
-                        step,
-                        dos.get('table_concordance', {}),
-                    )
+                    
+                    complete_args = {
+                        'current': step.get('articles', []),
+                        'previous': steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
+                        'anteprevious': ante_step_articles,
+                        'step': step,
+                        'table_concordance':dos.get('table_concordance', {}),
+                    }
+                    if debug_intermediary_files:
+                        _dump_json(complete_args, 'debug_complete_args_step_%d.json' % step_index)
+                    step['articles_completed'] = complete_articles.complete(**complete_args)
                     assert 'Non modifié' not in str(step['articles_completed'])
 
         if debug_intermediary_files:

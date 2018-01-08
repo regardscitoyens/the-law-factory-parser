@@ -382,6 +382,11 @@ def parse(url):
                 article["statut"] = re_cl_html.sub("", re_cl_par.sub("", real_lower(line)).strip())
                 continue
             if re_mat_dots.match(line):
+                if article is not None:
+                    texte = save_text(texte)
+                    pr_js(article)
+                    article = None
+                pr_js({"type": "dots"})
                 continue
             if "<table>" in line:
                 cl_line = cl_html_except_tables(line)
@@ -414,8 +419,9 @@ def parse(url):
             #metas
             continue
 
-    save_text(texte)
-    pr_js(article)
+    if article is not None:
+        save_text(texte)
+        pr_js(article)
 
     return ALL_ARTICLES
 

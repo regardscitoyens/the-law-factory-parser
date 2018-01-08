@@ -3,7 +3,12 @@
 
 import sys, re, copy
 import json
-from .sort_articles import bister, article_is_lower
+
+try:
+    from .sort_articles import bister, article_is_lower
+except SystemError:
+    from sort_articles import bister, article_is_lower
+
 
 def complete(current, previous, anteprevious, step, table_concordance):
     current = copy.deepcopy(current)
@@ -192,10 +197,11 @@ def complete(current, previous, anteprevious, step, table_concordance):
             cur = ""
             if texte['definitif']:
                 try:
-                    goon = True
-                    while goon:
+                    # recover the old article and mark those deleted as deleted
+                    while True:
                         _, oldart = oldarts[0]
 
+                        # first, mark the old articles as deleted via the concordance table
                         if oldart['titre'].lower() in table_concordance:
                             new_art = table_concordance[oldart['titre'].lower()]
                             if 'suppr' in new_art:
@@ -208,6 +214,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
                                     write_json(a)
                                 continue
 
+                        # as a backup, use the detected status to wait for a non-deleted article
                         if re_suppr.match(oldart['statut']):
                             c, a = oldarts.pop(0)
                             oldartids.remove(c)
@@ -217,7 +224,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
                                 order += 1
                                 write_json(a)
                         else:
-                            goon = False
+                            break
                 except:
                     print("ERROR: Problem while renumbering articles", line, "\n", oldart, file=sys.stderr)
                     exit()
@@ -228,11 +235,10 @@ def complete(current, previous, anteprevious, step, table_concordance):
                 if similarity < 0.75 and not olddepot:
                     print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len("".join(txt)), "diffchars, similarity; %.2f" % similarity, file=sys.stderr)
                 
-                log("DEBUG: concordance detected between '%s' et '%s'" % (line['titre'], oldart['titre']))
                 if oldart['titre'].lower() in table_concordance:
                     new_art = table_concordance[oldart['titre'].lower()]
                     if new_art != line['titre']:
-                        log("DEBUG: true concordance is different: '%s' instead of '%s'" % (new_art, line['titre']))
+                        print("DEBUG: true concordance is different: '%s' instead of '%s' (for '%s')" % (new_art, line['titre'], oldart['titre']))
                         exit()
 
                 if line['titre'] != oldart['titre']:
@@ -347,21 +353,32 @@ def complete(current, previous, anteprevious, step, table_concordance):
         if texte['definitif'] and not re_suppr.match(a["statut"]):
             print("ERROR: %s articles left:\n%s %s" % (len(oldarts)+1, cur, oldartids), file=sys.stderr)
             exit()
-        if not texte.get('echec', '') and a["statut"].startswith("conforme"):
-            log("DEBUG: Recovering art conforme %s" % cur)
+        elif not texte.get('echec', '') and a["statut"].startswith("conforme"):
+            log("DEBUG: Recovering art conforme %s (leftovers)" % cur)
             a["statut"] = "conforme"
             a["order"] = order
             order += 1
             write_json(a)
+        # do not keep already deleted articles but mark as deleted missing ones
         elif not re_suppr.match(a["statut"]) or texte.get('echec', ''):
-            log("DEBUG: Marking art %s as supprimé" % cur)
-            a["statut"] = "supprimé"
-            a["alineas"] = dict()
-            a["order"] = order
-            order += 1
-            write_json(a)
+            # if the last line of text was some dots, it means that we should keep
+            # the articles as-is if they are not deleted
+            if line['type'] == 'dots':
+                log("DEBUG: Recovering art as non-modifié via dots %s (leftovers)" % cur)
+                a["statut"] = "non modifié"
+                a["order"] = order
+                order += 1
+                write_json(a)
+            else:
+                log("DEBUG: Marking art %s as supprimé (leftovers)" % cur)
+                a["statut"] = "supprimé"
+                a["alineas"] = dict()
+                a["order"] = order
+                order += 1
+                write_json(a)
 
     return ALL_ARTICLES
 
 if __name__ == '__main__':
-    print(json.dump(json.load(open(sys.argv[1])), json.load(open(sys.argv[2])), indent=2, sort_keys=True, ensure_ascii=False))
+    serialized = json.load(open(sys.argv[1]))
+    print(json.dumps(complete(**serialized), indent=2, sort_keys=True, ensure_ascii=False))
