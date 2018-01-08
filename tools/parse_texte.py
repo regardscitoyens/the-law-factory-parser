@@ -186,7 +186,8 @@ def parse(url):
             if len(dic['alineas']) == 1 and dic['alineas']['001'].startswith("(Supprimé)"):
                 dic['statut'] = "supprimé"
                 dic['alineas'] = {'001': ''}
-            elif dic['statut'].startswith('conforme') and not len(dic['alineas']):
+            # assume an article is non-modifié if it's empty
+            elif dic['statut'].startswith('conforme') or not len(dic['alineas']):
                 dic['alineas'] = {'001': '(Non modifié)'}
             multiples = re_clean_et.sub(',', dic['titre']).split(',')
             if len(multiples) > 1:
