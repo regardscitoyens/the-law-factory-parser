@@ -219,7 +219,7 @@ def parse(url):
     re_cl_par  = re.compile(r"[()]")
     re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
     re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
-    re_mat_sec = re.compile(r"%s(\s+(.+)e?r?)" % section_titles, re.I)
+    re_mat_sec = re.compile(r"(?:<b>)?%s(\s+(.+)e?r?)(?:</b>)?" % section_titles, re.I)
     re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
     re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
     re_mat_ppl = re.compile(r"((<b>)?\s*pro.* loi|<h2>\s*pro.* loi\s*</h2>)", re.I)
@@ -254,6 +254,12 @@ def parse(url):
     re_sep_text = re.compile(r'\s*<b>\s*(article|%s)\s*(I|uniqu|pr..?limina|1|prem)[ier]*\s*</b>\s*$' % section_titles, re.I)
     re_stars = re.compile(r'^[\s*_]+$')
     re_art_uni = re.compile(r'\s*article\s*unique\s*$', re.I)
+
+    # 'read' can be
+    #     -1 : the text is not detected yet
+    #      0 : read the text
+    #      1 : titles lecture
+    #      2 : alineas lecture
     read = art_num = ali_num = 0
     section_id = ""
     article = None
