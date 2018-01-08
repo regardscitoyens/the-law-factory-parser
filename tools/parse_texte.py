@@ -34,7 +34,7 @@ def parse(url):
         (re.compile(r'(>%s\s*[\dIVXLCDM]+(<sup>[eE][rR]?</sup>)?)\s+-\s+([^<]*?)\s*</p>' % section_titles.upper()), r'\1</p><p><b>\6</b></p>'),
         (re.compile(r'(<sup>[eE][rR]?</sup>)(\w+)'), r'\1 \2'), # add missing space, ex: "1<sup>er</sup>A "
         (re.compile(r'(\w)<br/?>(\w)'),  r'\1 \2'), # a <br/> should be transformed as a ' ' only if there's text around it (visual break)
-        (re.compile(r'<em> </em>'),  r' '), # remove empty tags with only one space inside
+        (re.compile(r'<(em|s)> </(em|s)>'),  r' '), # remove empty tags with only one space inside
     ]
 
     re_clean_title_legif = re.compile("[\s|]*l[eé]gifrance(.gouv.fr)?$", re.I)
@@ -361,6 +361,7 @@ def parse(url):
                     article["source_text"] = srclst[curtext]
                 m = re_mat_art.match(line)
                 article["titre"] = re_cl_uno.sub("1er", re_cl_sec_uno.sub("1er", m.group(1).strip())).strip(" -'")
+                assert article["titre"] # avoid empty titles
                 if m.group(2) is not None:
                     article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
                 if section["id"] != "":
