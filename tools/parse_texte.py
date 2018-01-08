@@ -329,6 +329,14 @@ def parse(url):
         if is_inside_bad_element:
             continue
 
+        # crazy edge case: "(Conforme)Article 24 bis A (nouveau)" on one line
+        # http://www.assemblee-nationale.fr/13/projets/pl3324.asp
+        # simplified, just do the "(Conforme)" case
+        if '<i>(Conforme)</i>' in line and re_mat_art.search(line):
+            article["statut"] = 'conforme'
+            line = line.replace('<i>(Conforme)</i>', '')
+            cl_line = cl_line.replace('(Conforme)', '')
+
         # Identify section zones
         m = re_mat_sec.match(line)
         if m:
