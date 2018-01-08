@@ -115,7 +115,15 @@ def process(dos, debug_intermediary_files=False):
         url = step.get('source_url')
         print('    ^ text: ', url)
 
+        if dos.get('use_old_procedure') \
+            and step.get('institution') in ('senat', 'assemblee') \
+            and step.get('step') == 'commission':
+            continue
+
         if url is None:
+            if step == steps[-1] and not dos.get('url_jo'):
+                print('     * ignore empty last step since the law is not yet promulgated')
+                continue
             if step.get('echec') is None:
                 raise Exception('empty url for step: %s.%s.%s' % (step.get('institution'), step.get('stage'), step.get('step')))
             # TODO: texte retire
