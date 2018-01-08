@@ -133,7 +133,7 @@ def parse(url):
     re_clean_subsec_space2 = re.compile(r'^("?[IVX0-9]{1,4})\s*([a-z]*)\s*([A-H]{1,4})([\.°\-])', re.I)
     re_clean_punc_space = re.compile('([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])')
     re_clean_spaces = re.compile(r'\s+')
-    re_clean_coord = re.compile(r'^(<i>)?(["\(\s]+|pour)*coordination[\)\s\.]*', re.I)
+    re_clean_coord = re.compile(r'^(<i>)?(["\(\s]+|pour)*coordination[\)\s\.]*(</i>)?', re.I)
     # Clean html and special chars
     lower_inner_title = lambda x: x.group(1)+lower_but_first(x.group(3))+" "
     html_replace = [
@@ -400,6 +400,9 @@ def parse(url):
         # Read articles with alineas
         if read == 2 and not m:
             line = re_clean_coord.sub('', line)
+            # if the line was only "Pour coordination", ignore it
+            if not line:
+                continue
             # Find extra status information
             if ali_num == 0 and re_mat_st.match(line):
                 article["statut"] = re_cl_html.sub("", re_cl_par.sub("", real_lower(line)).strip())
