@@ -140,7 +140,7 @@ def parse(url):
         (re.compile(r"−"), "-"),
         (re.compile(r" "), " "),
         (re.compile(r"<!--.*?-->", re.I), ""),
-        (re.compile(r"(<img.*?/><br/>\s*)", re.I), ""), # remove <img><br/> before the next regex kills my precious '«'
+        (re.compile(r"(<img[^>]*>\s*<br/>\s*)", re.I), ""), # remove <img><br/> before the next regex kills my precious '«'
         (re.compile(r"</?br/?>[«\"\s]+", re.I), " "),
         (re.compile(r'(«\s+|\s+»)'), '"'),
         (re.compile(r'(«|»|“|”|„|‟|❝|❞|＂|〟|〞|〝)'), '"'),
