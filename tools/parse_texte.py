@@ -274,7 +274,7 @@ def parse(url):
         line = clean_html(str(text))
 
         # limit h2/h4 matches to PPL headers or Article unique
-        if text.name != 'h2' and (not re_mat_ppl.match(line) and not 'Article unique' in line):
+        if text.name != 'p' and (not re_mat_ppl.match(line) and not 'Article unique' in line):
             continue
 
         if re_stars.match(line):
