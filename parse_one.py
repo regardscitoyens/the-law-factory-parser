@@ -4,6 +4,7 @@ from senapy.dosleg.parser import parse as senapy_parse
 from anpy.dossier_like_senapy import parse as anpy_parse
 from lawfactory_utils.urls import download, enable_requests_cache, clean_url
 
+from tools.detect_anomalies import find_anomalies
 from merge import merge_senat_with_an
 import parse_doslegs_texts
 import format_data_for_frontend
@@ -16,12 +17,19 @@ def download_senat(url):
     return senapy_parse(html, url)
 
 
-def download_an(url):
+def download_an(url, url_senat=False):
     print('  [] download AN version')
     html = download(url).text
     print('  [] parse AN version')
     # TODO: do both instead of first
-    return anpy_parse(html, url)[0]
+    results = anpy_parse(html, url)
+    if len(results) > 1:
+        if url_senat:
+            for result in results:
+                if result.get('url_dossier_senat') == url_senat:
+                    return result
+        print('     WARNING: TOOK FIRST DOSLEG BUT THERE ARE %d OF THEM' % len(results))
+    return results[0]
 
 
 def _dump_json(data, filename):
@@ -39,6 +47,9 @@ def process(API_DIRECTORY, url, disable_cache=False,
 
     print(' -= DOSLEG URL:', url, '=-')
 
+    an_dos = None
+    senat_dos = None
+
     if 'senat.fr' in url:
         senat_dos = download_senat(url)
         if not senat_dos:
@@ -46,7 +57,9 @@ def process(API_DIRECTORY, url, disable_cache=False,
             return
         # Add AN version if there's one
         if 'url_dossier_assemblee' in senat_dos:
-            an_dos = download_an(senat_dos['url_dossier_assemblee'])
+            an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'])
+            if 'url_dossier_senat' in an_dos:
+                assert an_dos['url_dossier_senat'] == senat_dos['url_dossier_senat']
             dos = merge_senat_with_an(senat_dos, an_dos)
         else:
             dos = senat_dos
@@ -62,14 +75,21 @@ def process(API_DIRECTORY, url, disable_cache=False,
         print(' INVALID URL:', url)
         return
 
+    print('        title:', dos.get('short_title'))
+    find_anomalies([dos])
+
     if not dos.get('url_jo') and only_promulgated:
         print('    ----- passed: no JO link')
         return
-    if dos.get('use_old_procedure'):
+    if dos.get('use_old_procedure') and False:
         print('    ----- passed: budget law')
         return
 
     if debug_intermediary_files:
+        if an_dos:
+            _dump_json(an_dos, 'debug_an_dos.json')
+        if senat_dos:
+            _dump_json(senat_dos, 'debug_senat_dos.json')
         _dump_json(dos, 'debug_dos.json')
 
     print('  [] parse the texts')
