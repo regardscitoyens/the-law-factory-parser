@@ -9,6 +9,19 @@ def get_previous_step(steps, curr_step_index):
             if steps[i].get('step') == 'depot':
                 return i
 
+    if curr_step.get('stage') == 'l. définitive' and curr_step.get('step') == 'depot':
+        print('[parse_doslegs_texts] l. définitive / depot: fetching last AN hemi or last CMP hemi')
+        for i in reversed(range(curr_step_index)):
+            step = steps[i]
+            if step.get('echec'):
+                continue
+            if step.get('stage') == 'CMP' and step.get('step') == 'hemicycle':
+                return i
+            if step.get('institution') == 'assemblee' and step.get('stage') == 'nouv. lect.' and step.get('step') == 'hemicycle':
+                return i
+        else:
+            raise Exception('[parse_doslegs_texts] l. définitive / depot: no good text found, this should never happen !')
+
     for i in reversed(range(curr_step_index)):
         if not steps[i].get('echec') or steps[i].get('echec') == 'renvoi en commission':
             # do not take previous depot but hemicycle version instead if in the
