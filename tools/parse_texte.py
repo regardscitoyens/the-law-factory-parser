@@ -270,12 +270,13 @@ def parse(url):
     section = {"type": "section", "id": ""}
 
 
-    for text in soup.find_all(lambda x: x.name == 'p' or x.name == 'h2'):
+    for text in soup.find_all(lambda x: x.name == 'p' or x.name == 'h2' or x.name == 'h4'):
         line = clean_html(str(text))
 
-        # limit h2 matches to PPL headers
-        if text.name == 'h2' and not re_mat_ppl.match(line):
+        # limit h2/h4 matches to PPL headers or Article unique
+        if text.name != 'h2' and (not re_mat_ppl.match(line) and not 'Article unique' in line):
             continue
+
         if re_stars.match(line):
             continue
         if line == "<b>RAPPORT</b>" or line == "Mesdames, Messieurs,":
