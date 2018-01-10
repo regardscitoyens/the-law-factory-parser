@@ -10,12 +10,12 @@ def get_previous_step(steps, curr_step_index):
                 return i
 
     if curr_step.get('stage') == 'l. définitive' and curr_step.get('step') == 'depot':
-        print('[parse_doslegs_texts] l. définitive / depot: fetching last AN hemi or last CMP hemi')
+        print('[parse_doslegs_texts] l. définitive / depot: fetching last AN hemi or last CMP commission')
         for i in reversed(range(curr_step_index)):
             step = steps[i]
             if step.get('echec'):
                 continue
-            if step.get('stage') == 'CMP' and step.get('step') == 'hemicycle':
+            if step.get('stage') == 'CMP' and step.get('step') == 'commission':
                 return i
             if step.get('institution') == 'assemblee' and step.get('stage') == 'nouv. lect.' and step.get('step') == 'hemicycle':
                 return i
