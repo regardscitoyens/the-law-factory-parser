@@ -25,6 +25,7 @@ print('****** => url fixing OK ******')
 print()
 print('*** testing parse_texte ****')
 assert len(parse_texte.parse('http://www.assemblee-nationale.fr/13/rapports/r2568.asp')) == 5
+assert len(parse_texte.parse('https://www.senat.fr/leg/ppl08-039.html')) == 2
 print('****** => parse_texte OK ******')
 
 
