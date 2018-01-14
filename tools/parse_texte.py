@@ -178,6 +178,10 @@ def parse(url):
     re_clean_et = re.compile(r'(,|\s+et)\s+', re.I)
 
 
+    def check_section_is_not_a_duplicate(section_id):
+        for block in ALL_ARTICLES:
+            assert not (block['type'] == 'section' and block.get('id') == section_id)
+
     def pr_js(dic):
         nonlocal ALL_ARTICLES
         # Clean empty articles with only "Supprimé" as text
@@ -203,7 +207,6 @@ def parse(url):
                     ALL_ARTICLES.append(copy.deepcopy(new))
                 return
         ALL_ARTICLES.append(copy.deepcopy(dic))
-
 
     def save_text(txt):
         if "done" not in txt:
@@ -362,6 +365,7 @@ def parse(url):
             # Get parent section id to build current section id
             section_par = re.sub(r""+section_typ+"[\dL].*$", "", section["id"])
             section["id"] = section_par + section_typ + str(section_num)
+            # check_section_is_not_a_duplicate(section["id"])
 
         # Identify titles and new article zones
         elif (not expose and re_mat_end.match(line)) or (read == 2 and re_mat_ann.match(line)):
