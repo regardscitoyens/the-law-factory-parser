@@ -189,13 +189,13 @@ def process(dos, debug_intermediary_files=False):
             # TODO: texte retire
             # TODO: stats of None urls
         if 'articles' in step:
-            prev_step_index = _step_logic.get_previous_step(steps, step_index)
+            prev_step_index = _step_logic.get_previous_step(steps, step_index, dos.get('use_old_procedure', False))
             if prev_step_index is not None and not step.get('echec'):
                 # multiple-depots
                 if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):
                     step['articles_completed'] = step['articles']
                 else:
-                    ante_step_index = _step_logic.get_previous_step(steps, prev_step_index)
+                    ante_step_index = _step_logic.get_previous_step(steps, prev_step_index, dos.get('use_old_procedure', False))
                     if ante_step_index is None:
                         ante_step_articles = []
                     else:

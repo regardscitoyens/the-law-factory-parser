@@ -1,4 +1,4 @@
-def get_previous_step(steps, curr_step_index):
+def get_previous_step(steps, curr_step_index, is_old_procedure):
     curr_step = steps[curr_step_index]
 
     # if 'nouv. lect depot' and last step failed, take last depot
@@ -24,6 +24,8 @@ def get_previous_step(steps, curr_step_index):
 
     for i in reversed(range(curr_step_index)):
         if not steps[i].get('echec') or steps[i].get('echec') == 'renvoi en commission':
+            if is_old_procedure and steps[i].get('step') == 'commission':
+                continue
             # do not take previous depot but hemicycle version instead if in the
             # middle of the procedure
             # TODO: this is not working well, find why and enable it

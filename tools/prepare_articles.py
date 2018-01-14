@@ -113,7 +113,7 @@ def process(procedure):
                     s['newnum'] = article['newtitre']
                 txt = "\n".join([re_clean_alin.sub('', v) for v in s['text'] if not re_alin_sup.search(v)])
                 
-                old_step_index = get_previous_step(steps, nstep)
+                old_step_index = get_previous_step(steps, nstep, procedure.get('use_old_procedure', False))
                 oldtext = []
                 if old_step_index is not None:
                     old_step_id = steps[old_step_index]['directory']
