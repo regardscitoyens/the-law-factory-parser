@@ -120,11 +120,13 @@ def complete(current, previous, anteprevious, step, table_concordance):
                 res.append(i)
         # retry and get everything as I before II added if not found
         if not res:
-            if not l and re_mat_uno.match(s):
-                log("   nothing found, grabbing all article now...")
+            if not l:
+                # log("   nothing found, grabbing all article now...")
+                # TODO: ADD WARNING, SHOULD NOT USE THE 'FORCE' MULTIPLE
+                # TIMES FOR THE SAME ARTICLE
                 return get_mark_from_last(text, s, l, sep=sep, force=True)
             print('ERROR: could not retrieve', s, file=sys.stderr)
-            exit()
+            return False
         return res
 
     re_alin_sup = re.compile(r'supprimés?\)$', re.I)
@@ -155,6 +157,8 @@ def complete(current, previous, anteprevious, step, table_concordance):
             texte = dict(line)
             if texte["definitif"]:
                 from difflib import SequenceMatcher
+                # check number of sections is the same as the final text
+                # assert len(oldsects) == len([x for x in current if x['type'] == 'section'])
         else:
           if not done_titre:
             write_json(texte)
@@ -165,9 +169,10 @@ def complete(current, previous, anteprevious, step, table_concordance):
                     cursec = oldsects.pop(0)
                     assert(cursec["type_section"] == line["type_section"])
                 except:
-                    print("ERROR: Problem while renumbering sections", line['titre'], "\n", cursec, file=sys.stderr)
-                    exit()
+                    print("ERROR: Problem while renumbering sections: ", line['titre'], " is not ", cursec, '\n', file=sys.stderr)
+                    # exit()
                 if line["id"] != cursec["id"]:
+                    log("DEBUG: Matched section %s (%s) with old section %s (%s)" % (line["id"], line['titre'], cursec["id"], cursec['titre']))
                     line["newid"] = line["id"]
                     line["id"] = cursec["id"]
             write_json(line)
@@ -238,6 +243,8 @@ def complete(current, previous, anteprevious, step, table_concordance):
                             if newart_title.lower() == line['titre']:
                                 print('    -> it should have been matched with article %s' % oldart_title)
                                 break
+                        else:
+                            print('     -> it should have been deleted')
                         exit()
                 print("DEBUG: article '%s' matched with old article '%s'" % (line['titre'] , oldart['titre']))
                 
@@ -288,7 +295,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
                             order += 1
                             write_json(a)
                         else:
-                            log("DEBUG: Marking art %s as supprimé" % cur)
+                            log("DEBUG: Marking art %s as supprimé because it disappeared" % cur)
                             a["statut"] = "supprimé"
                             a["alineas"] = dict()
                             a["order"] = order
@@ -355,10 +362,20 @@ def complete(current, previous, anteprevious, step, table_concordance):
                         if " à " in todo:
                             start = re.split(" à ", todo)[0]
                             end = re.split(" à ", todo)[1]
-                            piece.extend(get_mark_from_last(oldstep[oldid][line['titre']], start, end, sep=part[1:]))
+                            mark = get_mark_from_last(oldstep[oldid][line['titre']], start, end, sep=part[1:])
+                            if mark is False and oldid == 1:
+                                mark = get_mark_from_last(oldstep[0][line['titre']], start, end, sep=part[1:])
+                            if mark is False:
+                                exit()
+                            piece.extend(mark)
                         # Extract set of non-modified subsections of articles from previous version.
                         elif todo:
-                            piece.extend(get_mark_from_last(oldstep[oldid][line['titre']], todo, sep=part[1:]))
+                            mark = get_mark_from_last(oldstep[oldid][line['titre']], todo, sep=part[1:])
+                            if mark is False and oldid == 1:
+                                mark = get_mark_from_last(oldstep[0][line['titre']], todo, sep=part[1:])
+                            if mark is False:
+                                exit()
+                            piece.extend(mark)
                     gd_text.extend(piece)
                 else:
                     gd_text.append(text)
