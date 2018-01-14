@@ -18,7 +18,7 @@ def open_csv(dirpath, filename, delimiter=";"):
     except Exception as e:
         print(type(e), e, file=sys.stderr)
         sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
-        exit(1)
+        raise e
 
 def open_json(dirpath, filename):
     try:
@@ -27,7 +27,7 @@ def open_json(dirpath, filename):
     except Exception as e:
         print(type(e), e, file=sys.stderr)
         sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
-        exit(1)
+        raise e
 
 def print_json(dico, filename=None):
     if filename:
@@ -40,7 +40,7 @@ def print_json(dico, filename=None):
         except Exception as e:
             print(type(e), e, file=sys.stderr)
             sys.stderr.write("ERROR: Could not write in file %s" % filename)
-            exit(1)
+            raise e
     else:
         print(json.dumps(dico, ensure_ascii=False))
 
@@ -103,9 +103,9 @@ class Context(object):
         try:
             with open(os.path.join(self.sourcedir, 'viz', 'procedure.json'), "r") as procedure:
                 return json.load(procedure)
-        except:
+        except Exception as e:
             sys.stderr.write('ERROR: could not find procedure data in directory %s\n' % self.sourcedir)
-            exit(1)
+            raise e
 
     def get_parlementaires(self):
         for f in os.listdir(os.path.join(self.sourcedir, '..')):

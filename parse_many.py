@@ -17,6 +17,6 @@ for url in sys.stdin:
         continue
 
     try:
-        parse_one.process(API_DIRECTORY, url, disable_cache=True)
+        parse_one.process(API_DIRECTORY, url, disable_cache=True, only_promulgated=True)
     except Exception as e:
         traceback.print_exc()
