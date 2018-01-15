@@ -57,12 +57,12 @@ def write_text(t, p):
 
 def get_step_id(nstep, step):
     clean = lambda x: x.replace(' ', '').replace('è','e').lower() if x else ''
-    return '%s_%s_%s_%s' % (
+    return '_'.join([x for x in (
         str(nstep).zfill(2),
         clean(step.get('stage')),
         clean(step.get('institution')),
         clean(step.get('step')),
-    )
+    ) if x])
 
 
 def process(dos, OUTPUT_DIR):

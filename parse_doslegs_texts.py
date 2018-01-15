@@ -132,9 +132,6 @@ def process(dos, debug_intermediary_files=False):
         # we do not parse CC
         elif 'conseil-constitutionnel' in url:
             continue
-        # also ignore legifrance for now
-        elif 'legifrance' in url:
-            continue
         else:
             fixed_url = find_good_url(url)
             if fixed_url:

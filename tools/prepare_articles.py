@@ -78,7 +78,7 @@ def process(procedure):
     step_id = ''
     for nstep, step in enumerate(steps):
         data = step.get('texte.json')
-        if step['stage'] in ["promulgation", "constitutionnalité"]:
+        if step['stage'] in ["constitutionnalité"]:
             continue
         if not data and not step.get('echec'):
             print('     prepare_articles: no data for', step.get('stage'), step.get('step'), step.get('institution'), file=sys.stderr)
