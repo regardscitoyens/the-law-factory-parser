@@ -33,7 +33,7 @@ mkdir -p $data"/../.cache/web" ; cachedir=$data"/../.cache/web"
 mkdir -p $data/.tmp/html $data/.tmp/json
 rm -f $data/.tmp/json/articles_laststep.json
 
-for url in "2007-2012.nosdeputes" "www.nosdeputes" "www.nossenateurs"; do
+for url in "2007-2012.nosdeputes" "2012-2017.nosdeputes" "www.nosdeputes" "www.nossenateurs"; do
   download "http://$url.fr/organismes/groupe/json" > "$data/../$url-groupes.json"
   typeparl=$(echo $url | sed 's/^.*nos//')
   download "http://$url.fr/$typeparl/json?"$CACHEVAL > "$data/../$url.parlementaires.json"

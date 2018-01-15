@@ -56,10 +56,14 @@ re_entities = re.compile(r'&([^;]+)(;|$)')
 decode_char = lambda x: chr(int(x.group(1)[1:]) if x.group(1).startswith('#') else name2codepoint[x.group(1)])
 decode_html = lambda text: re_entities.sub(decode_char, text)
 
-def identify_room(data, datatype):
+def identify_room(data, datatype, legislature=None):
     typeparl = "depute" if 'url_nosdeputes' in data[0][datatype] else "senateur"
     legis = data[0][datatype]['url_nos%ss' % typeparl]
-    legis = legis[7:legis.find('.')]
+    if legislature and typeparl == 'depute':
+        year = 1942 + 5*legislature
+        legis = '%s-%s' % (year, year+5)
+    else:
+        legis = legis[7:legis.find('.')]
     urlapi = "%s.nos%ss" % (legis, typeparl)
     return typeparl, urlapi.lower()
 

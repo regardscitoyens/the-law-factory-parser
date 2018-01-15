@@ -91,8 +91,6 @@ def process(dos, OUTPUT_DIR):
                 sys.exit(1)
             if data["type"] == "texte":
                 textid = data["id"]
-        #   textid = date_formatted+"_"+data["id"]
-                # write_text(clean_text(data["titre"]), step_dir + '/' + textid+".titre")
                 alldata = dict(data)
                 alldata['sections'] = []
                 alldata['articles'] = []
@@ -101,24 +99,18 @@ def process(dos, OUTPUT_DIR):
                 sys.exit(1)
             elif data["type"] == "section":
                 path = step_dir + '/' + sec_path(data["id"])
-                # mkdirs(path)
                 alldata['sections'].append(data)
-                # write_json(data, path+"/"+textid+".json")
-                # write_text(clean_text(data["titre"]), path+"/"+textid+".titre")
             elif data["type"] == "article":
                 path = step_dir + '/'
                 if "section" in data:
                     path += sec_path(data["section"])+"/"
                 path += "A"+orderabledir(data["titre"])+"/"
-                # mkdirs(path)
                 alldata['articles'].append(data)
-                # write_json(data, path+textid+".json")
                 text = ""
                 for i in range(len(data["alineas"])):
                     if text != "":
                         text += "\n"
                     text += clean_text(data["alineas"]["%03d" % (i+1)])
-                # write_text(text, path+textid+".alineas")
             elif data["type"] == "echec":
                 alldata['expose'] = data['texte']
 

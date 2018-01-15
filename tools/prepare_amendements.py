@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import os, sys
+
+from lawfactory_utils.urls import download, enable_requests_cache, clean_url
+enable_requests_cache()
+
 from common import *
 sys.path.append(os.path.join("..", "collectdata"))
 from sort_articles import compare_articles
@@ -15,19 +19,19 @@ format_sujet = lambda t: upper_first(re_clean_add.sub('', t))
 #['Indéfini', 'Adopté', 'Irrecevable', 'Rejeté', 'Retiré', 'Tombe', 'Non soutenu', 'Retiré avant séance', 'Rectifié', 'Favorable' ,'Satisfait']
 def simplify_sort(sort):
     sort = sort.lower()
-    if sort in u"adopté favorable":
-        return u"adopté"
-    if sort in u"rejeté ":
-        return u"rejeté"
-    if sort in u"indéfini":
-        return u"en attente"
-    return u"non-voté"
+    if sort in "adopté favorable":
+        return "adopté"
+    if sort in "rejeté ":
+        return "rejeté"
+    if sort in "indéfini":
+        return "en attente"
+    return "non-voté"
 
 re_clean_first = re.compile(r'^(.*?)(,| et) .*$')
 def first_author(signataires):
-    if "gouvernement" in signataires.lower():
+    if signataires is None or "gouvernement" in signataires.lower():
         return ""
-    return re_clean_first.sub(ur'\1, …', signataires)
+    return re_clean_first.sub(r'\1, …', signataires)
 
 def find_groupe(amd):
     if amd['signataires'] and "gouvernement" in amd['signataires'].lower():
@@ -59,13 +63,34 @@ def add_link(links, pA, pB, weight=1):
 
 
 steps = {}
-for step in procedure['steps']:
-    if not 'nb_amendements' in step or not step['nb_amendements']:
+for i, step in enumerate(procedure['steps']):
+    if step.get('step') not in ('commission', 'hemicycle'):
         continue
 
-    amendements_src = open_json(os.path.join(context.sourcedir, 'procedure', step['amendement_directory']), 'amendements.json')['amendements']
+    if i == 0:
+        continue
 
-    typeparl, urlapi = identify_room(amendements_src, 'amendement')
+    last_step = procedure['steps'][i-1]
+    texte = open_json(os.path.join(context.sourcedir, 'procedure', last_step['directory']), 'texte/texte.json')
+
+    amdt_url = None
+    if 'nosdeputes_id' in texte:
+        amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json' % (procedure['assemblee_legislature'], texte['nosdeputes_id'])
+    elif 'nossenateurs_id' in texte:
+        amdt_url = 'https://nossenateurs.fr/amendements/%s/json' % texte['nossenateurs_id']
+    if amdt_url is None:
+        continue
+
+    amendements = download(amdt_url).json()
+    amendements_src = amendements['amendements']
+
+    print(amdt_url, len(amendements_src), texte['source'])
+
+    if len(amendements_src) == 0:
+        continue
+
+    typeparl, urlapi = identify_room(amendements_src, 'amendement',
+        legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
 
     sujets = {}
     groupes = {}
@@ -78,8 +103,8 @@ for step in procedure['steps']:
     for amd in amendements_src:
         a = amd['amendement']
         if "sort" not in a:
-            print >> sys.stderr, a
-        if a["sort"] == u"Rectifié":
+            print(a, file=sys.stderr)
+        if a["sort"] == "Rectifié":
             continue
         try:
             key = format_sujet(a['sujet'])
@@ -91,10 +116,11 @@ for step in procedure['steps']:
             sujets[key] = {
               'titre': key,
               'details': a['sujet'],
-              'order': a['ordre_article'],
+              # TODO: port sort_amendements.pl
+              'order': a.get('ordre_article', 10),
               'amendements': []
             }
-        if a['ordre_article'] > 9000:
+        if a.get('ordre_article', 10) > 9000:
             fix_order = True
 
         gpe = find_groupe(a)
@@ -152,8 +178,8 @@ for step in procedure['steps']:
 
     linksfile = os.path.join(context.sourcedir, 'viz', 'amendements_links_%s.json' % step['directory'])
     data = {'id_step': step['directory'],
-            'links': links.values(),
-            'parlementaires': dict((p["i"], dict((k, p[k]) for k in "psang")) for p in parls.values())}
+            'links': list(links.values()),
+            'parlementaires': dict((p["i"], dict((k, p[k]) for k in "psang")) for p in list(parls.values()))}
     print_json(data, linksfile)
 
 
