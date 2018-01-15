@@ -72,10 +72,10 @@ def personalize_link(link, obj, urlapi):
         return link.replace("##URLAPI##", urlapi).replace("##TYPE##", typeparl).replace("##SLUG##", slug)
     return ""
 
-parl_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/##SLUG##", obj, urlapi)
-photo_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/##TYPE##/photo/##SLUG##", obj, urlapi)
-groupe_link = lambda obj, urlapi: personalize_link("http://##URLAPI##.fr/groupe/##SLUG##", obj, urlapi)
-amdapi_link = lambda urlapi: personalize_link("http://##URLAPI##.fr/api/document/Amendement/", {'slug': 'na'}, urlapi)
+parl_link = lambda obj, urlapi: personalize_link("https://##URLAPI##.fr/##SLUG##", obj, urlapi)
+photo_link = lambda obj, urlapi: personalize_link("https://##URLAPI##.fr/##TYPE##/photo/##SLUG##", obj, urlapi)
+groupe_link = lambda obj, urlapi: personalize_link("https://##URLAPI##.fr/groupe/##SLUG##", obj, urlapi)
+amdapi_link = lambda urlapi: personalize_link("https://##URLAPI##.fr/api/document/Amendement/", {'slug': 'na'}, urlapi)
 
 def slug_groupe(g):
     g = g.upper()
