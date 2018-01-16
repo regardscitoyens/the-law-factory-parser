@@ -1,6 +1,6 @@
 import os, glob, sys, json, csv, random, shutil
 
-from tools import json2arbo, prepare_articles, update_procedure
+from tools import json2arbo, prepare_articles, update_procedure, prepare_amendements
 
 def process(dos, OUTPUT_DIR, skip_already_done=False):
     dos_id = dos.get('senat_id', dos.get('assemblee_id'))
@@ -23,6 +23,9 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
 
     procedure = update_procedure.process(dos, articles_etapes)
 
+    print(' - process amendements')
+    prepare_amendements.process(output_dir, procedure)
+
     # remove intermediate data
     for step in procedure['steps']:
         for key in 'articles_completed', 'articles', 'texte.json':
@@ -33,3 +36,4 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
 
     open(output_dir + '/viz/procedure.json', 'w').write(
         json.dumps(procedure, indent=2, sort_keys=True, ensure_ascii=False))
+
