@@ -37,3 +37,4 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
     open(output_dir + '/viz/procedure.json', 'w').write(
         json.dumps(procedure, indent=2, sort_keys=True, ensure_ascii=False))
 
+    print('  FINISHED -', output_dir)

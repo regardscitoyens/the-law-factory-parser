@@ -127,28 +127,52 @@ def process(OUTPUT_DIR, procedure):
 
     steps = {}
     for i, step in enumerate(procedure['steps']):
+        print('     * amendement step -', step.get('source_url'))
         if step.get('step') not in ('commission', 'hemicycle') or step.get('echec'):
             continue
 
         if i == 0:
             continue
 
-        # TODO: CMP get hemicycle text and the good one
-        last_step = procedure['steps'][i-1]
+        texte_url = None
+        # for a CMP hemicycle we have to get the right text inside the CMP commission
+        if step.get('stage') == 'CMP' and step.get('step') == 'hemicycle':
+            last_step = [step for step in procedure['steps'] if step.get('stage') == 'CMP' and step.get('step') == 'commission'][0]
+            urls = [last_step.get('source_url')]
+            if 'cmp_commission_other_url' in last_step:
+                urls.append(last_step.get('cmp_commission_other_url'))
+            an_url = [url for url in urls if 'nationale.fr' in url]
+            senat_url = [url for url in urls if 'senat.fr' in url]
+            if step.get('institution') == 'assemblee' and an_url:
+                texte_url = an_url[0]
+            elif step.get('institution') == 'senat' and senat_url:
+                texte_url = senat_url[0]
+        else:
+            last_step = procedure['steps'][i-1]
+            texte_url = last_step.get('source_url')
+
+        if texte_url is None:
+            print('ERROR - no texte url', step.get('source_url'), file=sys.stderr)
+
         texte = open_json(os.path.join(context.sourcedir, 'procedure', last_step['directory']), 'texte/texte.json')
 
         amdt_url = None
-        if 'nosdeputes_id' in texte:
-            amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json' % (procedure['assemblee_legislature'], texte['nosdeputes_id'])
-        elif 'nossenateurs_id' in texte:
+        if "nationale.fr" in texte_url:
+            textid_match = re.search(r'fr\/(\d+)\/.*[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$', texte_url, re.I)
+            nosdeputes_id = textid_match.group(2)
+            amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json' % (procedure['assemblee_legislature'], nosdeputes_id)
+        elif "senat.fr" in texte_url:
+            textid_match = re.search(r"(\d{2})-(\d+)(_mono)?\.html$", texte_url, re.I)
+            nossenateurs_id = '20%s20%d-%s' % (textid_match.group(1), int(textid_match.group(1))+1, textid_match.group(2))
             amdt_url = 'https://nossenateurs.fr/amendements/%s/json' % texte['nossenateurs_id']
+
         if amdt_url is None:
             continue
 
         amendements = download(amdt_url).json()
         amendements_src = amendements['amendements']
 
-        print(amdt_url, len(amendements_src), texte['source'])
+        print('  parsing amendement:', amdt_url, len(amendements_src), texte_url)
 
         step['nb_amendements'] = len(amendements_src)
 

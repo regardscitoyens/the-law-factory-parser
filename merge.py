@@ -85,7 +85,7 @@ def merge_previous_works_an(doslegs):
 
 
 def fix_an_cmp_step_url(senat, an):
-    # adetect missing AN CMP step in senat data
+    # detect missing AN CMP step in senat data
     dos = copy.deepcopy(senat)
 
     # if CMP.assemblee.hemicycle is empty in senat data but ok in AN data
@@ -168,6 +168,20 @@ def merge_senat_with_an(senat, an):
                             if found_same_step_at is not None:
                                 steps_to_add = an['steps'][an_index:an_index+j+1]
                                 an_offset += found_same_step_at
+
+        # CMP commission: get extra urls from AN side if there's a different one
+        if step.get('stage') == 'CMP' and step.get('step') == 'commission':
+            an_index = i + an_offset
+            if len(an['steps']) > an_index and an_index > 0:
+                an_step = an['steps'][an_index]
+                if same_stage_step_instit(an_step, step):
+                    if 'cmp_commission_other_url' in an_step:
+                        if an_step['cmp_commission_other_url'] == step['source_url']:
+                            step['cmp_commission_other_url'] = an_step['source_url']
+                        else:
+                            step['cmp_commission_other_url'] = an_step['cmp_commission_other_url']
+                    elif step['source_url'] != an_step['source_url']:
+                        step['cmp_commission_other_url'] = an_step['source_url']
 
         if len(steps_to_add) == 0:
             steps_to_add = [step]
