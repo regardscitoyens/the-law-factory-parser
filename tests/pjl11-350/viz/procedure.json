@@ -30,6 +30,7 @@
       "echec": null,
       "enddate": "2012-01-17",
       "institution": "assemblee",
+      "nb_amendements": 0,
       "source_url": "http://www.assemblee-nationale.fr/13/rapports/r4175.asp",
       "stage": "1ère lecture",
       "step": "commission"
@@ -41,6 +42,7 @@
       "echec": null,
       "enddate": "2012-02-09",
       "institution": "assemblee",
+      "nb_amendements": 0,
       "source_url": "http://www.assemblee-nationale.fr/13/ta/ta0848.asp",
       "stage": "1ère lecture",
       "step": "hemicycle"
@@ -62,6 +64,7 @@
       "echec": null,
       "enddate": "2013-02-27",
       "institution": "senat",
+      "nb_amendements": 0,
       "source_url": "https://www.senat.fr/leg/pjl12-400.html",
       "stage": "1ère lecture",
       "step": "commission"
@@ -73,6 +76,7 @@
       "echec": null,
       "enddate": "2013-03-12",
       "institution": "senat",
+      "nb_amendements": 0,
       "source_url": "https://www.senat.fr/leg/tas12-113.html",
       "stage": "1ère lecture",
       "step": "hemicycle"

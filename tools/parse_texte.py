@@ -87,7 +87,7 @@ def parse(url):
             texte["id"] += m.group(1)
         texte["id"] += "%03d" % numero
 
-        textid_match = re.search(r"(\d{2})-(\d+)\.html$", url, re.I)
+        textid_match = re.search(r"(\d{2})-(\d+)(_mono)?\.html$", url, re.I)
         texte["nossenateurs_id"] = '20%s20%d-%s' % (textid_match.group(1), int(textid_match.group(1))+1, textid_match.group(2))
 
     texte["titre"] = re_clean_title_legif.sub('', soup.title.string.strip()) if soup.title else ""

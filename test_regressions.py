@@ -3,6 +3,7 @@ import glob, shutil, os, filecmp, sys
 import parse_one
 from parse_doslegs_texts import find_good_url
 from tools import parse_texte
+import download_groupes
 
 # use `test_regressions.py regen` to update the tests/ directory
 REGEN_TESTS = sys.argv[1] == 'regen' if len(sys.argv) == 2 else False
@@ -42,16 +43,18 @@ def _is_same_helper(dircmp):
            return False
     return True
 
+output_dir = 'tests_tmp'
+if REGEN_TESTS:
+    output_dir = 'tests'
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+download_groupes.process(output_dir)
 
-for directory in glob.glob('tests/*'):
+for directory in glob.glob('tests/p*'):
     senat_id = directory.split('/')[1]
     print()
     print('****** testing', senat_id, '*******')
     print()
-
-    output_dir = 'tests_tmp'
-    if REGEN_TESTS:
-        output_dir = 'tests'
 
     parse_one.process(output_dir, senat_id)
     comp = filecmp.dircmp(directory, output_dir + '/' + senat_id)

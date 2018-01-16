@@ -1,0 +1,145 @@
+{
+  "api_root_url": "https://2007-2012.nosdeputes.fr/api/document/Amendement/",
+  "groupes": {
+    "SRC": {
+      "color": "rgb(255,50,190)",
+      "link": "https://2007-2012.nosdeputes.fr/groupe/SRC",
+      "nom": "Socialiste, radical, citoyen et divers gauche",
+      "order": 11
+    },
+    "UMP": {
+      "color": "rgb(30,30,200)",
+      "link": "https://2007-2012.nosdeputes.fr/groupe/UMP",
+      "nom": "Union pour un mouvement populaire",
+      "order": 13
+    }
+  },
+  "id_step": "09_nouv.lect._assemblee_hemicycle",
+  "sujets": {
+    "Article 2": {
+      "amendements": [
+        {
+          "aut": "M. Vidalies, …",
+          "date": "2012-02-22",
+          "groupe": "SRC",
+          "id_api": "52316",
+          "numero": "1",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Vidalies, …",
+          "date": "2012-02-22",
+          "groupe": "SRC",
+          "id_api": "52314",
+          "numero": "2",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Vidalies, …",
+          "date": "2012-02-22",
+          "groupe": "SRC",
+          "id_api": "52315",
+          "numero": "3",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Diard",
+          "date": "2012-02-22",
+          "groupe": "UMP",
+          "id_api": "52323",
+          "numero": "6",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Diard",
+          "date": "2012-02-22",
+          "groupe": "UMP",
+          "id_api": "52319",
+          "numero": "7",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Diard",
+          "date": "2012-02-22",
+          "groupe": "UMP",
+          "id_api": "52321",
+          "numero": "8",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Diard",
+          "date": "2012-02-22",
+          "groupe": "UMP",
+          "id_api": "52322",
+          "numero": "9",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 2",
+      "order": 20,
+      "titre": "Article 2"
+    },
+    "Article 2 quater": {
+      "amendements": [
+        {
+          "aut": "M. Vidalies, …",
+          "date": "2012-02-22",
+          "groupe": "SRC",
+          "id_api": "52317",
+          "numero": "4",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Diard",
+          "date": "2012-02-22",
+          "groupe": "UMP",
+          "id_api": "52318",
+          "numero": "10",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Diard",
+          "date": "2012-02-22",
+          "groupe": "UMP",
+          "id_api": "52324",
+          "numero": "11",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. de Rocca Serra",
+          "date": "2012-02-22",
+          "groupe": "UMP",
+          "id_api": "52325",
+          "numero": "12",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. de Rocca Serra",
+          "date": "2012-02-22",
+          "groupe": "UMP",
+          "id_api": "52326",
+          "numero": "13",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article 2 quater",
+      "order": 20,
+      "titre": "Article 2 quater"
+    },
+    "Titre": {
+      "amendements": [
+        {
+          "aut": "M. de Rocca Serra",
+          "date": "2012-02-22",
+          "groupe": "UMP",
+          "id_api": "52320",
+          "numero": "5",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "titre",
+      "order": 0,
+      "titre": "Titre"
+    }
+  }
+}

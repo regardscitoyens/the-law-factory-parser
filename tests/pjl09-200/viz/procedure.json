@@ -31,6 +31,7 @@
       "echec": null,
       "enddate": "2010-05-06",
       "institution": "senat",
+      "nb_amendements": 0,
       "source_url": "https://www.senat.fr/leg/pjl09-437.html",
       "stage": "1ère lecture",
       "step": "commission"
@@ -42,6 +43,7 @@
       "echec": null,
       "enddate": "2010-05-29",
       "institution": "senat",
+      "nb_amendements": 680,
       "source_url": "https://www.senat.fr/leg/tas09-112.html",
       "stage": "1ère lecture",
       "step": "hemicycle"
@@ -63,6 +65,7 @@
       "echec": null,
       "enddate": "2010-06-17",
       "institution": "assemblee",
+      "nb_amendements": 0,
       "source_url": "http://www.assemblee-nationale.fr/13/ta-commission/r2636-a0.asp",
       "stage": "1ère lecture",
       "step": "commission"
@@ -74,6 +77,7 @@
       "echec": null,
       "enddate": "2010-07-06",
       "institution": "assemblee",
+      "nb_amendements": 1246,
       "source_url": "http://www.assemblee-nationale.fr/13/ta/ta0510.asp",
       "stage": "1ère lecture",
       "step": "hemicycle"
@@ -85,6 +89,7 @@
       "echec": null,
       "enddate": "2010-07-08",
       "institution": "CMP",
+      "nb_amendements": 1,
       "source_url": "https://www.senat.fr/rap/l09-654/l09-654.html",
       "stage": "CMP",
       "step": "commission"
@@ -96,6 +101,7 @@
       "echec": null,
       "enddate": "2010-07-13",
       "institution": "assemblee",
+      "nb_amendements": 0,
       "source_url": "http://www.assemblee-nationale.fr/13/ta/ta0522.asp",
       "stage": "CMP",
       "step": "hemicycle"
@@ -107,6 +113,7 @@
       "echec": null,
       "enddate": "2010-07-13",
       "institution": "senat",
+      "nb_amendements": 0,
       "source_url": "https://www.senat.fr/leg/tas09-156.html",
       "stage": "CMP",
       "step": "hemicycle"

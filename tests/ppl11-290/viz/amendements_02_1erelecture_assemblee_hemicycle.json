@@ -1,0 +1,350 @@
+{
+  "api_root_url": "https://2007-2012.nosdeputes.fr/api/document/Amendement/",
+  "groupes": {
+    "NC": {
+      "color": "rgb(30,180,255)",
+      "link": "https://2007-2012.nosdeputes.fr/groupe/NC",
+      "nom": "Nouveau centre",
+      "order": 12
+    },
+    "SRC": {
+      "color": "rgb(255,50,190)",
+      "link": "https://2007-2012.nosdeputes.fr/groupe/SRC",
+      "nom": "Socialiste, radical, citoyen et divers gauche",
+      "order": 11
+    },
+    "UMP": {
+      "color": "rgb(30,30,200)",
+      "link": "https://2007-2012.nosdeputes.fr/groupe/UMP",
+      "nom": "Union pour un mouvement populaire",
+      "order": 13
+    }
+  },
+  "id_step": "02_1erelecture_assemblee_hemicycle",
+  "sujets": {
+    "Après article 2": {
+      "amendements": [
+        {
+          "aut": "M. de Rocca Serra",
+          "date": "2012-01-21",
+          "groupe": "UMP",
+          "id_api": "51701",
+          "numero": "2",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. de Rocca Serra",
+          "date": "2012-01-21",
+          "groupe": "UMP",
+          "id_api": "51697",
+          "numero": "3",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Gandolfi-Scheit",
+          "date": "2012-01-23",
+          "groupe": "UMP",
+          "id_api": "51716",
+          "numero": "6",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Paternotte, …",
+          "date": "2012-01-25",
+          "groupe": "UMP",
+          "id_api": "51728",
+          "numero": "9",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Nicolin, …",
+          "date": "2012-01-25",
+          "groupe": "UMP",
+          "id_api": "51729",
+          "numero": "10",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Paternotte, …",
+          "date": "2012-01-25",
+          "groupe": "UMP",
+          "id_api": "51725",
+          "numero": "11",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Paternotte, …",
+          "date": "2012-01-20",
+          "groupe": "UMP",
+          "id_api": "51714",
+          "numero": "13",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Paternotte, …",
+          "date": "2012-01-24",
+          "groupe": "UMP",
+          "id_api": "51709",
+          "numero": "14",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Remiller, …",
+          "date": "2012-01-20",
+          "groupe": "UMP",
+          "id_api": "51730",
+          "numero": "20",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Carayon, …",
+          "date": "2012-01-21",
+          "groupe": "UMP",
+          "id_api": "51721",
+          "numero": "23",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Decool, …",
+          "date": "2012-01-20",
+          "groupe": "UMP",
+          "id_api": "51703",
+          "numero": "25",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Decool, …",
+          "date": "2012-01-20",
+          "groupe": "UMP",
+          "id_api": "51707",
+          "numero": "26",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Luca, …",
+          "date": "2012-01-20",
+          "groupe": "UMP",
+          "id_api": "51719",
+          "numero": "30",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 2",
+      "order": 20,
+      "titre": "Après article 2"
+    },
+    "Article 2": {
+      "amendements": [
+        {
+          "aut": "M. Kossowski",
+          "date": "2012-01-24",
+          "groupe": "UMP",
+          "id_api": "51711",
+          "numero": "4",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. de Courson",
+          "date": "2012-01-21",
+          "groupe": "NC",
+          "id_api": "51694",
+          "numero": "12",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Goldberg, …",
+          "date": "2012-01-23",
+          "groupe": "SRC",
+          "id_api": "51715",
+          "numero": "15",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. de Courson",
+          "date": "2012-01-20",
+          "groupe": "NC",
+          "id_api": "51706",
+          "numero": "16",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Goldberg, …",
+          "date": "2012-01-23",
+          "groupe": "SRC",
+          "id_api": "51720",
+          "numero": "17",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Goldberg, …",
+          "date": "2012-01-23",
+          "groupe": "SRC",
+          "id_api": "51705",
+          "numero": "18",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Goldberg, …",
+          "date": "2012-01-23",
+          "groupe": "SRC",
+          "id_api": "51712",
+          "numero": "19",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Goldberg, …",
+          "date": "2012-01-23",
+          "groupe": "SRC",
+          "id_api": "51722",
+          "numero": "21",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Goldberg, …",
+          "date": "2012-01-23",
+          "groupe": "SRC",
+          "id_api": "51726",
+          "numero": "22",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Decool, …",
+          "date": "2012-01-20",
+          "groupe": "UMP",
+          "id_api": "51702",
+          "numero": "24",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Decool, …",
+          "date": "2012-01-24",
+          "groupe": "UMP",
+          "id_api": "51708",
+          "numero": "27",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Decool, …",
+          "date": "2012-01-20",
+          "groupe": "UMP",
+          "id_api": "51710",
+          "numero": "28",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Decool, …",
+          "date": "2012-01-24",
+          "groupe": "UMP",
+          "id_api": "51727",
+          "numero": "29",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Luca, …",
+          "date": "2012-01-21",
+          "groupe": "UMP",
+          "id_api": "51696",
+          "numero": "31",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Luca, …",
+          "date": "2012-01-20",
+          "groupe": "UMP",
+          "id_api": "51695",
+          "numero": "32",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Luca, …",
+          "date": "2012-01-23",
+          "groupe": "UMP",
+          "id_api": "51724",
+          "numero": "33",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Diard",
+          "date": "2012-01-24",
+          "groupe": "UMP",
+          "id_api": "51698",
+          "numero": "34",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Diard",
+          "date": "2012-01-24",
+          "groupe": "UMP",
+          "id_api": "51713",
+          "numero": "35",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Diard",
+          "date": "2012-01-24",
+          "groupe": "UMP",
+          "id_api": "51718",
+          "numero": "36",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Diard",
+          "date": "2012-01-24",
+          "groupe": "UMP",
+          "id_api": "51717",
+          "numero": "37",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 2",
+      "order": 20,
+      "titre": "Article 2"
+    },
+    "Avant article 2": {
+      "amendements": [
+        {
+          "aut": "M. Paternotte, …",
+          "date": "2012-01-20",
+          "groupe": "UMP",
+          "id_api": "51704",
+          "numero": "8",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article additionnel avant article 2",
+      "order": 19,
+      "titre": "Avant article 2"
+    },
+    "Titre": {
+      "amendements": [
+        {
+          "aut": "M. de Rocca Serra",
+          "date": "2012-01-21",
+          "groupe": "UMP",
+          "id_api": "51699",
+          "numero": "1",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Gandolfi-Scheit",
+          "date": "2012-01-24",
+          "groupe": "UMP",
+          "id_api": "51723",
+          "numero": "5",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Paternotte, …",
+          "date": "2012-01-20",
+          "groupe": "UMP",
+          "id_api": "51700",
+          "numero": "7",
+          "sort": "adopté"
+        }
+      ],
+      "details": "titre",
+      "order": 0,
+      "titre": "Titre"
+    }
+  }
+}

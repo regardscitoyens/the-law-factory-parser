@@ -1,0 +1,6046 @@
+{
+  "api_root_url": "https://www.nossenateurs.fr/api/document/Amendement/",
+  "groupes": {
+    "CRC": {
+      "color": "rgb(255,30,30)",
+      "link": "https://www.nossenateurs.fr/groupe/CRC",
+      "nom": "Communiste, Républicain, Citoyen et des Sénateurs du Parti de Gauche",
+      "order": 11
+    },
+    "CRCE": {
+      "color": "rgb(255,30,30)",
+      "link": "https://www.nossenateurs.fr/groupe/CRCE",
+      "nom": "Communiste républicain citoyen et Écologiste",
+      "order": 10
+    },
+    "Gouvernement": {
+      "color": "#cccbb3",
+      "link": "",
+      "nom": "Gouvernement",
+      "order": 60
+    },
+    "Inconnu": {
+      "color": "#bfbfbf",
+      "link": "",
+      "nom": "Inconnu",
+      "order": 100
+    },
+    "LR": {
+      "color": "rgb(30,30,200)",
+      "link": "https://www.nossenateurs.fr/groupe/LR",
+      "nom": "Les Républicains",
+      "order": 24
+    },
+    "NI": {
+      "color": "rgb(165,165,165)",
+      "link": "https://www.nossenateurs.fr/groupe/NI",
+      "nom": "Réunion administrative des Sénateurs ne figurant sur la liste d'aucun groupe politique",
+      "order": 25
+    },
+    "RDSE": {
+      "color": "rgb(250,195,132)",
+      "link": "https://www.nossenateurs.fr/groupe/RDSE",
+      "nom": "Rassemblement Démocratique et Social européen",
+      "order": 17
+    },
+    "SOC": {
+      "color": "rgb(255,50,190)",
+      "link": "https://www.nossenateurs.fr/groupe/SOC",
+      "nom": "Socialiste et républicain",
+      "order": 14
+    },
+    "UC": {
+      "color": "rgb(130,140,255)",
+      "link": "https://www.nossenateurs.fr/groupe/UC",
+      "nom": "Union Centriste",
+      "order": 20
+    },
+    "UDI": {
+      "color": "rgb(30,180,255)",
+      "link": "https://www.nossenateurs.fr/groupe/UDI",
+      "nom": "Union des Démocrates et Indépendants - UC",
+      "order": 21
+    },
+    "UMP": {
+      "color": "rgb(30,30,200)",
+      "link": "https://www.nossenateurs.fr/groupe/UMP",
+      "nom": "Union pour un Mouvement Populaire",
+      "order": 23
+    }
+  },
+  "id_step": "02_1erelecture_senat_hemicycle",
+  "sujets": {
+    "Après article 11": {
+      "amendements": [
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17300",
+          "numero": "164",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Repentin, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17305",
+          "numero": "169",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17306",
+          "numero": "170",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Chastan, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17307",
+          "numero": "171",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17553",
+          "numero": "427",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Nicoux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17559",
+          "numero": "433",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Marc, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17614",
+          "numero": "489",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Gillot, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17702",
+          "numero": "587",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 11",
+      "order": 160,
+      "titre": "Après article 11"
+    },
+    "Après article 11 bis": {
+      "amendements": [
+        {
+          "aut": "MM. Tropeano, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17665",
+          "numero": "547",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 11 bis",
+      "order": 160,
+      "titre": "Après article 11 bis"
+    },
+    "Après article 11 quater": {
+      "amendements": [
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-25",
+          "groupe": "LR",
+          "id_api": "17148",
+          "numero": "4",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17149",
+          "numero": "5",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17150",
+          "numero": "6",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Férat, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17580",
+          "numero": "454",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 11 quater",
+      "order": 160,
+      "titre": "Après article 11 quater"
+    },
+    "Après article 11 quinquies": {
+      "amendements": [
+        {
+          "aut": "MM. Chatillon, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17260",
+          "numero": "123",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17722",
+          "numero": "608",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17723",
+          "numero": "609",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17724",
+          "numero": "610",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17725",
+          "numero": "611",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17726",
+          "numero": "612",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 11 quinquies",
+      "order": 160,
+      "titre": "Après article 11 quinquies"
+    },
+    "Après article 11 septies": {
+      "amendements": [
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-25",
+          "groupe": "LR",
+          "id_api": "17152",
+          "numero": "9",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Beaumont, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17166",
+          "numero": "24",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17187",
+          "numero": "46",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17202",
+          "numero": "62",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17203",
+          "numero": "63",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Vasselle, …",
+          "date": "2010-05-12",
+          "groupe": "LR",
+          "id_api": "17204",
+          "numero": "65",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Chatillon, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17255",
+          "numero": "118",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Chatillon, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17256",
+          "numero": "119",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Chatillon, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17259",
+          "numero": "122",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Guillaume",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17336",
+          "numero": "201",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Férat, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17579",
+          "numero": "453",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Férat, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17582",
+          "numero": "456",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-17",
+          "groupe": "UDI",
+          "id_api": "17623",
+          "numero": "501",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17688",
+          "numero": "572",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Muller",
+          "date": "2010-05-28",
+          "groupe": "SOC",
+          "id_api": "17798",
+          "numero": "685",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Muller",
+          "date": "2010-05-28",
+          "groupe": "SOC",
+          "id_api": "17799",
+          "numero": "686",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 11 septies",
+      "order": 160,
+      "titre": "Après article 11 septies"
+    },
+    "Après article 12": {
+      "amendements": [
+        {
+          "aut": "MM. Bailly, …",
+          "date": "2010-05-12",
+          "groupe": "LR",
+          "id_api": "17216",
+          "numero": "77",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Le Cam",
+          "date": "2010-05-17",
+          "groupe": "CRCE",
+          "id_api": "17423",
+          "numero": "290",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-20",
+          "groupe": "SOC",
+          "id_api": "17731",
+          "numero": "617",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 12",
+      "order": 250,
+      "titre": "Après article 12"
+    },
+    "Après article 12 a": {
+      "amendements": [
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17301",
+          "numero": "165",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Sueur, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17535",
+          "numero": "409",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17537",
+          "numero": "411",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17667",
+          "numero": "549",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17727",
+          "numero": "613",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17728",
+          "numero": "614",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-20",
+          "groupe": "SOC",
+          "id_api": "17743",
+          "numero": "629",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 12 a",
+      "order": 250,
+      "titre": "Après article 12 a"
+    },
+    "Après article 12 b": {
+      "amendements": [
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17168",
+          "numero": "26",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17169",
+          "numero": "27",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Pointereau, …",
+          "date": "2010-05-12",
+          "groupe": "LR",
+          "id_api": "17184",
+          "numero": "43",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17189",
+          "numero": "48",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17253",
+          "numero": "115",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Botrel, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17302",
+          "numero": "166",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Botrel, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17303",
+          "numero": "167",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Botrel, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17304",
+          "numero": "168",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17414",
+          "numero": "281",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17415",
+          "numero": "282",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-18",
+          "groupe": "CRC",
+          "id_api": "17425",
+          "numero": "292",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-18",
+          "groupe": "CRC",
+          "id_api": "17426",
+          "numero": "293",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-18",
+          "groupe": "CRC",
+          "id_api": "17447",
+          "numero": "314",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-18",
+          "groupe": "CRC",
+          "id_api": "17448",
+          "numero": "315",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Houpert, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17473",
+          "numero": "340",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Houpert, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17477",
+          "numero": "344",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Sueur, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17533",
+          "numero": "407",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Chastan, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17534",
+          "numero": "408",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Sueur, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17536",
+          "numero": "410",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17562",
+          "numero": "436",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-19",
+          "groupe": "SOC",
+          "id_api": "17563",
+          "numero": "437",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-19",
+          "groupe": "SOC",
+          "id_api": "17566",
+          "numero": "440",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Dubois, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17584",
+          "numero": "458",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Dubois, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17585",
+          "numero": "459",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Dubois, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17586",
+          "numero": "460",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-17",
+          "groupe": "UDI",
+          "id_api": "17628",
+          "numero": "506",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17666",
+          "numero": "548",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-17",
+          "groupe": "RDSE",
+          "id_api": "17668",
+          "numero": "550",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17669",
+          "numero": "551",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17670",
+          "numero": "552",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-17",
+          "groupe": "RDSE",
+          "id_api": "17671",
+          "numero": "553",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-17",
+          "groupe": "RDSE",
+          "id_api": "17672",
+          "numero": "554",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17673",
+          "numero": "555",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17674",
+          "numero": "556",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17675",
+          "numero": "557",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17676",
+          "numero": "559",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17721",
+          "numero": "607",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17729",
+          "numero": "615",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17730",
+          "numero": "616",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-18",
+          "groupe": "Gouvernement",
+          "id_api": "17766",
+          "numero": "653",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article additionnel après article 12 b",
+      "order": 250,
+      "titre": "Après article 12 b"
+    },
+    "Après article 13": {
+      "amendements": [
+        {
+          "aut": "M. Repentin, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17317",
+          "numero": "182",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-20",
+          "groupe": "CRC",
+          "id_api": "17424",
+          "numero": "291",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Repentin",
+          "date": "2010-05-17",
+          "groupe": "Inconnu",
+          "id_api": "17466",
+          "numero": "333",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Houpert, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17478",
+          "numero": "345",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-19",
+          "groupe": "RDSE",
+          "id_api": "17678",
+          "numero": "561",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 13",
+      "order": 270,
+      "titre": "Après article 13"
+    },
+    "Après article 13 bis": {
+      "amendements": [
+        {
+          "aut": "M. J. Blanc",
+          "date": "2010-05-17",
+          "groupe": "UMP",
+          "id_api": "17346",
+          "numero": "211",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. J. Blanc",
+          "date": "2010-05-17",
+          "groupe": "UMP",
+          "id_api": "17353",
+          "numero": "220",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. J. Blanc",
+          "date": "2010-05-17",
+          "groupe": "UMP",
+          "id_api": "17354",
+          "numero": "221",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Vera, …",
+          "date": "2010-05-18",
+          "groupe": "CRC",
+          "id_api": "17420",
+          "numero": "287",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-18",
+          "groupe": "CRC",
+          "id_api": "17421",
+          "numero": "288",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17505",
+          "numero": "377",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17506",
+          "numero": "378",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Béteille",
+          "date": "2010-05-17",
+          "groupe": "UMP",
+          "id_api": "17523",
+          "numero": "396",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Béteille",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17524",
+          "numero": "397",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Bérit-Débat, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17560",
+          "numero": "434",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Bérit-Débat, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17561",
+          "numero": "435",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17661",
+          "numero": "543",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17684",
+          "numero": "568",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17685",
+          "numero": "569",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-20",
+          "groupe": "RDSE",
+          "id_api": "17686",
+          "numero": "570",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17697",
+          "numero": "581",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17698",
+          "numero": "582",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-20",
+          "groupe": "SOC",
+          "id_api": "17744",
+          "numero": "630",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 13 bis",
+      "order": 270,
+      "titre": "Après article 13 bis"
+    },
+    "Après article 13 quater": {
+      "amendements": [
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17350",
+          "numero": "215",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Biwer, …",
+          "date": "2010-05-17",
+          "groupe": "UDI",
+          "id_api": "17589",
+          "numero": "463",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17616",
+          "numero": "494",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17617",
+          "numero": "495",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17618",
+          "numero": "496",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17619",
+          "numero": "497",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17620",
+          "numero": "498",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17621",
+          "numero": "499",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17622",
+          "numero": "500",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 13 quater",
+      "order": 270,
+      "titre": "Après article 13 quater"
+    },
+    "Après article 13 ter": {
+      "amendements": [
+        {
+          "aut": "M. Détraigne",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17451",
+          "numero": "318",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 13 ter",
+      "order": 270,
+      "titre": "Après article 13 ter"
+    },
+    "Après article 14": {
+      "amendements": [
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17748",
+          "numero": "635",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 14",
+      "order": 310,
+      "titre": "Après article 14"
+    },
+    "Après article 14 bis": {
+      "amendements": [
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17324",
+          "numero": "189",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 14 bis",
+      "order": 310,
+      "titre": "Après article 14 bis"
+    },
+    "Après article 15": {
+      "amendements": [
+        {
+          "aut": "MM. Bailly, …",
+          "date": "2010-05-25",
+          "groupe": "LR",
+          "id_api": "17214",
+          "numero": "75",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article additionnel après article 15",
+      "order": 330,
+      "titre": "Après article 15"
+    },
+    "Après article 15 bis": {
+      "amendements": [
+        {
+          "aut": "M. Repentin, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17546",
+          "numero": "420",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 15 bis",
+      "order": 330,
+      "titre": "Après article 15 bis"
+    },
+    "Après article 16 bis": {
+      "amendements": [
+        {
+          "aut": "M. J. Blanc",
+          "date": "2010-05-17",
+          "groupe": "UMP",
+          "id_api": "17355",
+          "numero": "222",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Carrère, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17548",
+          "numero": "422",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mmes Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17549",
+          "numero": "423",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 16 bis",
+      "order": 350,
+      "titre": "Après article 16 bis"
+    },
+    "Après article 17": {
+      "amendements": [
+        {
+          "aut": "M. Cointat",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17156",
+          "numero": "13",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Cointat",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17157",
+          "numero": "14",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Cointat",
+          "date": "2010-05-19",
+          "groupe": "UMP",
+          "id_api": "17158",
+          "numero": "15",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Cointat",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17159",
+          "numero": "16",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Cointat",
+          "date": "2010-05-19",
+          "groupe": "UMP",
+          "id_api": "17160",
+          "numero": "17",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Cointat",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17161",
+          "numero": "19",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Cointat",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17162",
+          "numero": "20",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Cointat",
+          "date": "2010-05-19",
+          "groupe": "UMP",
+          "id_api": "17163",
+          "numero": "21",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Cointat",
+          "date": "2010-05-19",
+          "groupe": "UMP",
+          "id_api": "17164",
+          "numero": "22",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Cointat",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17165",
+          "numero": "23",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17167",
+          "numero": "25",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Panis, …",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17175",
+          "numero": "33",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Panis, …",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17176",
+          "numero": "34",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17185",
+          "numero": "44",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17206",
+          "numero": "67",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17207",
+          "numero": "68",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17208",
+          "numero": "69",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17209",
+          "numero": "70",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17210",
+          "numero": "71",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17211",
+          "numero": "72",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Panis, …",
+          "date": "2010-05-20",
+          "groupe": "UMP",
+          "id_api": "17224",
+          "numero": "85",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Bernard-Reymond, …",
+          "date": "2010-05-14",
+          "groupe": "UMP",
+          "id_api": "17254",
+          "numero": "117",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Leroy, …",
+          "date": "2010-05-14",
+          "groupe": "LR",
+          "id_api": "17267",
+          "numero": "131",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17347",
+          "numero": "212",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Gourault, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17594",
+          "numero": "468",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17689",
+          "numero": "573",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-29",
+          "groupe": "LR",
+          "id_api": "17818",
+          "numero": "705",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-29",
+          "groupe": "LR",
+          "id_api": "17819",
+          "numero": "706",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-29",
+          "groupe": "LR",
+          "id_api": "17820",
+          "numero": "707",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-29",
+          "groupe": "LR",
+          "id_api": "17821",
+          "numero": "708",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-29",
+          "groupe": "LR",
+          "id_api": "17822",
+          "numero": "709",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-29",
+          "groupe": "LR",
+          "id_api": "17823",
+          "numero": "710",
+          "sort": "adopté"
+        }
+      ],
+      "details": "division additionnelle après article 17",
+      "order": 370,
+      "titre": "Après article 17"
+    },
+    "Après article 18 bis": {
+      "amendements": [
+        {
+          "aut": "MM. S. Larcher, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17609",
+          "numero": "484",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article additionnel après article 18 bis",
+      "order": 380,
+      "titre": "Après article 18 bis"
+    },
+    "Après article 1er": {
+      "amendements": [
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17240",
+          "numero": "101",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17241",
+          "numero": "102",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17242",
+          "numero": "103",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mmes Bonnefoy, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17243",
+          "numero": "104",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17244",
+          "numero": "105",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17245",
+          "numero": "106",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17246",
+          "numero": "108",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17247",
+          "numero": "109",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17248",
+          "numero": "110",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17373",
+          "numero": "240",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Bourquin, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17558",
+          "numero": "432",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-17",
+          "groupe": "RDSE",
+          "id_api": "17645",
+          "numero": "525",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17646",
+          "numero": "526",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17708",
+          "numero": "594",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 1er",
+      "order": 10,
+      "titre": "Après article 1er"
+    },
+    "Après article 1er bis": {
+      "amendements": [
+        {
+          "aut": "M. Repentin, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17252",
+          "numero": "114",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. J. Blanc, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17341",
+          "numero": "206",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme David, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17463",
+          "numero": "330",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17649",
+          "numero": "529",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 1er bis",
+      "order": 20,
+      "titre": "Après article 1er bis"
+    },
+    "Après article 1er quater": {
+      "amendements": [
+        {
+          "aut": "MM. S. Larcher, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17607",
+          "numero": "482",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 1er quater",
+      "order": 40,
+      "titre": "Après article 1er quater"
+    },
+    "Après article 2": {
+      "amendements": [
+        {
+          "aut": "M. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17190",
+          "numero": "49",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Patriat, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17568",
+          "numero": "442",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Férat, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17578",
+          "numero": "452",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17710",
+          "numero": "596",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17711",
+          "numero": "597",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17712",
+          "numero": "598",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17713",
+          "numero": "599",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17714",
+          "numero": "600",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17715",
+          "numero": "601",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 2",
+      "order": 50,
+      "titre": "Après article 2"
+    },
+    "Après article 23": {
+      "amendements": [
+        {
+          "aut": "",
+          "date": "2010-05-27",
+          "groupe": "Gouvernement",
+          "id_api": "17797",
+          "numero": "684",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article additionnel après article 23",
+      "order": 440,
+      "titre": "Après article 23"
+    },
+    "Après article 24": {
+      "amendements": [
+        {
+          "aut": "M. Virapoullé",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17178",
+          "numero": "36",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17348",
+          "numero": "213",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Hoarau, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17443",
+          "numero": "310",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Hoarau, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17446",
+          "numero": "313",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Payet, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17571",
+          "numero": "445",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Payet, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17573",
+          "numero": "447",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Patient, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17603",
+          "numero": "477",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article additionnel après article 24",
+      "order": 450,
+      "titre": "Après article 24"
+    },
+    "Après article 4": {
+      "amendements": [
+        {
+          "aut": "M. Cornu, …",
+          "date": "2010-05-14",
+          "groupe": "LR",
+          "id_api": "17145",
+          "numero": "1",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Cornu, …",
+          "date": "2010-05-14",
+          "groupe": "LR",
+          "id_api": "17146",
+          "numero": "2",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Cornu, …",
+          "date": "2010-05-14",
+          "groupe": "LR",
+          "id_api": "17147",
+          "numero": "3",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-25",
+          "groupe": "LR",
+          "id_api": "17193",
+          "numero": "52",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17277",
+          "numero": "141",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17278",
+          "numero": "142",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17279",
+          "numero": "143",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Hérisson, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17611",
+          "numero": "486",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 4",
+      "order": 70,
+      "titre": "Après article 4"
+    },
+    "Après article 5": {
+      "amendements": [
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17287",
+          "numero": "151",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17288",
+          "numero": "152",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-18",
+          "groupe": "CRC",
+          "id_api": "17402",
+          "numero": "269",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17653",
+          "numero": "534",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17654",
+          "numero": "535",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17657",
+          "numero": "538",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-25",
+          "groupe": "Gouvernement",
+          "id_api": "17770",
+          "numero": "657",
+          "sort": "adopté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-20",
+          "groupe": "Gouvernement",
+          "id_api": "17790",
+          "numero": "677",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article additionnel après article 5",
+      "order": 80,
+      "titre": "Après article 5"
+    },
+    "Après article 6": {
+      "amendements": [
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17285",
+          "numero": "149",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17286",
+          "numero": "150",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17405",
+          "numero": "272",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17406",
+          "numero": "273",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Ferrand, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17518",
+          "numero": "390",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 6",
+      "order": 100,
+      "titre": "Après article 6"
+    },
+    "Après article 7": {
+      "amendements": [
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17155",
+          "numero": "12",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article additionnel après article 7",
+      "order": 110,
+      "titre": "Après article 7"
+    },
+    "Après article 7 bis": {
+      "amendements": [
+        {
+          "aut": "M. Bailly",
+          "date": "2010-05-17",
+          "groupe": "Inconnu",
+          "id_api": "17457",
+          "numero": "324",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article additionnel après article 7 bis",
+      "order": 110,
+      "titre": "Après article 7 bis"
+    },
+    "Après article 8": {
+      "amendements": [
+        {
+          "aut": "M. Marc, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17613",
+          "numero": "488",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel après article 8",
+      "order": 130,
+      "titre": "Après article 8"
+    },
+    "Après article 9": {
+      "amendements": [
+        {
+          "aut": "MM. Gillot, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17297",
+          "numero": "161",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Gillot, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17298",
+          "numero": "162",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Repentin, …",
+          "date": "2010-05-17",
+          "groupe": "Inconnu",
+          "id_api": "17455",
+          "numero": "322",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Guillaume",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17525",
+          "numero": "398",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Gillot, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17701",
+          "numero": "585",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Gillot, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17703",
+          "numero": "588",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Gillot, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17704",
+          "numero": "589",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel après article 9",
+      "order": 140,
+      "titre": "Après article 9"
+    },
+    "Article 10": {
+      "amendements": [
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17299",
+          "numero": "163",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17412",
+          "numero": "279",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Retailleau",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17531",
+          "numero": "405",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Carrère, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17547",
+          "numero": "421",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17557",
+          "numero": "431",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Soulage, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17593",
+          "numero": "467",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17663",
+          "numero": "545",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17664",
+          "numero": "546",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-18",
+          "groupe": "Gouvernement",
+          "id_api": "17772",
+          "numero": "659",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Soulage, …",
+          "date": "2010-05-20",
+          "groupe": "UC",
+          "id_api": "17791",
+          "numero": "678",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-26",
+          "groupe": "SOC",
+          "id_api": "17793",
+          "numero": "680",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-26",
+          "groupe": "SOC",
+          "id_api": "17794",
+          "numero": "681",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Carrère, …",
+          "date": "2010-05-26",
+          "groupe": "SOC",
+          "id_api": "17795",
+          "numero": "682",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Retailleau",
+          "date": "2010-05-26",
+          "groupe": "LR",
+          "id_api": "17796",
+          "numero": "683",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article 10",
+      "order": 150,
+      "titre": "Article 10"
+    },
+    "Article 11 bis": {
+      "amendements": [
+        {
+          "aut": "",
+          "date": "2010-05-28",
+          "groupe": "Gouvernement",
+          "id_api": "17800",
+          "numero": "687",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 11 bis",
+      "order": 160,
+      "titre": "Article 11 bis"
+    },
+    "Article 11 quater": {
+      "amendements": [
+        {
+          "aut": "",
+          "date": "2010-05-28",
+          "groupe": "Gouvernement",
+          "id_api": "17802",
+          "numero": "689",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 11 quater",
+      "order": 160,
+      "titre": "Article 11 quater"
+    },
+    "Article 11 quinquies": {
+      "amendements": [
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-11",
+          "groupe": "LR",
+          "id_api": "17151",
+          "numero": "8",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-25",
+          "groupe": "LR",
+          "id_api": "17188",
+          "numero": "47",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Férat, …",
+          "date": "2010-05-25",
+          "groupe": "UC",
+          "id_api": "17581",
+          "numero": "455",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17782",
+          "numero": "669",
+          "sort": "adopté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-28",
+          "groupe": "Gouvernement",
+          "id_api": "17803",
+          "numero": "690",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 11 quinquies",
+      "order": 160,
+      "titre": "Article 11 quinquies"
+    },
+    "Article 11 septies": {
+      "amendements": [
+        {
+          "aut": "M. Hyest",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17527",
+          "numero": "401",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-28",
+          "groupe": "LR",
+          "id_api": "17812",
+          "numero": "699",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 11 septies",
+      "order": 160,
+      "titre": "Article 11 septies"
+    },
+    "Article 11 sexies": {
+      "amendements": [
+        {
+          "aut": "",
+          "date": "2010-05-28",
+          "groupe": "Gouvernement",
+          "id_api": "17811",
+          "numero": "698",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 11 sexies",
+      "order": 160,
+      "titre": "Article 11 sexies"
+    },
+    "Article 11 ter": {
+      "amendements": [
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17186",
+          "numero": "45",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Chatillon, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17258",
+          "numero": "121",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Darniche",
+          "date": "2010-05-17",
+          "groupe": "NI",
+          "id_api": "17450",
+          "numero": "317",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Détraigne, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17452",
+          "numero": "319",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-28",
+          "groupe": "Gouvernement",
+          "id_api": "17801",
+          "numero": "688",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 11 ter",
+      "order": 160,
+      "titre": "Article 11 ter"
+    },
+    "Article 12": {
+      "amendements": [
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17191",
+          "numero": "50",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Vasselle, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17196",
+          "numero": "55",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17197",
+          "numero": "56",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pierre, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17198",
+          "numero": "57",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pierre, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17199",
+          "numero": "58",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17309",
+          "numero": "173",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17310",
+          "numero": "174",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17311",
+          "numero": "175",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Repentin, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17312",
+          "numero": "176",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17313",
+          "numero": "178",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17337",
+          "numero": "202",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. J. Blanc, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17344",
+          "numero": "209",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. J. Blanc, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17345",
+          "numero": "210",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17416",
+          "numero": "283",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-28",
+          "groupe": "CRC",
+          "id_api": "17417",
+          "numero": "284",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17418",
+          "numero": "285",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17419",
+          "numero": "286",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-19",
+          "groupe": "CRC",
+          "id_api": "17422",
+          "numero": "289",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme David, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17465",
+          "numero": "332",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Houpert, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17474",
+          "numero": "341",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17501",
+          "numero": "373",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17502",
+          "numero": "374",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17503",
+          "numero": "375",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17504",
+          "numero": "376",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17507",
+          "numero": "379",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17508",
+          "numero": "380",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17509",
+          "numero": "381",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17510",
+          "numero": "382",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17511",
+          "numero": "383",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17512",
+          "numero": "384",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17513",
+          "numero": "385",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17515",
+          "numero": "387",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17516",
+          "numero": "388",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17517",
+          "numero": "389",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17538",
+          "numero": "412",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Repentin, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17539",
+          "numero": "413",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Soulage, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17595",
+          "numero": "469",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Patient, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17596",
+          "numero": "470",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Patient, …",
+          "date": "2010-05-20",
+          "groupe": "SOC",
+          "id_api": "17597",
+          "numero": "471",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. S. Larcher, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17606",
+          "numero": "480",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. S. Larcher, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17608",
+          "numero": "483",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-19",
+          "groupe": "UMP",
+          "id_api": "17629",
+          "numero": "507",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Miquel",
+          "date": "2010-05-17",
+          "groupe": "Inconnu",
+          "id_api": "17637",
+          "numero": "516",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17679",
+          "numero": "562",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17680",
+          "numero": "563",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17681",
+          "numero": "564",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17682",
+          "numero": "565",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17683",
+          "numero": "566",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17695",
+          "numero": "579",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17696",
+          "numero": "580",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17732",
+          "numero": "618",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17733",
+          "numero": "619",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-28",
+          "groupe": "SOC",
+          "id_api": "17734",
+          "numero": "620",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17735",
+          "numero": "621",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17736",
+          "numero": "622",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17737",
+          "numero": "623",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17738",
+          "numero": "624",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17739",
+          "numero": "625",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17740",
+          "numero": "626",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-18",
+          "groupe": "Gouvernement",
+          "id_api": "17763",
+          "numero": "650",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17785",
+          "numero": "672",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article 12",
+      "order": 250,
+      "titre": "Article 12"
+    },
+    "Article 12 a": {
+      "amendements": [
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17413",
+          "numero": "280",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article 12 a",
+      "order": 250,
+      "titre": "Article 12 a"
+    },
+    "Article 13": {
+      "amendements": [
+        {
+          "aut": "M. Sueur, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17314",
+          "numero": "179",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Sueur, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17315",
+          "numero": "180",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17316",
+          "numero": "181",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Repentin",
+          "date": "2010-05-17",
+          "groupe": "Inconnu",
+          "id_api": "17469",
+          "numero": "336",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17677",
+          "numero": "560",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17741",
+          "numero": "627",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17742",
+          "numero": "628",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-20",
+          "groupe": "Gouvernement",
+          "id_api": "17787",
+          "numero": "674",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 13",
+      "order": 270,
+      "titre": "Article 13"
+    },
+    "Article 14": {
+      "amendements": [
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17153",
+          "numero": "10",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17154",
+          "numero": "11",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17200",
+          "numero": "59",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Pierre, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17201",
+          "numero": "60",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. du Luart, …",
+          "date": "2010-05-17",
+          "groupe": "UMP",
+          "id_api": "17205",
+          "numero": "66",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17427",
+          "numero": "294",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Houpert, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17475",
+          "numero": "342",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dassault, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17514",
+          "numero": "386",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17540",
+          "numero": "414",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dubois, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17576",
+          "numero": "450",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Dubois, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17577",
+          "numero": "451",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17687",
+          "numero": "571",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17745",
+          "numero": "631",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-28",
+          "groupe": "SOC",
+          "id_api": "17746",
+          "numero": "632",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17747",
+          "numero": "633",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-28",
+          "groupe": "Gouvernement",
+          "id_api": "17813",
+          "numero": "700",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 14",
+      "order": 310,
+      "titre": "Article 14"
+    },
+    "Article 14 bis": {
+      "amendements": [
+        {
+          "aut": "Mmes Nicoux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17323",
+          "numero": "188",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17428",
+          "numero": "295",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Houpert, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17476",
+          "numero": "343",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article 14 bis",
+      "order": 310,
+      "titre": "Article 14 bis"
+    },
+    "Article 15": {
+      "amendements": [
+        {
+          "aut": "MM. Leroy, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17261",
+          "numero": "124",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Leroy, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17262",
+          "numero": "125",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Leroy, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17263",
+          "numero": "126",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Leroy, …",
+          "date": "2010-05-28",
+          "groupe": "LR",
+          "id_api": "17264",
+          "numero": "127",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Leroy, …",
+          "date": "2010-05-28",
+          "groupe": "LR",
+          "id_api": "17265",
+          "numero": "128",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Leroy, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17266",
+          "numero": "129",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Leroy, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17308",
+          "numero": "172",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mmes Nicoux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17318",
+          "numero": "183",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mmes Nicoux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17319",
+          "numero": "184",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mmes Nicoux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17320",
+          "numero": "185",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17321",
+          "numero": "186",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17429",
+          "numero": "296",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17430",
+          "numero": "297",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17431",
+          "numero": "298",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17432",
+          "numero": "299",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17433",
+          "numero": "300",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17434",
+          "numero": "301",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17435",
+          "numero": "302",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17436",
+          "numero": "303",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17437",
+          "numero": "304",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17438",
+          "numero": "305",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-19",
+          "groupe": "CRC",
+          "id_api": "17439",
+          "numero": "306",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Vasselle, …",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17460",
+          "numero": "327",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Leroy, …",
+          "date": "2010-05-28",
+          "groupe": "LR",
+          "id_api": "17468",
+          "numero": "335",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Pierre, …",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17519",
+          "numero": "391",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pierre, …",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17520",
+          "numero": "392",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pierre, …",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17521",
+          "numero": "393",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pierre, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17522",
+          "numero": "394",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mmes Herviaux, …",
+          "date": "2010-05-26",
+          "groupe": "SOC",
+          "id_api": "17541",
+          "numero": "415",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Repentin, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17542",
+          "numero": "416",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mmes Nicoux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17543",
+          "numero": "417",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Repentin, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17544",
+          "numero": "418",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mmes Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17545",
+          "numero": "419",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Patient, …",
+          "date": "2010-05-26",
+          "groupe": "SOC",
+          "id_api": "17604",
+          "numero": "478",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17699",
+          "numero": "583",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17700",
+          "numero": "584",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17749",
+          "numero": "636",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17750",
+          "numero": "637",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17751",
+          "numero": "638",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17752",
+          "numero": "639",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17753",
+          "numero": "640",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17754",
+          "numero": "641",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-19",
+          "groupe": "Gouvernement",
+          "id_api": "17788",
+          "numero": "675",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-29",
+          "groupe": "Gouvernement",
+          "id_api": "17814",
+          "numero": "701",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article 15",
+      "order": 330,
+      "titre": "Article 15"
+    },
+    "Article 15 bis": {
+      "amendements": [
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17440",
+          "numero": "307",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article 15 bis",
+      "order": 330,
+      "titre": "Article 15 bis"
+    },
+    "Article 16": {
+      "amendements": [
+        {
+          "aut": "",
+          "date": "2010-05-18",
+          "groupe": "Gouvernement",
+          "id_api": "17765",
+          "numero": "652",
+          "sort": "adopté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-29",
+          "groupe": "Gouvernement",
+          "id_api": "17816",
+          "numero": "703",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 16",
+      "order": 350,
+      "titre": "Article 16"
+    },
+    "Article 16 bis": {
+      "amendements": [
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-14",
+          "groupe": "LR",
+          "id_api": "17218",
+          "numero": "79",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-14",
+          "groupe": "LR",
+          "id_api": "17219",
+          "numero": "80",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-14",
+          "groupe": "LR",
+          "id_api": "17220",
+          "numero": "81",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-14",
+          "groupe": "LR",
+          "id_api": "17221",
+          "numero": "82",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-14",
+          "groupe": "LR",
+          "id_api": "17222",
+          "numero": "83",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Des Esgaulx, …",
+          "date": "2010-05-14",
+          "groupe": "LR",
+          "id_api": "17223",
+          "numero": "84",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17441",
+          "numero": "308",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-18",
+          "groupe": "Gouvernement",
+          "id_api": "17769",
+          "numero": "656",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17784",
+          "numero": "671",
+          "sort": "adopté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-29",
+          "groupe": "Gouvernement",
+          "id_api": "17817",
+          "numero": "704",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 16 bis",
+      "order": 350,
+      "titre": "Article 16 bis"
+    },
+    "Article 17": {
+      "amendements": [
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17322",
+          "numero": "187",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17442",
+          "numero": "309",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-18",
+          "groupe": "Gouvernement",
+          "id_api": "17767",
+          "numero": "654",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 17",
+      "order": 370,
+      "titre": "Article 17"
+    },
+    "Article 18": {
+      "amendements": [
+        {
+          "aut": "MM. S. Larcher, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17610",
+          "numero": "485",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Lise, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17615",
+          "numero": "490",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-28",
+          "groupe": "LR",
+          "id_api": "17804",
+          "numero": "691",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 18",
+      "order": 380,
+      "titre": "Article 18"
+    },
+    "Article 19": {
+      "amendements": [
+        {
+          "aut": "MM. Patient, …",
+          "date": "2010-05-27",
+          "groupe": "SOC",
+          "id_api": "17598",
+          "numero": "472",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17755",
+          "numero": "642",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17756",
+          "numero": "643",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17757",
+          "numero": "644",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-28",
+          "groupe": "LR",
+          "id_api": "17805",
+          "numero": "692",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 19",
+      "order": 400,
+      "titre": "Article 19"
+    },
+    "Article 1er": {
+      "amendements": [
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17170",
+          "numero": "28",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Revet, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17171",
+          "numero": "29",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-20",
+          "groupe": "SOC",
+          "id_api": "17172",
+          "numero": "30",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17174",
+          "numero": "32",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Pinton, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17217",
+          "numero": "78",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17227",
+          "numero": "88",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-19",
+          "groupe": "SOC",
+          "id_api": "17228",
+          "numero": "89",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17229",
+          "numero": "90",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17230",
+          "numero": "91",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Chastan, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17231",
+          "numero": "92",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17232",
+          "numero": "93",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. S. Larcher, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17233",
+          "numero": "94",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17234",
+          "numero": "95",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mmes Bonnefoy, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17235",
+          "numero": "96",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Teston, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17236",
+          "numero": "97",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17237",
+          "numero": "98",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17238",
+          "numero": "99",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17239",
+          "numero": "100",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17257",
+          "numero": "120",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. J. Blanc, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17339",
+          "numero": "204",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. J. Blanc, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17340",
+          "numero": "205",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17352",
+          "numero": "219",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17358",
+          "numero": "225",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17359",
+          "numero": "226",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17360",
+          "numero": "227",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17361",
+          "numero": "228",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17362",
+          "numero": "229",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17363",
+          "numero": "230",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17364",
+          "numero": "231",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17365",
+          "numero": "232",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17366",
+          "numero": "233",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17367",
+          "numero": "234",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17368",
+          "numero": "235",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17369",
+          "numero": "236",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17370",
+          "numero": "237",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17371",
+          "numero": "238",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17372",
+          "numero": "239",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Dériot",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17456",
+          "numero": "323",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Vasselle, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17458",
+          "numero": "325",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Vasselle, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17459",
+          "numero": "326",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme David, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17461",
+          "numero": "328",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme David, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17462",
+          "numero": "329",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Lecerf, …",
+          "date": "2010-05-17",
+          "groupe": "UMP",
+          "id_api": "17567",
+          "numero": "441",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17633",
+          "numero": "512",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-20",
+          "groupe": "UMP",
+          "id_api": "17634",
+          "numero": "513",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17638",
+          "numero": "517",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17639",
+          "numero": "518",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17640",
+          "numero": "519",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17641",
+          "numero": "520",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-17",
+          "groupe": "RDSE",
+          "id_api": "17642",
+          "numero": "521",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17643",
+          "numero": "522",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17644",
+          "numero": "523",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17690",
+          "numero": "574",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17705",
+          "numero": "591",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17706",
+          "numero": "592",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17707",
+          "numero": "593",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17759",
+          "numero": "646",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17760",
+          "numero": "647",
+          "sort": "adopté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-18",
+          "groupe": "Gouvernement",
+          "id_api": "17764",
+          "numero": "651",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Dubois, …",
+          "date": "2010-05-20",
+          "groupe": "UC",
+          "id_api": "17786",
+          "numero": "673",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 1er",
+      "order": 10,
+      "titre": "Article 1er"
+    },
+    "Article 1er bis": {
+      "amendements": [
+        {
+          "aut": "M. Virapoullé",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17179",
+          "numero": "37",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17374",
+          "numero": "241",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17375",
+          "numero": "242",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17647",
+          "numero": "527",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article 1er bis",
+      "order": 20,
+      "titre": "Article 1er bis"
+    },
+    "Article 1er quater": {
+      "amendements": [
+        {
+          "aut": "Mme Gonthier-Maurin, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17376",
+          "numero": "243",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Gonthier-Maurin, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17377",
+          "numero": "244",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Gonthier-Maurin, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17378",
+          "numero": "245",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Gonthier-Maurin, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17379",
+          "numero": "246",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Gonthier-Maurin, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17380",
+          "numero": "247",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Gonthier-Maurin, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17381",
+          "numero": "248",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Gonthier-Maurin, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17382",
+          "numero": "249",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Lecerf, …",
+          "date": "2010-05-17",
+          "groupe": "UMP",
+          "id_api": "17528",
+          "numero": "402",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17709",
+          "numero": "595",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article 1er quater",
+      "order": 40,
+      "titre": "Article 1er quater"
+    },
+    "Article 1er ter": {
+      "amendements": [
+        {
+          "aut": "M. Virapoullé",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17180",
+          "numero": "38",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Fauconnier, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17249",
+          "numero": "111",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Lecerf, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17526",
+          "numero": "400",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article 1er ter",
+      "order": 30,
+      "titre": "Article 1er ter"
+    },
+    "Article 2": {
+      "amendements": [
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17250",
+          "numero": "112",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Botrel, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17251",
+          "numero": "113",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17383",
+          "numero": "250",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17384",
+          "numero": "251",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17385",
+          "numero": "252",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17386",
+          "numero": "253",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17387",
+          "numero": "254",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17648",
+          "numero": "528",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article 2",
+      "order": 50,
+      "titre": "Article 2"
+    },
+    "Article 20": {
+      "amendements": [
+        {
+          "aut": "MM. Antoinette, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17325",
+          "numero": "190",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Bizet, …",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17454",
+          "numero": "321",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-28",
+          "groupe": "SOC",
+          "id_api": "17480",
+          "numero": "347",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-28",
+          "groupe": "SOC",
+          "id_api": "17481",
+          "numero": "348",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-28",
+          "groupe": "SOC",
+          "id_api": "17482",
+          "numero": "349",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17483",
+          "numero": "350",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Patient, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17599",
+          "numero": "473",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-28",
+          "groupe": "LR",
+          "id_api": "17807",
+          "numero": "694",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-29",
+          "groupe": "LR",
+          "id_api": "17808",
+          "numero": "695",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-29",
+          "groupe": "LR",
+          "id_api": "17824",
+          "numero": "711",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 20",
+      "order": 410,
+      "titre": "Article 20"
+    },
+    "Article 21": {
+      "amendements": [
+        {
+          "aut": "MM. Antoinette, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17326",
+          "numero": "191",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17484",
+          "numero": "351",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-29",
+          "groupe": "SOC",
+          "id_api": "17485",
+          "numero": "352",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17486",
+          "numero": "354",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17487",
+          "numero": "355",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17488",
+          "numero": "356",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17489",
+          "numero": "357",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17490",
+          "numero": "358",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17491",
+          "numero": "360",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mmes Blondin, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17492",
+          "numero": "362",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17493",
+          "numero": "363",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17494",
+          "numero": "364",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17495",
+          "numero": "365",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17496",
+          "numero": "366",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17497",
+          "numero": "367",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17498",
+          "numero": "370",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Merceron, …",
+          "date": "2010-05-17",
+          "groupe": "UDI",
+          "id_api": "17590",
+          "numero": "464",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Merceron, …",
+          "date": "2010-05-29",
+          "groupe": "UDI",
+          "id_api": "17591",
+          "numero": "465",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Merceron, …",
+          "date": "2010-05-17",
+          "groupe": "UDI",
+          "id_api": "17592",
+          "numero": "466",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Patient, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17600",
+          "numero": "474",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Patient, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17601",
+          "numero": "475",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Patient, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17602",
+          "numero": "476",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-28",
+          "groupe": "LR",
+          "id_api": "17809",
+          "numero": "696",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 21",
+      "order": 420,
+      "titre": "Article 21"
+    },
+    "Article 22": {
+      "amendements": [
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-28",
+          "groupe": "LR",
+          "id_api": "17810",
+          "numero": "697",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 22",
+      "order": 430,
+      "titre": "Article 22"
+    },
+    "Article 23": {
+      "amendements": [
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-28",
+          "groupe": "LR",
+          "id_api": "17806",
+          "numero": "693",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 23",
+      "order": 440,
+      "titre": "Article 23"
+    },
+    "Article 24": {
+      "amendements": [
+        {
+          "aut": "M. Virapoullé",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17177",
+          "numero": "35",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Antoinette, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17327",
+          "numero": "192",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Antoinette, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17328",
+          "numero": "193",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Antoinette, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17329",
+          "numero": "194",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Antoinette, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17330",
+          "numero": "195",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Antoinette, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17331",
+          "numero": "196",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Antoinette, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17332",
+          "numero": "197",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Antoinette, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17333",
+          "numero": "198",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Antoinette, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17334",
+          "numero": "199",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Antoinette, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17335",
+          "numero": "200",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Lise, …",
+          "date": "2010-05-25",
+          "groupe": "SOC",
+          "id_api": "17356",
+          "numero": "223",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Lise, …",
+          "date": "2010-05-20",
+          "groupe": "SOC",
+          "id_api": "17357",
+          "numero": "224",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Hoarau, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17444",
+          "numero": "311",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Hoarau, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17445",
+          "numero": "312",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-20",
+          "groupe": "SOC",
+          "id_api": "17500",
+          "numero": "372",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mmes Payet, …",
+          "date": "2010-05-19",
+          "groupe": "UC",
+          "id_api": "17574",
+          "numero": "448",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-29",
+          "groupe": "Gouvernement",
+          "id_api": "17815",
+          "numero": "702",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 24",
+      "order": 450,
+      "titre": "Article 24"
+    },
+    "Article 3": {
+      "amendements": [
+        {
+          "aut": "MM. Couderc, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17213",
+          "numero": "74",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17270",
+          "numero": "134",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Repentin, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17271",
+          "numero": "135",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17272",
+          "numero": "136",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Chastan, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17273",
+          "numero": "137",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Cazeau, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17274",
+          "numero": "138",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Cazeau, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17275",
+          "numero": "139",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. J. Blanc, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17338",
+          "numero": "203",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. J. Blanc, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17342",
+          "numero": "207",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17393",
+          "numero": "260",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17394",
+          "numero": "261",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17395",
+          "numero": "262",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17396",
+          "numero": "263",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17397",
+          "numero": "264",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme David, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17464",
+          "numero": "331",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Biwer",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17467",
+          "numero": "334",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Deneux, …",
+          "date": "2010-05-17",
+          "groupe": "UDI",
+          "id_api": "17569",
+          "numero": "443",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Marc, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17612",
+          "numero": "487",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17627",
+          "numero": "505",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17630",
+          "numero": "508",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Miquel",
+          "date": "2010-05-17",
+          "groupe": "Inconnu",
+          "id_api": "17635",
+          "numero": "514",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17650",
+          "numero": "530",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17651",
+          "numero": "531",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17691",
+          "numero": "575",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17692",
+          "numero": "576",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17693",
+          "numero": "577",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17716",
+          "numero": "602",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-18",
+          "groupe": "Gouvernement",
+          "id_api": "17761",
+          "numero": "648",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17773",
+          "numero": "660",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17774",
+          "numero": "661",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17775",
+          "numero": "662",
+          "sort": "adopté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-19",
+          "groupe": "Gouvernement",
+          "id_api": "17789",
+          "numero": "676",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Dubois, …",
+          "date": "2010-05-25",
+          "groupe": "UC",
+          "id_api": "17792",
+          "numero": "679",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 3",
+      "order": 60,
+      "titre": "Article 3"
+    },
+    "Article 4": {
+      "amendements": [
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17349",
+          "numero": "214",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17398",
+          "numero": "265",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17399",
+          "numero": "266",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17400",
+          "numero": "267",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17401",
+          "numero": "268",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Houpert, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17470",
+          "numero": "337",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17631",
+          "numero": "509",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17776",
+          "numero": "663",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 4",
+      "order": 70,
+      "titre": "Article 4"
+    },
+    "Article 5": {
+      "amendements": [
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17276",
+          "numero": "140",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17280",
+          "numero": "144",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17403",
+          "numero": "270",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17652",
+          "numero": "533",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17777",
+          "numero": "664",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 5",
+      "order": 80,
+      "titre": "Article 5"
+    },
+    "Article 6": {
+      "amendements": [
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17194",
+          "numero": "53",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17281",
+          "numero": "145",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Guillaume, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17282",
+          "numero": "146",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-26",
+          "groupe": "SOC",
+          "id_api": "17283",
+          "numero": "147",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Cazeau, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17284",
+          "numero": "148",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17404",
+          "numero": "271",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Houpert, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17471",
+          "numero": "338",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Retailleau",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17529",
+          "numero": "403",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dubois, …",
+          "date": "2010-05-26",
+          "groupe": "UC",
+          "id_api": "17575",
+          "numero": "449",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Dubois, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17583",
+          "numero": "457",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17624",
+          "numero": "502",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17625",
+          "numero": "503",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-17",
+          "groupe": "UDI",
+          "id_api": "17632",
+          "numero": "510",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Miquel",
+          "date": "2010-05-17",
+          "groupe": "Inconnu",
+          "id_api": "17636",
+          "numero": "515",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17655",
+          "numero": "536",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-17",
+          "groupe": "RDSE",
+          "id_api": "17656",
+          "numero": "537",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17717",
+          "numero": "603",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article 6",
+      "order": 100,
+      "titre": "Article 6"
+    },
+    "Article 7": {
+      "amendements": [
+        {
+          "aut": "M. Beaumont",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17182",
+          "numero": "40",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. Beaumont",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17183",
+          "numero": "41",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17192",
+          "numero": "51",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Pointereau, …",
+          "date": "2010-05-26",
+          "groupe": "LR",
+          "id_api": "17195",
+          "numero": "54",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Couderc, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17212",
+          "numero": "73",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17289",
+          "numero": "153",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Courteau, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17290",
+          "numero": "154",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Pointereau, …",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17351",
+          "numero": "218",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17407",
+          "numero": "274",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17408",
+          "numero": "275",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Houpert, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17472",
+          "numero": "339",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Pierre, …",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17479",
+          "numero": "346",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17550",
+          "numero": "424",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17551",
+          "numero": "425",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17552",
+          "numero": "426",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17555",
+          "numero": "429",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Repentin, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17556",
+          "numero": "430",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Deneux, …",
+          "date": "2010-05-26",
+          "groupe": "UDI",
+          "id_api": "17570",
+          "numero": "444",
+          "sort": "adopté"
+        },
+        {
+          "aut": "MM. Jarlier, …",
+          "date": "2010-05-18",
+          "groupe": "UMP",
+          "id_api": "17626",
+          "numero": "504",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17658",
+          "numero": "539",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17659",
+          "numero": "541",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Collin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17660",
+          "numero": "542",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Miquel",
+          "date": "2010-05-17",
+          "groupe": "Inconnu",
+          "id_api": "17758",
+          "numero": "645",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-18",
+          "groupe": "Gouvernement",
+          "id_api": "17762",
+          "numero": "649",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "",
+          "date": "2010-05-18",
+          "groupe": "Gouvernement",
+          "id_api": "17768",
+          "numero": "655",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17778",
+          "numero": "665",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17779",
+          "numero": "666",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 7",
+      "order": 110,
+      "titre": "Article 7"
+    },
+    "Article 8": {
+      "amendements": [
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17291",
+          "numero": "155",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17409",
+          "numero": "276",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17449",
+          "numero": "316",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17554",
+          "numero": "428",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Soulage, …",
+          "date": "2010-05-17",
+          "groupe": "UC",
+          "id_api": "17572",
+          "numero": "446",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dubois, …",
+          "date": "2010-05-17",
+          "groupe": "UDI",
+          "id_api": "17587",
+          "numero": "461",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Dubois, …",
+          "date": "2010-05-17",
+          "groupe": "UDI",
+          "id_api": "17588",
+          "numero": "462",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Marc, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17605",
+          "numero": "479",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Fortassin, …",
+          "date": "2010-05-18",
+          "groupe": "RDSE",
+          "id_api": "17662",
+          "numero": "544",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17780",
+          "numero": "667",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 8",
+      "order": 130,
+      "titre": "Article 8"
+    },
+    "Article 9": {
+      "amendements": [
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17292",
+          "numero": "156",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17293",
+          "numero": "157",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17294",
+          "numero": "158",
+          "sort": "adopté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17295",
+          "numero": "159",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17296",
+          "numero": "160",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. J. Blanc",
+          "date": "2010-05-17",
+          "groupe": "UMP",
+          "id_api": "17343",
+          "numero": "208",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17410",
+          "numero": "277",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17411",
+          "numero": "278",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Repentin",
+          "date": "2010-05-17",
+          "groupe": "Inconnu",
+          "id_api": "17453",
+          "numero": "320",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Retailleau",
+          "date": "2010-05-17",
+          "groupe": "LR",
+          "id_api": "17530",
+          "numero": "404",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Fortassin, …",
+          "date": "2010-05-17",
+          "groupe": "RDSE",
+          "id_api": "17694",
+          "numero": "578",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17718",
+          "numero": "604",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17719",
+          "numero": "605",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Muller, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17720",
+          "numero": "606",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. Muller",
+          "date": "2010-05-18",
+          "groupe": "SOC",
+          "id_api": "17771",
+          "numero": "658",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17781",
+          "numero": "668",
+          "sort": "adopté"
+        },
+        {
+          "aut": "M. César, …",
+          "date": "2010-05-19",
+          "groupe": "LR",
+          "id_api": "17783",
+          "numero": "670",
+          "sort": "adopté"
+        }
+      ],
+      "details": "article 9",
+      "order": 140,
+      "titre": "Article 9"
+    },
+    "Avant article 12": {
+      "amendements": [
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17564",
+          "numero": "438",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17565",
+          "numero": "439",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel avant article 12",
+      "order": 249,
+      "titre": "Avant article 12"
+    },
+    "Avant article 23": {
+      "amendements": [
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-29",
+          "groupe": "SOC",
+          "id_api": "17499",
+          "numero": "371",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel avant article 23",
+      "order": 439,
+      "titre": "Avant article 23"
+    },
+    "Avant article 3": {
+      "amendements": [
+        {
+          "aut": "M. Revet, …",
+          "date": "2010-05-18",
+          "groupe": "LR",
+          "id_api": "17173",
+          "numero": "31",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "Mme Herviaux, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17269",
+          "numero": "133",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17388",
+          "numero": "255",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17389",
+          "numero": "256",
+          "sort": "non-voté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17390",
+          "numero": "257",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17391",
+          "numero": "258",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "MM. Le Cam, …",
+          "date": "2010-05-17",
+          "groupe": "CRC",
+          "id_api": "17392",
+          "numero": "259",
+          "sort": "rejeté"
+        },
+        {
+          "aut": "M. Guillaume, …",
+          "date": "2010-05-17",
+          "groupe": "SOC",
+          "id_api": "17532",
+          "numero": "406",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "article additionnel avant article 3",
+      "order": 59,
+      "titre": "Avant article 3"
+    },
+    "Avant titre1eravant l'article 1er": {
+      "amendements": [
+        {
+          "aut": "MM. S. Larcher, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17226",
+          "numero": "87",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "article additionnel avant titre1eravant l'article 1er",
+      "order": 9,
+      "titre": "Avant titre1eravant l'article 1er"
+    },
+    "Intitulé du projet de loi": {
+      "amendements": [
+        {
+          "aut": "MM. Bailly, …",
+          "date": "2010-05-12",
+          "groupe": "UMP",
+          "id_api": "17215",
+          "numero": "76",
+          "sort": "non-voté"
+        }
+      ],
+      "details": "intitulé du projet de loi",
+      "order": 0,
+      "titre": "Intitulé du projet de loi"
+    },
+    "Motion tendant à opposer l'exception d'irrecevabilité": {
+      "amendements": [
+        {
+          "aut": "Mme Labarre, …",
+          "date": "2010-05-12",
+          "groupe": "CRC",
+          "id_api": "17181",
+          "numero": "39",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "motion tendant à opposer l'exception d'irrecevabilité",
+      "order": 1,
+      "titre": "Motion tendant à opposer l'exception d'irrecevabilité"
+    },
+    "Motion tendant à opposer la question préalable": {
+      "amendements": [
+        {
+          "aut": "M. Bel, …",
+          "date": "2010-05-14",
+          "groupe": "SOC",
+          "id_api": "17225",
+          "numero": "86",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "motion tendant à opposer la question préalable",
+      "order": 1,
+      "titre": "Motion tendant à opposer la question préalable"
+    },
+    "Titre iiavant l'article 3": {
+      "amendements": [
+        {
+          "aut": "Mmes Nicoux, …",
+          "date": "2010-05-15",
+          "groupe": "SOC",
+          "id_api": "17268",
+          "numero": "132",
+          "sort": "rejeté"
+        }
+      ],
+      "details": "titre iiavant l'article 3",
+      "order": 59,
+      "titre": "Titre iiavant l'article 3"
+    }
+  }
+}
