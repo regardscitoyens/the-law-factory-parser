@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os, sys
+from functools import cmp_to_key
 
 from lawfactory_utils.urls import download, enable_requests_cache, clean_url
 enable_requests_cache()
@@ -61,6 +62,69 @@ def add_link(links, pA, pB, weight=1):
         }
     links[linkid]["w"] += weight
 
+def sort_amendements(texte, amendements):
+    articles = {}
+    for article in texte:
+        if article['type'] == 'article':
+            titre = article.get('titre')
+            if titre:
+                articles[titre.lower()] = article.get('order') * 10
+
+    def clean_subject(subj):
+        subj = subj.lower().strip()
+        for regex, replacement in [
+                (r' (prem)?ier', '1er'),
+                (r'unique', '1er'),
+                (r'\s*\(((avant|apr).*)\)', '\1'),
+                (r'\s*\(.*$', ''),
+                (r'^(\d)', 'article \1'),
+                (r'^(\d)', 'article \1'),
+                (r'articles', 'article'),
+                (r'art(\.|icle|\s)*(\d+)', 'article \2'),
+                (r'^(apr\S+s|avant)\s*', 'article additionnel \1 '),
+                (r'^(apr\S+s|avant)\s+article', "\1 l'article"),
+                (r'^(\d+e?r? )([a-z]{1,2})$', lambda x: x.group(1) + x.group(2).upper()),
+                (r'^(\d+e?r? \S+ )([a-z]+)$', lambda x: x.group(1) + x.group(2).upper()),
+                (r'^ annexe.*', ''),
+                (r'^ rapport.*', ''),
+                (r'article 1$', 'article 1er'),
+            ]:
+            subj = re.sub(regex, replacement, subj)
+            subj = subj.strip()
+        return subj
+
+    def solveorder(art):
+        nonlocal articles
+        art = art.lower()
+        order = 10000;
+        if art == 'titre' or art.startswith('intitul'):
+            return 0
+        elif art.startswith('motion'):
+            return 1
+        elif art.startswith('projet') \
+            or art.startswith('proposition') \
+            or art.startswith('texte'):
+            return 5
+        else:
+            m = re.search(r'article (1er.*|(\d+).*)$', art, re.I)
+            if m:
+                for match in m.group(1), m.group(2):
+                    matched_order = articles.get(match)
+                    if matched_order:
+                        order = matched_order
+                if 'avant' in art:
+                    order -= 1
+                elif re.match(r'apr\S+s', art, re.I):
+                    order += 1
+        return order
+
+
+    for amendement in amendements:
+        amdt = amendement['amendement']
+        amdt['sujet'] = clean_subject(amdt['sujet'])
+        amdt['ordre_article'] = solveorder(amdt['sujet'])
+
+    return amendements
 
 steps = {}
 for i, step in enumerate(procedure['steps']):
@@ -89,6 +153,8 @@ for i, step in enumerate(procedure['steps']):
     if len(amendements_src) == 0:
         continue
 
+    amendements_src = sort_amendements(texte['articles'], amendements_src)
+
     typeparl, urlapi = identify_room(amendements_src, 'amendement',
         legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
 
@@ -116,16 +182,16 @@ for i, step in enumerate(procedure['steps']):
             sujets[key] = {
               'titre': key,
               'details': a['sujet'],
-              # TODO: port sort_amendements.pl
-              'order': a.get('ordre_article', 10),
+              'order': a['ordre_article'],
               'amendements': []
             }
-        if a.get('ordre_article', 10) > 9000:
+        if a['ordre_article'] > 9000:
             fix_order = True
 
         gpe = find_groupe(a)
         if not gpe:
             sys.stderr.write('WARNING: no groupe found for %s\n' % a['url_nos%ss' % typeparl])
+            import pudb;pu.db
             gpe = "Inconnu"
         context.add_groupe(groupes, gpe, urlapi)
 
@@ -165,7 +231,7 @@ for i, step in enumerate(procedure['steps']):
             idents[hmd5].append(pid)
 
     if fix_order:
-        orders.sort(compare_articles)
+        orders.sort(key=cmp_to_key(compare_articles))
         for i, k in enumerate(orders):
             sujets[k]["order"] = i
 
