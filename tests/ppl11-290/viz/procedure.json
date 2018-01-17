@@ -80,6 +80,7 @@
       "step": "hemicycle"
     },
     {
+      "cmp_commission_other_url": "http://www.assemblee-nationale.fr/13/rapports/r4387.asp",
       "date": "2012-02-21",
       "debats_order": 6,
       "directory": "06_cmp_cmp_commission",

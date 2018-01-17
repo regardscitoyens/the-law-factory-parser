@@ -126,6 +126,7 @@ def process(OUTPUT_DIR, procedure):
         return amendements
 
     steps = {}
+    last_text_id = None
     for i, step in enumerate(procedure['steps']):
         print('     * amendement step -', step.get('source_url'))
         if step.get('step') not in ('commission', 'hemicycle') or step.get('echec'):
@@ -145,7 +146,7 @@ def process(OUTPUT_DIR, procedure):
             senat_url = [url for url in urls if 'senat.fr' in url]
             if step.get('institution') == 'assemblee' and an_url:
                 texte_url = an_url[0]
-            elif step.get('institution') == 'senat' and senat_url:
+            elif step.get('institution') == 'senat' and senat_url:# TA texts can be zero-paded or not (TA0XXX or TAXXX), we try both
                 texte_url = senat_url[0]
         else:
             last_step = procedure['steps'][i-1]
@@ -158,21 +159,28 @@ def process(OUTPUT_DIR, procedure):
 
         amdt_url = None
         if "nationale.fr" in texte_url:
-            textid_match = re.search(r'fr\/(\d+)\/.*[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$', texte_url, re.I)
-            nosdeputes_id = textid_match.group(2)
-            amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json' % (procedure['assemblee_legislature'], nosdeputes_id)
+            amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json' % (procedure['assemblee_legislature'], get_text_id(texte_url))
         elif "senat.fr" in texte_url:
-            textid_match = re.search(r"(\d{2})-(\d+)(_mono)?\.html$", texte_url, re.I)
-            nossenateurs_id = '20%s20%d-%s' % (textid_match.group(1), int(textid_match.group(1))+1, textid_match.group(2))
-            amdt_url = 'https://nossenateurs.fr/amendements/%s/json' % texte['nossenateurs_id']
+            amdt_url = 'https://nossenateurs.fr/amendements/%s/json' % get_text_id(texte_url)
 
         if amdt_url is None:
             continue
 
-        amendements = download(amdt_url).json()
-        amendements_src = amendements['amendements']
+        print('     * downloading amendments:', amdt_url, 'for', texte_url)
 
-        print('  parsing amendement:', amdt_url, len(amendements_src), texte_url)
+        amendements_src = download(amdt_url).json().get('amendements', [])
+
+        # TA texts can be zero-paded or not (TA0XXX or TAXXX), we try both
+        if 'amendements/TA' in amdt_url:
+            textid = get_text_id(texte_url)
+            if 'TA0' in textid:
+                alternative_url = amdt_url.replace(textid, 'TA' + textid.replace('TA', '').lstrip('0'))
+            else:
+                alternative_url = amdt_url.replace(textid, 'TA' + textid.replace('TA', '').zfill(4))
+            print(' WARNING: TA - trying alternative url too', alternative_url)
+            amendements_src += download(alternative_url).json().get('amendements', [])
+
+        print('  parsing amendments:', len(amendements_src))
 
         step['nb_amendements'] = len(amendements_src)
 
@@ -272,6 +280,35 @@ def process(OUTPUT_DIR, procedure):
                 'links': list(links.values()),
                 'parlementaires': dict((p["i"], dict((k, p[k]) for k in "psang")) for p in list(parls.values()))}
         print_json(data, linksfile)
+
+
+
+        ###########  INTERVENTIONS #############
+
+        print('    * downloading interventions')
+        inter_dir = os.path.join(context.sourcedir, 'procedure', last_step['directory'], 'interventions')
+        if not os.path.exists(inter_dir):
+            os.makedirs(inter_dir)
+        commission_or_hemicycle = '?commission=1' if step.get('step') == 'commission' else '?hemicycle=1'
+        # TODO: TA texts can be zero-paded or not (TA0XXX or TAXXX), we should try both
+        # TODO: last_text_id check same stage same institution
+        seance_name = None
+        for loiid in get_text_id(texte_url), last_text_id:
+            url_seances = 'https://{}.fr/seances/{}/json{}'.format(urlapi, loiid, commission_or_hemicycle)
+            print('         * downloading seances - ', url_seances)
+            for id_seance_obj in download(url_seances).json().get('seances', []):
+                url_seance = 'https://{}.fr/seance/{}/{}/json'.format(urlapi, id_seance_obj['seance'], loiid)
+                print('             * downloading seance - ', url_seance)
+                seance = download(url_seance).json().get('seance')
+                if seance:
+                    inter = seance[0]['intervention']
+                    seance_name = inter['date'] + 'T' + inter['heure'] + '_' + inter['seance_id']
+                    print('                 * dumping seance -', seance_name)
+                    print_json(data, os.path.join(inter_dir, seance_name + '.json'))
+            if seance_name:
+                break
+
+        last_text_id = get_text_id(texte_url)
 
 if __name__ == '__main__':
     process(sys.argv[1], json.load(open(os.path.join(sys.argv[1], 'viz/procedure.json'))))

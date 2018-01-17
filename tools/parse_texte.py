@@ -15,8 +15,10 @@ from bs4 import BeautifulSoup
 
 try:
     from .sort_articles import bister
+    from .common import get_text_id
 except SystemError:
     from sort_articles import bister
+    from common import get_text_id
 
 
 def parse(url):
@@ -74,9 +76,7 @@ def parse(url):
         if m.group(2) is not None:
             texte["id"] += m.group(2)
         texte["id"] += str(numero)
-
-        textid_match = re.search(r'fr\/(\d+)\/.*[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$', url, re.I)
-        texte["nosdeputes_id"] = textid_match.group(2)
+        texte["nosdeputes_id"] = get_text_id(url)
     else:
         m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})\d?(_mono)?\.", url, re.I)
         if m is None:
@@ -86,9 +86,7 @@ def parse(url):
         if m.group(1) is not None:
             texte["id"] += m.group(1)
         texte["id"] += "%03d" % numero
-
-        textid_match = re.search(r"(\d{2})-(\d+)(_mono)?\.html$", url, re.I)
-        texte["nossenateurs_id"] = '20%s20%d-%s' % (textid_match.group(1), int(textid_match.group(1))+1, textid_match.group(2))
+        texte["nossenateurs_id"] = get_text_id(url)
 
     texte["titre"] = re_clean_title_legif.sub('', soup.title.string.strip()) if soup.title else ""
     texte["expose"] = ""

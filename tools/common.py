@@ -189,3 +189,14 @@ class Context(object):
 def amendementIsFromGouvernement(amdt):
     return amdt["amendement"]["signataires"].lower() == "le gouvernement"
 
+
+def get_text_id(texte_url):
+    if "nationale.fr" in texte_url:
+        textid_match = re.search(r'fr\/(\d+)\/.*[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$', texte_url, re.I)
+        nosdeputes_id = textid_match.group(2)
+        if '/ta/ta' in texte_url:
+            nosdeputes_id = 'TA' + nosdeputes_id
+        return nosdeputes_id
+    elif "senat.fr" in texte_url:
+        textid_match = re.search(r"(\d{2})-(\d+)(_mono)?\.html$", texte_url, re.I)
+        return '20%s20%d-%s' % (textid_match.group(1), int(textid_match.group(1))+1, textid_match.group(2))

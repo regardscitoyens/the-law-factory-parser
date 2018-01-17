@@ -83,13 +83,14 @@
       "step": "hemicycle"
     },
     {
+      "cmp_commission_other_url": "http://www.assemblee-nationale.fr/13/rapports/r2723.asp",
       "date": "2010-07-08",
       "debats_order": 6,
       "directory": "06_cmp_cmp_commission",
       "echec": null,
       "enddate": "2010-07-08",
       "institution": "CMP",
-      "nb_amendements": 1,
+      "nb_amendements": 0,
       "source_url": "https://www.senat.fr/rap/l09-654/l09-654.html",
       "stage": "CMP",
       "step": "commission"
