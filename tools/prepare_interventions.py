@@ -7,15 +7,15 @@ from common import *
 context = Context(sys.argv)
 procedure = context.get_procedure()
 
-re_short_orga = re.compile(ur'(,| et) (à |aux |d).*$')
+re_short_orga = re.compile(r'(,| et) (à |aux |d).*$')
 def clean_orga(orga):
-    orga = orga.replace(u" de l'assemblée nationale", "")
-    orga = orga.replace(u" du sénat", "")
+    orga = orga.replace(" de l'assemblée nationale", "")
+    orga = orga.replace(" du sénat", "")
     orga = re_short_orga.sub('', orga)
     return orga
 
 def init_section(dic, key, inter, order):
-    if inter[key] and inter['seance_lieu'] != u'Hémicycle':
+    if inter[key] and inter['seance_lieu'] != 'Hémicycle':
         inter[key] = clean_orga(inter['seance_lieu']) + " <br/> " + inter[key]
     if inter[key] not in dic:
         dic[inter[key]] = {
@@ -68,9 +68,9 @@ def save_o_g(i, gpe):
 def get_o_g(i):
     return get_hash(i, orat_gpes)
 
-re_gouv = re.compile(u'(ministre|garde.*sceaux|secr[eéÉ]taire.*[eéÉ]tat|haut-commissaire)', re.I)
-re_parl = re.compile(u'(d[eéÉ]put[eéÉ]|s[eéÉ]nateur|membre du parlement|parlementaire)', re.I)
-re_rapporteur = re.compile(ur'((vice|co|pr[eéÉ]sidente?)[,\-\s]*)?rapporte', re.I)
+re_gouv = re.compile('(ministre|garde.*sceaux|secr[eéÉ]taire.*[eéÉ]tat|haut-commissaire)', re.I)
+re_parl = re.compile('(d[eéÉ]put[eéÉ]|s[eéÉ]nateur|membre du parlement|parlementaire)', re.I)
+re_rapporteur = re.compile(r'((vice|co|pr[eéÉ]sidente?)[,\-\s]*)?rapporte', re.I)
 steps = {}
 
 re_id_laststep = re.compile(r'/[^/\d]*(\d+)\D[^/]*$')
@@ -99,7 +99,7 @@ for step in procedure['steps']:
             del(i['intervention']['contenu'])
             if has_tag_loi > 2 and {"loi": id_laststep} not in i['intervention']['lois']:
                 if context.DEBUG:
-                    print >> sys.stderr, "SKIPPING interv " + i['intervention']['id'] + " with missing tag loi"
+                    print("SKIPPING interv " + i['intervention']['id'] + " with missing tag loi", file=sys.stderr)
                 continue
             intervs.append(i)
 
@@ -131,8 +131,8 @@ for step in procedure['steps']:
         # Consider as separate groups cases such as: personnalités, présidents and rapporteurs
         gpe = i['intervenant_groupe']
         i['intervenant_fonction'] = decode_html(i['intervenant_fonction'])
-        if i['intervenant_fonction'].lower() in [u"président", u"présidente"]:
-            gpe = u"Présidence"
+        if i['intervenant_fonction'].lower() in ["président", "présidente"]:
+            gpe = "Présidence"
         elif re_rapporteur.match(i['intervenant_fonction']):
             gpe = "Rapporteurs"
             save_rap(i)
@@ -144,25 +144,25 @@ for step in procedure['steps']:
             # unmeaningful information hard to rematch to the groups, usually invectives, skipping it
             if context.DEBUG and i['intervenant_nom'] not in warndone:
                 warndone.append(i['intervenant_nom'])
-                print >> sys.stderr, 'WARNING: skipping interventions from %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl])
+                print('WARNING: skipping interventions from %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl]), file=sys.stderr)
             continue
         if not gpe:
             if context.DEBUG and i['intervenant_nom'] not in warndone:
                 warndone.append(i['intervenant_nom'])
-                print >> sys.stderr, 'WARNING: neither groupe nor function found for %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl])
+                print('WARNING: neither groupe nor function found for %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl]), file=sys.stderr)
             gm = get_gm(i)
             if gm:
                 gpe = "Gouvernement"
                 i['intervenant_fonction'] = gm
             else:
-                gpe = u"Auditionnés"
+                gpe = "Auditionnés"
         else:
             ra = get_rap(i)
             if ra:
                 gpe = "Rapporteurs"
                 i['intervenant_fonction'] = ra
         existing = get_o_g(i)
-        if not (existing and gpe == u"Présidence") and gpe != get_o_g(i):
+        if not (existing and gpe == "Présidence") and gpe != get_o_g(i):
             save_o_g(i, gpe)
 
     for inter in intervs:
@@ -187,8 +187,8 @@ for step in procedure['steps']:
         else:
             if len(i['intervenant_fonction']) > len(orateurs[orateur]['fonction']):
                 if context.DEBUG and ((orateurs[orateur]['fonction'] and not i['intervenant_fonction'].startswith(orateurs[orateur]['fonction'])) or
-                  (not orateurs[orateur]['fonction'] and not (i['intervenant_fonction'].startswith('rapporte') or i['intervenant_fonction'].startswith(u'président')))):
-                    print >> sys.stderr, 'WARNING: found different functions for %s at %s : %s / %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl], orateurs[orateur]['fonction'], i['intervenant_fonction'])
+                  (not orateurs[orateur]['fonction'] and not (i['intervenant_fonction'].startswith('rapporte') or i['intervenant_fonction'].startswith('président')))):
+                    print('WARNING: found different functions for %s at %s : %s / %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl], orateurs[orateur]['fonction'], i['intervenant_fonction']), file=sys.stderr)
                 orateurs[orateur]['fonction'] = i['intervenant_fonction']
 
         if not "orateurs" in sections[i[sectype]]['groupes'][gpid]:
@@ -204,7 +204,7 @@ for step in procedure['steps']:
 
     # Remove sections with less than 3 interventions
     for s in dict(sections):
-        if sections[s]['total_intervs'] < 3 or sections[s]['total_mots'] < 150 or sections[s]['groupes'].keys() == [u'Présidence']:
+        if sections[s]['total_intervs'] < 3 or sections[s]['total_mots'] < 150 or list(sections[s]['groupes'].keys()) == ['Présidence']:
             del(sections[s])
 
     if sections:
