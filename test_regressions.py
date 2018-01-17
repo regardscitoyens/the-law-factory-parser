@@ -1,12 +1,13 @@
-import glob, shutil, os, filecmp, sys
+import glob, shutil, os, filecmp, sys, difflib
 
 import parse_one
 from parse_doslegs_texts import find_good_url
 from tools import parse_texte
 import download_groupes
 
-# use `test_regressions.py regen` to update the tests/ directory
-REGEN_TESTS = sys.argv[1] == 'regen' if len(sys.argv) == 2 else False
+# use `test_regressions.py <directory> --regen` to update the tests directory
+REGEN_TESTS = '--regen' in sys.argv
+TEST_DIR = sys.argv[1]
 
 print('****** testing url fixing... ******')
 # AN .pdf
@@ -37,6 +38,13 @@ filecmp.cmpfiles.__defaults__ = (False,)
 def _is_same_helper(dircmp):
     assert not dircmp.funny_files
     if dircmp.left_only or dircmp.right_only or dircmp.diff_files or dircmp.funny_files:
+        for name in dircmp.diff_files:
+            diff = difflib.unified_diff(open(os.path.join(dircmp.left, name)).readlines(),
+                open(os.path.join(dircmp.right, name)).readlines())
+            for line in diff:
+                print(line)
+        else:
+            dircmp.report_full_closure()
         return False
     for sub_dircmp in dircmp.subdirs.values():
        if not _is_same_helper(sub_dircmp):
@@ -45,25 +53,23 @@ def _is_same_helper(dircmp):
 
 output_dir = 'tests_tmp'
 if REGEN_TESTS:
-    output_dir = 'tests'
+    output_dir = TEST_DIR
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 download_groupes.process(output_dir)
 
-for directory in glob.glob('tests/p*'):
-    senat_id = directory.split('/')[1]
+for directory in glob.glob(TEST_DIR + '/p*'):
+    senat_id = directory.split('/')[-1]
     print()
     print('****** testing', senat_id, '*******')
     print()
 
-    parse_one.process(output_dir, senat_id)
+    parse_one.process(output_dir, senat_id, disable_cache=True)
     comp = filecmp.dircmp(directory, output_dir + '/' + senat_id)
     if _is_same_helper(comp):
         print()
         print('  -> test passed')
     else:
-        print()
-        comp.report_full_closure()
         print()
         print('   -> test failed, details in tests_tmp')
         raise Exception()

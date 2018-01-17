@@ -24,7 +24,7 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
     procedure = update_procedure.process(dos, articles_etapes)
 
     print(' - process amendements')
-    prepare_amendements.process(output_dir, procedure)
+    procedure = prepare_amendements.process(output_dir, procedure)
 
     # remove intermediate data
     for step in procedure['steps']:

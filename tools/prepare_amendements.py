@@ -146,9 +146,10 @@ def process(OUTPUT_DIR, procedure):
             senat_url = [url for url in urls if 'senat.fr' in url]
             if step.get('institution') == 'assemblee' and an_url:
                 texte_url = an_url[0]
-            elif step.get('institution') == 'senat' and senat_url:# TA texts can be zero-paded or not (TA0XXX or TAXXX), we try both
+            elif step.get('institution') == 'senat' and senat_url:
                 texte_url = senat_url[0]
         else:
+            # TODO: review this to get the real text the amendements are done on
             last_step = procedure['steps'][i-1]
             texte_url = last_step.get('source_url')
 
@@ -279,7 +280,7 @@ def process(OUTPUT_DIR, procedure):
         data = {'id_step': step['directory'],
                 'links': list(links.values()),
                 'parlementaires': dict((p["i"], dict((k, p[k]) for k in "psang")) for p in list(parls.values()))}
-        print_json(data, linksfile)
+        # print_json(data, linksfile)
 
 
 
@@ -309,6 +310,8 @@ def process(OUTPUT_DIR, procedure):
                 break
 
         last_text_id = get_text_id(texte_url)
+
+    return procedure
 
 if __name__ == '__main__':
     process(sys.argv[1], json.load(open(os.path.join(sys.argv[1], 'viz/procedure.json'))))

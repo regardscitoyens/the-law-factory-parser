@@ -3,4 +3,8 @@ language: python
 python:
     - "3.5"
 install: pip install -r requirements.txt
-script: python test_regressions.py
+script:
+   - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git tests
+   - python test_regressions.py tests
+
+
