@@ -4,6 +4,8 @@ from lawfactory_utils.urls import download, enable_requests_cache
 
 
 def process(output_directory):
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
     for url in "2007-2012.nosdeputes", "2012-2017.nosdeputes", "2017-2022.nosdeputes", "www.nosdeputes", "www.nossenateurs":
         print('downloading from', url)
         open(os.path.join(output_directory, '%s-groupes.json' % url), 'w').write(
