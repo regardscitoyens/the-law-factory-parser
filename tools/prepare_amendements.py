@@ -304,7 +304,7 @@ def process(OUTPUT_DIR, procedure):
                     inter = seance[0]['intervention']
                     seance_name = inter['date'] + 'T' + inter['heure'] + '_' + inter['seance_id']
                     print('                 * dumping seance -', seance_name)
-                    print_json(data, os.path.join(inter_dir, seance_name + '.json'))
+                    print_json(seance, os.path.join(inter_dir, seance_name + '.json'))
             if seance_name:
                 break
 
