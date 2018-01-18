@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, random
 from functools import cmp_to_key
 
 from lawfactory_utils.urls import download
@@ -125,6 +125,8 @@ def process(OUTPUT_DIR, procedure):
 
         return amendements
 
+
+    CACHE_BUSTING = 'cache=%d' % random.randint(0, 10000)
     steps = {}
     last_text_id = None
     for i, step in enumerate(procedure['steps']):
@@ -160,9 +162,9 @@ def process(OUTPUT_DIR, procedure):
 
         amdt_url = None
         if "nationale.fr" in texte_url:
-            amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json' % (procedure['assemblee_legislature'], get_text_id(texte_url))
+            amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json?%s' % (procedure['assemblee_legislature'], get_text_id(texte_url), CACHE_BUSTING)
         elif "senat.fr" in texte_url:
-            amdt_url = 'https://nossenateurs.fr/amendements/%s/json' % get_text_id(texte_url)
+            amdt_url = 'https://nossenateurs.fr/amendements/%s/json?%s' % (get_text_id(texte_url), CACHE_BUSTING)
 
         if amdt_url is None:
             continue
@@ -287,26 +289,30 @@ def process(OUTPUT_DIR, procedure):
         ###########  INTERVENTIONS #############
 
         print('    * downloading interventions')
-        inter_dir = os.path.join(context.sourcedir, 'procedure', last_step['directory'], 'interventions')
+        inter_dir = os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions')
         if not os.path.exists(inter_dir):
             os.makedirs(inter_dir)
         commission_or_hemicycle = '?commission=1' if step.get('step') == 'commission' else '?hemicycle=1'
         # TODO: TA texts can be zero-paded or not (TA0XXX or TAXXX), we should try both
         # TODO: last_text_id check same stage same institution
         seance_name = None
+        intervention_files = []
         for loiid in get_text_id(texte_url), last_text_id:
             url_seances = 'https://{}.fr/seances/{}/json{}'.format(urlapi, loiid, commission_or_hemicycle)
             print('         * downloading seances - ', url_seances)
             for id_seance_obj in download(url_seances).json().get('seances', []):
                 url_seance = 'https://{}.fr/seance/{}/{}/json'.format(urlapi, id_seance_obj['seance'], loiid)
                 print('             * downloading seance - ', url_seance)
-                seance = download(url_seance).json().get('seance')
-                if seance:
-                    inter = seance[0]['intervention']
+                resp = download(url_seance).json()
+                if resp.get('seance'):
+                    inter = resp.get('seance')[0]['intervention']
                     seance_name = inter['date'] + 'T' + inter['heure'] + '_' + inter['seance_id']
                     print('                 * dumping seance -', seance_name)
-                    print_json(seance, os.path.join(inter_dir, seance_name + '.json'))
+                    intervention_files.append(seance_name)
+                    print_json(resp, os.path.join(inter_dir, seance_name + '.json'))
             if seance_name:
+                step['has_interventions'] = True
+                step['intervention_files'] = intervention_files
                 break
 
         last_text_id = get_text_id(texte_url)

@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import os, sys, re
-from common import *
 
+try:
+    from common import *
+except ImportError:
+    from .common import *
 
 re_short_orga = re.compile(r'(,| et) (à |aux |d).*$')
 def clean_orga(orga):
@@ -73,7 +76,7 @@ steps = {}
 
 re_id_laststep = re.compile(r'/[^/\d]*(\d+)\D[^/]*$')
 
-# need intervention_files, intervention_directory
+
 def process(OUTPUT_DIR, procedure):
     context = Context([0, OUTPUT_DIR])
 
@@ -91,7 +94,7 @@ def process(OUTPUT_DIR, procedure):
         step['intervention_files'].sort()
         warndone = []
         for interv_file in step['intervention_files']:
-            seance = open_json(os.path.join(context.sourcedir, 'procedure', step['intervention_directory']), "%s.json" % interv_file)['seance']
+            seance = open_json(os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions'), "%s.json" % interv_file)['seance']
             has_tag_loi = 0
             if id_laststep:
                 for i in seance:
@@ -199,7 +202,7 @@ def process(OUTPUT_DIR, procedure):
 
             orat_sec = "%s-%s-%s" % (i[sectype],gpid,orateur)
             if orat_sec not in done_links:
-                if not "link" in sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur] or i['nbmots'] > 20:
+                if not "link" in sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur] or int(i['nbmots']) > 20:
                     sections[i[sectype]]['groupes'][gpid]['orateurs'][orateur]['link'] = i['url_nos%ss' % typeparl]
                     if int(i['nbmots']) > 20:
                         done_links[orat_sec] = True
