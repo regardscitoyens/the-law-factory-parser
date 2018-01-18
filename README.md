@@ -1,5 +1,6 @@
 the-law-factory-parser
 ======================
+[![Build Status](https://travis-ci.org/regardscitoyens/the-law-factory-parser.svg?branch=parser-refactor)](https://travis-ci.org/regardscitoyens/the-law-factory-parser)
 
 **WIP: rewrite of the parser**
 
