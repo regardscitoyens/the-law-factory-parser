@@ -39,10 +39,15 @@ def _is_same_helper(dircmp):
     assert not dircmp.funny_files
     if dircmp.left_only or dircmp.right_only or dircmp.diff_files or dircmp.funny_files:
         for name in dircmp.diff_files:
-            diff = difflib.unified_diff(open(os.path.join(dircmp.left, name)).readlines(),
-                open(os.path.join(dircmp.right, name)).readlines())
-            for line in diff:
-                print(line)
+            left_file = os.path.join(dircmp.left, name)
+            right_file = os.path.join(dircmp.rightr, name)
+            print('TWO FILES ARES DIFFERENT:', left_file, 'AND', right_file)
+            diff = difflib.unified_diff(open(left_file).readlines(),
+                open(right_file).readlines())
+            for line in diff[:20]:
+                print(line, end='/n')
+            if len(diff) > 20:
+                print('-- diff too long, it was truncated')
         else:
             dircmp.report_full_closure()
         return False

@@ -298,10 +298,10 @@ def process(OUTPUT_DIR, procedure):
         seance_name = None
         intervention_files = []
         for loiid in get_text_id(texte_url), last_text_id:
-            url_seances = 'https://{}.fr/seances/{}/json{}'.format(urlapi, loiid, commission_or_hemicycle)
+            url_seances = 'https://{}.fr/seances/{}/json{}&%s'.format(urlapi, loiid, commission_or_hemicycle, CACHE_BUSTING)
             print('         * downloading seances - ', url_seances)
             for id_seance_obj in download(url_seances).json().get('seances', []):
-                url_seance = 'https://{}.fr/seance/{}/{}/json'.format(urlapi, id_seance_obj['seance'], loiid)
+                url_seance = 'https://{}.fr/seance/{}/{}/json?%s'.format(urlapi, id_seance_obj['seance'], loiid, CACHE_BUSTING)
                 print('             * downloading seance - ', url_seance)
                 resp = download(url_seance).json()
                 if resp.get('seance'):
