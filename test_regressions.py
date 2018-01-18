@@ -40,10 +40,10 @@ def _is_same_helper(dircmp):
     if dircmp.left_only or dircmp.right_only or dircmp.diff_files or dircmp.funny_files:
         for name in dircmp.diff_files:
             left_file = os.path.join(dircmp.left, name)
-            right_file = os.path.join(dircmp.right, name)
+            right_file = os.path.join(dircmp.rightf, name)
             print('TWO FILES ARES DIFFERENT:', left_file, 'AND', right_file)
-            diff = difflib.unified_diff(open(left_file).readlines(),
-                open(right_file).readlines())
+            diff = list(difflib.unified_diff(open(left_file).readlines(),
+                open(right_file).readlines()))
             for line in diff[:20]:
                 print(line, end='/n')
             if len(diff) > 20:
