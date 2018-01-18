@@ -53,33 +53,34 @@ def save_hash(i, dico, val=None):
 def get_hash(i, dico):
     h = hash_name(i['intervenant_nom'])
     return dico[h] if h in dico else ""
-gouv_members = {}
-rapporteurs = {}
-orat_gpes = {}
-def save_gm(i):
-    save_hash(i, gouv_members)
-def get_gm(i):
-    return get_hash(i, gouv_members)
-def save_rap(i):
-    save_hash(i, rapporteurs)
-def get_rap(i):
-    return get_hash(i, rapporteurs)
-def save_o_g(i, gpe):
-    save_hash(i, orat_gpes, gpe)
-def get_o_g(i):
-    return get_hash(i, orat_gpes)
 
 re_gouv = re.compile('(ministre|garde.*sceaux|secr[eéÉ]taire.*[eéÉ]tat|haut-commissaire)', re.I)
 re_parl = re.compile('(d[eéÉ]put[eéÉ]|s[eéÉ]nateur|membre du parlement|parlementaire)', re.I)
 re_rapporteur = re.compile(r'((vice|co|pr[eéÉ]sidente?)[,\-\s]*)?rapporte', re.I)
-steps = {}
 
 re_id_laststep = re.compile(r'/[^/\d]*(\d+)\D[^/]*$')
 
 
 def process(OUTPUT_DIR, procedure):
     context = Context([0, OUTPUT_DIR])
+    
+    gouv_members = {}
+    rapporteurs = {}
+    orat_gpes = {}
+    def save_gm(i):
+        save_hash(i, gouv_members)
+    def get_gm(i):
+        return get_hash(i, gouv_members)
+    def save_rap(i):
+        save_hash(i, rapporteurs)
+    def get_rap(i):
+        return get_hash(i, rapporteurs)
+    def save_o_g(i, gpe):
+        save_hash(i, orat_gpes, gpe)
+    def get_o_g(i):
+        return get_hash(i, orat_gpes)
 
+    steps = {}
     id_step = None
     for step in procedure['steps']:
         done_links = {}
