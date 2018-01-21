@@ -9,6 +9,8 @@ To get the parsed doslegs:
 ```
 # let's install senapy, anpy and a few other things
 # NOTE: this is python 3 only for now
+# you might need to upgrade setuptools to get some of the dependencies before
+pip install --upgrade setuptools pip
 pip install -r requirements.txt
 
 # setup first a few files
