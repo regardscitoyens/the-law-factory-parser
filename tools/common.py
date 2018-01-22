@@ -63,7 +63,7 @@ def identify_room(data, datatype, legislature=None):
         year = 1942 + 5*legislature
         legis = '%s-%s' % (year, year+5)
     else:
-        legis = legis[7:legis.find('.')]
+        legis = legis.split('://')[1].split('.')[0]
     urlapi = "%s.nos%ss" % (legis, typeparl)
     return typeparl, urlapi.lower()
 
