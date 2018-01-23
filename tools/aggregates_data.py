@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, os
-from common import open_json, print_json, amendementIsFromGouvernement
+import sys, os, glob
+from common import open_json, print_json
+
+
+def amendementIsFromGouvernement(amdt):
+    return amdt["groupe"] == "Gouvernement"
 
 
 
@@ -58,7 +62,7 @@ class CountAmendementComputation(object):
         if not amendementIsFromGouvernement(amdt):
             self.countAmdtParl += 1
         
-        if amdt["amendement"]["sort"] == "Adopté":
+        if amdt["sort"] == "adopté":
             self.countAmdtAdoptes += 1
             if not amendementIsFromGouvernement(amdt):
                 self.countAmdtParlAdoptes += 1
@@ -148,19 +152,6 @@ class DossierWalker(object):
         self.vizPath = os.path.join(sourcedir, self.id, "viz")
 
     def step_walker(self,step):
-        #Amendement treatment    
-        if "amendement_directory" in step:
-            amdtDir = os.path.join(self.procedurePath, 
-                step["amendement_directory"])
-            if not os.path.exists(amdtDir):
-                print("ERROR > No Amendements Directory ")
-                return;
-
-            amendements = open_json(amdtDir, "amendements.json")
-            for amendement in amendements["amendements"]:
-                self.computationClass.computeAmendements(amendement)
-               # print ">>%s"% amendement["amendement"]["id"]
-
         #Intervention treatment
         if "intervention_directory" in step:
             intervDir = os.path.join(self.procedurePath, 
@@ -202,6 +193,13 @@ class DossierWalker(object):
         for step in procedure['steps'] :
            self.step_walker(step)
            self.computationClass.computeStep(step)
+
+        for amdts_file in glob.glob(os.path.join(self.vizPath, 'amendements_*')):
+            amendements = open_json(amdts_file)
+            for subject in amendements.get('sujets', {}).values():
+                for amdt in subject.get('amendements', []):
+                    import pudb;pu.db
+                    self.computationClass.computeAmendements(amdt)
 
         self.computationClass.finalize()
 

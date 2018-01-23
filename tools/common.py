@@ -186,10 +186,6 @@ class Context(object):
         return gpid
 
 
-def amendementIsFromGouvernement(amdt):
-    return amdt["amendement"]["signataires"].lower() == "le gouvernement"
-
-
 def get_text_id(texte_url):
     if "nationale.fr" in texte_url:
         textid_match = re.search(r'fr\/(\d+)\/.*[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$', texte_url, re.I)
