@@ -1,6 +1,7 @@
 import os, glob, sys, json, csv, random, shutil
 
-from tools import json2arbo, prepare_articles, update_procedure, prepare_amendements, prepare_interventions
+from tools import json2arbo, prepare_articles, update_procedure, \
+    prepare_amendements, prepare_interventions, reorder_interventions_and_correct_procedure
 
 def process(dos, OUTPUT_DIR, skip_already_done=False):
     dos_id = dos.get('senat_id', dos.get('assemblee_id'))
@@ -25,6 +26,9 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
 
     print(' - process amendements')
     procedure = prepare_amendements.process(output_dir, procedure)
+
+    print(' - re-order interventions and correct procedure dates')
+    procedure = reorder_interventions_and_correct_procedure.process(output_dir, procedure)
 
     print(' - prepare interventions.json')
     prepare_interventions.process(output_dir, procedure)
