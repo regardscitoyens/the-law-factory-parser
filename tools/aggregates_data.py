@@ -198,7 +198,6 @@ class DossierWalker(object):
             amendements = open_json(amdts_file)
             for subject in amendements.get('sujets', {}).values():
                 for amdt in subject.get('amendements', []):
-                    import pudb;pu.db
                     self.computationClass.computeAmendements(amdt)
 
         self.computationClass.finalize()
