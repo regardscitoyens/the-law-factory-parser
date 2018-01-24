@@ -37,6 +37,10 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
             except KeyError:
                 pass
 
+    # avoid duplicate titles
+    if " de loi organique" in procedure['long_title']:
+        procedure['short_title'] += " (texte organique)"
+
     open(output_dir + '/viz/procedure.json', 'w').write(
         json.dumps(procedure, indent=2, sort_keys=True, ensure_ascii=False))
 
