@@ -20,13 +20,17 @@ def open_csv(dirpath, filename, delimiter=";"):
         sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
         raise e
 
-def open_json(dirpath, filename):
+def open_json(dirpath, filename=None):
+    if filename:
+        path = os.path.join(dirpath, filename)
+    else:
+        path = dirpath
     try:
-        with open(os.path.join(dirpath, filename), 'r') as f:
+        with open(path, 'r') as f:
             return json.load(f)
     except Exception as e:
         print(type(e), e, file=sys.stderr)
-        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
+        sys.stderr.write("ERROR: Could not open file %s" % (path,))
         raise e
 
 def print_json(dico, filename=None):
@@ -56,16 +60,18 @@ re_entities = re.compile(r'&([^;]+)(;|$)')
 decode_char = lambda x: chr(int(x.group(1)[1:]) if x.group(1).startswith('#') else name2codepoint[x.group(1)])
 decode_html = lambda text: re_entities.sub(decode_char, text)
 
-def identify_room(data, datatype, legislature=None):
-    typeparl = "depute" if 'url_nosdeputes' in data[0][datatype] else "senateur"
-    legis = data[0][datatype]['url_nos%ss' % typeparl]
-    if legislature and typeparl == 'depute':
+
+def identify_room(url_or_institution, legislature):
+    typeparl = "depute" if 'nationale.fr' in url_or_institution \
+        or url_or_institution == 'assemblee' else "senateur"
+    if typeparl == 'depute':
         year = 1942 + 5*legislature
         legis = '%s-%s' % (year, year+5)
     else:
-        legis = legis.split('://')[1].split('.')[0]
+        legis = 'www'
     urlapi = "%s.nos%ss" % (legis, typeparl)
-    return typeparl, urlapi.lower()
+    return typeparl, urlapi
+
 
 def personalize_link(link, obj, urlapi):
     if isinstance(obj, dict):

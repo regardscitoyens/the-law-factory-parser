@@ -109,7 +109,7 @@ def process(OUTPUT_DIR, procedure):
                     continue
                 intervs.append(i)
 
-        typeparl, urlapi = identify_room(intervs, 'intervention',
+        typeparl, urlapi = identify_room(step.get('institution'),
             legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
 
         # By default divide in subsections, or by seance if no subsection

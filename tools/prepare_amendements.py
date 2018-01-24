@@ -72,7 +72,7 @@ def process(OUTPUT_DIR, procedure):
         def clean_subject(subj):
             subj = subj.lower().strip()
             for regex, replacement in [
-                    (r' (prem)?ier', '1er'),
+                    (r' (prem)?ier', ' 1er'),
                     (r'unique', '1er'),
                     (r'\s*\(((avant|apr).*)\)', r'\1'),
                     (r'\s*\(.*$', ''),
@@ -187,108 +187,108 @@ def process(OUTPUT_DIR, procedure):
 
         step['nb_amendements'] = len(amendements_src)
 
-        if len(amendements_src) == 0:
-            continue
+        if len(amendements_src) > 0:
+            amendements_src = sort_amendements(texte['articles'], amendements_src)
 
-        amendements_src = sort_amendements(texte['articles'], amendements_src)
+            typeparl, urlapi = identify_room(texte_url,
+                legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
 
-        typeparl, urlapi = identify_room(amendements_src, 'amendement',
-            legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
+            sujets = {}
+            groupes = {}
 
-        sujets = {}
-        groupes = {}
-
-        fix_order = False
-        orders = []
-        parls = {}
-        links = {}
-        idents = {}
-        for amd in amendements_src:
-            a = amd['amendement']
-            if "sort" not in a:
-                print(a, file=sys.stderr)
-            if a["sort"] == "Rectifié":
-                continue
-            try:
-                key = format_sujet(a['sujet'])
-            except:
-                sys.stderr.write('WARNING: amendment has no subject %s\n' % a['url_nos%ss' % typeparl])
-                continue
-            if key not in sujets:
-                orders.append(key)
-                sujets[key] = {
-                  'titre': key,
-                  'details': a['sujet'],
-                  'order': a['ordre_article'],
-                  'amendements': []
-                }
-            if a['ordre_article'] > 9000:
-                fix_order = True
-
-            gpe = find_groupe(a)
-            if not gpe:
-                sys.stderr.write('WARNING: no groupe found for %s\n' % a['url_nos%ss' % typeparl])
-                gpe = "Inconnu"
-            context.add_groupe(groupes, gpe, urlapi)
-
-            sujets[key]['amendements'].append({
-              'numero': a['numero'],
-              'date': a['date'],
-              'sort': simplify_sort(a['sort']),
-              'groupe': gpe,
-              'id_api': a['id'],
-              'aut': first_author(a['signataires'])
-            })
-
-            cosign = []
-            hmd5 = a["cle_unicite"]
-            if hmd5 not in idents:
-                idents[hmd5] = []
-            for parll in a["parlementaires"]:
-                parl = parll["parlementaire"]
-                if parl not in parls:
-                    p = context.get_parlementaire(urlapi, parl)
-                    parls[parl] = {
-                      "i": p["id"],
-                      "s": parl,
-                      "a": 0,
-                      "n": p["nom"],
-                      "g": p["groupe_sigle"],
-                      "p": p["place_en_hemicycle"]
+            fix_order = False
+            orders = []
+            parls = {}
+            links = {}
+            idents = {}
+            for amd in amendements_src:
+                a = amd['amendement']
+                if "sort" not in a:
+                    print(a, file=sys.stderr)
+                if a["sort"] == "Rectifié":
+                    continue
+                try:
+                    key = format_sujet(a['sujet'])
+                except:
+                    sys.stderr.write('WARNING: amendment has no subject %s\n' % a['url_nos%ss' % typeparl])
+                    continue
+                if key not in sujets:
+                    orders.append(key)
+                    sujets[key] = {
+                      'titre': key,
+                      'details': a['sujet'],
+                      'order': a['ordre_article'],
+                      'amendements': []
                     }
-                pid = parls[parl]["i"]
-                parls[parl]["a"] += 1
-                for cid in cosign:
-                    add_link(links, pid, cid)
-                    #add_link(links, pid, cid, 2)
-                cosign.append(pid)
-                for cid in idents[hmd5]:
-                    add_link(links, pid, cid)
-                idents[hmd5].append(pid)
+                if a['ordre_article'] > 9000:
+                    fix_order = True
 
-        if fix_order:
-            orders.sort(key=cmp_to_key(compare_articles))
-            for i, k in enumerate(orders):
-                sujets[k]["order"] = i
+                gpe = find_groupe(a)
+                if not gpe:
+                    sys.stderr.write('WARNING: no groupe found for %s\n' % a['url_nos%ss' % typeparl])
+                    gpe = "Inconnu"
+                context.add_groupe(groupes, gpe, urlapi)
 
-        amdtsfile = os.path.join(context.sourcedir, 'viz', 'amendements_%s.json' % step['directory'])
-        data = {'id_step': step['directory'],
-                'api_root_url': amdapi_link(urlapi),
-                'groupes': groupes,
-                'sujets': sujets}
-        print_json(data, amdtsfile)
+                sujets[key]['amendements'].append({
+                  'numero': a['numero'],
+                  'date': a['date'],
+                  'sort': simplify_sort(a['sort']),
+                  'groupe': gpe,
+                  'id_api': a['id'],
+                  'aut': first_author(a['signataires'])
+                })
 
-        linksfile = os.path.join(context.sourcedir, 'viz', 'amendements_links_%s.json' % step['directory'])
-        data = {'id_step': step['directory'],
-                'links': list(links.values()),
-                'parlementaires': dict((p["i"], dict((k, p[k]) for k in "psang")) for p in list(parls.values()))}
-        # print_json(data, linksfile)
+                cosign = []
+                hmd5 = a["cle_unicite"]
+                if hmd5 not in idents:
+                    idents[hmd5] = []
+                for parll in a["parlementaires"]:
+                    parl = parll["parlementaire"]
+                    if parl not in parls:
+                        p = context.get_parlementaire(urlapi, parl)
+                        parls[parl] = {
+                          "i": p["id"],
+                          "s": parl,
+                          "a": 0,
+                          "n": p["nom"],
+                          "g": p["groupe_sigle"],
+                          "p": p["place_en_hemicycle"]
+                        }
+                    pid = parls[parl]["i"]
+                    parls[parl]["a"] += 1
+                    for cid in cosign:
+                        add_link(links, pid, cid)
+                        #add_link(links, pid, cid, 2)
+                    cosign.append(pid)
+                    for cid in idents[hmd5]:
+                        add_link(links, pid, cid)
+                    idents[hmd5].append(pid)
 
+            if fix_order:
+                orders.sort(key=cmp_to_key(compare_articles))
+                for i, k in enumerate(orders):
+                    sujets[k]["order"] = i
+
+            amdtsfile = os.path.join(context.sourcedir, 'viz', 'amendements_%s.json' % step['directory'])
+            data = {'id_step': step['directory'],
+                    'api_root_url': amdapi_link(urlapi),
+                    'groupes': groupes,
+                    'sujets': sujets}
+            print_json(data, amdtsfile)
+
+            linksfile = os.path.join(context.sourcedir, 'viz', 'amendements_links_%s.json' % step['directory'])
+            data = {'id_step': step['directory'],
+                    'links': list(links.values()),
+                    'parlementaires': dict((p["i"], dict((k, p[k]) for k in "psang")) for p in list(parls.values()))}
+            # print_json(data, linksfile)
 
 
         ###########  INTERVENTIONS #############
+        # TODO: move this to a dedicated file
 
         print('    * downloading interventions')
+        typeparl, urlapi = identify_room(texte_url,
+            legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
         inter_dir = os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions')
         if not os.path.exists(inter_dir):
             os.makedirs(inter_dir)
