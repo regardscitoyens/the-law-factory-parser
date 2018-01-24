@@ -14,14 +14,16 @@ pip install --upgrade setuptools pip
 pip install -r requirements.txt
 
 # setup first a few files
-python download_groupes.py data/parsed/api/
+python download_groupes.py data/
 
 # then you can parse any dosleg by url or id
-python parse_one.py data/parsed/api/ pjl12-688
-python parse_one.py data/parsed/api/ http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp
+python parse_one.py data/ pjl12-688
+python parse_one.py data/ http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp
 
 # and to parse many of them
 senapy-cli doslegs_urls | python parse_many.py data/parsed/api
+python generate_dossiers_csv.py data/
+python tools/assemble_procedures.py data/
 ```
 
 ### Other things you can do
