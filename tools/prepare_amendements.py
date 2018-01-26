@@ -210,7 +210,7 @@ def process(OUTPUT_DIR, procedure):
                     continue
                 if a["sort"] == "Rectifié":
                     continue
-                if "sujet" not in a or not a["sujet"]
+                if "sujet" not in a or not a["sujet"]:
                     if a["sort"] not in ["Irrecevable", "Retiré avant séance"]:
                         print('WARNING: amendment has no subject %s\n' % a['url_nos%ss' % typeparl], file=sys.stderr)
                     continue
