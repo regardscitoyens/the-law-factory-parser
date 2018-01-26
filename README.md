@@ -21,7 +21,7 @@ python parse_one.py data/ pjl12-688
 python parse_one.py data/ http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp
 
 # and to parse many of them
-senapy-cli doslegs_urls | python parse_many.py data/parsed/api
+senapy-cli doslegs_urls | python parse_many.py data/
 python generate_dossiers_csv.py data/
 python tools/assemble_procedures.py data/
 ```
