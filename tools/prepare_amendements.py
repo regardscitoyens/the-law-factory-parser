@@ -232,7 +232,8 @@ def process(OUTPUT_DIR, procedure):
 
                 gpe = find_groupe(a)
                 if not gpe:
-                    sys.stderr.write('WARNING: no groupe found for %s\n' % a['url_nos%ss' % typeparl])
+                    if a["sort"] != "Irrecevable":
+                        sys.stderr.write('WARNING: no groupe found for %s\n' % a['url_nos%ss' % typeparl])
                     gpe = "Inconnu"
                 context.add_groupe(groupes, gpe, urlapi)
 
