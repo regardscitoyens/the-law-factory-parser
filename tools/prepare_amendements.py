@@ -206,13 +206,18 @@ def process(OUTPUT_DIR, procedure):
             for amd in amendements_src:
                 a = amd['amendement']
                 if "sort" not in a:
-                    print(a, file=sys.stderr)
+                    print('WARNING: amendment has no sort %s\n' % a['url_nos%ss' % typeparl], file=sys.stderr)
+                    continue
                 if a["sort"] == "Rectifié":
+                    continue
+                if "sujet" not in a or not a["sujet"]
+                    if a["sort"] not in ["Irrecevable", "Retiré avant séance"]:
+                        print('WARNING: amendment has no subject %s\n' % a['url_nos%ss' % typeparl], file=sys.stderr)
                     continue
                 try:
                     key = format_sujet(a['sujet'])
                 except:
-                    sys.stderr.write('WARNING: amendment has no subject %s\n' % a['url_nos%ss' % typeparl])
+                    print('WARNING: amendment has no subject %s\n' % a['url_nos%ss' % typeparl], file=sys.stderr)
                     continue
                 if key not in sujets:
                     orders.append(key)
