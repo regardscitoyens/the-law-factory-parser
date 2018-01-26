@@ -1,4 +1,5 @@
 import os, sys, random
+from time import time
 from functools import cmp_to_key
 
 from lawfactory_utils.urls import download
@@ -125,7 +126,7 @@ def process(OUTPUT_DIR, procedure):
         return amendements
 
 
-    CACHE_BUSTING = 'cache=%d' % random.randint(0, 10000)
+    CACHE_BUSTING = 'cache=%d' % time()
     steps = {}
     last_text_id = None
     for i, step in enumerate(procedure['steps']):
