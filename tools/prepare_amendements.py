@@ -115,7 +115,7 @@ def process(OUTPUT_DIR, procedure):
                         order = articles.get(m.group(2))
                     if 'avant' in art:
                         order -= 1
-                    elif re.match(r'apr\S+s', art, re.I):
+                    elif 'après' in art or 'apres' in art:
                         order += 1
             return order
 
