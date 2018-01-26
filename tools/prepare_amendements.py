@@ -62,6 +62,23 @@ def process(OUTPUT_DIR, procedure):
             }
         links[linkid]["w"] += weight
 
+    clean_subject_amendements_regexp = [(re.compile(reg), res) for (reg, res) in [
+        (r' (prem)?ier', ' 1er'),
+        (r'unique', '1er'),
+        (r'\s*\(((avant|apr).*)\)', r' \1'),
+        (r'\s*\(.*$', ''),
+        (r'^(\d)', r'article \1'),
+        (r'articles', 'article'),
+        (r'art(\.|icle|\s)*(\d+)', r'article \2'),
+        (r'^(apr[eè]s|avant)\s*', r'article additionnel \1 '),
+        (r'(apr[eè]s|avant)\s+article', r"\1 l'article"),
+        (r'(\d+e?r? )([a-z]{1,2})$', lambda x: x.group(1) + x.group(2).upper()),
+        (r'(\d+e?r? \S+ )([a-z]+)$', lambda x: x.group(1) + x.group(2).upper()),
+        (r' annexe.*', ''),
+        (r' rapport.*', ''),
+        (r'article 1$', 'article 1er'),
+    ]]
+    article_number_regexp = re.compile(r'article (1er.*|(\d+).*)$', re.I)
     def sort_amendements(texte, amendements):
         articles = {}
         for article in texte:
@@ -72,23 +89,8 @@ def process(OUTPUT_DIR, procedure):
 
         def clean_subject(subj):
             subj = subj.lower().strip()
-            for regex, replacement in [
-                    (r' (prem)?ier', ' 1er'),
-                    (r'unique', '1er'),
-                    (r'\s*\(((avant|apr).*)\)', r' \1'),
-                    (r'\s*\(.*$', ''),
-                    (r'^(\d)', r'article \1'),
-                    (r'articles', 'article'),
-                    (r'art(\.|icle|\s)*(\d+)', r'article \2'),
-                    (r'^(apr\S+s|avant)\s*', r'article additionnel \1 '),
-                    (r'(apr\S+s|avant)\s+article', r"\1 l'article"),
-                    (r'(\d+e?r? )([a-z]{1,2})$', lambda x: x.group(1) + x.group(2).upper()),
-                    (r'(\d+e?r? \S+ )([a-z]+)$', lambda x: x.group(1) + x.group(2).upper()),
-                    (r' annexe.*', ''),
-                    (r' rapport.*', ''),
-                    (r'article 1$', 'article 1er'),
-                ]:
-                subj = re.sub(regex, replacement, subj)
+            for regex, replacement in clean_subject_amendements_regexp:
+                subj = regex.sub(replacement, subj)
                 subj = subj.strip()
             return subj
 
@@ -105,7 +107,7 @@ def process(OUTPUT_DIR, procedure):
                 or art.startswith('texte'):
                 return 5
             else:
-                m = re.search(r'article (1er.*|(\d+).*)$', art, re.I)
+                m = article_number_regexp.search(art)
                 if m:
                     for match in m.group(1), m.group(2):
                         matched_order = articles.get(match)
