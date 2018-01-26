@@ -109,10 +109,10 @@ def process(OUTPUT_DIR, procedure):
             else:
                 m = article_number_regexp.search(art)
                 if m:
-                    for match in m.group(1), m.group(2):
-                        matched_order = articles.get(match)
-                        if matched_order:
-                            order = matched_order
+                    if articles.get(m.group(1)):
+                        order = articles.get(m.group(1))
+                    elif articles.get(m.group(2)):
+                        order = articles.get(m.group(2))
                     if 'avant' in art:
                         order -= 1
                     elif re.match(r'apr\S+s', art, re.I):
