@@ -16,10 +16,11 @@ def project_header_template(dos_id, procedure):
 def process(dos, OUTPUT_DIR, skip_already_done=False):
     dos_id = dos.get('senat_id', dos.get('assemblee_id'))
     
-    output_dir = os.path.join(OUTPUT_DIR, dos_id)
+    output_dir = os.path.join(OUTPUT_DIR, dos_id + '_tmp')
+    final_output_dir = os.path.join(OUTPUT_DIR, dos_id)
     print('     writing to:', output_dir)
 
-    if skip_already_done and os.path.exists(output_dir):
+    if skip_already_done and os.path.exists(final_output_dir):
         print(' - already done')
         return
 
@@ -61,4 +62,7 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
     open(os.path.join(output_dir, 'HEADER.html'), 'w').write(
         project_header_template(dos_id, procedure))
 
-    print('  FINISHED -', output_dir)
+    shutil.rmtree(final_output_dir, ignore_errors=True)
+    os.rename(output_dir, final_output_dir)
+
+    print('  FINISHED -', final_output_dir)
