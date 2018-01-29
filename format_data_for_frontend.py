@@ -3,6 +3,16 @@ import os, glob, sys, json, csv, random, shutil
 from tools import json2arbo, prepare_articles, update_procedure, \
     prepare_amendements, prepare_interventions, reorder_interventions_and_correct_procedure
 
+
+def project_header_template(dos_id, procedure):
+    return """
+<h1>Les données pour: "{long_title}"</h1>
+<p>Les données mises à disposition dans ces répertoires sont celles utilisées par <a href="http://lafabriquedelaloi.fr/">La Fabrique de la Loi</a> pour visualiser "<a href="http://lafabriquedelaloi.fr/lois.html?loi={dos_id}">{long_title}</a>".</p>
+<p>Elles ont été constituées par <a href="http://regardscitoyens.org">Regards Citoyens</a> à partir de <a href="http://nosdeputes.Fr/">NosDéputés.fr</a>, <a href="http://NosSénateurs.fr">NosSénateurs.fr<a/> et les sites du <a href="http://senat.fr/">Sénat</a> et de l'<a href="http://assemblee-nationale.fr">Assemblée nationale</a>. Elles sont réutilisables librement en <img src="http://www.nosdeputes.fr/images/opendata.png" alt="Open Data"/> sous la licence <a href="http://opendatacommons.org/licenses/odbl/">ODBL</a>.</p>
+<p>Le répertoire <a href="procedure/"><img src="http://www.lafabriquedelaloi.fr/icons/folder.gif"/>&nbsp;procedure/</a> contient les données brutes au format JSON sur les textes, les interventions et les amendements à chaque étape de la procédure. Le répertoire <a href="viz/"><img src="http://www.lafabriquedelaloi.fr/icons/folder.gif"/>&nbsp;viz/</a> contient les fichiers utilisés par l'application.</p>
+""".format(long_title=procedure.get('long_title'), dos_id=dos_id)
+
+
 def process(dos, OUTPUT_DIR, skip_already_done=False):
     dos_id = dos.get('senat_id', dos.get('assemblee_id'))
     
@@ -45,7 +55,10 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
     if " de loi organique" in procedure['long_title']:
         procedure['short_title'] += " (texte organique)"
 
-    open(output_dir + '/viz/procedure.json', 'w').write(
+    open(os.path.join(output_dir, 'viz/procedure.json'), 'w').write(
         json.dumps(procedure, indent=2, sort_keys=True, ensure_ascii=False))
+
+    open(os.path.join(output_dir, 'HEADER.html'), 'w').write(
+        project_header_template(dos_id, procedure))
 
     print('  FINISHED -', output_dir)

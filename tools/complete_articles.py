@@ -246,7 +246,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
                         else:
                             print('     -> it should have been deleted')
                         exit()
-                print("DEBUG: article '%s' matched with old article '%s'" % (line['titre'] , oldart['titre']))
+                log("DEBUG: article '%s' matched with old article '%s'" % (line['titre'] , oldart['titre']))
                 
                 oldtxt = [re_clean_alin.sub('', v) for v in list(oldart["alineas"].values()) if not re_alin_sup.search(v)]
                 txt = [re_clean_alin.sub('', v) for v in list(line["alineas"].values()) if not re_alin_sup.search(v)]

@@ -93,7 +93,7 @@ for d in dossiers:
     for s in proc['steps']:
         if s['debats_order'] == None:
             continue
-        if s['step'] != "depot":
+        if s.get('step') != "depot":
             first_found = True
             lastText = read_text(d['id'], s['directory'])
         if not first_found and s['step'] == "depot":

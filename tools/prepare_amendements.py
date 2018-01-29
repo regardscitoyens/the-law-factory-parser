@@ -138,6 +138,8 @@ def process(OUTPUT_DIR, procedure):
 
 
     CACHE_BUSTING = 'cache=%d' % time()
+    if 'url_jo' in procedure:
+        CACHE_BUSTING = 'cache=promulgated' # disable cache busting for promulgated laws
     steps = {}
     last_text_id = None
     for i, step in enumerate(procedure['steps']):
@@ -307,8 +309,6 @@ def process(OUTPUT_DIR, procedure):
         typeparl, urlapi = identify_room(texte_url,
             legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
         inter_dir = os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions')
-        if not os.path.exists(inter_dir):
-            os.makedirs(inter_dir)
         commission_or_hemicycle = '?commission=1' if step.get('step') == 'commission' else '?hemicycle=1'
         # TODO: TA texts can be zero-paded or not (TA0XXX or TAXXX), we should try both
         # TODO: last_text_id check same stage same institution
@@ -326,6 +326,8 @@ def process(OUTPUT_DIR, procedure):
                     seance_name = inter['date'] + 'T' + inter['heure'] + '_' + inter['seance_id']
                     print('                 * dumping seance -', seance_name)
                     intervention_files.append(seance_name)
+                    if not os.path.exists(inter_dir):
+                        os.makedirs(inter_dir)
                     print_json(resp, os.path.join(inter_dir, seance_name + '.json'))
             if seance_name:
                 step['has_interventions'] = True
