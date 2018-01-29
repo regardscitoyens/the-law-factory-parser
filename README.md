@@ -52,3 +52,15 @@ python tools/detect_anomalies data/parsed/merged/all.json
 # detect only in one
 senapy-cli parse pjl15-610 | python tools/detect_anomalies
 ```
+
+
+### Tests
+
+To run the tests, you can follow the `.travis.yml` file.
+
+    - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git
+    - python tests_regressions.py <path-to-the-tests-cases>
+
+If you modify something, best in to re-generate the test-cases with the `--regen` flag:
+
+    - python tests_regressions.py <path-to-the-tests-cases> --regen
