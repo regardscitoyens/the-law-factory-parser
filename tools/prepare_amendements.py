@@ -40,7 +40,7 @@ def clean_subject(subj):
     for regex, replacement in clean_subject_amendements_regexp:
         subj = regex.sub(replacement, subj)
         subj = subj.strip(": ")
-        return subj
+    return subj
 
 
 def process(OUTPUT_DIR, procedure):
