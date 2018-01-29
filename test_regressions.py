@@ -79,4 +79,7 @@ for directory in glob.glob(TEST_DIR + '/p*'):
         print('   -> test failed, details in tests_tmp')
         raise Exception()
 
-shutil.rmtree('tests_tmp')
+if not REGEN_TESTS:
+    shutil.rmtree('tests_tmp')
+else:
+    print('TESTS REGEN OK')
