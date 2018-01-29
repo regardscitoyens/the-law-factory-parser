@@ -91,12 +91,12 @@ for d in dossiers:
     proc["output_text_length"] = computation.lastStepTextLength
     first_found = False
     for s in proc['steps']:
-        if s['debats_order'] == None:
+        if s['debats_order'] == None or s.get('echec'):
             continue
         if s.get('step') != "depot":
             first_found = True
             lastText = read_text(d['id'], s['directory'])
-        if not first_found and s['step'] == "depot":
+        if not first_found and s.get('step') == "depot":
             firstText = read_text(d['id'], s['directory'])
     a = SequenceMatcher(None, "\n".join(firstText), "\n".join(lastText)).get_matching_blocks()
     proc["ratio_texte_modif"] = 1 - float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])

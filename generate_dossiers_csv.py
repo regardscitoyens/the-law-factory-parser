@@ -58,9 +58,9 @@ for dos, path in dossiers:
         dos.get('short_title') # short_title
     ])
 
-    if len(total_amendements) == 0:
+    if total_amendements == 0:
         status = 'Aucun amendement'
-    elif len(total_amendements) == 1:
+    elif total_amendements == 1:
         status = 'Un amendement'
     else:
         status = '%d amendements' % total_amendements
