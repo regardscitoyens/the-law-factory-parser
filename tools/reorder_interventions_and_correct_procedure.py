@@ -79,7 +79,7 @@ def process(OUTPUT_DIR, procedure):
             step['intervention_files'] = new_interventions_files
         else:
             del step['intervention_files']
-            # TODO: remove empty directory
+            os.rmdir(interv_dirpath)
 
     return procedure
 
