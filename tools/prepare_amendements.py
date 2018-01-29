@@ -1,4 +1,6 @@
-import os, sys, random
+import os
+import random
+import sys
 from time import time
 from functools import cmp_to_key
 
@@ -10,6 +12,36 @@ try:
 except SystemError:
     from common import *
     from sort_articles import compare_articles
+
+
+clean_subject_amendements_regexp = [(re.compile(reg), res) for (reg, res) in [
+    (r'\s\s+', ' '),
+    (r' (prem)?ier', ' 1er'),
+    (r'1 er', '1er'),
+    (r'unique', '1er'),
+    (r'apres', 'après'),
+    (r'\s*\(((avant|apr).*)\)', r' \1'),
+    (r'\s*\(.*$', ''),
+    (r'^(\d)', r'article \1'),
+    (r'articles', 'article'),
+    (r'art(\.|icle|\s)*(\d+)', r'article \2'),
+    (r'^(après|avant)\s*', r'article additionnel \1 '),
+    (r'(après|avant)\s+article', r"\1 l'article"),
+    (r'(\d+e?r? )([a-z]{1,2})$', lambda x: x.group(1) + x.group(2).upper()),
+    (r'(\d+e?r? \S+ )([a-z]+)$', lambda x: x.group(1) + x.group(2).upper()),
+    (r' annexe.*', ''),
+    (r' rapport.*', ''),
+    (r'article 1$', 'article 1er'),
+]]
+
+
+def clean_subject(subj):
+    subj = subj.lower().strip()
+    for regex, replacement in clean_subject_amendements_regexp:
+        subj = regex.sub(replacement, subj)
+        subj = subj.strip(": ")
+        return subj
+
 
 def process(OUTPUT_DIR, procedure):
     context = Context([0, OUTPUT_DIR], load_parls=True)
@@ -62,22 +94,6 @@ def process(OUTPUT_DIR, procedure):
             }
         links[linkid]["w"] += weight
 
-    clean_subject_amendements_regexp = [(re.compile(reg), res) for (reg, res) in [
-        (r' (prem)?ier', ' 1er'),
-        (r'unique', '1er'),
-        (r'\s*\(((avant|apr).*)\)', r' \1'),
-        (r'\s*\(.*$', ''),
-        (r'^(\d)', r'article \1'),
-        (r'articles', 'article'),
-        (r'art(\.|icle|\s)*(\d+)', r'article \2'),
-        (r'^(apr[eè]s|avant)\s*', r'article additionnel \1 '),
-        (r'(apr[eè]s|avant)\s+article', r"\1 l'article"),
-        (r'(\d+e?r? )([a-z]{1,2})$', lambda x: x.group(1) + x.group(2).upper()),
-        (r'(\d+e?r? \S+ )([a-z]+)$', lambda x: x.group(1) + x.group(2).upper()),
-        (r' annexe.*', ''),
-        (r' rapport.*', ''),
-        (r'article 1$', 'article 1er'),
-    ]]
     article_number_regexp = re.compile(r'article (1er.*|(\d+).*)$', re.I)
     def sort_amendements(texte, amendements):
         articles = {}
@@ -86,13 +102,6 @@ def process(OUTPUT_DIR, procedure):
                 titre = article.get('titre')
                 if titre:
                     articles[titre.lower()] = article.get('order') * 10
-
-        def clean_subject(subj):
-            subj = subj.lower().strip()
-            for regex, replacement in clean_subject_amendements_regexp:
-                subj = regex.sub(replacement, subj)
-                subj = subj.strip()
-            return subj
 
         def solveorder(art):
             nonlocal articles
