@@ -69,7 +69,7 @@ for directory in glob.glob(TEST_DIR + '/p*'):
     print('****** testing', senat_id, '*******')
     print()
 
-    parse_one.process(output_dir, senat_id, disable_cache=True)
+    parse_one.process(output_dir, senat_id)
     comp = filecmp.dircmp(directory, output_dir + '/' + senat_id)
     if _is_same_helper(comp):
         print()

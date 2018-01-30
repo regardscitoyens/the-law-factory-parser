@@ -37,7 +37,7 @@ def _dump_json(data, filename):
     print('   DEBUG - dumped', filename)
 
 
-def process(API_DIRECTORY, url, disable_cache=False,
+def process(API_DIRECTORY, url, disable_cache=True,
         debug_intermediary_files=False, only_promulgated=False):
     # Download senat version
     if not disable_cache:
@@ -101,7 +101,7 @@ def process(API_DIRECTORY, url, disable_cache=False,
 if __name__ == '__main__':
     API_DIRECTORY = sys.argv[1]
     url = sys.argv[2]
-    disable_cache = '--disable-cache' in sys.argv
+    disable_cache = '--enable-cache' not in sys.argv
     debug_intermediary_files = '--debug' in sys.argv
     only_promulgated = '--only-promulgated' in sys.argv
     process(API_DIRECTORY, url, disable_cache, debug_intermediary_files, only_promulgated)
