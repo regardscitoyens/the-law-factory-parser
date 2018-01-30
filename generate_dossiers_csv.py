@@ -89,20 +89,20 @@ print(total_doslegs, 'doslegs in csv')
 
 home_json_final = {
     "total": total_doslegs,
-    "maximum": 800, # TODO: how can I get it ?
+    "maximum": 841, # TODO: how can I get it ?
 }
 home_json_data.sort(key=lambda x: -x['total_amendements'])
-home_json_final["recent"] = {
-    "titre": "Les derniers textes débattus",
-    "lien": "Explorer les textes récents",
+home_json_final["focus"] = {
+    "titre": "Les textes les plus amendés",
+    "lien": "Explorer les textes les plus amendés",
     "url": "lois.html",
     "textes": home_json_data[:4],
 }
 home_json_data.sort(key=lambda x: x['last_intervention'] if x['last_intervention'] else '0')
-home_json_final["focus"] = {
+home_json_final["recent"] = {
     "titre": "Les derniers textes débattus",
     "lien": "Explorer les textes récents",
-    "url": "lois.html",
+    "url": "lois.html?action=quanti",
     "textes": home_json_data[-4:],
 }
 open(os.path.join(API_DIRECTORY, 'home.json'), 'w').write(

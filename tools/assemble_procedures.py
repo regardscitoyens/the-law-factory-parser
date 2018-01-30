@@ -111,6 +111,7 @@ for d in dossiers:
     tosave.append(proc)
     done += 1
     if done % pagesize == 0:
+        print('dossiers.json dumping:', done, 'doslegs')
         save_json_page(tosave, done)
         tosave = []
 
