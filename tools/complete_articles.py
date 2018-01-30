@@ -10,10 +10,9 @@ except SystemError:
     from sort_articles import bister, article_is_lower
 
 
-def complete(current, previous, anteprevious, step, table_concordance):
+def complete(current, previous, step, table_concordance):
     current = copy.deepcopy(current)
     previous = copy.deepcopy(previous)
-    anteprevious = copy.deepcopy(anteprevious)
 
     DEBUG = True if len(sys.argv) > 4 else False
     def log(text):
@@ -25,7 +24,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
 
     find_num = re.compile(r'-[a-z]*(\d+)\D?$')
     oldnum = 0
-    oldstep = [{}, {}]
+    oldstep = {}
     oldjson =  []
     oldstatus = {}
     oldartids = []
@@ -44,7 +43,7 @@ def complete(current, previous, anteprevious, step, table_concordance):
             if line["type"] == "article":
                 keys = list(line['alineas'].keys())
                 keys.sort()
-                oldstep[0][line["titre"]] = [line['alineas'][k] for k in keys]
+                oldstep[line["titre"]] = [line['alineas'][k] for k in keys]
                 oldstatus[line["titre"]] = line['statut']
                 oldartids.append(line["titre"])
                 oldarts.append((line["titre"], line))
@@ -54,16 +53,6 @@ def complete(current, previous, anteprevious, step, table_concordance):
         print(type(e), e, file=sys.stderr)
         log("No previous step found at %s" % sys.argv[2])
         exit()
-
-
-    grdoldarts = {}
-    if '/ta' in step.get('source_url', ''):
-        for line in anteprevious:
-            if line["type"] == "article":
-                keys = list(line['alineas'].keys())
-                keys.sort()
-                oldstep[1][line["titre"]] = [line['alineas'][k] for k in keys]
-                grdoldarts[line["titre"]] = line
 
     ALL_ARTICLES = []
     def write_json(data):
@@ -182,7 +171,6 @@ def complete(current, previous, anteprevious, step, table_concordance):
             alineas = [line['alineas'][k] for k in keys]
             mult = line['titre'].split(' à ')
             is_mult = (len(mult) > 1)
-            oldid = 1 if grdoldarts and ("conforme" in line['statut'].lower() or (alineas and "conforme" in alineas[0].lower())) else 0
             if is_mult:
                 st = mult[0].strip()
                 ed = mult[1].strip()
@@ -317,8 +305,6 @@ def complete(current, previous, anteprevious, step, table_concordance):
                         order += 1
                         write_json(a)
                     elif mult_type == "conf":
-                        if oldid:
-                            a = grdoldarts[a['titre']]
                         log("DEBUG: Recovering art conforme %s (mult)" % cur)
                         a["statut"] = "conforme"
                         a["order"] = order
@@ -332,18 +318,17 @@ def complete(current, previous, anteprevious, step, table_concordance):
                continue
             # Clean empty articles with only "Non modifié" and include text from previous step
             if alineas and re_confo.match(alineas[0]) and alineas[0].endswith(')'):
-                if not line['titre'] in oldstep[oldid]:
+                if not line['titre'] in oldstep:
                     sys.stderr.write("WARNING: found repeated article %s missing from previous step: %s (article is ignored)\n" % (line['titre'], line['alineas']))
                     # ignore empty non-modified
                     continue
                 else:
                     log("DEBUG: get back Art %s" % line['titre'])
-                    alineas = oldstep[oldid][line['titre']]
+                    alineas = oldstep[line['titre']]
             gd_text = []
-            oldid = 1 if grdoldarts else 0
             for j, text in enumerate(alineas):
                 text = text
-                if "(Non modifi" in text and not line['titre'] in oldstep[oldid]:
+                if "(Non modifi" in text and not line['titre'] in oldstep:
                     sys.stderr.write("WARNING: found repeated article missing %s from previous step: %s\n" % (line['titre'], text))
                 elif re_confo_with_txt.search(text):
                     text = re_confo_with_txt.sub(r' \2', text)
@@ -362,17 +347,13 @@ def complete(current, previous, anteprevious, step, table_concordance):
                         if " à " in todo:
                             start = re.split(" à ", todo)[0]
                             end = re.split(" à ", todo)[1]
-                            mark = get_mark_from_last(oldstep[oldid][line['titre']], start, end, sep=part[1:])
-                            if mark is False and oldid == 1:
-                                mark = get_mark_from_last(oldstep[0][line['titre']], start, end, sep=part[1:])
+                            mark = get_mark_from_last(oldstep[line['titre']], start, end, sep=part[1:])
                             if mark is False:
                                 exit()
                             piece.extend(mark)
                         # Extract set of non-modified subsections of articles from previous version.
                         elif todo:
-                            mark = get_mark_from_last(oldstep[oldid][line['titre']], todo, sep=part[1:])
-                            if mark is False and oldid == 1:
-                                mark = get_mark_from_last(oldstep[0][line['titre']], todo, sep=part[1:])
+                            mark = get_mark_from_last(oldstep[line['titre']], todo, sep=part[1:])
                             if mark is False:
                                 exit()
                             piece.extend(mark)

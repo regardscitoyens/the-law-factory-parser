@@ -195,16 +195,9 @@ def process(dos, debug_intermediary_files=False):
                 if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):
                     step['articles_completed'] = step['articles']
                 else:
-                    ante_step_index = _step_logic.get_previous_step(steps, prev_step_index, dos.get('use_old_procedure', False))
-                    if ante_step_index is None:
-                        ante_step_articles = []
-                    else:
-                        ante_step_articles = steps[ante_step_index].get('articles_completed', steps[ante_step_index].get('articles', []))
-                    
                     complete_args = {
                         'current': step.get('articles', []),
                         'previous': steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
-                        'anteprevious': ante_step_articles,
                         'step': step,
                         'table_concordance':dos.get('table_concordance', {}),
                     }
