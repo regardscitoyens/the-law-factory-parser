@@ -19,7 +19,9 @@ def download_senat(url):
 
 def download_an(url, url_senat=False):
     print('  [] download AN version')
-    html = download(url).text
+    resp = download(url)
+    resp.encoding = 'Windows-1252'
+    html = resp.text
     print('  [] parse AN version')
     # TODO: do both instead of first
     results = anpy_parse(html, url)
@@ -75,7 +77,7 @@ def process(API_DIRECTORY, url, disable_cache=True,
         print(' INVALID URL:', url)
         return
 
-    print('        title:', dos.get('short_title'))
+    print('        title:', dos.get('long_title'))
     find_anomalies([dos])
 
     if not dos.get('url_jo') and only_promulgated:

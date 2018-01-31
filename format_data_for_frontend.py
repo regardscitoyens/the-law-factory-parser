@@ -56,6 +56,10 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
     if " de loi organique" in procedure['long_title']:
         procedure['short_title'] += " (texte organique)"
 
+    # AN doslegs have no short_titles
+    if 'short_title' not in procedure:
+        procedure['short_title'] = procedure['long_title']
+
     open(os.path.join(output_dir, 'viz/procedure.json'), 'w').write(
         json.dumps(procedure, indent=2, sort_keys=True, ensure_ascii=False))
 
