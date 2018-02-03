@@ -13,41 +13,8 @@ except SystemError:
     from common import *
     from sort_articles import compare_articles
 
-
-clean_subject_amendements_regexp = [(re.compile(reg), res) for (reg, res) in [
-    (r'\s\s+', ' '),
-    (r' (prem)?ier', ' 1er'),
-    (r'1 er', '1er'),
-    (r'unique', '1er'),
-    (r'apres', 'après'),
-    (r'\s*\(((avant|apr).*)\)', r' \1'),
-    (r'\s*\(.*$', ''),
-    (r'^(\d)', r'article \1'),
-    (r'articles', 'article'),
-    (r'art(\.|icle|\s)*(\d+)', r'article \2'),
-    (r'^(après|avant)\s*', r'article additionnel \1 '),
-    (r'(après|avant)\s+article', r"\1 l'article"),
-    (r'(\d+e?r? )([a-z]{1,2})$', lambda x: x.group(1) + x.group(2).upper()),
-    (r'(\d+e?r? \S+ )([a-z]+)$', lambda x: x.group(1) + x.group(2).upper()),
-    (r' annexe.*', ''),
-    (r' rapport.*', ''),
-    (r'article 1$', 'article 1er'),
-]]
-
-
-def clean_subject(subj):
-    subj = subj.lower().strip()
-    for regex, replacement in clean_subject_amendements_regexp:
-        subj = regex.sub(replacement, subj)
-        subj = subj.strip(": ")
-    return subj
-
-
 def process(OUTPUT_DIR, procedure):
     context = Context([0, OUTPUT_DIR], load_parls=True)
-
-    re_clean_add = re.compile(r'^.*additionnel[le\s]*', re.I)
-    format_sujet = lambda t: upper_first(re_clean_add.sub('', t))
 
     #['Indéfini', 'Adopté', 'Irrecevable', 'Rejeté', 'Retiré', 'Tombe', 'Non soutenu', 'Retiré avant séance', 'Rectifié', 'Favorable' ,'Satisfait']
     def simplify_sort(sort):
@@ -131,7 +98,6 @@ def process(OUTPUT_DIR, procedure):
 
         for amendement in amendements:
             amdt = amendement['amendement']
-            amdt['sujet'] = clean_subject(amdt['sujet'])
             amdt['ordre_article'] = solveorder(amdt['sujet'])
 
         return amendements
@@ -225,16 +191,15 @@ def process(OUTPUT_DIR, procedure):
                     if a["sort"] not in ["Irrecevable", "Retiré avant séance"]:
                         print('WARNING: amendment has no subject %s\n' % a['url_nos%ss' % typeparl], file=sys.stderr)
                     continue
-                try:
-                    key = format_sujet(a['sujet'])
-                except:
+                key = a['sujet']
+                if not key:
                     print('WARNING: amendment has no subject %s\n' % a['url_nos%ss' % typeparl], file=sys.stderr)
                     continue
                 if key not in sujets:
                     orders.append(key)
                     sujets[key] = {
                       'titre': key,
-                      'details': a['sujet'],
+                      'details': upper_first(key),
                       'order': a['ordre_article'],
                       'amendements': []
                     }
