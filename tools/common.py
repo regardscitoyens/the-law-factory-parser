@@ -54,7 +54,7 @@ def format_date(d):
     da.reverse()
     return "-".join(da)
 
-upper_first = lambda t: t[0].upper() + t[1:]
+upper_first = lambda t: t[0].upper() + t[1:] if len(t) > 1 else t.upper()
 
 re_entities = re.compile(r'&([^;]+)(;|$)')
 decode_char = lambda x: chr(int(x.group(1)[1:]) if x.group(1).startswith('#') else name2codepoint[x.group(1)])
