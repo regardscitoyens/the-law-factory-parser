@@ -76,6 +76,7 @@ def process(procedure):
     re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
     re_upper_first = re.compile(r'^(.)(.*)$')
     step_id = ''
+    old_step_index = None
     for nstep, step in enumerate(steps):
         data = step.get('texte.json')
         if step['stage'] in ["promulgation", "constitutionnalité"]:
@@ -84,9 +85,9 @@ def process(procedure):
             print('     prepare_articles: no data for', step.get('stage'), step.get('step'), step.get('institution'), file=sys.stderr)
             continue
 
-        #step['directory'] = str(nstep)
         step_id = step['directory']
-        # step_id = "%02d%s" % (nstep, step['directory'][2:])
+
+        # hack
         step['echec'] = step.get('echec')
 
         echec = (step['echec'] and step['echec'] != "renvoi en commission")
@@ -112,8 +113,7 @@ def process(procedure):
                 if 'newtitre' in article:
                     s['newnum'] = article['newtitre']
                 txt = "\n".join([re_clean_alin.sub('', v) for v in s['text'] if not re_alin_sup.search(v)])
-                
-                old_step_index = get_previous_step(steps, nstep, procedure.get('use_old_procedure', False))
+
                 oldtext = []
                 if old_step_index is not None:
                     old_step_id = steps[old_step_index]['directory']
@@ -176,6 +176,7 @@ def process(procedure):
             else:
                 s['length'] = len(txt)
             out['articles'][id]['steps'].append(s)
+        old_step_index = nstep
 
         # except Error as e:
         #     sys.stderr.write("ERROR parsing step %s:\n%s: %s\n" % (str(step)[:50], type(e), e))
