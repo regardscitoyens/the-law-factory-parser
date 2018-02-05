@@ -1,4 +1,15 @@
+""""
+Generate final directories as the ones we use in the
+live website and compare it with previously
+a previously generated version
+
+Usage: python tests_regressions.py <tests_cases_directory>
+
+Optional: There's a `--regen` flag to generate the tests cases
+"""
+
 import glob, shutil, os, filecmp, sys, difflib
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import parse_one
 from parse_doslegs_texts import find_good_url

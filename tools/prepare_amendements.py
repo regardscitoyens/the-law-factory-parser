@@ -9,9 +9,40 @@ from lawfactory_utils.urls import download
 try:
     from .common import *
     from .sort_articles import compare_articles
+    from tools._step_logic import get_previous_step
 except SystemError:
     from common import *
     from sort_articles import compare_articles
+    from _step_logic import get_previous_step
+
+clean_subject_amendements_regexp = [(re.compile(reg), res) for (reg, res) in [
+    (r'\s\s+', ' '),
+    (r' (prem)?ier', ' 1er'),
+    (r'1 er', '1er'),
+    (r'unique', '1er'),
+    (r'apres', 'après'),
+    (r'\s*\(((avant|apr).*)\)', r' \1'),
+    (r'\s*\(.*$', ''),
+    (r'^(\d)', r'article \1'),
+    (r'articles', 'article'),
+    (r'art(\.|icle|\s)*(\d+)', r'article \2'),
+    (r'^(après|avant)\s*', r'article additionnel \1 '),
+    (r'(après|avant)\s+article', r"\1 l'article"),
+    (r'(\d+e?r? )([a-z]{1,2})$', lambda x: x.group(1) + x.group(2).upper()),
+    (r'(\d+e?r? \S+ )([a-z]+)$', lambda x: x.group(1) + x.group(2).upper()),
+    (r' annexe.*', ''),
+    (r' rapport.*', ''),
+    (r'article 1$', 'article 1er'),
+]]
+
+
+def clean_subject(subj):
+    subj = subj.lower().strip()
+    for regex, replacement in clean_subject_amendements_regexp:
+        subj = regex.sub(replacement, subj)
+        subj = subj.strip(": ")
+    return subj
+
 
 def process(OUTPUT_DIR, procedure):
     context = Context([0, OUTPUT_DIR], load_parls=True)
@@ -108,18 +139,24 @@ def process(OUTPUT_DIR, procedure):
         CACHE_BUSTING = 'cache=promulgated' # disable cache busting for promulgated laws
     steps = {}
     last_text_id = None
-    for i, step in enumerate(procedure['steps']):
+    steps = procedure['steps']
+    for i, step in enumerate(steps):
         print('     * amendement step -', step.get('source_url'))
-        if step.get('step') not in ('commission', 'hemicycle') or step.get('echec'):
+        if step.get('step') not in ('commission', 'hemicycle'):
             continue
 
         if i == 0:
             continue
 
-        texte_url = None
+        last_step_index = get_previous_step(steps, i, is_old_procedure=procedure.get('use_old_procedure'))
+        last_step = steps[last_step_index]
+        last_step_with_good_text_number = steps[get_previous_step(steps, i,
+            is_old_procedure=procedure.get('use_old_procedure'), get_depot_step=True)
+        ]
+        texte_url = last_step_with_good_text_number.get('source_url')
+
         # for a CMP hemicycle we have to get the right text inside the CMP commission
         if step.get('stage') == 'CMP' and step.get('step') == 'hemicycle':
-            last_step = [step for step in procedure['steps'] if step.get('stage') == 'CMP' and step.get('step') == 'commission'][0]
             urls = [last_step.get('source_url')]
             if 'cmp_commission_other_url' in last_step:
                 urls.append(last_step.get('cmp_commission_other_url'))
@@ -129,13 +166,10 @@ def process(OUTPUT_DIR, procedure):
                 texte_url = an_url[0]
             elif step.get('institution') == 'senat' and senat_url:
                 texte_url = senat_url[0]
-        else:
-            # TODO: review this to get the real text the amendements are done on
-            last_step = procedure['steps'][i-1]
-            texte_url = last_step.get('source_url')
 
         if texte_url is None:
             print('ERROR - no texte url', step.get('source_url'), file=sys.stderr)
+            continue
 
         texte = open_json(os.path.join(context.sourcedir, 'procedure', last_step['directory']), 'texte/texte.json')
 
@@ -271,6 +305,7 @@ def process(OUTPUT_DIR, procedure):
         # TODO: move this to a dedicated file
 
         print('    * downloading interventions')
+        # TODO: last_text_id may be of another room
         typeparl, urlapi = identify_room(texte_url,
             legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
         inter_dir = os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions')

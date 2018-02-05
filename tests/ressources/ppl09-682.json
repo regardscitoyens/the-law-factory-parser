@@ -1,0 +1,374 @@
+{
+  "assemblee_id": "protection_identite",
+  "assemblee_legislature": 13,
+  "beginning": "2010-07-27",
+  "end": "2012-03-27",
+  "end_jo": "2012-03-28",
+  "legifrance_cidTexte": "JORFTEXT000025582411",
+  "long_title": "Loi relative à la protection de l'identité",
+  "long_title_descr": "proposition de loi relative à la protection de l'identité",
+  "proposal_type": "PPL",
+  "senat_id": "ppl09-682",
+  "short_title": "Identité",
+  "steps": [
+    {
+      "auteur_depot": "Sénateurs",
+      "date": "2010-07-27",
+      "debats_order": 0,
+      "directory": "00_1erelecture_senat_depot",
+      "echec": null,
+      "enddate": "2010-07-27",
+      "institution": "senat",
+      "source_url": "https://www.senat.fr/leg/ppl09-682.html",
+      "stage": "1ère lecture",
+      "step": "depot"
+    },
+    {
+      "date": "2011-04-13",
+      "debats_order": 1,
+      "directory": "01_1erelecture_senat_commission",
+      "echec": null,
+      "enddate": "2011-04-13",
+      "has_interventions": true,
+      "institution": "senat",
+      "intervention_files": [
+        "2011-04-13T1ère séance_3288",
+        "2011-04-27T1ère séance_4441",
+        "2011-05-31T1ère séance_3399"
+      ],
+      "nb_amendements": 9,
+      "source_url": "https://www.senat.fr/leg/ppl10-433.html",
+      "stage": "1ère lecture",
+      "step": "commission"
+    },
+    {
+      "date": "2011-05-31",
+      "debats_order": 2,
+      "directory": "02_1erelecture_senat_hemicycle",
+      "echec": null,
+      "enddate": "2011-05-31",
+      "has_interventions": true,
+      "institution": "senat",
+      "intervention_files": [
+        "2011-05-31T22:15_1605"
+      ],
+      "nb_amendements": 19,
+      "source_url": "https://www.senat.fr/leg/tas10-126.html",
+      "stage": "1ère lecture",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2011-06-01",
+      "debats_order": null,
+      "directory": "03_1erelecture_assemblee_depot",
+      "enddate": "2011-06-01",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/propositions/pion3471.asp",
+      "stage": "1ère lecture",
+      "step": "depot"
+    },
+    {
+      "date": "2011-06-29",
+      "debats_order": 4,
+      "directory": "04_1erelecture_assemblee_commission",
+      "echec": null,
+      "enddate": "2011-06-29",
+      "has_interventions": true,
+      "institution": "assemblee",
+      "intervention_files": [
+        "2011-06-29T11:00_5176",
+        "2011-07-06T11:00_5190"
+      ],
+      "nb_amendements": 0,
+      "source_url": "http://www.assemblee-nationale.fr/13/ta-commission/r3599-a0.asp",
+      "stage": "1ère lecture",
+      "step": "commission"
+    },
+    {
+      "date": "2011-07-07",
+      "debats_order": 5,
+      "directory": "05_1erelecture_assemblee_hemicycle",
+      "echec": null,
+      "enddate": "2011-07-07",
+      "has_interventions": true,
+      "institution": "assemblee",
+      "intervention_files": [
+        "2011-07-07T15:00_5228"
+      ],
+      "nb_amendements": 20,
+      "source_url": "http://www.assemblee-nationale.fr/13/ta/ta0713.asp",
+      "stage": "1ère lecture",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2011-07-07",
+      "debats_order": null,
+      "directory": "06_2emelecture_senat_depot",
+      "enddate": "2011-07-07",
+      "institution": "senat",
+      "source_url": "https://www.senat.fr/leg/ppl10-744.html",
+      "stage": "2ème lecture",
+      "step": "depot"
+    },
+    {
+      "date": "2011-10-19",
+      "debats_order": 7,
+      "directory": "07_2emelecture_senat_commission",
+      "echec": null,
+      "enddate": "2011-10-19",
+      "institution": "senat",
+      "nb_amendements": 1,
+      "source_url": "https://www.senat.fr/leg/ppl11-040.html",
+      "stage": "2ème lecture",
+      "step": "commission"
+    },
+    {
+      "date": "2011-11-03",
+      "debats_order": 8,
+      "directory": "08_2emelecture_senat_hemicycle",
+      "echec": null,
+      "enddate": "2011-11-03",
+      "has_interventions": true,
+      "institution": "senat",
+      "intervention_files": [
+        "2011-11-03T09:30_1908"
+      ],
+      "nb_amendements": 4,
+      "source_url": "https://www.senat.fr/leg/tas11-009.html",
+      "stage": "2ème lecture",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2011-11-03",
+      "debats_order": null,
+      "directory": "09_2emelecture_assemblee_depot",
+      "enddate": "2011-11-03",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/propositions/pion3887.asp",
+      "stage": "2ème lecture",
+      "step": "depot"
+    },
+    {
+      "date": "2011-11-30",
+      "debats_order": 10,
+      "directory": "10_2emelecture_assemblee_commission",
+      "echec": null,
+      "enddate": "2011-11-30",
+      "has_interventions": true,
+      "institution": "assemblee",
+      "intervention_files": [
+        "2011-12-13T14:00_5713"
+      ],
+      "nb_amendements": 0,
+      "source_url": "http://www.assemblee-nationale.fr/13/ta-commission/r4016-a0.asp",
+      "stage": "2ème lecture",
+      "step": "commission"
+    },
+    {
+      "date": "2011-12-13",
+      "debats_order": 11,
+      "directory": "11_2emelecture_assemblee_hemicycle",
+      "echec": null,
+      "enddate": "2011-12-13",
+      "has_interventions": true,
+      "institution": "assemblee",
+      "intervention_files": [
+        "2011-12-13T15:00_5693"
+      ],
+      "nb_amendements": 5,
+      "source_url": "http://www.assemblee-nationale.fr/13/ta/ta0798.asp",
+      "stage": "2ème lecture",
+      "step": "hemicycle"
+    },
+    {
+      "cmp_commission_other_url": "http://www.assemblee-nationale.fr/13/ta-commission/r4143-a0.asp",
+      "date": "2012-01-10",
+      "debats_order": 12,
+      "directory": "12_cmp_cmp_commission",
+      "echec": null,
+      "enddate": "2012-01-10",
+      "institution": "CMP",
+      "nb_amendements": 0,
+      "source_url": "https://www.senat.fr/leg/ppl11-238.html",
+      "stage": "CMP",
+      "step": "commission"
+    },
+    {
+      "date": "2012-01-12",
+      "debats_order": 13,
+      "directory": "13_cmp_assemblee_hemicycle",
+      "echec": null,
+      "enddate": "2012-01-12",
+      "institution": "assemblee",
+      "nb_amendements": 1,
+      "source_url": "http://www.assemblee-nationale.fr/13/ta/ta0818.asp",
+      "stage": "CMP",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2012-01-26",
+      "debats_order": 14,
+      "directory": "14_cmp_senat_hemicycle",
+      "echec": "echec",
+      "enddate": "2012-01-26",
+      "institution": "senat",
+      "source_url": "https://www.senat.fr/leg/tas11-056.html",
+      "stage": "CMP",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2012-01-26",
+      "debats_order": null,
+      "directory": "15_nouv.lect._assemblee_depot",
+      "enddate": "2012-01-26",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/propositions/pion4223.asp",
+      "stage": "nouv. lect.",
+      "step": "depot"
+    },
+    {
+      "date": "2012-01-31",
+      "debats_order": 16,
+      "directory": "16_nouv.lect._assemblee_commission",
+      "echec": null,
+      "enddate": "2012-01-31",
+      "has_interventions": true,
+      "institution": "assemblee",
+      "intervention_files": [
+        "2012-01-31T14:00_5972",
+        "2012-02-01T14:00_5980"
+      ],
+      "nb_amendements": 0,
+      "source_url": "http://www.assemblee-nationale.fr/13/ta-commission/r4229-a0.asp",
+      "stage": "nouv. lect.",
+      "step": "commission"
+    },
+    {
+      "date": "2012-02-01",
+      "debats_order": 17,
+      "directory": "17_nouv.lect._assemblee_hemicycle",
+      "echec": null,
+      "enddate": "2012-02-01",
+      "has_interventions": true,
+      "institution": "assemblee",
+      "intervention_files": [
+        "2012-02-01T15:00_5981"
+      ],
+      "nb_amendements": 1,
+      "source_url": "http://www.assemblee-nationale.fr/13/ta/ta0838.asp",
+      "stage": "nouv. lect.",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2012-02-02",
+      "debats_order": null,
+      "directory": "18_nouv.lect._senat_depot",
+      "enddate": "2012-02-02",
+      "institution": "senat",
+      "source_url": "https://www.senat.fr/leg/ppl11-332.html",
+      "stage": "nouv. lect.",
+      "step": "depot"
+    },
+    {
+      "date": "2012-02-08",
+      "debats_order": 19,
+      "directory": "19_nouv.lect._senat_commission",
+      "echec": null,
+      "enddate": "2012-02-08",
+      "has_interventions": true,
+      "institution": "senat",
+      "intervention_files": [
+        "2012-02-08T1ère séance_7894",
+        "2012-02-21T1ère séance_7710"
+      ],
+      "nb_amendements": 2,
+      "source_url": "https://www.senat.fr/leg/ppl11-340.html",
+      "stage": "nouv. lect.",
+      "step": "commission"
+    },
+    {
+      "date": "2012-02-21",
+      "debats_order": 20,
+      "directory": "20_nouv.lect._senat_hemicycle",
+      "echec": null,
+      "enddate": "2012-02-21",
+      "has_interventions": true,
+      "institution": "senat",
+      "intervention_files": [
+        "2012-02-21T14:30_7808"
+      ],
+      "nb_amendements": 2,
+      "source_url": "https://www.senat.fr/leg/tas11-081.html",
+      "stage": "nouv. lect.",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2012-02-22",
+      "debats_order": null,
+      "directory": "21_l.définitive_assemblee_depot",
+      "enddate": "2012-02-22",
+      "institution": "assemblee",
+      "source_url": "http://www.assemblee-nationale.fr/13/propositions/pion4393.asp",
+      "stage": "l. définitive",
+      "step": "depot"
+    },
+    {
+      "date": "2012-03-06",
+      "debats_order": 22,
+      "directory": "22_l.définitive_assemblee_hemicycle",
+      "echec": null,
+      "enddate": "2012-03-06",
+      "has_interventions": true,
+      "institution": "assemblee",
+      "intervention_files": [
+        "2012-02-29T15:00_6102",
+        "2012-03-06T15:00_6114"
+      ],
+      "nb_amendements": 0,
+      "source_url": "http://www.assemblee-nationale.fr/13/ta/ta0883.asp",
+      "stage": "l. définitive",
+      "step": "hemicycle"
+    },
+    {
+      "date": "2012-03-22",
+      "debats_order": null,
+      "directory": "23_constitutionnalité_conseilconstitutionnel_",
+      "enddate": "2012-03-22",
+      "institution": "conseil constitutionnel",
+      "source_url": "http://www.conseil-constitutionnel.fr/conseil-constitutionnel/francais/les-decisions/acces-par-date/decisions-depuis-1959/2012/2012-652-dc/decision-n-2012-652-dc-du-22-mars-2012.105165.html",
+      "stage": "constitutionnalité"
+    },
+    {
+      "date": "2012-03-27",
+      "debats_order": null,
+      "directory": "24_promulgation_gouvernement_",
+      "enddate": "2012-03-27",
+      "institution": "gouvernement",
+      "source_url": "https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000025582411&categorieLien=id",
+      "stage": "promulgation"
+    }
+  ],
+  "table_concordance": {
+    "1er": "1er",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "5 bis": "6",
+    "5 ter": "7",
+    "6": "8",
+    "7": "9",
+    "7 bis": "11",
+    "7 bis a": "10",
+    "8": "12",
+    "9": "supprimé"
+  },
+  "themes": [
+    "Société",
+    "Questions sociales et santé"
+  ],
+  "urgence": false,
+  "url_dossier_assemblee": "http://www.assemblee-nationale.fr/13/dossiers/protection_identite.asp",
+  "url_dossier_senat": "https://www.senat.fr/dossier-legislatif/ppl09-682.html",
+  "url_jo": "https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000025582411&categorieLien=id"
+}
