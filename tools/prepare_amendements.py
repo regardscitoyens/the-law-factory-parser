@@ -15,34 +15,6 @@ except SystemError:
     from sort_articles import compare_articles
     from _step_logic import get_previous_step
 
-clean_subject_amendements_regexp = [(re.compile(reg), res) for (reg, res) in [
-    (r'\s\s+', ' '),
-    (r' (prem)?ier', ' 1er'),
-    (r'1 er', '1er'),
-    (r'unique', '1er'),
-    (r'apres', 'après'),
-    (r'\s*\(((avant|apr).*)\)', r' \1'),
-    (r'\s*\(.*$', ''),
-    (r'^(\d)', r'article \1'),
-    (r'articles', 'article'),
-    (r'art(\.|icle|\s)*(\d+)', r'article \2'),
-    (r'^(après|avant)\s*', r'article additionnel \1 '),
-    (r'(après|avant)\s+article', r"\1 l'article"),
-    (r'(\d+e?r? )([a-z]{1,2})$', lambda x: x.group(1) + x.group(2).upper()),
-    (r'(\d+e?r? \S+ )([a-z]+)$', lambda x: x.group(1) + x.group(2).upper()),
-    (r' annexe.*', ''),
-    (r' rapport.*', ''),
-    (r'article 1$', 'article 1er'),
-]]
-
-
-def clean_subject(subj):
-    subj = subj.lower().strip()
-    for regex, replacement in clean_subject_amendements_regexp:
-        subj = regex.sub(replacement, subj)
-        subj = subj.strip(": ")
-    return subj
-
 
 def process(OUTPUT_DIR, procedure):
     context = Context([0, OUTPUT_DIR], load_parls=True)
@@ -136,7 +108,7 @@ def process(OUTPUT_DIR, procedure):
 
     CACHE_BUSTING = 'cache=%d' % time()
     if 'url_jo' in procedure:
-        CACHE_BUSTING = 'cache=promulgated' # disable cache busting for promulgated laws
+        CACHE_BUSTING = 'cache=5feb2018' # fixed cache busting for promulgated laws
     steps = {}
     last_text_id = None
     steps = procedure['steps']
