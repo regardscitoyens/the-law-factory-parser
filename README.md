@@ -59,8 +59,8 @@ senapy-cli parse pjl15-610 | python tools/detect_anomalies
 To run the tests, you can follow the `.travis.yml` file.
 
     - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git
-    - python tests_regressions.py <path-to-the-tests-cases>
+    - python tests/test_regressions.py the-law-factory-parser-test-cases
 
 If you modify something, best in to re-generate the test-cases with the `--regen` flag:
 
-    - python tests_regressions.py <path-to-the-tests-cases> --regen
+    - python tests/test_regressions.py the-law-factory-parser-test-cases --regen
