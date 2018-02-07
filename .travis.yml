@@ -7,5 +7,7 @@ script:
    - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git tests_cases
    - python tests/test_steps.py
    - python tests/test_regressions.py tests_cases
+notifications:
+  irc: "chat.freenode.net#regardscitoyens"
 
 

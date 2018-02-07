@@ -116,6 +116,8 @@ def process(OUTPUT_DIR, procedure):
         print('     * amendement step -', step.get('source_url'))
         if step.get('step') not in ('commission', 'hemicycle'):
             continue
+        if step.get('step') == 'commission' and step.get('stage') == 'CMP':
+            continue
 
         if i == 0:
             continue
@@ -169,6 +171,36 @@ def process(OUTPUT_DIR, procedure):
             amendements_src += download(alternative_url).json().get('amendements', [])
 
         print('  parsing amendments:', len(amendements_src))
+
+        # ignore amendments if they are not for the correct step
+        amendements_src_filtered = []
+        for amd in amendements_src:
+            a = amd['amendement']
+            if step.get('institution') == 'assemblee':
+                # commission amendments can have two forms
+                #    - /amendements/LOI/NUM.asp (13th legislature)
+                #    - /amendements/LOI/COMMISSION_NAME/NUM.asp (14+ legislature)
+                # hemicycle amendments are:
+                #    - /amendements/LOI/NUM.asp (13th legislature)
+                #    - /amendements/LOI/AN/NUM.asp (14+ legislature)
+                amdt_step = 'hemicycle'
+                if '/cr-' in a['source']:
+                    amdt_step = 'commission'
+                else:
+                    url_parts = a['source'].split('amendements/')[1].split('/')
+                    if len(url_parts) == 3 and url_parts[1] != 'AN':
+                        amdt_step = 'commission'
+            elif step.get('institution') == 'senat':
+                amdt_step = 'commission' if '/commissions/' in a['source'] else 'hemicycle'
+            else:
+                # CMP - there's not way for now to distinguish the step
+                amdt_step = step['step']
+            if step['step'] != amdt_step:
+                print('WARNING: amendment was ignored (not the right step) %s' % a['source'], file=sys.stderr)
+                continue
+            amendements_src_filtered.append(amd)
+
+        amendements_src = amendements_src_filtered
 
         step['nb_amendements'] = len(amendements_src)
 
