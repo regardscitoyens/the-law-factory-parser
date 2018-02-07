@@ -205,7 +205,7 @@ def process(OUTPUT_DIR, procedure):
                     orders.append(key)
                     sujets[key] = {
                       'titre': key,
-                      'details': upper_first(key),
+                      'details': key,
                       'order': a['ordre_article'],
                       'amendements': []
                     }
