@@ -1,7 +1,7 @@
 import re
 import sys
 
-from lawfactory_utils.urls import download
+from lawfactory_utils.urls import download, enable_requests_cache
 
 # TODO:
 # - parse by <p>
@@ -16,7 +16,7 @@ re_clean_spaces = re.compile(r"[\s\n]+")
 clean_spaces = lambda x: re_clean_spaces.sub(" ", x)
 re_clean_balises = re.compile(r"<\/?[a-z][^>]*>", re.I)
 clean_balises = lambda x: re_clean_balises.sub("", x)
-re_delibere = re.compile(r"<p>\s*(Jug|Délibér)é par le Conseil constitutionnel .*$", re.M)
+re_delibere = re.compile(r"<p>\s*(Jug|Délibér)é par le Conseil constitutionnel .*$", re.S)
 clean_delib = lambda x: re_delibere.sub("", x)
 
 def extract_full_decision(url):
@@ -32,10 +32,17 @@ def extract_full_decision(url):
     return clean_spaces(clean_balises(decision_txt))
 
 def get_decision_length(url):
-    try:
-        return len(extract_full_decision(url))
-    except:
+    decision_txt = extract_full_decision(url)
+    if not decision_txt:
         return -1
+    return len(decision_txt)
 
 if __name__ == "__main__":
-    print(extract_full_decision(sys.argv[1]))
+    enable_requests_cache()
+    if len(sys.argv) == 2:
+        with open(sys.argv[1]) as f:
+            for url in f.readlines():
+                url = url.strip()
+                print(url, ':', get_decision_length(url))
+    else:
+        print(extract_full_decision(sys.argv[1]))
