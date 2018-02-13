@@ -8,6 +8,11 @@ script:
    - python tests/test_steps.py
    - python tests/test_regressions.py tests_cases
 notifications:
-  irc: "chat.freenode.net#regardscitoyens"
-
+  irc: 
+    channels:
+      - "chat.freenode.net#regardscitoyens"
+    template:
+      - "%{repository_slug} - %{commit_subject} : %{message}"
+    on_success: change
+    on_failure: always
 
