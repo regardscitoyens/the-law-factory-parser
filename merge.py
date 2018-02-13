@@ -108,6 +108,9 @@ def merge_senat_with_an(senat, an):
 
     dos['url_dossier_assemblee'] = an['url_dossier_assemblee']
 
+    if 'url_jo' not in dos and 'url_jo' in an:
+        dos['url_jo'] = an['end_jo']
+    
     dos['steps'] = []
 
     def same_stage_step_instit(a, b):
@@ -180,8 +183,11 @@ def merge_senat_with_an(senat, an):
                             step['cmp_commission_other_url'] = an_step['source_url']
                         else:
                             step['cmp_commission_other_url'] = an_step['cmp_commission_other_url']
-                    elif step['source_url'] != an_step['source_url']:
-                        step['cmp_commission_other_url'] = an_step['source_url']
+                    elif step.get('source_url'):
+                        if step['source_url'] != an_step['source_url']:
+                            step['cmp_commission_other_url'] = an_step['source_url']
+                    elif an_step['source_url']:
+                        step['source_url'] = an_step['source_url']
 
         if len(steps_to_add) == 0:
             steps_to_add = [step]

@@ -149,7 +149,10 @@ def process(OUTPUT_DIR, procedure):
 
         amdt_url = None
         if "nationale.fr" in texte_url:
-            amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json?%s' % (procedure['assemblee_legislature'], get_text_id(texte_url), CACHE_BUSTING)
+            if 'assemblee_legislature' not in procedure:
+                print('         + no AN legislature - pass text')
+                continue
+            amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json?%s' % (procedure.get('assemblee_legislature'), get_text_id(texte_url), CACHE_BUSTING)
         elif "senat.fr" in texte_url:
             amdt_url = 'https://nossenateurs.fr/amendements/%s/json?%s' % (get_text_id(texte_url), CACHE_BUSTING)
 
