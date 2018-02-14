@@ -4,6 +4,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from lawfactory_utils.urls import enable_requests_cache
 from senapy.dosleg import opendata
 
+from tools.common import upper_first
 from tools.process_conscons import get_decision_length
 from tools.process_jo import count_signataires, get_texte_length
 from tools import parse_texte
@@ -45,6 +46,15 @@ def custom_number_of_steps(steps):
     return c
 
 
+def get_CMP_type(steps):
+    steps = [s for s in steps if s['stage'] == 'CMP']
+    if not steps:
+        return 'pas de CMP'
+    if len(steps) == 3 and not any([s['rejet'] for s in steps]):
+        return 'succès'
+    return 'échec'
+
+
 def read_text(articles):
     texte = []
     for art in articles:
@@ -60,6 +70,7 @@ def add_metrics(dos, parsed_dos):
     dos['Taille initiale'] = parsed_dos['input_text_length2']
     dos['Taille finale'] = parsed_dos['output_text_length2']
     dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
+    dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
     dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
     dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
@@ -79,6 +90,7 @@ def add_metrics_via_adhoc_parsing(dos):
     else:
         parsed_dos = senat_dos
     dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
+    dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
     dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
     dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
@@ -123,6 +135,7 @@ def clean_type_dossier(dos):
 #    4 = constitutionnelle
 #    5 = ratification d&#39;ordonnances
 #    6 = textes budgétaires (projet de loi de finances, projets de la loi de financement de la sécurité sociale et les textes rectificatifs)
+#        add field catégorie de texte : projets ou proposition de loi constitutionnels, organique, ordinaire, budgétaire (pjlf, pjlfss, pjlf rect, pjlf programmatique, autres?), ratifications (accords internationaux/ordonnances), transpositions ?), lois de programmation
     return dos
 
 HEADERS = [
@@ -148,7 +161,6 @@ HEADERS = [
 
 # TODO:
 # - clean types de dossier
-# - fill CMP field
 # - check accords internationaux : taille should include annexes and finale == initiale
 
 if __name__ == '__main__':
@@ -168,7 +180,6 @@ if __name__ == '__main__':
 
         dos['Initiative du texte'] = upper_first(dos['Type de dossier'].split(' de loi ')[0]) + ' de loi'
         dos['Type de texte'] = clean_type_dossier(dos['Type de dossier'])
-        dos['CMP'] = "TODO"
 
         if not dos["Décision du CC"]:
             dos["Décision du CC"] = "pas de saisine"
