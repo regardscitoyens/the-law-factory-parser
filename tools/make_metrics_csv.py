@@ -5,7 +5,7 @@ from lawfactory_utils.urls import enable_requests_cache
 from senapy.dosleg import opendata
 
 from tools.process_conscons import get_decision_length
-from tools.process_jo import count_signataires
+from tools.process_jo import count_signataires, get_texte_length
 from tools import parse_texte
 from parse_one import *
 
@@ -96,11 +96,11 @@ def add_metrics_via_adhoc_parsing(dos):
         if step.get('step') == 'commission':
             raise Exception('commission as last step')
     dos['Initial size of the law'] = read_text(parse_texte.parse(last_depot['source_url']))
-    # TODO: .get('definitif')
     articles = parse_texte.parse(last_text['source_url'])
-    if not articles[0].get('definitif'):
-        raise Exception('last text not definitif')
-    dos['Final size of the law'] = read_text(parse_texte.parse(last_text['source_url']))
+    if articles[0].get('definitif'):
+        dos['Final size of the law'] = read_text(parse_texte.parse(last_text['source_url']))
+    else:
+        dos['Final size of the law'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
 
 
 if __name__ == '__main__':

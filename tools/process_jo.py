@@ -4,6 +4,10 @@ import sys
 from common import strip_text
 from lawfactory_utils.urls import download, enable_requests_cache
 
+# TODO:
+# - count articles
+# - count alineas
+
 re_br = re.compile(r"[\s\n\r]*</?br[^>]*>[\s\n\r]*", re.S)
 clean_br = lambda x: re_br.sub("\n", x)
 re_fioritures = re.compile(r"(<div[^>]*>[\s\n]*</div>|<a[^>]*>En savoir plus sur [^<]*</a>)")
