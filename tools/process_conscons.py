@@ -1,6 +1,7 @@
 import re
 import sys
 
+from common import strip_text
 from lawfactory_utils.urls import download, enable_requests_cache
 
 # TODO:
@@ -12,10 +13,6 @@ from lawfactory_utils.urls import download, enable_requests_cache
 # - return list of considerants
 # - return list of decision articles
 
-re_clean_spaces = re.compile(r"[\s\n]+")
-clean_spaces = lambda x: re_clean_spaces.sub(" ", x)
-re_clean_balises = re.compile(r"<\/?[a-z][^>]*>", re.I)
-clean_balises = lambda x: re_clean_balises.sub("", x)
 re_delibere = re.compile(r"<p>\s*(Jug|Délibér)é par le Conseil constitutionnel .*$", re.S)
 clean_delib = lambda x: re_delibere.sub("", x)
 
@@ -29,7 +26,7 @@ def extract_full_decision(url):
         print("ERROR: could not find siège in décision CC", url, file=sys.stderr)
         return None
     decision_txt = clean_delib(decision_txt)
-    return clean_spaces(clean_balises(decision_txt))
+    return strip_text(decision_txt)
 
 def get_decision_length(url):
     decision_txt = extract_full_decision(url)

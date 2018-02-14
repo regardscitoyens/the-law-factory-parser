@@ -60,6 +60,14 @@ re_entities = re.compile(r'&([^;]+)(;|$)')
 decode_char = lambda x: chr(int(x.group(1)[1:]) if x.group(1).startswith('#') else name2codepoint[x.group(1)])
 decode_html = lambda text: re_entities.sub(decode_char, text)
 
+re_clean_spaces = re.compile(r"[\s\n]+")
+clean_spaces = lambda x: re_clean_spaces.sub(" ", x)
+
+re_clean_balises = re.compile(r"<\/?[!a-z][^>]*>", re.I)
+clean_balises = lambda x: re_clean_balises.sub("", x)
+
+strip_text = lambda x: clean_spaces(clean_balises(x)).strip()
+
 
 def identify_room(url_or_institution, legislature):
     typeparl = "depute" if 'nationale.fr' in url_or_institution \
