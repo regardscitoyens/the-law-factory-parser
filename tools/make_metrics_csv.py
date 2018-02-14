@@ -50,7 +50,7 @@ def get_CMP_type(steps):
     steps = [s for s in steps if s['stage'] == 'CMP']
     if not steps:
         return 'pas de CMP'
-    if len(steps) == 3 and not any([s['echec'] for s in steps]):
+    if len(steps) == 3 and not any([s.get('echec') for s in steps]):
         return 'succès'
     return 'échec'
 
