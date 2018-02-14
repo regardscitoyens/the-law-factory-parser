@@ -237,7 +237,7 @@ if __name__ == '__main__':
     # output the metrics CSV
     out = os.path.join(sys.argv[1], 'metrics.csv')
     print('output:', out)
-    writer = csv.DictWriter(open(out, 'w'), fieldnames=HEADERS)
+    writer = csv.DictWriter(open(out, 'w'), fieldnames=HEADERS, extrasaction='ignore')
     writer.writeheader()
     for dos in senat_csv:
         writer.writerow(dos)
