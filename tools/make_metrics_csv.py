@@ -57,12 +57,12 @@ def read_text(articles):
 
 def add_metrics(dos, parsed_dos):
     parsed_dos = dossiers_json[senat_id]
-    dos['Initial size of the law'] = parsed_dos['input_text_length2']
-    dos['Final size of the law'] = parsed_dos['output_text_length2']
-    dos['Steps in the legislative procedures'] = custom_number_of_steps(parsed_dos['steps'])
+    dos['Taille initiale'] = parsed_dos['input_text_length2']
+    dos['Taille finale'] = parsed_dos['output_text_length2']
+    dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
-    dos['Size Decision CC'] = get_decision_length(cc_step[0]) if cc_step else ''
-    dos['Signataires JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+    dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
+    dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
 
 
 def add_metrics_via_adhoc_parsing(dos):
@@ -78,10 +78,10 @@ def add_metrics_via_adhoc_parsing(dos):
         parsed_dos = merge_senat_with_an(senat_dos, an_dos)
     else:
         parsed_dos = senat_dos
-    dos['Steps in the legislative procedures'] = custom_number_of_steps(parsed_dos['steps'])
+    dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
-    dos['Size Decision CC'] = get_decision_length(cc_step[0]) if cc_step else ''
-    dos['Signataires JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+    dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
+    dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
 
     last_depot = None
     for step in parsed_dos['steps']:
@@ -95,13 +95,61 @@ def add_metrics_via_adhoc_parsing(dos):
             break
         if step.get('step') == 'commission':
             raise Exception('commission as last step')
-    dos['Initial size of the law'] = read_text(parse_texte.parse(last_depot['source_url']))
+    dos['Taille initiale'] = read_text(parse_texte.parse(last_depot['source_url']))
     articles = parse_texte.parse(last_text['source_url'])
     if articles[0].get('definitif'):
-        dos['Final size of the law'] = read_text(parse_texte.parse(last_text['source_url']))
+        dos['Taille finale'] = read_text(parse_texte.parse(last_text['source_url']))
     else:
-        dos['Final size of the law'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+        dos['Taille finale'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
 
+def clean_type_dossier(dos):
+    # TODO
+    # existing values:
+#    594 projet de loi
+#      2 projet de loi  constitutionnelle
+#     11 projet de loi de financement de la sécurité sociale
+#      1 projet de loi de financement rectificative de la sécurité soc
+#     10 projet de loi de finances
+#     23 projet de loi de finances rectificative
+#      1 projet de loi de programmation
+#      7 projet de loi de règlement
+#     32 projet de loi organique
+#    171 proposition de loi
+#     15 proposition de loi organique
+    # desired values:
+#    1 = ordinaire
+#    2 = ordinaire, accord international
+#    3 = organique
+#    4 = constitutionnelle
+#    5 = ratification d&#39;ordonnances
+#    6 = textes budgétaires (projet de loi de finances, projets de la loi de financement de la sécurité sociale et les textes rectificatifs)
+    return dos
+
+HEADERS = [
+    "Numéro de la loi",
+    "Titre",
+    "Année initiale",
+    "Date initiale",
+    "Date de promulgation",
+    "Taille initiale",
+    "Taille finale",
+    "Initiative du texte",
+    "Type de texte",
+    "Étapes de la procédure",
+    "CMP",
+    "Décision du CC",
+    "Date de la décision du CC",
+    "Taille de la décision du CC",
+    "Signataires au JO",
+    "Thèmes",
+    "URL du dossier",
+    "Source données"
+]
+
+# TODO:
+# - clean types de dossier
+# - fill CMP field
+# - check accords internationaux : taille should include annexes and finale == initiale
 
 if __name__ == '__main__':
     enable_requests_cache()
@@ -110,14 +158,21 @@ if __name__ == '__main__':
 
     random.shuffle(senat_csv)
 
-    sample_for_header = None
     c = 0
     fixed = 0
     for dos in senat_csv:
         print()
         print(dos['URL du dossier'])
 
-        dos['Aneee initiale'] = annee(dos['Date initiale'])
+        dos['Année initiale'] = annee(dos['Date initiale'])
+
+        dos['Initiative du texte'] = upper_first(dos['Type de dossier'].split(' de loi ')[0]) + ' de loi'
+        dos['Type de texte'] = clean_type_dossier(dos['Type de dossier'])
+        dos['CMP'] = "TODO"
+
+        if not dos["Décision du CC"]:
+            dos["Décision du CC"] = "pas de saisine"
+        dos["Date de la décision du CC"] = dos["Date de la décision"]
 
         senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
         if senat_id in dossiers_json:
@@ -126,14 +181,13 @@ if __name__ == '__main__':
             parsed_dos = dossiers_json[senat_id]
             try:
                 add_metrics(dos, parsed_dos)
-                dos['parse_source'] = 'parsed'
-                sample_for_header = dos
+                dos['Source données'] = 'LaFabrique'
             except KeyboardInterrupt:
                 break
         else:
             # do a custom parsing when the parsed dos is missing
             try:
-                dos['parse_source'] = 'adhoc'
+                dos['Source données'] = 'parsing ad-hoc'
                 add_metrics_via_adhoc_parsing(dos)
                 fixed += 1
             except KeyboardInterrupt:
@@ -143,10 +197,10 @@ if __name__ == '__main__':
                 print('- adhoc parsing failed', e)
                 pass
 
-        if dos.get('Size Decision CC') == -1:
-            dos['Size Decision CC'] = ''
-        if dos.get('Signataires JO') == -1:
-            dos['Signataires JO'] = ''
+        if dos.get('Taille de la décision du CC') == -1:
+            dos['Taille de la décision du CC'] = ''
+        if dos.get('Signataires au JO') == -1:
+            dos['Signataires au JO'] = ''
 
     print(len(senat_csv), 'dos')
     print(c, 'matched')
@@ -156,7 +210,7 @@ if __name__ == '__main__':
     # output the metrics CSV
     out = os.path.join(sys.argv[1], 'metrics.csv')
     print('output:', out)
-    writer = csv.DictWriter(open(out, 'w'), fieldnames=sorted(list(sample_for_header.keys())))
+    writer = csv.DictWriter(open(out, 'w'), fieldnames=HEADERS)
     writer.writeheader()
     for dos in senat_csv:
         writer.writerow(dos)
