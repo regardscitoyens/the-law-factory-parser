@@ -195,7 +195,7 @@ if __name__ == '__main__':
         dos['Année initiale'] = annee(dos['Date initiale'])
 
         dos['Initiative du texte'] = upper_first(dos['Type de dossier'].split(' de loi ')[0]) + ' de loi'
-        dos['Type de texte'] = clean_type_dossier(dos['Type de dossier'])
+        dos['Type de texte'] = clean_type_dossier(dos)
 
         if not dos["Décision du CC"]:
             dos["Décision du CC"] = "pas de saisine"
