@@ -1,7 +1,10 @@
 import re
 import sys
 
-from common import strip_text
+try:
+    from common import strip_text
+except:
+    from .common import strip_text
 from lawfactory_utils.urls import download, enable_requests_cache
 
 # TODO:
