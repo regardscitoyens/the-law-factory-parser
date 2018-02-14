@@ -109,7 +109,7 @@ def merge_senat_with_an(senat, an):
     dos['url_dossier_assemblee'] = an['url_dossier_assemblee']
 
     if 'url_jo' not in dos and 'url_jo' in an:
-        dos['url_jo'] = an['end_jo']
+        dos['url_jo'] = an['url_jo']
     
     dos['steps'] = []
 
