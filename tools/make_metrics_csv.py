@@ -35,7 +35,7 @@ def find_parsed_doslegs(api_directory):
 
 
 def custom_number_of_steps(steps):
-    # count the number of coulumns minus CMP hemicycle
+    # count the number of columns minus CMP hemicycle
     c = 0
     for step in steps:
         if step['stage'] == 'CMP':
@@ -114,29 +114,44 @@ def add_metrics_via_adhoc_parsing(dos):
     else:
         dos['Taille finale'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
 
+
 def clean_type_dossier(dos):
-    # TODO
-    # existing values:
-#    594 projet de loi
-#      2 projet de loi  constitutionnelle
-#     11 projet de loi de financement de la sécurité sociale
-#      1 projet de loi de financement rectificative de la sécurité soc
-#     10 projet de loi de finances
-#     23 projet de loi de finances rectificative
-#      1 projet de loi de programmation
-#      7 projet de loi de règlement
-#     32 projet de loi organique
-#    171 proposition de loi
-#     15 proposition de loi organique
-    # desired values:
-#    1 = ordinaire
-#    2 = ordinaire, accord international
-#    3 = organique
-#    4 = constitutionnelle
-#    5 = ratification d&#39;ordonnances
-#    6 = textes budgétaires (projet de loi de finances, projets de la loi de financement de la sécurité sociale et les textes rectificatifs)
-#        add field catégorie de texte : projets ou proposition de loi constitutionnels, organique, ordinaire, budgétaire (pjlf, pjlfss, pjlf rect, pjlf programmatique, autres?), ratifications (accords internationaux/ordonnances), transpositions ?), lois de programmation
-    return dos
+#   ? transpositions EU ?
+#   ? lois de programmation ?
+#   ? propositions de résolution ? (attention : statut = adopté pas promulgué)
+    typ = dos['Type de dossier'].lower()
+    for t in ['constitutionnel', 'organique']:
+        if t in typ:
+            return t
+    for t in ['finance', 'règlement', 'programmation']:
+        if t in typ:
+            return 'budgétaire'
+    tit = dos['Titre'].lower()
+    for t in ['financement de la sécurité', 'programmation des finances publiques']:
+        if t in tit:
+            return 'budgétaire'
+    if 'accord international' not in tit:
+        if (' ratifi' in tit and ' ordonnance' in tit.split(' ratifi')[1]):
+            return "ratification d'ordonnances"
+        for t in [
+            "autorisant le Gouvernement",
+            "habilitant le gouvernement",
+            "habilitation du Gouvernement",
+            "habilitation à prendre par ordonnance",
+            "loi d'habilitation",
+            "transposition par ordonnances"
+        ]:
+            if t in tit:
+                return "habilitation d'ordonnances"
+    if typ.startswith('projet'):
+        for t in ['autorisa', 'approba', 'ratifi', ' accord ', 'amendement']:
+            if t in tit:
+                tit2 = " ".join(tit.split(t)[1:])
+                for d in ['accord', 'avenant', 'adhésion', 'convention', 'france - ', 'gouvernement français', 'protocole']:
+                    if d in tit2:
+                        return 'accord international'
+    return 'ordinaire'
+
 
 HEADERS = [
     "Numéro de la loi",
@@ -159,8 +174,9 @@ HEADERS = [
     "Source données"
 ]
 
+
 # TODO:
-# - clean types de dossier
+# - check type de dossier ordinaire/accord internationaux finaux pok
 # - check accords internationaux : taille should include annexes and finale == initiale
 
 if __name__ == '__main__':
