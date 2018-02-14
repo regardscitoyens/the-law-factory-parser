@@ -2,6 +2,7 @@ import json, glob, os, sys, csv, random, traceback
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from lawfactory_utils.urls import enable_requests_cache
+from senapy.dosleg import opendata
 
 from tools.process_conscons import get_decision_length
 from tools.process_jo import count_signataires
@@ -9,12 +10,16 @@ from tools import parse_texte
 from parse_one import *
 
 
-def parse_senat_open_data(open_data_file):
-    senat_csv = list(csv.DictReader(open(open_data_file, encoding='iso-8859-1'), delimiter=';'))
+def annee(date):
+    return int(date.split('/')[-1])
+
+
+def parse_senat_open_data():
+    senat_csv = opendata.fetch_csv()
     # filter non-promulgués
     senat_csv = [dos for dos in senat_csv if dos['Date de promulgation']]
     # filter after 1998
-    senat_csv = [dos for dos in senat_csv if int(dos['Date initiale'].split('/')[-1]) >= 2008]
+    senat_csv = [dos for dos in senat_csv if annee(dos['Date initiale']) >= 2008]
     return senat_csv
 
 
@@ -47,7 +52,7 @@ def read_text(articles):
             for key in sorted(art['alineas'].keys()):
                 if art['alineas'][key] != '':
                     texte.append(art['alineas'][key])
-    return texte
+    return len("\n".join(texte))
 
 
 def add_metrics(dos, parsed_dos):
@@ -100,8 +105,8 @@ def add_metrics_via_adhoc_parsing(dos):
 
 if __name__ == '__main__':
     enable_requests_cache()
-    senat_csv = parse_senat_open_data(sys.argv[1])
-    dossiers_json = find_parsed_doslegs(sys.argv[2])
+    senat_csv = parse_senat_open_data()
+    dossiers_json = find_parsed_doslegs(sys.argv[1])
 
     random.shuffle(senat_csv)
 
@@ -111,6 +116,8 @@ if __name__ == '__main__':
     for dos in senat_csv:
         print()
         print(dos['URL du dossier'])
+
+        dos['Aneee initiale'] = annee(dos['Date initiale'])
 
         senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
         if senat_id in dossiers_json:
@@ -124,7 +131,6 @@ if __name__ == '__main__':
             except KeyboardInterrupt:
                 break
         else:
-            continue
             # do a custom parsing when the parsed dos is missing
             try:
                 dos['parse_source'] = 'adhoc'
@@ -137,9 +143,9 @@ if __name__ == '__main__':
                 print('- adhoc parsing failed', e)
                 pass
 
-        if dos['Size Decision CC'] == -1:
+        if dos.get('Size Decision CC') == -1:
             dos['Size Decision CC'] = ''
-        if dos['Signataires JO'] == -1:
+        if dos.get('Signataires JO') == -1:
             dos['Signataires JO'] = ''
 
     print(len(senat_csv), 'dos')
@@ -148,7 +154,7 @@ if __name__ == '__main__':
     senat_csv.sort(key=lambda x: ''.join(reversed(x['Date de promulgation'].split('/'))))
 
     # output the metrics CSV
-    out = sys.argv[1] + '.test.csv'
+    out = os.path.join(sys.argv[1], 'metrics.csv')
     print('output:', out)
     writer = csv.DictWriter(open(out, 'w'), fieldnames=sorted(list(sample_for_header.keys())))
     writer.writeheader()

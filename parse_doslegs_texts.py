@@ -142,6 +142,8 @@ def process(dos, debug_intermediary_files=False):
                     print('        ^ text url fixed:', fixed_url)
 
                 step['articles'] = parse_texte.parse(fixed_url)
+                assert step['articles']
+                
                 step['articles'][0]['depot'] = step.get('step') == 'depot'
 
                 # echec detected in the text content ? we update the step then
