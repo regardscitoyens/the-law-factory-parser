@@ -230,7 +230,7 @@ if __name__ == '__main__':
         dos['Date de promulgation'] = format_date(dos['Date de promulgation'])
         dos["Durée d'adoption"] = (datize(dos["Date de promulgation"]) - datize(dos["Date initiale"])).days + 1
 
-        dos['Initiative du texte'] = upper_first(dos['Type de dossier'].split(' de loi ')[0]) + ' de loi'
+        dos['Initiative du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
         dos['Type de texte'] = clean_type_dossier(dos)
 
         if not dos["Décision du CC"]:
