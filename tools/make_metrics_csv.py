@@ -130,9 +130,7 @@ def add_metrics_via_adhoc_parsing(dos):
 
 
 def clean_type_dossier(dos):
-#   ? transpositions EU ?
-#   ? lois de programmation ?
-#   ? propositions de résolution ? (attention : statut = adopté pas promulgué)
+#   TODO ?  propositions de résolution ? (attention : statut = adopté pas promulgué)
     typ = dos['Type de dossier'].lower()
     for t in ['constitutionnel', 'organique']:
         if t in typ:
@@ -141,7 +139,11 @@ def clean_type_dossier(dos):
         if t in typ:
             return 'budgétaire'
     tit = dos['Titre'].lower()
-    for t in ['financement de la sécurité', 'programmation des finances publiques']:
+    # lois de programmation budgétaire seem to follow regular procédures, so set as programmation rather than budgétaire?
+    #for t in ['programmation', 'loi de programme']:
+    #    if t in tit:
+    #        return 'programmation'
+    for t in ['financement de la sécurité', 'programmation des finances publiques', 'règlement des comptes']:
         if t in tit:
             return 'budgétaire'
     if 'accord international' not in tit:
@@ -158,12 +160,19 @@ def clean_type_dossier(dos):
             if t in tit:
                 return "habilitation d'ordonnances"
     if typ.startswith('projet'):
-        for t in ['autorisa', 'approba', 'ratifi', ' accord ', 'amendement']:
+        for t in ['autorisa', 'approba', 'ratifi', ' accord ', 'amendement', 'convention']:
             if t in tit:
                 tit2 = " ".join(tit.split(t)[1:])
-                for d in ['accord', 'avenant', 'adhésion', 'convention', 'france - ', 'gouvernement français', 'protocole']:
+                for d in ['accord', 'avenant', 'adhésion', 'traité', 'france',
+                  'gouvernement français', 'gouvernement d', 'coopération',
+                  'protocole', 'arrangement', 'approbation de la décision',
+                  'convention', 'ratification de la décision', 'principauté',
+                  'international']:
                     if d in tit2:
                         return 'accord international'
+    #for t in ["dispositions d'adaptation", 'transposition de la directive', 'portant adaptation']:
+    #    if t in tit:
+    #        return 'transposition EU'
     return 'ordinaire'
 
 
@@ -209,7 +218,6 @@ HEADERS = [
 
 
 # TODO:
-# - check type de dossier ordinaire/accord internationaux finaux pok
 # - check accords internationaux : taille should include annexes and finale == initiale
 
 if __name__ == '__main__':
