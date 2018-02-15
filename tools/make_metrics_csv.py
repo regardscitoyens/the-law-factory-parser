@@ -145,7 +145,7 @@ def clean_type_dossier(dos):
         if t in tit:
             return 'budgétaire'
     if 'accord international' not in tit:
-        if (' ratifi' in tit and ' ordonnance' in tit.split(' ratifi')[1]):
+        if (' ratifi' in tit and 'ordonnance' in tit.split(' ratifi')[1]):
             return "ratification d'ordonnances"
         for t in [
             "autorisant le Gouvernement",
