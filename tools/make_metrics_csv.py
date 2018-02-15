@@ -4,7 +4,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from lawfactory_utils.urls import enable_requests_cache
 from senapy.dosleg import opendata
 
-from tools.common import upper_first
+from tools.common import upper_first, format_date, datize
 from tools.process_conscons import get_decision_length
 from tools.process_jo import count_signataires, get_texte_length
 from tools import parse_texte
@@ -19,7 +19,7 @@ def parse_senat_open_data():
     senat_csv = opendata.fetch_csv()
     # filter non-promulgués
     senat_csv = [dos for dos in senat_csv if dos['Date de promulgation']]
-    # filter after 1998
+    # filter before 2008
     senat_csv = [dos for dos in senat_csv if annee(dos['Date initiale']) >= 2008]
     return senat_csv
 
@@ -46,6 +46,10 @@ def custom_number_of_steps(steps):
     return c
 
 
+def count_echecs(steps):
+    return len([s for s in steps if s.get('echec')])
+
+
 def get_CMP_type(steps):
     steps = [s for s in steps if s['stage'] == 'CMP']
     if not steps:
@@ -67,13 +71,18 @@ def read_text(articles):
 
 def add_metrics(dos, parsed_dos):
     parsed_dos = dossiers_json[senat_id]
+    dos['Titre court'] = parsed_dos['short_title']
     dos['Taille initiale'] = parsed_dos['input_text_length2']
     dos['Taille finale'] = parsed_dos['output_text_length2']
+    dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
     dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
+    dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
     dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
+    dos['URL CC'] = cc_step[0] if cc_step else ''
     dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+    dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
 
 
 def add_metrics_via_adhoc_parsing(dos):
@@ -89,11 +98,16 @@ def add_metrics_via_adhoc_parsing(dos):
         parsed_dos = merge_senat_with_an(senat_dos, an_dos)
     else:
         parsed_dos = senat_dos
+    dos['Titre court'] = parsed_dos['short_title']
+    dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
     dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
+    dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
     dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
+    dos['URL CC'] = cc_step[0] if cc_step else ''
     dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+    dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
 
     last_depot = None
     for step in parsed_dos['steps']:
@@ -155,15 +169,32 @@ def clean_type_dossier(dos):
 
 HEADERS = [
     "Numéro de la loi",
+#   "IDs internes/institutions"
     "Titre",
+    "Titre court",
     "Année initiale",
     "Date initiale",
     "Date de promulgation",
+    "Durée d'adoption",
+    "Initiative du texte",
     "Taille initiale",
     "Taille finale",
-    "Initiative du texte",
+#   "Proportion de texte allongé"
+#   "Proportion de texte modifié"
+#   "Nombre initial d'articles",
+#   "Nombre final d'articles",
+#   "Nombre d'articles inchangés",
+#   "Proportion d'articles inchangés",
+#   "Nombre initial d'alinéas",
+#   "Nombre final d'alinéas",
+#   "Nombre d'amendements déposés (+ ventilation Gouv/AN/Sénat)",
+#   "Nombre d'amendements adoptés (+ ventilation Gouv/AN/Sénat)",
+#   "Nombre de mots prononcés (+ ventilation Gouv/AN/Sénat)",
+#   "Nombre d'intervenants (+ ventilation Gouv/AN/Sénat)",
     "Type de texte",
+    "Type de procédure",
     "Étapes de la procédure",
+    "Étapes échouées",
     "CMP",
     "Décision du CC",
     "Date de la décision du CC",
@@ -171,6 +202,8 @@ HEADERS = [
     "Signataires au JO",
     "Thèmes",
     "URL du dossier",
+    "URL JO",
+    "URL CC",
     "Source données"
 ]
 
@@ -193,13 +226,16 @@ if __name__ == '__main__':
         print(dos['URL du dossier'])
 
         dos['Année initiale'] = annee(dos['Date initiale'])
+        dos['Date initiale'] = format_date(dos['Date initiale'])
+        dos['Date de promulgation'] = format_date(dos['Date de promulgation'])
+        dos["Durée d'adoption"] = (datize(dos["Date de promulgation"]) - datize(dos["Date initiale"])).days + 1
 
         dos['Initiative du texte'] = upper_first(dos['Type de dossier'].split(' de loi ')[0]) + ' de loi'
         dos['Type de texte'] = clean_type_dossier(dos)
 
         if not dos["Décision du CC"]:
             dos["Décision du CC"] = "pas de saisine"
-        dos["Date de la décision du CC"] = dos["Date de la décision"]
+        dos["Date de la décision du CC"] = format_date(dos["Date de la décision"])
 
         senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
         if senat_id in dossiers_json:
@@ -232,7 +268,7 @@ if __name__ == '__main__':
     print(len(senat_csv), 'dos')
     print(c, 'matched')
     print(fixed, 'fixed')
-    senat_csv.sort(key=lambda x: ''.join(reversed(x['Date de promulgation'].split('/'))))
+    senat_csv.sort(key=lambda x: x['Date de promulgation'])
 
     # output the metrics CSV
     out = os.path.join(sys.argv[1], 'metrics.csv')

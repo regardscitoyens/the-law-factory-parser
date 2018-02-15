@@ -29,7 +29,7 @@ maxdate = ""
 for d in dossiers:
     d0 = format_date(d["Date initiale"])
     d1 = format_date(d["Date de promulgation"])
-    days =  (datize(d1) - datize(d0)).days + 1
+    days = (datize(d1) - datize(d0)).days + 1
     maxdays = max(maxdays, (datize(d1) - datize(d0)).days + 1)
     mindate = min(mindate, d0)
     maxdate = max(maxdate, d1)
