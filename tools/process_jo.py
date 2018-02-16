@@ -13,11 +13,13 @@ from lawfactory_utils.urls import download, enable_requests_cache
 
 re_br = re.compile(r"[\s\n\r]*</?br[^>]*>[\s\n\r]*", re.S)
 clean_br = lambda x: re_br.sub("\n", x)
-re_fioritures = re.compile(r"(<div[^>]*>[\s\n]*</div>|<a[^>]*>En savoir plus sur [^<]*</a>)")
+re_fioritures = re.compile(r"(<div[^>]*>[\s\n]*</div>|<a[^>]*>En savoir plus sur [^<]*</a>|Fait à [^,]+, le \d[^.,]*, en double exemplaire\.)")
 clean_fioritures = lambda x: re_fioritures.sub("", x)
-re_texte = re.compile(r"^.*Le Président de la République (?:française )?promulgue la loi dont la teneur suit :(.*?)(La présente loi sera exécutée comme loi de l'Etat\.|<!-- end texte -->|Fait(?: (?:à|au) [^,]+,)? le \d.*?<[^>]*>).*$", re.S|re.I)
+re_texte = re.compile(r"^.*Le Président (?:de la République (?:française )?)?promulgue la loi dont la teneur suit :(.*?)(La présente loi sera exécutée comme loi de l'Etat\.|<!-- end texte -->|Fait(?: (?:à|au) [^,]+,)? le \d.*?<[^>]*>).*$", re.S|re.I)
 extract_contenu = lambda x: re_texte.sub(r"\1", x)
-re_signataires = re.compile(r"^.*((<!-- end texte -->|Fait(?: (?:à|au) [^,]+,)? le \d.*?<[^>]*>).*?)<(font|!-- end signataires).*$", re.S)
+re_reorder = re.compile(r"(Fait(?: (?:à|au) [^,]+,)? le \d.*?<[^>]*>)(.*)(<!-- end texte -->.*Par le Président de la République :)", re.S)
+reorder = lambda x: re_reorder.sub(r"\2\1\3", x)
+re_signataires = re.compile(r"^.*?((<!-- end texte -->|Fait(?: (?:à|au) [^,]+,)? le \d.*?<[^>]*>).*?)<(font|!-- end signataires).*$", re.S)
 signataires = lambda x: re_signataires.sub(r"\1", x)
 re_ministre = re.compile(r"le Président de la République|L[ea] (Premi[eè]re?|ministre|garde|secrétaire|haut-commissaire) ")
 count_ministres = lambda x: len(re_ministre.findall(x))
@@ -40,7 +42,7 @@ def get_texte_length(url):
     return len(text)
 
 def extract_signataires(url):
-    text_src = download_texte(url)
+    text_src = reorder(download_texte(url))
     if not re_signataires.search(text_src):
         print("ERROR: could not find signature in texte JO", url, file=sys.stderr)
         return None
