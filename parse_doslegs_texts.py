@@ -120,6 +120,10 @@ def process(dos, debug_intermediary_files=False):
             and step.get('step') == 'commission':
             continue
 
+        # we do not parse CC / JO texte for now
+        if step.get('stage') in ('constitutionnalité', 'promulgation'):
+            continue
+
         if url is None:
             if step == steps[-1] and not dos.get('url_jo'):
                 print('     * ignore empty last step since the law is not yet promulgated')
@@ -128,12 +132,6 @@ def process(dos, debug_intermediary_files=False):
                 raise Exception('empty url for step: %s.%s.%s' % (step.get('institution'), step.get('stage'), step.get('step')))
             # TODO: texte retire
             # TODO: stats of None urls
-            continue
-        # we do not parse CC
-        elif 'conseil-constitutionnel' in url:
-            continue
-        # also ignore legifrance for now
-        elif 'legifrance' in url:
             continue
         else:
             fixed_url = find_good_url(url)
