@@ -29,7 +29,7 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
     # add texte.json and write all the text files tree
     dos = json2arbo.process(dos, output_dir + '/procedure')
 
-    json2arbo.mkdirs(output_dir + '/viz')
+    json2arbo.mkdirs(os.path.join(output_dir, 'viz'))
     articles_etapes = prepare_articles.process(dos)
     open(output_dir + '/viz/articles_etapes.json', 'w').write(json.dumps(articles_etapes, indent=2, sort_keys=True, ensure_ascii=True))
 

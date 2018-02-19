@@ -1,10 +1,11 @@
-import sys, json
+import sys, json, contextlib, io, os, traceback
 
 from senapy.dosleg.parser import parse as senapy_parse
 from anpy.dossier_like_senapy import parse as anpy_parse
 from lawfactory_utils.urls import download, enable_requests_cache, clean_url
 
 from tools.detect_anomalies import find_anomalies
+from tools.json2arbo import mkdirs
 from tools.download_groupes import process as download_groupes
 from merge import merge_senat_with_an
 import parse_doslegs_texts
@@ -52,69 +53,119 @@ def _dump_json(data, filename):
     print('   DEBUG - dumped', filename)
 
 
+@contextlib.contextmanager
+def log_print(file):
+    # capture all outputs to a log file while still printing it
+    class Logger:
+        def __init__(self, file):
+            self.terminal = sys.stdout
+            self.log = file
+            self.only_log = False
+
+        def write(self, message):
+            self.terminal.write(message)
+            self.log.write(message)
+
+        def __getattr__(self, attr):
+            return getattr(self.terminal, attr)
+
+    logger = Logger(file)
+
+    _stdout = sys.stdout
+    _stderr = sys.stderr
+    sys.stdout = logger
+    sys.stderr = logger
+    yield logger.log
+    sys.stdout = _stdout
+    sys.stderr = _stderr
+
+
+def dump_error_log(url, exception, api_dir, log):
+    log = log.getvalue() + '\n' + ''.join(traceback.format_tb(exception.__traceback__))
+
+    url_id = None
+    if 'assemblee-nationale' in url:
+        legi = url.split('.fr/')[1].split('/')[0]
+        url_id = legi + url.split('/')[-1].replace('.asp', '')
+    elif 'senat.fr' in url:
+        url_id = url.split('/')[-1].replace('.html', '')
+
+    mkdirs(os.path.join(api_dir, 'logs/'))
+    logfile = os.path.join(api_dir, 'logs/' + url_id)
+
+    print('[error] parsing', url, 'failed. Details in', logfile)
+    open(logfile, 'w').write(log)
+
+
 def process(API_DIRECTORY, url, disable_cache=True,
         debug_intermediary_files=False, only_promulgated=False):
-    # Download senat version
-    if not disable_cache:
-        enable_requests_cache()
-    if not url.startswith('http') and ('pjl' in url or 'ppl' in url):
-        url = "http://www.senat.fr/dossier-legislatif/%s.html" % url
+    with log_print(io.StringIO()) as log:
+        try:
+            # Download senat version
+            if not disable_cache:
+                enable_requests_cache()
+            if not url.startswith('http') and ('pjl' in url or 'ppl' in url):
+                url = "http://www.senat.fr/dossier-legislatif/%s.html" % url
 
-    print(' -= DOSLEG URL:', url, '=-')
+            print(' -= DOSLEG URL:', url, '=-')
 
-    an_dos = None
-    senat_dos = None
+            an_dos = None
+            senat_dos = None
 
-    if 'senat.fr' in url:
-        senat_dos = download_senat(url)
-        if not senat_dos:
-            print('  /!\ INVALID SENAT DOS')
-            return
-        # Add AN version if there's one
-        if 'url_dossier_assemblee' in senat_dos:
-            an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'])
-            if 'url_dossier_senat' in an_dos:
-                assert are_same_doslegs(senat_dos, an_dos)
-            dos = merge_senat_with_an(senat_dos, an_dos)
-        else:
-            dos = senat_dos
-    elif 'assemblee-nationale.fr' in url:
-        an_dos = download_an(url)
-        # Add senat version if there's one
-        if 'url_dossier_senat' in an_dos:
-            senat_dos = download_senat(an_dos['url_dossier_senat'])
-            dos = merge_senat_with_an(senat_dos, an_dos)
-        else:
-            dos = an_dos
-    else:
-        print(' INVALID URL:', url)
-        return
+            if 'senat.fr' in url:
+                senat_dos = download_senat(url)
+                if not senat_dos:
+                    print('  /!\ INVALID SENAT DOS')
+                    return
+                # Add AN version if there's one
+                if 'url_dossier_assemblee' in senat_dos:
+                    an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'])
+                    if 'url_dossier_senat' in an_dos:
+                        assert are_same_doslegs(senat_dos, an_dos)
+                    dos = merge_senat_with_an(senat_dos, an_dos)
+                else:
+                    dos = senat_dos
+            elif 'assemblee-nationale.fr' in url:
+                an_dos = download_an(url)
+                # Add senat version if there's one
+                if 'url_dossier_senat' in an_dos:
+                    senat_dos = download_senat(an_dos['url_dossier_senat'])
+                    dos = merge_senat_with_an(senat_dos, an_dos)
+                else:
+                    dos = an_dos
+            else:
+                print(' INVALID URL:', url)
+                return
 
-    print('        title:', dos.get('long_title'))
-    find_anomalies([dos])
+            print('        title:', dos.get('long_title'))
+            find_anomalies([dos])
 
-    if not dos.get('url_jo') and only_promulgated:
-        print('    ----- passed: no JO link')
-        return
-    if dos.get('use_old_procedure') and False:
-        print('    ----- passed: budget law')
-        return
+            if not dos.get('url_jo') and only_promulgated:
+                print('    ----- passed: no JO link')
+                return
+            if dos.get('use_old_procedure') and False:
+                print('    ----- passed: budget law')
+                return
 
-    if debug_intermediary_files:
-        if an_dos:
-            _dump_json(an_dos, 'debug_an_dos.json')
-        if senat_dos:
-            _dump_json(senat_dos, 'debug_senat_dos.json')
-        _dump_json(dos, 'debug_dos.json')
+            if debug_intermediary_files:
+                if an_dos:
+                    _dump_json(an_dos, 'debug_an_dos.json')
+                if senat_dos:
+                    _dump_json(senat_dos, 'debug_senat_dos.json')
+                _dump_json(dos, 'debug_dos.json')
 
-    # download the groupes in case they are not there yet
-    download_groupes(API_DIRECTORY)
+            # download the groupes in case they are not there yet
+            download_groupes(API_DIRECTORY)
 
-    print('  [] parse the texts')
-    dos_with_texts = parse_doslegs_texts.process(dos, debug_intermediary_files=debug_intermediary_files)
+            print('  [] parse the texts')
+            dos_with_texts = parse_doslegs_texts.process(dos, debug_intermediary_files=debug_intermediary_files)
 
-    print('  [] format data for the frontend')
-    format_data_for_frontend.process(dos_with_texts, API_DIRECTORY)
+            print('  [] format data for the frontend')
+            format_data_for_frontend.process(dos_with_texts, API_DIRECTORY)
+        except Exception as e:
+            # dump log for each failed doslegs in logs/
+            dump_log(url, e, API_DIRECTORY, log)
+            raise e
 
 if __name__ == '__main__':
     API_DIRECTORY = sys.argv[1]
