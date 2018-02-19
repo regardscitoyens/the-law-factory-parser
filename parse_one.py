@@ -34,6 +34,18 @@ def download_an(url, url_senat=False):
     return results[0]
 
 
+def are_same_doslegs(senat_dos, an_dos):
+    # same dosleg url ?
+    if an_dos['url_dossier_senat'] == senat_dos['url_dossier_senat']:
+        return True
+    # same first text  ?
+    if senat_dos.get('steps') and an_dos.get('steps') \
+        and senat_dos['steps'][0].get('source_url') == an_dos['steps'][0].get('source_url'):
+        return True
+    # it's not the same dosleg !
+    return False
+
+
 def _dump_json(data, filename):
     json.dump(data, open(filename, 'w'), ensure_ascii=False, indent=2, sort_keys=True)
     print('   DEBUG - dumped', filename)
@@ -61,7 +73,7 @@ def process(API_DIRECTORY, url, disable_cache=True,
         if 'url_dossier_assemblee' in senat_dos:
             an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'])
             if 'url_dossier_senat' in an_dos:
-                assert an_dos['url_dossier_senat'] == senat_dos['url_dossier_senat']
+                assert are_same_doslegs(senat_dos, an_dos)
             dos = merge_senat_with_an(senat_dos, an_dos)
         else:
             dos = senat_dos

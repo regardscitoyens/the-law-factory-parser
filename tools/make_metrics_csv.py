@@ -94,7 +94,7 @@ def add_metrics_via_adhoc_parsing(dos):
     if 'url_dossier_assemblee' in senat_dos:
         an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'])
         if 'url_dossier_senat' in an_dos:
-            assert an_dos['url_dossier_senat'] == senat_dos['url_dossier_senat']
+            assert are_same_doslegs(senat_dos, an_dos)
         parsed_dos = merge_senat_with_an(senat_dos, an_dos)
     else:
         parsed_dos = senat_dos
