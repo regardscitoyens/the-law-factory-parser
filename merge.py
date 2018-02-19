@@ -139,7 +139,7 @@ def merge_senat_with_an(senat, an):
         # complete senat data from AN
         if step.get('institution') == 'assemblee':
             an_index = i + an_offset
-            if len(an['steps']) > an_index and an_index > 0:
+            if len(an['steps']) > an_index and an_index >= 0:
                 an_step = an['steps'][an_index]
 
                 # get data from AN even if there's data on the senat side
