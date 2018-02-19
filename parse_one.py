@@ -104,7 +104,7 @@ def process(API_DIRECTORY, url, disable_cache=True,
             # Download senat version
             if not disable_cache:
                 enable_requests_cache()
-            if not url.startswith('http') and ('pjl' in url or 'ppl' in url):
+            if not url.startswith('http') and ('pjl' in url or 'ppl' in url or 'plfss' in url):
                 url = "http://www.senat.fr/dossier-legislatif/%s.html" % url
 
             print(' -= DOSLEG URL:', url, '=-')

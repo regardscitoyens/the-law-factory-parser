@@ -199,10 +199,12 @@ def process(OUTPUT_DIR, procedure):
                 # CMP - there's not way for now to distinguish the step
                 amdt_step = step['step']
             if step['step'] != amdt_step:
-                print('WARNING: amendment was ignored (not the right step) %s' % a['source'], file=sys.stderr)
                 continue
             amendements_src_filtered.append(amd)
 
+        if len(amendements_src_filtered) != len(amendements_src):
+            print('WARNING: amendments ignored (not the right step) %s' %
+                    (len(amendements_src) - len(amendements_src_filtered)), file=sys.stderr)
         amendements_src = amendements_src_filtered
 
         step['nb_amendements'] = len(amendements_src)
@@ -343,6 +345,7 @@ def process(OUTPUT_DIR, procedure):
         last_text_id = get_text_id(texte_url)
 
     return procedure
+
 
 if __name__ == '__main__':
     process(sys.argv[1], json.load(open(os.path.join(sys.argv[1], 'viz/procedure.json'))))
