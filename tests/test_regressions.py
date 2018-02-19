@@ -14,7 +14,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import parse_one
 from parse_doslegs_texts import find_good_url
 from tools import parse_texte
-import download_groupes
 
 # use `test_regressions.py <directory> --regen` to update the tests directory
 REGEN_TESTS = '--regen' in sys.argv
@@ -72,7 +71,6 @@ if REGEN_TESTS:
     output_dir = TEST_DIR
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
-download_groupes.process(output_dir)
 
 for directory in glob.glob(TEST_DIR + '/p*'):
     senat_id = directory.split('/')[-1]
@@ -89,6 +87,7 @@ for directory in glob.glob(TEST_DIR + '/p*'):
         print()
         print('   -> test failed, details in tests_tmp')
         raise Exception()
+
 
 if not REGEN_TESTS:
     shutil.rmtree('tests_tmp')

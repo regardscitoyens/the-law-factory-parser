@@ -13,9 +13,6 @@ To get the parsed doslegs:
 pip install --upgrade setuptools pip
 pip install -r requirements.txt
 
-# setup first a few files
-python download_groupes.py data/
-
 # then you can parse any dosleg by url or id
 python parse_one.py data/ pjl12-688
 python parse_one.py data/ http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp
