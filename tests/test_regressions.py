@@ -73,6 +73,8 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 for directory in glob.glob(TEST_DIR + '/p*'):
+    if '_tmp' in directory:
+        continue
     senat_id = directory.split('/')[-1]
     print()
     print('****** testing', senat_id, '*******')
@@ -87,7 +89,6 @@ for directory in glob.glob(TEST_DIR + '/p*'):
         print()
         print('   -> test failed, details in tests_tmp')
         raise Exception()
-
 
 if not REGEN_TESTS:
     shutil.rmtree('tests_tmp')
