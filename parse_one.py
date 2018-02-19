@@ -2,7 +2,7 @@ import sys, json, contextlib, io, os, traceback
 
 from senapy.dosleg.parser import parse as senapy_parse
 from anpy.dossier_like_senapy import parse as anpy_parse
-from lawfactory_utils.urls import download, enable_requests_cache, clean_url
+from lawfactory_utils.urls import download, enable_requests_cache
 
 from tools.detect_anomalies import find_anomalies
 from tools.json2arbo import mkdirs
@@ -164,8 +164,9 @@ def process(API_DIRECTORY, url, disable_cache=True,
             format_data_for_frontend.process(dos_with_texts, API_DIRECTORY)
         except Exception as e:
             # dump log for each failed doslegs in logs/
-            dump_log(url, e, API_DIRECTORY, log)
+            dump_error_log(url, e, API_DIRECTORY, log)
             raise e
+
 
 if __name__ == '__main__':
     API_DIRECTORY = sys.argv[1]
