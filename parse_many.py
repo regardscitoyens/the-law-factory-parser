@@ -18,5 +18,7 @@ for url in sys.stdin:
 
     try:
         parse_one.process(API_DIRECTORY, url, only_promulgated=True)
+    except KeyboardInterrupt:
+        break
     except Exception as e:
         traceback.print_exc()

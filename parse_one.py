@@ -162,6 +162,8 @@ def process(API_DIRECTORY, url, disable_cache=True,
 
             print('  [] format data for the frontend')
             format_data_for_frontend.process(dos_with_texts, API_DIRECTORY)
+        except KeyboardInterrupt as e:
+            raise e
         except Exception as e:
             # dump log for each failed doslegs in logs/
             dump_error_log(url, e, API_DIRECTORY, log)
