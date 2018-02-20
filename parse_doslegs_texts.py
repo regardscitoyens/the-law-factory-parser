@@ -1,13 +1,7 @@
-import sys, json, time, random, os, re
+import sys, json, re
 
-from lawfactory_utils.urls import clean_url, download, enable_requests_cache
-
-enable_requests_cache()
-
-from bs4 import BeautifulSoup
-import requests
-
-from tools import parse_texte, complete_articles, _step_logic, common
+from lawfactory_utils.urls import download
+from tools import parse_texte, complete_articles, _step_logic
 
 
 def _dump_json(data, filename):
@@ -28,7 +22,7 @@ def find_good_url(url):
             resp = test_status(url)
             if resp:
                 return url
-        if '/rap/' in url: # and step.get('institution') == 'CMP':
+        if '/rap/' in url:  # and step.get('institution') == 'CMP':
             # we try to use the last page to get a clean text
             clean_url = None
             for page in '9', '8', '7', '6', '5', '4', '3', '2', '1', '0':
@@ -129,9 +123,8 @@ def process(dos, debug_intermediary_files=False):
                 print('     * ignore empty last step since the law is not yet promulgated')
                 continue
             if step.get('echec') is None:
-                raise Exception('empty url for step: %s.%s.%s' % (step.get('institution'), step.get('stage'), step.get('step')))
+                raise Exception('[parse_texts] Empty url for step: %s.%s.%s' % (step.get('institution'), step.get('stage'), step.get('step')))
             # TODO: texte retire
-            # TODO: stats of None urls
             continue
         else:
             fixed_url = find_good_url(url)
@@ -141,10 +134,10 @@ def process(dos, debug_intermediary_files=False):
 
                 step['articles'] = parse_texte.parse(fixed_url)
                 assert step['articles']
-                
+
                 step['articles'][0]['depot'] = step.get('step') == 'depot'
 
-                # echec detected in the text content ? we update the step then
+                # echec detected ? we update the step
                 echec_line = [article for article in step['articles'] if article.get('type') == 'echec']
                 if echec_line:
                     assert step.get('step') != 'depot'
@@ -164,11 +157,10 @@ def process(dos, debug_intermediary_files=False):
                         if not last_step.get('echec') and last_step.get('step') == 'hemicycle':
                             print('     * ignore missing depot', url)
                             continue
-                raise Exception('INVALID RESPONSE %s' % url)
+                raise Exception('[parse_texts] Invalid response %s' % url)
 
         if debug_intermediary_files:
             _dump_json(step.get('articles'), 'debug_parsed_text_step_%d.json' % step_index)
-    
 
     # re-order CMPs via texte définitif detection
     cmp_hemi_steps = [i for i, step in enumerate(dos['steps']) if
@@ -176,15 +168,14 @@ def process(dos, debug_intermediary_files=False):
     if cmp_hemi_steps and len(cmp_hemi_steps) == 2:
         first, second = [dos['steps'][i] for i in cmp_hemi_steps]
         first_i, second_i = cmp_hemi_steps
-        if first.get('articles',[{}])[0].get('definitif'):
+        if first.get('articles', [{}])[0].get('definitif'):
             print('     * re-ordered CMP steps')
             steps = dos['steps']
             steps[first_i], steps[second_i] = steps[second_i], steps[first_i]
 
-
     for step_index, step in enumerate(steps):
         print('    ^ complete text: ', step.get('source_url'))
-        
+
         if step.get('echec') == 'renvoi en commission':
             step['articles'] = steps[step_index-2].get('articles')
             # TODO: texte retire
@@ -200,56 +191,24 @@ def process(dos, debug_intermediary_files=False):
                         'current': step.get('articles', []),
                         'previous': steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
                         'step': step,
-                        'table_concordance':dos.get('table_concordance', {}),
+                        'table_concordance': dos.get('table_concordance', {}),
                     }
                     if debug_intermediary_files:
                         _dump_json(complete_args, 'debug_complete_args_step_%d.json' % step_index)
                     step['articles_completed'] = complete_articles.complete(**complete_args)
-                    assert 'Non modifié' not in str(step['articles_completed'])
 
         if debug_intermediary_files:
             _dump_json(step.get('articles_completed'), 'debug_completed_text_step_%d.json' % step_index)
 
     return dos
 
-
-if __name__ == '__main__':
-    doslegs = json.load(open(sys.argv[1]))
-    if type(doslegs) is not list:
-        doslegs = [doslegs]
-
-    output_dir = sys.argv[2]
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-    # random.shuffle(doslegs)
-    for dos in doslegs:
-        filepath = os.path.join(output_dir, _dos_id(dos))
-        print('generating', filepath)
-
-        if os.path.exists(filepath):
-            print('  - already done')
-            continue
-
-        json.dump(process(dos), open(filepath, 'w'),
-            ensure_ascii=False, indent=2, sort_keys=True)
-
-
 """
 A gerer:
- - https://www.legifrance.gouv.fr/jo_pdf.do?numJO=0&dateJO=20131230&numTexte=2&pageDebut=21910&pageFin=22188
-
-Non-géré par parse_texte:
- - _mono /rap/
  - Votre commission vous propose d'adopter le projet de loi sans modification.
     - https://www.senat.fr/rap/l07-372/l07-3722.html#toc16
  - http://www.assemblee-nationale.fr/13/rapports/r1151.asp
     "Suivant les conclusions du rapporteur, la commission adopte les projets de loi (nos 1038, 1039 et 1040)."
- - PLF - https://www.legifrance.gouv.fr/eli/loi/2016/7/22/FCPX1613153L/jo/texte
  - tableaux comparatif - http://www.assemblee-nationale.fr/13/rapports/r0771.asp
- - old proc
-
-Cas difficiles:
  - tomes: http://www.assemblee-nationale.fr/13/rapports/r1211.asp
  - plf - https://www.senat.fr/rap/l08-162/l08-162_mono.html#toc40
 """
