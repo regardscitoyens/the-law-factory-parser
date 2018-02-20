@@ -109,7 +109,7 @@ def complete(current, previous, step, table_concordance):
                 res.append(i)
         # retry and get everything as I before II added if not found
         if not res:
-            if not l:
+            if not l and not force:
                 # log("   nothing found, grabbing all article now...")
                 # TODO: ADD WARNING, SHOULD NOT USE THE 'FORCE' MULTIPLE
                 # TIMES FOR THE SAME ARTICLE
