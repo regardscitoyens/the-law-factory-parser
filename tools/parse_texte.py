@@ -313,16 +313,17 @@ def parse(url):
         elif re_mat_exp.match(line):
             read = -1 # Deactivate description lecture
             expose = True
-        elif re_echec_cmp.search(cl_line) \
-            or re_echec_com.search(cl_line) \
-            or re_echec_com2.search(cl_line) \
-            or re_echec_com3.search(cl_line) \
-            or re_echec_com4.search(cl_line) \
-            or re_echec_com5.search(cl_line) \
-            or re_echec_com6.search(cl_line) \
-            or re_echec_hemi.match(cl_line) \
-            or re_echec_hemi2.search(cl_line) \
-            or re_echec_hemi3.search(cl_line):
+        elif (re_echec_cmp.search(cl_line)
+                or re_echec_com.search(cl_line)
+                or re_echec_com2.search(cl_line)
+                or re_echec_com3.search(cl_line)
+                or re_echec_com4.search(cl_line)
+                or re_echec_com5.search(cl_line)
+                or re_echec_com6.search(cl_line)
+                or re_echec_hemi.match(cl_line)
+                or re_echec_hemi2.search(cl_line)
+                or re_echec_hemi3.search(cl_line)
+            ) and 'dont la teneur suit' not in cl_line:
             texte = save_text(texte)
             pr_js({"type": "echec", "texte": cl_line})
             break
