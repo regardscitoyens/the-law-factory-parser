@@ -147,6 +147,7 @@ def process(dos, debug_intermediary_files=False):
                 # echec detected in the text content ? we update the step then
                 echec_line = [article for article in step['articles'] if article.get('type') == 'echec']
                 if echec_line:
+                    assert step.get('step') != 'depot'
                     echec_line = echec_line[0]
                     if step.get('stage') == 'CMP':
                         step['echec'] = 'echec'

@@ -20,7 +20,7 @@ def complete(current, previous, step, table_concordance):
             print(text, file=sys.stderr)
 
     def exit():
-        raise Exception('oops, parsing exploded')
+        raise Exception('[complete_articles] Fatal error')
 
     find_num = re.compile(r'-[a-z]*(\d+)\D?$')
     oldnum = 0

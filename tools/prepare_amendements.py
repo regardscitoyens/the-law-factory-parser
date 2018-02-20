@@ -110,7 +110,7 @@ def process(OUTPUT_DIR, procedure):
     if 'url_jo' in procedure:
         CACHE_BUSTING = 'cache=5feb2018' # fixed cache busting for promulgated laws
     steps = {}
-    last_text_id = None
+    last_text_id, last_text_typeparl = None, None
     steps = procedure['steps']
     for i, step in enumerate(steps):
         print('     * amendement step -', step.get('source_url'))
@@ -128,6 +128,10 @@ def process(OUTPUT_DIR, procedure):
             is_old_procedure=procedure.get('use_old_procedure'), get_depot_step=True)
         ]
         texte_url = last_step_with_good_text_number.get('source_url')
+
+        if last_step_with_good_text_number.get('institution') != step.get('institution'):
+            print('ERROR - last step is from another institution', file=sys.stderr)
+            continue
 
         # for a CMP hemicycle we have to get the right text inside the CMP commission
         if step.get('stage') == 'CMP' and step.get('step') == 'hemicycle':
@@ -313,16 +317,19 @@ def process(OUTPUT_DIR, procedure):
         # TODO: move this to a dedicated file
 
         print('    * downloading interventions')
-        # TODO: last_text_id may be of another room
         typeparl, urlapi = identify_room(texte_url,
             legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
         inter_dir = os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions')
         commission_or_hemicycle = '?commission=1' if step.get('step') == 'commission' else '?hemicycle=1'
         # TODO: TA texts can be zero-paded or not (TA0XXX or TAXXX), we should try both
-        # TODO: last_text_id check same stage same institution
         seance_name = None
         intervention_files = []
-        for loiid in get_text_id(texte_url), last_text_id:
+
+        texts = (get_text_id(texte_url),)
+        if last_text_typeparl == typeparl:
+            texts = (get_text_id(texte_url), last_text_id)
+
+        for loiid in texts:
             url_seances = 'https://{}.fr/seances/{}/json{}'.format(urlapi, loiid, commission_or_hemicycle)
             print('         * downloading seances - ', url_seances)
             for id_seance_obj in download(url_seances).json().get('seances', []):
@@ -343,6 +350,7 @@ def process(OUTPUT_DIR, procedure):
                 break
 
         last_text_id = get_text_id(texte_url)
+        last_text_typeparl = typeparl
 
     return procedure
 
