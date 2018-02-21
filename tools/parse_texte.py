@@ -9,9 +9,11 @@ Outputs results to stdout
 Dependencies :
 html5lib, beautifulsoup4"""
 
-import sys, re, html5lib, requests, copy
+import sys, re, html5lib, copy
 import json
 from bs4 import BeautifulSoup
+
+from lawfactory_utils.urls import download
 
 try:
     from .sort_articles import bister
@@ -49,7 +51,7 @@ def parse(url):
         (re.compile(r'<div[^>]*class="titreArt[^>]*>(.*?)\s*</div>', re.I), r'<p><b>\1</b></p>'),
     ]
 
-    resp = requests.get(url)
+    resp = download(url)
     if '/textes/'in url:
         resp.encoding = 'utf-8'
     string = resp.text
