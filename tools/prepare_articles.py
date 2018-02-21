@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import re, csv, os, sys
+import re, os, sys
 from difflib import ndiff, SequenceMatcher
-from .common import json, open_json, print_json
-from ._step_logic import get_previous_step
+from .common import json
 
 
 def getParentFolder(root, f):
     abs = os.path.abspath(os.path.join(root, f))
     return os.path.basename(os.path.abspath(os.path.join(abs, os.pardir)))
+
 
 def unifyStatus(status):
     status = status.lstrip().rstrip('s. ')
@@ -18,6 +17,7 @@ def unifyStatus(status):
     if status.startswith("nouveau"):
         return "new"
     return "none"
+
 
 def create_step(step_id, directory, article=None, echec_type=None):
     s = {}
@@ -45,6 +45,8 @@ def process(procedure):
     title = procedure.get("long_title", "Missing title").replace(procedure.get("short_title", "").lower(), procedure.get("short_title", ""))
     title = title[0].upper() + title[1:]
     out = {'law_title': title, 'articles': {}, 'sections': {}, 'short_title': procedure.get("short_title", "")}
+
+    # TODO: handle missing deleted articles and articles marked as new when they are not (ex: renvoi en commission, loi macron,...)
 
     # Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
     dossier_id = procedure.get('senat_id')
@@ -81,7 +83,7 @@ def process(procedure):
         data = step.get('texte.json')
         if step['stage'] in ["promulgation", "constitutionnalité"]:
             continue
-        if not data and not step.get('echec'):
+        if not data and not step.get('echec') and not (procedure.get('is_old_procedure') and step.get('step') == 'commission'):
             print('     prepare_articles: no data for', step.get('stage'), step.get('step'), step.get('institution'), file=sys.stderr)
             continue
 
@@ -92,11 +94,11 @@ def process(procedure):
 
         echec = (step['echec'] and step['echec'] != "renvoi en commission")
         if echec:
-            if not 'echec' in out['articles']:
+            if 'echec' not in out['articles']:
                 out['articles']['echec'] = {'id': 'echec', 'titre': step['echec'], 'section': 'echec', 'steps': []}
             next_step = create_step(step_id, step['directory'], echec_type=step['echec'])
             out['articles']['echec']['steps'].append(next_step)
-            if not 'echec' in out['sections']:
+            if 'echec' not in out['sections']:
                 out['sections']['echec'] = {}
             out['sections']['echec'][step_id] = {'title': data['expose'] if data else '', 'type': step['echec'].upper()}
             continue
