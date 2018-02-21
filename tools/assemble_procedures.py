@@ -60,7 +60,7 @@ def read_text(text_id, step_id):
     for art in articles:
         for key in sorted(art['alineas'].keys()):
             if art['alineas'][key] != '':
-                texte.append(art['alineas'][key])
+                texte.append(strip_text(art['alineas'][key]))
     return texte
 
 for d in dossiers:
