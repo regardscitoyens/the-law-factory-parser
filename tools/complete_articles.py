@@ -237,7 +237,7 @@ def complete(current, previous, step, table_concordance):
                             print('     -> it should have been deleted')
 
                         # if article not matching but here in the concordance table, introduce it as a new one
-                        # since it can be introduced in an amendment
+                        # since it can correspond to an article deleted by the Senate in Nouvelle lecture
                         # /!\ this can only happen during a lecture définitive
                         if step.get('stage') == 'l. définitive' and match:
                             log("DEBUG: Marking art %s as nouveau" % line['titre'])
@@ -253,7 +253,7 @@ def complete(current, previous, step, table_concordance):
                             exit()
 
                 log("DEBUG: article '%s' matched with old article '%s'" % (line['titre'] , oldart['titre']))
-                
+
                 oldtxt = [re_clean_alin.sub('', v) for v in list(oldart["alineas"].values()) if not re_alin_sup.search(v)]
                 txt = [re_clean_alin.sub('', v) for v in list(line["alineas"].values()) if not re_alin_sup.search(v)]
                 a = SequenceMatcher(None, oldtxt, txt).get_matching_blocks()
