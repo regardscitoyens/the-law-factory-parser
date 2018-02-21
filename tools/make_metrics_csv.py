@@ -257,7 +257,10 @@ if __name__ == '__main__':
         dos['Type de texte'] = clean_type_dossier(dos)
 
         if not dos["Décision du CC"]:
-            dos["Décision du CC"] = "pas de saisine"
+            if dos["URL CC"]:
+                dos["Décision du CC"] = "conforme"
+            else:
+                dos["Décision du CC"] = "pas de saisine"
         dos["Date de la décision du CC"] = format_date(dos["Date de la décision"])
 
         senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
