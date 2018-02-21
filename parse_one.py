@@ -161,7 +161,7 @@ def process(API_DIRECTORY, url, disable_cache=True,
             dos_with_texts = parse_doslegs_texts.process(dos, debug_intermediary_files=debug_intermediary_files)
 
             print('  [] format data for the frontend')
-            format_data_for_frontend.process(dos_with_texts, API_DIRECTORY)
+            format_data_for_frontend.process(dos_with_texts, API_DIRECTORY, log=log)
         except KeyboardInterrupt as e:
             raise e
         except Exception as e:

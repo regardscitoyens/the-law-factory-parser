@@ -1,4 +1,4 @@
-import os, glob, sys, json, csv, random, shutil
+import os, glob, sys, json, csv, random, shutil, io
 
 from tools import json2arbo, prepare_articles, update_procedure, \
     prepare_amendements, prepare_interventions, reorder_interventions_and_correct_procedure
@@ -13,9 +13,16 @@ def project_header_template(dos_id, procedure):
 """.format(long_title=procedure.get('long_title'), dos_id=dos_id)
 
 
-def process(dos, OUTPUT_DIR, skip_already_done=False):
+def dump_success_log(output_dir, log):
+    log = log.getvalue()
+    logfile = os.path.join(output_dir, "parsing.log")
+    with open(logfile, 'w') as f:
+        f.write(log)
+
+
+def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
     dos_id = dos.get('senat_id', dos.get('assemblee_id'))
-    
+
     output_dir = os.path.join(OUTPUT_DIR, dos_id + '_tmp')
     final_output_dir = os.path.join(OUTPUT_DIR, dos_id)
     print('     writing to:', output_dir)
@@ -70,3 +77,5 @@ def process(dos, OUTPUT_DIR, skip_already_done=False):
     os.rename(output_dir, final_output_dir)
 
     print('  FINISHED -', final_output_dir)
+
+    dump_success_log(final_output_dir, log)
