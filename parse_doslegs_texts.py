@@ -22,7 +22,7 @@ def find_good_url(url):
             resp = test_status(url)
             if resp:
                 return url
-        if '/rap/' in url:  # and step.get('institution') == 'CMP':
+        if '/rap/' in url:
             # we try to use the last page to get a clean text
             clean_url = None
             for page in '9', '8', '7', '6', '5', '4', '3', '2', '1', '0':
@@ -52,6 +52,9 @@ def find_good_url(url):
             return False
         if '/dossiers/' in url:
             return False
+
+        if 'documents/notice/' in url:
+            url = url.replace('www2', 'www').replace('documents/notice/', '').split('/(index)')[0] + '.asp'
 
         if url.endswith('.pdf'):
             url = url.replace('/pdf/', '/propositions/').replace('.pdf', '.asp')
@@ -202,6 +205,7 @@ def process(dos, debug_intermediary_files=False):
 
     return dos
 
+
 """
 A gerer:
  - Votre commission vous propose d'adopter le projet de loi sans modification.
@@ -211,4 +215,6 @@ A gerer:
  - tableaux comparatif - http://www.assemblee-nationale.fr/13/rapports/r0771.asp
  - tomes: http://www.assemblee-nationale.fr/13/rapports/r1211.asp
  - plf - https://www.senat.fr/rap/l08-162/l08-162_mono.html#toc40
+ - revenir au sommaire depuis une page - https://www.senat.fr/rap/l11-038/l11-0389.html#toc50
+ - alineas bis non modifiés - https://www.senat.fr/leg/tas11-064.html
 """
