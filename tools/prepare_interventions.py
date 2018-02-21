@@ -209,9 +209,9 @@ def process(OUTPUT_DIR, procedure):
                     if int(i['nbmots']) > 20:
                         done_links[orat_sec] = True
 
-        # Remove sections with less than 3 interventions
+        # Remove sections with less than 3 interventions or invalid section name
         for s in dict(sections):
-            if sections[s]['total_intervs'] < 3 or sections[s]['total_mots'] < 150 or list(sections[s]['groupes'].keys()) == ['Présidence']:
+            if not s or sections[s]['total_intervs'] < 3 or sections[s]['total_mots'] < 150 or list(sections[s]['groupes'].keys()) == ['Présidence']:
                 del(sections[s])
 
         if sections:
