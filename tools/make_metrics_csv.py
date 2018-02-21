@@ -139,7 +139,9 @@ def add_metrics_via_adhoc_parsing(dos):
     # skip budget law text initial length if from AN since our parsing is not working for now
     if dos['Type de texte'] == 'budgétaire' and 'assemblee-nationale.fr' in last_depot['source_url']:
         return
-    dos['Taille initiale'] = read_text(parse_texte.parse(last_depot['source_url']))
+    input_text_length = read_text(parse_texte.parse(last_depot['source_url']))
+    if input_text_length > 0:
+        dos['Taille initiale'] = input_text_length
 
 
 def clean_type_dossier(dos):
