@@ -256,13 +256,6 @@ if __name__ == '__main__':
         dos['Initiative du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
         dos['Type de texte'] = clean_type_dossier(dos)
 
-        if not dos["Décision du CC"]:
-            if dos["URL CC"]:
-                dos["Décision du CC"] = "conforme"
-            else:
-                dos["Décision du CC"] = "pas de saisine"
-        dos["Date de la décision du CC"] = format_date(dos["Date de la décision"])
-
         senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
         if senat_id in dossiers_json:
             print(' - matched')
@@ -286,6 +279,12 @@ if __name__ == '__main__':
                 print('- adhoc parsing failed', e)
                 pass
 
+        if not dos["Décision du CC"]:
+            if dos["URL CC"]:
+                dos["Décision du CC"] = "conforme"
+            else:
+                dos["Décision du CC"] = "pas de saisine"
+        dos["Date de la décision du CC"] = format_date(dos["Date de la décision"])
         if dos.get('Taille de la décision du CC') == -1:
             dos['Taille de la décision du CC'] = ''
         if dos.get('Signataires au JO') == -1:
