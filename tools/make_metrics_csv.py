@@ -148,15 +148,15 @@ def clean_type_dossier(dos):
     for t in ['constitutionnel', 'organique']:
         if t in typ:
             return t
-    for t in ['finance', 'règlement', 'programmation']:
+    for t in ['finance', 'règlement']:
         if t in typ:
             return 'budgétaire'
     tit = dos['Titre'].lower()
-    # lois de programmation budgétaire seem to follow regular procédures, so set as programmation rather than budgétaire?
-    #for t in ['programmation', 'loi de programme']:
-    #    if t in tit:
-    #        return 'programmation'
-    for t in ['financement de la sécurité', 'programmation des finances publiques', 'règlement des comptes']:
+    # lois de programmation budgétaire seem to follow regular procédures, so set as programmation rather than budgétaire
+    for t in ['programmation', 'loi de programme']:
+        if t in tit:
+            return 'programmation'
+    for t in ['financement de la sécurité', 'règlement des comptes']:
         if t in tit:
             return 'budgétaire'
     if 'accord international' not in tit:
