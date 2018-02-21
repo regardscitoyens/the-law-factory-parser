@@ -221,19 +221,37 @@ def complete(current, previous, step, table_concordance):
                 except:
                     print("ERROR: Problem while renumbering articles", line, "\n", oldart, file=sys.stderr)
                     exit()
-                
+
                 # detect matching errors
                 if oldart['titre'].lower() in table_concordance:
                     new_art = table_concordance[oldart['titre'].lower()]
                     if new_art != line['titre']:
                         print("ERROR: true concordance is different: when parsing article '%s', we matched it with '%s' which should be matched to '%s' (from concordance table) " % (line['titre'] , oldart['titre'], new_art))
+                        match = None
                         for oldart_title, newart_title in table_concordance.items():
                             if newart_title.lower() == line['titre']:
+                                match = newart_title
                                 print('    -> it should have been matched with article %s' % oldart_title)
                                 break
                         else:
                             print('     -> it should have been deleted')
-                        exit()
+
+                        # if article not matching but here in the concordance table, introduce it as a new one
+                        # since it can be introduced in an amendment
+                        # /!\ this can only happen during a lecture définitive
+                        if step.get('stage') == 'l. définitive' and match:
+                            log("DEBUG: Marking art %s as nouveau" % line['titre'])
+                            if "section" in line and cursec['id'] != line["section"]:
+                                line["section"] = cursec["id"]
+                            a = line
+                            a["order"] = order
+                            a["status"] = "nouveau"
+                            order += 1
+                            write_json(a)
+                            continue
+                        else:
+                            exit()
+
                 log("DEBUG: article '%s' matched with old article '%s'" % (line['titre'] , oldart['titre']))
                 
                 oldtxt = [re_clean_alin.sub('', v) for v in list(oldart["alineas"].values()) if not re_alin_sup.search(v)]
@@ -248,6 +266,7 @@ def complete(current, previous, step, table_concordance):
                     line['titre'] = oldart['titre']
                 if "section" in line and cursec['id'] != line["section"]:
                     line["section"] = cursec["id"]
+
             if oldarts:
                 while oldarts:
                     cur, a = oldarts.pop(0)
