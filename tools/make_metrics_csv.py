@@ -284,6 +284,8 @@ if __name__ == '__main__':
                 dos["Décision du CC"] = "conforme"
             else:
                 dos["Décision du CC"] = "pas de saisine"
+        elif not dos["URL CC"]:
+            dos["Décision du CC"] = "pas de saisine"
         dos["Date de la décision du CC"] = format_date(dos["Date de la décision"])
         if dos.get('Taille de la décision du CC') == -1:
             dos['Taille de la décision du CC'] = ''
