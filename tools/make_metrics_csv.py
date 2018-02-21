@@ -4,7 +4,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from lawfactory_utils.urls import enable_requests_cache
 from senapy.dosleg import opendata
 
-from tools.common import upper_first, format_date, datize
+from tools.common import upper_first, format_date, datize, strip_text
 from tools.process_conscons import get_decision_length
 from tools.process_jo import count_signataires, get_texte_length
 from tools import parse_texte
@@ -65,15 +65,13 @@ def read_text(articles):
         if 'alineas' in art:
             for key in sorted(art['alineas'].keys()):
                 if art['alineas'][key] != '':
-                    texte.append(art['alineas'][key])
+                    texte.append(strip_text(art['alineas'][key]))
     return len("\n".join(texte))
 
 
 def add_metrics(dos, parsed_dos):
     parsed_dos = dossiers_json[senat_id]
     dos['Titre court'] = parsed_dos['short_title']
-    dos['Taille initiale'] = parsed_dos['input_text_length2']
-    dos['Taille finale'] = parsed_dos['output_text_length2']
     dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
     dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
     dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
@@ -83,6 +81,13 @@ def add_metrics(dos, parsed_dos):
     dos['URL CC'] = cc_step[0] if cc_step else ''
     dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
+
+    # skip budget law text length since ours is not working for now
+    if dos['Type de texte'] == 'budgétaire':
+        return
+
+    dos['Taille initiale'] = parsed_dos['input_text_length2']
+    dos['Taille finale'] = parsed_dos['output_text_length2']
 
 
 def add_metrics_via_adhoc_parsing(dos):
@@ -108,6 +113,10 @@ def add_metrics_via_adhoc_parsing(dos):
     dos['URL CC'] = cc_step[0] if cc_step else ''
     dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
+
+    # skip budget law text length since ours is not working for now
+    if dos['Type de texte'] == 'budgétaire':
+        return
 
     last_depot = None
     for step in parsed_dos['steps']:
