@@ -45,7 +45,7 @@ def merge_previous_works_an(doslegs):
     the previous ones
     """
     all_an_hash_an = {an['url_dossier_assemblee']: an for an in all_an if 'url_dossier_assemblee' in an and an['url_dossier_assemblee']}
-    
+
     merged_dos_urls = set()
     for dos in doslegs:
         if dos['url_dossier_assemblee'] not in merged_dos_urls:
@@ -108,9 +108,9 @@ def merge_senat_with_an(senat, an):
 
     dos['url_dossier_assemblee'] = an['url_dossier_assemblee']
 
-    if 'url_jo' not in dos and 'url_jo' in an:
+    if ('url_jo' not in dos or 'jo_pdf' in dos['url_jo']) and 'url_jo' in an:
         dos['url_jo'] = an['url_jo']
-    
+
     dos['steps'] = []
 
     def same_stage_step_instit(a, b):
@@ -238,7 +238,7 @@ if __name__ == '__main__':
     all_senat = [dos for dos in dedup_by_key(all_senat, 'url_dossier_senat')]
 
     print('senat loaded', len(all_senat))
-    print('  - anomalies', find_anomalies(all_senat, verbose=False)) 
+    print('  - anomalies', find_anomalies(all_senat, verbose=False))
     print()
 
 
@@ -252,7 +252,7 @@ if __name__ == '__main__':
     all_an = [dos for dos in dedup_by_key(all_an, 'url_dossier_senat')]
 
     print('an loaded', len(all_an))
-    print('  - anomalies', find_anomalies(all_an, verbose=False)) 
+    print('  - anomalies', find_anomalies(all_an, verbose=False))
     print()
 
 
@@ -292,11 +292,11 @@ if __name__ == '__main__':
     print('match (senat)', len(matched))
     print('no match (senat)', len(not_matched))
     print('no match (senat) && assemblee_id', len(not_matched_and_assemblee_id))
-    print('  - anomalies (senat merged)', find_anomalies(matched+not_matched, verbose=False)) 
+    print('  - anomalies (senat merged)', find_anomalies(matched+not_matched, verbose=False))
     print('no match (AN)', len(an_not_matched))
-    print('  - anomalies (AN)', find_anomalies(an_not_matched, verbose=False)) 
+    print('  - anomalies (AN)', find_anomalies(an_not_matched, verbose=False))
     print('all (matched and not matched)', len(ALL))
-    print('  - anomalies (ALL)', find_anomalies(ALL, verbose=False)) 
+    print('  - anomalies (ALL)', find_anomalies(ALL, verbose=False))
 
     json.dump(all_senat, open(OUTPUT_DIR + 'all_senat.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
     json.dump(all_an, open(OUTPUT_DIR + 'all_an.json', 'w'), ensure_ascii=False, indent=2, sort_keys=True)
