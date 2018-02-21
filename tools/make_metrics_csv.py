@@ -203,7 +203,7 @@ HEADERS = [
     "Type de texte",
     "Type de procédure",
     "Étapes de la procédure",
-    "Étapes échouées",
+#   "Étapes échouées",
     "CMP",
     "Décision du CC",
     "Date de la décision du CC",
