@@ -131,7 +131,7 @@ def add_metrics_via_adhoc_parsing(dos):
         if step.get('step') == 'commission':
             raise Exception('commission as last step')
     articles = parse_texte.parse(last_text['source_url'])
-    if articles[0].get('definitif'):
+    if articles and articles[0].get('definitif'):
         dos['Taille finale'] = read_text(parse_texte.parse(last_text['source_url']))
     else:
         dos['Taille finale'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
