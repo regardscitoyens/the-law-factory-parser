@@ -15,6 +15,14 @@ def annee(date):
     return int(date.split('/')[-1])
 
 
+def find_last_depot(steps):
+    last_depot = None
+    for step in steps:
+        if not step.get('step') == 'depot':
+            break
+        last_depot = step
+    return last_depot
+
 def parse_senat_open_data():
     senat_csv = opendata.fetch_csv()
     # filter non-promulgués
@@ -81,13 +89,13 @@ def add_metrics(dos, parsed_dos):
     dos['URL CC'] = cc_step[0] if cc_step else ''
     dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
-
-    # skip budget law text length since ours is not working for now
-    if dos['Type de texte'] == 'budgétaire':
-        return
-
-    dos['Taille initiale'] = parsed_dos['input_text_length2']
     dos['Taille finale'] = parsed_dos['output_text_length2']
+
+    # skip budget law text initial length if from AN since our parsing is not working for now
+    last_depot = find_last_depot(parsed_dos['steps'])
+    if dos['Type de texte'] == 'budgétaire' and 'assemblee-nationale.fr' in last_depot['source_url']:
+        return
+    dos['Taille initiale'] = parsed_dos['input_text_length2']
 
 
 def add_metrics_via_adhoc_parsing(dos):
@@ -114,15 +122,7 @@ def add_metrics_via_adhoc_parsing(dos):
     dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
 
-    # skip budget law text length since ours is not working for now
-    if dos['Type de texte'] == 'budgétaire':
-        return
-
-    last_depot = None
-    for step in parsed_dos['steps']:
-        if not step.get('step') == 'depot':
-            break
-        last_depot = step
+    last_depot = find_last_depot(parsed_dos['steps'])
     last_text = None
     for step in reversed(parsed_dos['steps']):
         last_text = step
@@ -130,12 +130,16 @@ def add_metrics_via_adhoc_parsing(dos):
             break
         if step.get('step') == 'commission':
             raise Exception('commission as last step')
-    dos['Taille initiale'] = read_text(parse_texte.parse(last_depot['source_url']))
     articles = parse_texte.parse(last_text['source_url'])
     if articles[0].get('definitif'):
         dos['Taille finale'] = read_text(parse_texte.parse(last_text['source_url']))
     else:
         dos['Taille finale'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+
+    # skip budget law text initial length if from AN since our parsing is not working for now
+    if dos['Type de texte'] == 'budgétaire' and 'assemblee-nationale.fr' in last_depot['source_url']:
+        return
+    dos['Taille initiale'] = read_text(parse_texte.parse(last_depot['source_url']))
 
 
 def clean_type_dossier(dos):
