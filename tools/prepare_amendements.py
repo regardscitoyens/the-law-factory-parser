@@ -129,7 +129,7 @@ def process(OUTPUT_DIR, procedure):
         ]
         texte_url = last_step_with_good_text_number.get('source_url')
 
-        if last_step_with_good_text_number.get('institution') != step.get('institution'):
+        if step.get('stage') != 'CMP' and last_step_with_good_text_number.get('institution') != step.get('institution'):
             print('ERROR - last step is from another institution', file=sys.stderr)
             continue
 
