@@ -90,8 +90,8 @@ def dump_error_log(url, exception, api_dir, log):
     elif 'senat.fr' in url:
         url_id = url.split('/')[-1].replace('.html', '')
 
-    mkdirs(os.path.join(api_dir, 'logs/'))
-    logfile = os.path.join(api_dir, 'logs/' + url_id)
+    mkdirs(os.path.join(api_dir, 'logs'))
+    logfile = os.path.join(api_dir, 'logs', url_id)
 
     print('[error] parsing', url, 'failed. Details in', logfile)
     open(logfile, 'w').write(log)
