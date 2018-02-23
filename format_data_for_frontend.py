@@ -42,7 +42,7 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
 
     procedure = update_procedure.process(dos, articles_etapes)
 
-    print(' - process amendements')
+    print(' - process amendements & interventions')
     procedure = prepare_amendements.process(output_dir, procedure)
 
     print(' - re-order interventions and correct procedure dates')

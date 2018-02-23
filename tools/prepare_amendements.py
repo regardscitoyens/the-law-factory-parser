@@ -113,7 +113,7 @@ def process(OUTPUT_DIR, procedure):
     last_text_id, last_text_typeparl = None, None
     steps = procedure['steps']
     for i, step in enumerate(steps):
-        print('     * amendement step -', step.get('source_url'))
+        print('    * step -', step.get('stage'), step.get('step'), step.get('source_url'))
         if step.get('step') not in ('commission', 'hemicycle'):
             continue
         if step.get('step') == 'commission' and step.get('stage') == 'CMP':
@@ -163,7 +163,7 @@ def process(OUTPUT_DIR, procedure):
         if amdt_url is None:
             continue
 
-        print('     * downloading amendments:', amdt_url, 'for', texte_url)
+        print('      * downloading amendments:', amdt_url, 'for', texte_url)
 
         amendements_src = download(amdt_url).json().get('amendements', [])
 
@@ -177,7 +177,7 @@ def process(OUTPUT_DIR, procedure):
             print(' WARNING: TA - trying alternative url too', alternative_url)
             amendements_src += download(alternative_url).json().get('amendements', [])
 
-        print('  parsing amendments:', len(amendements_src))
+        print('        parsing amendments:', len(amendements_src))
 
         # ignore amendments if they are not for the correct step
         amendements_src_filtered = []
@@ -316,7 +316,7 @@ def process(OUTPUT_DIR, procedure):
         ###########  INTERVENTIONS #############
         # TODO: move this to a dedicated file
 
-        print('    * downloading interventions')
+        print('      * downloading interventions')
         typeparl, urlapi = identify_room(texte_url,
             legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
         inter_dir = os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions')
@@ -331,15 +331,15 @@ def process(OUTPUT_DIR, procedure):
 
         for loiid in texts:
             url_seances = 'https://{}.fr/seances/{}/json{}'.format(urlapi, loiid, commission_or_hemicycle)
-            print('         * downloading seances - ', url_seances)
+            print('        * downloading seances - ', url_seances)
             for id_seance_obj in download(url_seances).json().get('seances', []):
                 url_seance = 'https://{}.fr/seance/{}/{}/json'.format(urlapi, id_seance_obj['seance'], loiid)
-                print('             * downloading seance - ', url_seance)
+                print('           downloading seance - ', url_seance)
                 resp = download(url_seance).json()
                 if resp.get('seance'):
                     inter = resp.get('seance')[0]['intervention']
                     seance_name = inter['date'] + 'T' + inter['heure'] + '_' + inter['seance_id']
-                    print('                 * dumping seance -', seance_name)
+                    print('            dumping seance -', seance_name)
                     intervention_files.append(seance_name)
                     if not os.path.exists(inter_dir):
                         os.makedirs(inter_dir)
