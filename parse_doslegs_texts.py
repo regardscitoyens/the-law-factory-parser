@@ -135,6 +135,8 @@ def process(dos, debug_intermediary_files=False):
                 if fixed_url != url:
                     print('        ^ text url fixed:', fixed_url)
 
+                step['source_url'] = fixed_url
+
                 step['articles'] = parse_texte.parse(fixed_url)
                 assert step['articles']
 
