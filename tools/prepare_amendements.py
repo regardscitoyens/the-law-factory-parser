@@ -332,7 +332,7 @@ def process(OUTPUT_DIR, procedure):
         for loiid in texts:
             url_seances = 'https://{}.fr/seances/{}/json{}'.format(urlapi, loiid, commission_or_hemicycle)
             print('        * downloading seances - ', url_seances)
-            for id_seance_obj in download(url_seances).json().get('seances', []):
+            for id_seance_obj in sorted(download(url_seances).json().get('seances', []), key=lambda x: x["seance"]):
                 url_seance = 'https://{}.fr/seance/{}/{}/json'.format(urlapi, id_seance_obj['seance'], loiid)
                 print('           downloading seance - ', url_seance)
                 resp = download(url_seance).json()

@@ -254,8 +254,8 @@ def complete(current, previous, step, table_concordance):
 
                 log("DEBUG: article '%s' matched with old article '%s'" % (line['titre'] , oldart['titre']))
 
-                oldtxt = [re_clean_alin.sub('', v) for v in list(oldart["alineas"].values()) if not re_alin_sup.search(v)]
-                txt = [re_clean_alin.sub('', v) for v in list(line["alineas"].values()) if not re_alin_sup.search(v)]
+                oldtxt = "\n".join([re_clean_alin.sub('', v) for v in list(oldart["alineas"].values()) if not re_alin_sup.search(v)])
+                txt = "\n".join([re_clean_alin.sub('', v) for v in list(line["alineas"].values()) if not re_alin_sup.search(v)])
                 a = SequenceMatcher(None, oldtxt, txt).get_matching_blocks()
                 similarity = float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
                 if similarity < 0.75 and not olddepot:

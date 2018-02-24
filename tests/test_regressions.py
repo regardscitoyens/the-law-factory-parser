@@ -69,10 +69,12 @@ def _is_same_helper(dircmp):
 output_dir = 'tests_tmp'
 if REGEN_TESTS:
     output_dir = TEST_DIR
+    for f in glob.glob(os.path.join(TEST_DIR, '*es.json')):
+        os.remove(f)
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-for directory in glob.glob(TEST_DIR + '/p*'):
+for directory in sorted(glob.glob(TEST_DIR + '/p*')):
     if '_tmp' in directory:
         continue
     senat_id = directory.split('/')[-1]
