@@ -154,7 +154,7 @@ def process(procedure):
                             s['diff'] = 'both'
                         else:
                             s['diff'] = 'none'
-                        a = SequenceMatcher(None, oldtxt, txt).get_matching_blocks()
+                        a = SequenceMatcher(None, oldtxt, txt, autojunk=False).get_matching_blocks()
                         s['n_diff'] = 1 - float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
             else:
                 out['articles'][id] = {}

@@ -98,7 +98,7 @@ for d in dossiers:
             lastText = read_text(d['id'], s['directory'])
         if not first_found and s.get('step') == "depot":
             firstText = read_text(d['id'], s['directory'])
-    a = SequenceMatcher(None, "\n".join(firstText), "\n".join(lastText)).get_matching_blocks()
+    a = SequenceMatcher(None, "\n".join(firstText), "\n".join(lastText), autojunk=False).get_matching_blocks()
     proc["ratio_texte_modif"] = 1 - float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
     proc["input_text_length2"] = len("\n".join(firstText))
     proc["output_text_length2"] = len("\n".join(lastText))

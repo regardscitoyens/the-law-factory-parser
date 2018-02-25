@@ -20,7 +20,7 @@ def compare(textA, textB):
     lenA = len(textA)
     lenB = len(textB)
 
-    matcher = SequenceMatcher(None, textA, textB)
+    matcher = SequenceMatcher(None, textA, textB, autojunk=False)
     blocks = matcher.get_matching_blocks()
 
     return {

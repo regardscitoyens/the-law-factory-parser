@@ -258,7 +258,7 @@ def complete(current, previous, step, table_concordance):
 
                 oldtxt = get_alineas_text(oldart["alineas"])
                 txt = get_alineas_text(line["alineas"])
-                a = SequenceMatcher(None, oldtxt, txt).get_matching_blocks()
+                a = SequenceMatcher(None, oldtxt, txt, autojunk=False).get_matching_blocks()
                 similarity = float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
                 if similarity < 0.75 and not olddepot:
                     print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len("".join(txt)), "chars, similarity; %.2f" % similarity, file=sys.stderr)
