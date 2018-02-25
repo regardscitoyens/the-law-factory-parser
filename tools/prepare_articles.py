@@ -2,7 +2,11 @@
 # -*- coding: utf-8 -*-
 import re, os, sys
 from difflib import ndiff, SequenceMatcher
-from .common import json
+
+try:
+    from .common import json
+except:
+    from common import json
 
 
 def getParentFolder(root, f):
@@ -19,10 +23,10 @@ def unifyStatus(status):
     return "none"
 
 
-def create_step(step_id, directory, article=None, echec_type=None):
+def create_step(step_id, article=None, echec_type=None):
     s = {}
     s['id_step'] = step_id
-    s['directory'] = directory
+    s['directory'] = step_id
     s['text'] = []
     if article:
         if article.get('statut'):
@@ -41,12 +45,28 @@ def create_step(step_id, directory, article=None, echec_type=None):
     return s
 
 
+def mark_missing_articles_as_deleted(articles, old_step_id, step_id, last_match_with_previous_step, current_match):
+    # we look for *non-deleted* articles in the previous step to mark them as deleted in this step
+    # articles to recover = articles with index between last_match_with_previous_step and current_match
+    for article_id, article in articles.items():
+        for step in article['steps']:
+            if step['id_step'] == old_step_id \
+                    and last_match_with_previous_step < step['_original_index'] < current_match \
+                    and step['status'] != 'sup':
+                print('Matched an article deleted in this step', article_id)
+                def_s = {**step}
+                def_s['id_step'] = step_id
+                def_s['directory'] = step_id
+                def_s['status'] = 'sup'
+                def_s['diff'] = 'rem'
+                def_s['n_diff'] = 0
+                articles[article_id]['steps'].append(def_s)
+
+
 def process(procedure):
     title = procedure.get("long_title", "Missing title").replace(procedure.get("short_title", "").lower(), procedure.get("short_title", ""))
     title = title[0].upper() + title[1:]
     out = {'law_title': title, 'articles': {}, 'sections': {}, 'short_title': procedure.get("short_title", "")}
-
-    # TODO: handle missing deleted articles and articles marked as new when they are not (ex: renvoi en commission, loi macron,...)
 
     # Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
     dossier_id = procedure.get('senat_id')
@@ -97,7 +117,7 @@ def process(procedure):
         if echec:
             if 'echec' not in out['articles']:
                 out['articles']['echec'] = {'id': 'echec', 'titre': step['echec'], 'section': 'echec', 'steps': []}
-            next_step = create_step(step_id, step['directory'], echec_type=step['echec'])
+            next_step = create_step(step_id, echec_type=step['echec'])
             out['articles']['echec']['steps'].append(next_step)
             if 'echec' not in out['sections']:
                 out['sections']['echec'] = {}
@@ -109,10 +129,11 @@ def process(procedure):
             out['sections'][section['id']][step_id] = {'title': section['titre'], 'type': re_upper_first.sub(lambda x: x.group(1).upper() + x.group(2), section['type_section'])}
             if 'newid' in section:
                 out['sections'][section['id']][step_id]['newnum'] = section['newid']
-        for article in data['articles']:
+        last_match_with_previous_step = -1
+        for article_index, article in enumerate(data['articles']):
             id = article['titre'].replace(' ', '_')
             if out['articles'].get(id):
-                s = create_step(step_id, step['directory'], article=article)
+                s = create_step(step_id, article=article)
                 if 'newtitre' in article:
                     s['newnum'] = article['newtitre']
                 txt = "\n".join([re_clean_alin.sub('', v) for v in s['text'] if not re_alin_sup.search(v)])
@@ -122,6 +143,9 @@ def process(procedure):
                     old_step_id = steps[old_step_index]['directory']
                     for st in out['articles'][id]['steps']:
                         if st['id_step'] == old_step_id:
+                            if st['_original_index'] != last_match_with_previous_step + 1:
+                                mark_missing_articles_as_deleted(out['articles'], old_step_id, step_id, last_match_with_previous_step, st['_original_index'])
+                            last_match_with_previous_step = st['_original_index']
                             oldtext = [re_clean_alin.sub('', v) for v in st['text'] if not re_alin_sup.search(v)]
                             break
 
@@ -165,7 +189,7 @@ def process(procedure):
                 else:
                     out['articles'][id]['section'] = 'A%s' % article['titre']
                 out['articles'][id]['steps'] = []
-                s = create_step(step_id, step['directory'], article)
+                s = create_step(step_id, article)
                 s['n_diff'] = 1
                 s['diff'] = 'add'
                 if nstep >= depots:
@@ -178,6 +202,7 @@ def process(procedure):
                 s['n_diff'] = 0
             else:
                 s['length'] = len(txt)
+            s['_original_index'] = article_index
             out['articles'][id]['steps'].append(s)
         old_step_index = nstep
 
@@ -188,7 +213,8 @@ def process(procedure):
     for a in out['articles']:
         new_steps = []
         for s in out['articles'][a]['steps']:
-            del(s['text'])
+            del s['text']
+            s.pop('_original_index', None)
             if len(new_steps) > 0 and new_steps[-1]['id_step'] == s['id_step']:
                 print('same id_step', s['id_step'], file=sys.stderr)
                 continue
