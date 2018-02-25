@@ -120,6 +120,8 @@ def complete(current, previous, step, table_concordance):
 
     re_alin_sup = re.compile(r'supprimés?\)$', re.I)
     re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
+    get_alineas_text = lambda a: "\n".join([re_clean_alin.sub('', a[k]) for k in sorted(a.keys()) if not re_alin_sup.search(a[k])])
+
     re_clean_et = re.compile(r'(\s*[\&,]\s*|\s+et\s+)+', re.I)
     re_clean_virg = re.compile(r'\s*,\s*')
     re_suppr = re.compile(r'\W*suppr(ess|im)', re.I)
@@ -254,12 +256,12 @@ def complete(current, previous, step, table_concordance):
 
                 log("DEBUG: article '%s' matched with old article '%s'" % (line['titre'] , oldart['titre']))
 
-                oldtxt = "\n".join([re_clean_alin.sub('', v) for v in list(oldart["alineas"].values()) if not re_alin_sup.search(v)])
-                txt = "\n".join([re_clean_alin.sub('', v) for v in list(line["alineas"].values()) if not re_alin_sup.search(v)])
+                oldtxt = get_alineas_text(oldart["alineas"])
+                txt = get_alineas_text(line["alineas"])
                 a = SequenceMatcher(None, oldtxt, txt).get_matching_blocks()
                 similarity = float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
                 if similarity < 0.75 and not olddepot:
-                    print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len("".join(txt)), "diffchars, similarity; %.2f" % similarity, file=sys.stderr)
+                    print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len("".join(txt)), "chars, similarity; %.2f" % similarity, file=sys.stderr)
 
                 if line['titre'] != oldart['titre']:
                     line['newtitre'] = line['titre']
