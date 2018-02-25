@@ -84,10 +84,11 @@ def process(procedure):
         if step['stage'] in ["promulgation", "constitutionnalité"]:
             continue
         if not data and not step.get('echec') and not (procedure.get('is_old_procedure') and step.get('step') == 'commission'):
-            print('     prepare_articles: no data for', step.get('stage'), step.get('step'), step.get('institution'), file=sys.stderr)
+            print('       WARNING: prepare_articles: no data for', step.get('stage'), step.get('step'), step.get('institution'), file=sys.stderr)
             continue
 
         step_id = step['directory']
+        print('      * preparing articles for step', step_id)
 
         # hack
         step['echec'] = step.get('echec')
