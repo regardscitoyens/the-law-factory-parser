@@ -89,7 +89,7 @@ print(total_doslegs, 'doslegs in csv')
 
 home_json_final = {
     "total": total_doslegs,
-    "maximum": 766, # TODO: how can I get it ?
+    "maximum": len(glob.glob(os.path.join(API_DIRECTORY, '*/parsing.log'))) + len(glob.glob(os.path.join(API_DIRECTORY, 'logs/*')))
 }
 home_json_data.sort(key=lambda x: -x['total_amendements'])
 home_json_final["focus"] = {
