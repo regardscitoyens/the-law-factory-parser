@@ -30,7 +30,7 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
 
     output_dir = os.path.join(OUTPUT_DIR, dos_id + '_tmp')
     final_output_dir = os.path.join(OUTPUT_DIR, dos_id)
-    print('     writing to:', output_dir)
+    print('     writing to:', dos_id + '_tmp')
 
     if skip_already_done and os.path.exists(final_output_dir):
         print(' - already done')
@@ -82,6 +82,6 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
     shutil.rmtree(final_output_dir, ignore_errors=True)
     os.rename(output_dir, final_output_dir)
 
-    print('  FINISHED -', final_output_dir)
+    print('  FINISHED -', dos_id)
 
     dump_success_log(final_output_dir, log)
