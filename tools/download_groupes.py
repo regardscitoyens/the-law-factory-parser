@@ -7,13 +7,15 @@ def process(output_directory):
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
     for url in "2007-2012.nosdeputes", "2012-2017.nosdeputes", "2017-2022.nosdeputes", "www.nosdeputes", "www.nossenateurs":
-        destfile = os.path.join(output_directory, '%s-groupes.json' % url)
+        dfile = '%s-groupes.json' % url
+        destfile = os.path.join(output_directory, dfile)
         if not os.path.exists(destfile):
-            print('downloading', destfile)
+            print('downloading', dfile)
             open(destfile, 'w').write(download("https://%s.fr/organismes/groupe/json" % url).text)
-        destfile = os.path.join(output_directory, '%s.parlementaires.json' % url)
+        dfile = '%s.parlementaires.json' % url
+        destfile = os.path.join(output_directory, dfile)
         if not os.path.exists(destfile):
-            print('downloading', destfile)
+            print('downloading', dfile)
             open(destfile, 'w').write(download("http://%s.fr/%s/json" %
                 (url, 'deputes' if 'deputes' in url else 'senateurs')).text)
 
