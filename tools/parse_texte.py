@@ -158,13 +158,13 @@ def parse(url):
         (re.compile(r"(</?)strong>", re.I), r"\1b>"),
         (re.compile(r"<(![^>]*|/?(p|span))>", re.I), ""),
         (re.compile(r"\s*\n+\s*"), " "),
-        (re.compile(r"<[^>]*></[^>]*>"), ""),
+        (re.compile(r"<[^/>]*></[^>]*>"), ""),
         (re.compile(r"^<b><i>", re.I), "<i><b>"),
         (re.compile(r"</b>(\s*)<b>", re.I), r"\1"),
         (re.compile(r"</?sup>", re.I), ""),
         (re.compile(r"^((<[bi]>)*)\((S|AN)[12]\)\s*", re.I), r"\1"),
-        (re.compile(r"^(<b>Article\s*)\d+\s*<s>\s*", re.I), r"\1"),
         (re.compile(r"<s>(.*)</s>", re.I), ""),
+        (re.compile(r"^(<b>Article\s*)\d+\s*(?:<s>\s*)+", re.I), r"\1"),
         (re.compile(r"</?s>", re.I), ""),
         (re.compile(r"\s*</?img>\s*", re.I), ""),
         (re.compile(r"œ([A-Z])"), r"OE\1"),
@@ -397,7 +397,10 @@ def parse(url):
                     article["source_text"] = srclst[curtext]
                 m = re_mat_art.match(line)
                 article["titre"] = re_cl_uno.sub("1er", re_cl_sec_uno.sub("1er", m.group(1).strip())).strip(" -'")
-                assert article["titre"] # avoid empty titles
+
+                assert article["titre"]  # avoid empty titles
+                assert not definitif or ' bis' not in article["titre"]  # detect invalid article names
+
                 if m.group(2) is not None:
                     article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
                 if section["id"] != "":
