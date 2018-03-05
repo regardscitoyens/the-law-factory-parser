@@ -4,6 +4,8 @@
 import sys, re, copy
 import json
 
+from requests.structures import CaseInsensitiveDict
+
 try:
     from .sort_articles import bister, article_is_lower
 except SystemError:
@@ -13,8 +15,9 @@ except SystemError:
 def complete(current, previous, step, table_concordance):
     current = copy.deepcopy(current)
     previous = copy.deepcopy(previous)
+    table_concordance = CaseInsensitiveDict(table_concordance)
 
-    DEBUG = True if len(sys.argv) > 4 else False
+    DEBUG = '--debug' in sys.argv
     def log(text):
         if DEBUG:
             print(text, file=sys.stderr)
@@ -25,7 +28,7 @@ def complete(current, previous, step, table_concordance):
     find_num = re.compile(r'-[a-z]*(\d+)\D?$')
     oldnum = 0
     oldstep = {}
-    oldjson =  []
+    oldjson = []
     oldstatus = {}
     oldartids = []
     oldarts = []
@@ -198,7 +201,7 @@ def complete(current, previous, step, table_concordance):
 
                         # first, mark the old articles as deleted via the concordance table
                         if oldart['titre'].lower() in table_concordance:
-                            new_art = table_concordance[oldart['titre'].lower()]
+                            new_art = table_concordance[oldart['titre']]
                             if 'suppr' in new_art:
                                 c, a = oldarts.pop(0)
                                 oldartids.remove(c)
@@ -225,14 +228,14 @@ def complete(current, previous, step, table_concordance):
                     exit()
 
                 # detect matching errors
-                if oldart['titre'].lower() in table_concordance:
-                    new_art = table_concordance[oldart['titre'].lower()]
+                if oldart['titre'] in table_concordance:
+                    new_art = table_concordance[oldart['titre']]
                     if new_art != line['titre']:
                         print("ERROR: true concordance is different: when parsing article '%s', we matched it with '%s' which should be matched to '%s' (from concordance table) " % (line['titre'] , oldart['titre'], new_art))
                         match = None
                         for oldart_title, newart_title in table_concordance.items():
-                            if newart_title.lower() == line['titre']:
-                                match = newart_title
+                            if newart_title == line['titre']:
+                                match = oldart_title
                                 print('    -> it should have been matched with article %s' % oldart_title)
                                 break
                         else:
@@ -240,21 +243,25 @@ def complete(current, previous, step, table_concordance):
 
                         # if article not matching but here in the concordance table, introduce it as a new one
                         # since it can correspond to an article deleted by the Senate in Nouvelle lecture
-                        # /!\ this can only happen during a lecture définitive
-                        if step.get('stage') == 'l. définitive' and match:
+                        # or an article introduced in CMP hémicycle
+                        # /!\ this can only happen during a lecture définitive or a CMP hémicycle
+                        if (step.get('stage') == 'l. définitive' or step.get('step') == 'hemicycle') and match:
                             log("DEBUG: Marking art %s as nouveau" % line['titre'])
                             if "section" in line and cursec['id'] != line["section"]:
                                 line["section"] = cursec["id"]
                             a = line
                             a["order"] = order
                             a["status"] = "nouveau"
+                            if a['titre'] != match:
+                                a['newtitre'] = a['titre']
+                                a['titre'] = match
                             order += 1
                             write_json(a)
                             continue
                         else:
                             exit()
 
-                log("DEBUG: article '%s' matched with old article '%s'" % (line['titre'] , oldart['titre']))
+                log("DEBUG: article '%s' matched with old article '%s'" % (line['titre'], oldart['titre']))
 
                 oldtxt = get_alineas_text(oldart["alineas"])
                 txt = get_alineas_text(line["alineas"])
