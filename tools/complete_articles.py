@@ -246,7 +246,7 @@ def complete(current, previous, step, table_concordance):
                         # or an article introduced in CMP hémicycle
                         # /!\ this can only happen during a lecture définitive or a CMP hémicycle
                         if (step.get('stage') == 'l. définitive' or (
-                                step.get('step') == 'hemicycle' and step.get.get('stage') == 'CMP')
+                                step.get('step') == 'hemicycle' and step.get('stage') == 'CMP')
                             ) and match:
                             log("DEBUG: Marking art %s as nouveau" % line['titre'])
                             if "section" in line and cursec['id'] != line["section"]:
