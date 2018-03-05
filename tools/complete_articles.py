@@ -245,7 +245,9 @@ def complete(current, previous, step, table_concordance):
                         # since it can correspond to an article deleted by the Senate in Nouvelle lecture
                         # or an article introduced in CMP hémicycle
                         # /!\ this can only happen during a lecture définitive or a CMP hémicycle
-                        if (step.get('stage') == 'l. définitive' or step.get('step') == 'hemicycle') and match:
+                        if (step.get('stage') == 'l. définitive' or (
+                                step.get('step') == 'hemicycle' and step.get.get('stage') == 'CMP')
+                            ) and match:
                             log("DEBUG: Marking art %s as nouveau" % line['titre'])
                             if "section" in line and cursec['id'] != line["section"]:
                                 line["section"] = cursec["id"]
