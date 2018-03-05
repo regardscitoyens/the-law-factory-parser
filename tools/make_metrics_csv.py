@@ -277,7 +277,7 @@ if __name__ == '__main__':
             except Exception as e:
                 traceback.print_tb(e.__traceback__)
                 print('- adhoc parsing failed', e)
-                pass
+                continue
 
         if not dos["Décision du CC"]:
             if dos["URL CC"]:
