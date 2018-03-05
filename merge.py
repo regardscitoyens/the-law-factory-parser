@@ -189,7 +189,7 @@ def merge_senat_with_an(senat, an):
                     elif an_step['source_url']:
                         step['source_url'] = an_step['source_url']
 
-        if step.get('stage') == 'promulgation' and (not step['source_url'] or 'jo_pdf' in step['source_url']):
+        if step.get('stage') == 'promulgation' and (not step.get('source_url') or 'jo_pdf' in step['source_url']):
             an_step_promulgation = [s for s in an['steps'] if s.get('stage') == 'promulgation']
             if an_step_promulgation and an_step_promulgation[0]['source_url']:
                 step['source_url'] = an_step_promulgation[0]['source_url']
