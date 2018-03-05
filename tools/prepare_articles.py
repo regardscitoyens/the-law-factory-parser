@@ -54,7 +54,7 @@ def mark_missing_articles_as_deleted(articles, old_step_id, step_id, last_match_
                     and last_match_with_previous_step < step['_original_index'] < current_match \
                     and step['status'] != 'sup':
                 print('Matched an article deleted in this step', article_id)
-                def_s = {**step}
+                def_s = dict(step)
                 def_s['id_step'] = step_id
                 def_s['directory'] = step_id
                 def_s['status'] = 'sup'
