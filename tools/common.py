@@ -208,7 +208,7 @@ def get_text_id(texte_url):
             nosdeputes_id = 'TA' + nosdeputes_id
         return nosdeputes_id
     elif "senat.fr" in texte_url:
-        textid_match = re.search(r"(\d{2})-(\d+)(/|(_mono)?\.html$)", texte_url, re.I)
+        textid_match = re.search(r"(\d{2})-(\d+)(/|rec|(_mono)?\.html$)", texte_url, re.I)
         return '20%s20%s-%s' % (textid_match.group(1).zfill(2),
             str(int(textid_match.group(1))+1).zfill(2),
             textid_match.group(2))

@@ -80,7 +80,7 @@ def parse(url):
         texte["id"] += str(numero)
         texte["nosdeputes_id"] = get_text_id(url)
     else:
-        m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})\d?(_mono)?\.", url, re.I)
+        m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})(rec)?\d?(_mono)?\.", url, re.I)
         if m is None:
             m = re.search(r"/(-)?20(\d+)-\d+/(\d+)(_mono)?.html", url, re.I)
         numero = int(m.group(3))
