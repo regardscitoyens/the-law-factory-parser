@@ -236,6 +236,7 @@ def parse(url):
     re_mat_ppl = re.compile(r"((<b>)?\s*pro.* loi|<h2>\s*pro.* loi\s*</h2>)", re.I)
     re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*(</b>\s*$|\(.*\))")
     re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
+    re_mat_exp_per_article = re.compile(r"Articles du projet de loi et exposé des motifs par article", re.I) # only happens for projet de loi (ex: budget)
     re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|<a>\*</a>\s*(<i>)?1)", re.I)
     re_mat_ann = re.compile(r"\s*<b>\s*ANNEXES?[\s<]+")
     re_mat_dots = re.compile(r"^(<i>)?[.…_]+(</i>)?$")
@@ -328,6 +329,8 @@ def parse(url):
             ) and 'dont la teneur suit' not in cl_line:
             texte = save_text(texte)
             pr_js({"type": "echec", "texte": cl_line})
+            break
+        elif re_mat_exp_per_article.match(line): # We can't parse texts with embedded exposé for now
             break
         elif read == -1 or (indextext != -1 and curtext != indextext):
             continue
