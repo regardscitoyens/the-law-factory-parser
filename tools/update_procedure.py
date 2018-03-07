@@ -14,11 +14,12 @@ def process(procedure, articles, intervs={}):
             stepid = s['directory']
             if stepid not in good_steps:
                 good_steps[stepid] = int(s['directory'].split('_')[0])
+            # TODO : handle here cases of step with no directory, but last one and commission or hemicycle for currently discussed texts and set enddate to ""
 
     for i, s in enumerate(procedure['steps']):
         # hacks
         s['enddate'] = s.get('date')
-        
+
         s['debats_order'] = None
         if 'has_interventions' in s and s['has_interventions'] and s['directory'] not in intervs:
             print("WARNING: removing nearly empty interventions steps for %s" % s['directory'].encode('utf-8'), file=sys.stderr)
