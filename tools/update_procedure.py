@@ -14,18 +14,24 @@ def process(procedure, articles, intervs={}):
             stepid = s['directory']
             if stepid not in good_steps:
                 good_steps[stepid] = int(s['directory'].split('_')[0])
-            # TODO : handle here cases of step with no directory, but last one and commission or hemicycle for currently discussed texts and set enddate to ""
+
+    # detect current step
+    currently_debated_step = None
+    for i, s in reversed(list(enumerate(procedure['steps']))):
+        if s['directory'] in good_steps:
+            break
+        if s.get('step') in ('hemicycle', 'commission'):
+            currently_debated_step = i
 
     for i, s in enumerate(procedure['steps']):
-        # hacks
-        s['enddate'] = s.get('date')
+        s['enddate'] = s.get('date') if i != currently_debated_step else ''
 
         s['debats_order'] = None
         if 'has_interventions' in s and s['has_interventions'] and s['directory'] not in intervs:
             print("WARNING: removing nearly empty interventions steps for %s" % s['directory'].encode('utf-8'), file=sys.stderr)
             s['has_interventions'] = False
         if 'directory' in s:
-            if i == len(procedure['steps'])-1 and not s['enddate']:
+            if not s['enddate']:
                 # no good steps, it means the parsing failed
                 if good_steps:
                     s['debats_order'] = max(good_steps.values()) + 1
