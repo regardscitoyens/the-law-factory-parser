@@ -102,6 +102,7 @@ def add_metrics_via_adhoc_parsing(dos):
     senat_dos = download_senat(dos['URL du dossier'])
     if not senat_dos:
         print('  /!\ INVALID SENAT DOS')
+        return
 
     # Add AN version if there's one
     if 'url_dossier_assemblee' in senat_dos:
