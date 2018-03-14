@@ -335,17 +335,19 @@ def parse(url):
         elif read == -1 or (indextext != -1 and curtext != indextext):
             continue
 
-        # if the paragraph is inside another paragraph, ignore it since we already processed the parent
-        # if it's inside a table we ignore it too for now
-        is_inside_bad_element = False
+        # if there's a <p> inside a <p>, we don't want to process it twice
+        # here the solution is to mark all the processed elements
+        # with a '_processed' attribute
+        parent_already_processed = False
         parent = text.parent
         while parent:
-            if parent.name in ('table', 'p'):
-                is_inside_bad_element = True
+            if '_processed' in parent.attrs:
+                parent_already_processed = True
                 break
             parent = parent.parent
-        if is_inside_bad_element:
+        if parent_already_processed:
             continue
+        text.attrs['_processed'] = True
 
         # crazy edge case: "(Conforme)Article 24 bis A (nouveau)" on one line
         # http://www.assemblee-nationale.fr/13/projets/pl3324.asp
