@@ -46,7 +46,7 @@ def custom_number_of_steps(steps):
     # count the number of columns minus CMP hemicycle
     c = 0
     for step in steps:
-        if step['stage'] == 'CMP':
+        if step.get('stage') == 'CMP':
             if step['step'] == 'commission':
                 c += 1
         elif step.get('step') == 'hemicycle':
@@ -59,7 +59,7 @@ def count_echecs(steps):
 
 
 def get_CMP_type(steps):
-    steps = [s for s in steps if s['stage'] == 'CMP']
+    steps = [s for s in steps if s.get('stage') == 'CMP']
     if not steps:
         return 'pas de CMP'
     if len(steps) == 3 and not any([s.get('echec') for s in steps]):
