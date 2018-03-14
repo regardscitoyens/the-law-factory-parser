@@ -51,6 +51,13 @@ def parse(url):
         (re.compile(r'<div[^>]*class="titreArt[^>]*>(.*?)\s*</div>', re.I), r'<p><b>\1</b></p>'),
     ]
 
+    if url.endswith('.pdf'):
+        print("WARNING: text url is a pdf: %s skipping it..." % url)
+        return ALL_ARTICLES
+    if 'assemblee-nat.fr' in url:
+        print("WARNING: url corresponds to old AN website: %s skipping it..." % url)
+        return ALL_ARTICLES
+
     resp = download(url)
     if '/textes/'in url:
         resp.encoding = 'utf-8'

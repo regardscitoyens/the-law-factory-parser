@@ -130,18 +130,26 @@ def add_metrics_via_adhoc_parsing(dos):
             break
         if step.get('step') == 'commission':
             raise Exception('commission as last step')
-    articles = parse_texte.parse(last_text['source_url'])
-    if articles and articles[0].get('definitif'):
-        dos['Taille finale'] = read_text(parse_texte.parse(last_text['source_url']))
-    else:
-        dos['Taille finale'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
 
+    if 'source_url' in last_text:
+        try:
+            articles = parse_texte.parse(last_text['source_url'])
+            if articles and articles[0].get('definitif'):
+                dos['Taille finale'] = read_text(parse_texte.parse(last_text['source_url']))
+            else:
+                dos['Taille finale'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+        except:
+            print("WARNING: Taille finale impossible to evaluate")
+
+    try:
     # skip budget law text initial length if from AN since our parsing is not working for now
-    if dos['Type de texte'] == 'budgétaire' and 'assemblee-nationale.fr' in last_depot['source_url']:
-        return
-    input_text_length = read_text(parse_texte.parse(last_depot['source_url']))
-    if input_text_length > 0:
-        dos['Taille initiale'] = input_text_length
+        if dos['Type de texte'] == 'budgétaire' and 'assemblee-nationale.fr' in last_depot['source_url']:
+            return
+        input_text_length = read_text(parse_texte.parse(last_depot['source_url']))
+        if input_text_length > 0:
+            dos['Taille initiale'] = input_text_length
+    except:
+        print("WARNING: Taille initiale impossible to evaluate")
 
 
 def clean_type_dossier(dos):
