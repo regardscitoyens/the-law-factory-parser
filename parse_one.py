@@ -40,6 +40,8 @@ def are_same_doslegs(senat_dos, an_dos):
     # same dosleg url ?
     if an_dos['url_dossier_senat'] == senat_dos['url_dossier_senat']:
         return True
+    elif download(an_dos['url_dossier_senat']).status_code == 404:
+        return True
     # same first text  ?
     if senat_dos.get('steps') and an_dos.get('steps') \
         and senat_dos['steps'][0].get('source_url') == an_dos['steps'][0].get('source_url'):
