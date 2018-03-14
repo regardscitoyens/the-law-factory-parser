@@ -23,12 +23,14 @@ def find_last_depot(steps):
         last_depot = step
     return last_depot
 
+
 def parse_senat_open_data():
     senat_csv = opendata.fetch_csv()
     # filter non-promulgués
     senat_csv = [dos for dos in senat_csv if dos['Date de promulgation']]
     # filter before 2008
     senat_csv = [dos for dos in senat_csv if annee(dos['Date initiale']) >= 2008]
+    senat_csv.sort(key=lambda dos: annee(dos['Date initiale']))
     return senat_csv
 
 
@@ -313,4 +315,3 @@ if __name__ == '__main__':
     writer.writeheader()
     for dos in senat_csv:
         writer.writerow(dos)
-
