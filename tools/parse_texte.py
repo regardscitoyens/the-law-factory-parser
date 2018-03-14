@@ -2,8 +2,7 @@
 # -*- coding=utf-8 -*-
 """Common law parser for AN/Sénat
 
-Run with python parse_texte.py LAW_FILE
-where LAW_FILE results from perl download_loi.pl URL > LAW_FILE
+Run with python parse_texte.py <URL>
 Outputs results to stdout
 
 Dependencies :
@@ -21,6 +20,19 @@ try:
 except SystemError:
     from sort_articles import bister
     from common import get_text_id
+
+
+def non_recursive_find_all(node, test):
+    """
+    if there's a <p> inside a <p>, we don't want to process both
+    so we stop at the first top-level <p> we find
+    and ignore the children
+    """
+    if test(node):
+        yield node
+    elif hasattr(node, 'children'):
+        for child in node.children:
+            yield from non_recursive_find_all(child, test)
 
 
 def parse(url):
@@ -289,7 +301,7 @@ def parse(url):
     section = {"type": "section", "id": ""}
 
 
-    for text in soup.find_all(lambda x: x.name == 'p' or x.name == 'h2' or x.name == 'h4'):
+    for text in non_recursive_find_all(soup, lambda x: x.name == 'p' or x.name == 'h2' or x.name == 'h4'):
         line = clean_html(str(text))
 
         # limit h2/h4 matches to PPL headers or Article unique
@@ -341,20 +353,6 @@ def parse(url):
             break
         elif read == -1 or (indextext != -1 and curtext != indextext):
             continue
-
-        # if there's a <p> inside a <p>, we don't want to process it twice
-        # here the solution is to mark all the processed elements
-        # with a '_processed' attribute
-        parent_already_processed = False
-        parent = text.parent
-        while parent:
-            if '_processed' in parent.attrs:
-                parent_already_processed = True
-                break
-            parent = parent.parent
-        if parent_already_processed:
-            continue
-        text.attrs['_processed'] = True
 
         # crazy edge case: "(Conforme)Article 24 bis A (nouveau)" on one line
         # http://www.assemblee-nationale.fr/13/projets/pl3324.asp
