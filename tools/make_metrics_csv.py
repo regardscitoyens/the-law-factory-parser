@@ -107,13 +107,11 @@ def add_metrics_via_adhoc_parsing(dos):
         return
 
     # Add AN version if there's one
+    parsed_dos = senat_dos
     if 'url_dossier_assemblee' in senat_dos:
         an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'])
-        if 'url_dossier_senat' in an_dos:
-            assert are_same_doslegs(senat_dos, an_dos)
-        parsed_dos = merge_senat_with_an(senat_dos, an_dos)
-    else:
-        parsed_dos = senat_dos
+        if 'url_dossier_senat' in an_dos and are_same_doslegs(senat_dos, an_dos):
+            parsed_dos = merge_senat_with_an(senat_dos, an_dos)
     dos['Titre court'] = parsed_dos['short_title']
     dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
     dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
