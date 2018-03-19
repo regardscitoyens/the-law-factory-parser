@@ -37,10 +37,10 @@ anpy-cli doslegs_urls | anpy-cli parse_many_doslegs data/parsed/an/
 senapy-cli show_dossier_like_senapy http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp
 
 # generate a graph of the steps
-python merge.py "data/parsed/senat/*" "data/parsed/an/*" data/parsed/merged/
-python tools/steps_as_dot.py data/parsed/merged/all.json | dot -Tsvg > steps.svg
+python tools/steps_as_dot.py data/ | dot -Tsvg > steps.svg
 
 # compare with previously-generated data
+python merge.py "data/parsed/senat/*" "data/parsed/an/*" data/parsed/merged/
 git clone git@github.com:mdamien/lafabrique-export.git lafabrique
 python tools/compare_all_thelawfactory_and_me.py "lafabrique/*" data/parsed/merged/all.json
 

@@ -1,8 +1,8 @@
 # quick script to produce a DOT file of the steps from a list of dosleg
-# use "python steps_as_dot.py <path_to_json>| dot -Tpng > steps.png" to produce the diagram
+# use "python steps_as_dot.py <data_directory>| dot -Tpng > steps.png" to produce the diagram
 
 # the XKCD font is available here: https://github.com/ipython/xkcd-font/tree/master/xkcd/build
-import json, sys, os, random
+import json, sys, os, random, glob
 
 
 if len(sys.argv) < 2:
@@ -12,7 +12,11 @@ if len(sys.argv) < 2:
 procedure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'doc/valid_procedure.json')
 procedure = json.load(open(procedure_file))
 
-all_senat_jo = [x for x in json.load(open(sys.argv[1])) if len(x['steps']) > 2]
+API_DIRECTORY = sys.argv[1]
+all_senat_jo = [json.load(open(path)) for path \
+                in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json'))]
+all_senat_jo = [dos for dos in all_senat_jo if dos.get('end_jo')]
+# all_senat_jo = [x for x in json.load(open(sys.argv[1])) if len(x['steps']) > 2]
 # all_senat_jo = random.sample(all_senat_jo, 5)
 
 nodes_names_size = {}
@@ -54,7 +58,7 @@ for prev, nexts in step_trans.items():
         for next, next_v in nexts.items():
             next_id = get_node_id(next)
 
-            incorrect =  procedure.get(prev, {}).get(next, False) is False
+            incorrect = procedure.get(prev, {}).get(next, False) is False
             color = '#F44336' if incorrect else '#a5a5a5'
 
             dot_result += '\n   %s -> %s [label="%s", penwidth="%d", color="%s", fontcolor="%s"];' % (
