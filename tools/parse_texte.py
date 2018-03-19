@@ -35,6 +35,35 @@ def non_recursive_find_all(node, test):
             yield from non_recursive_find_all(child, test)
 
 
+def clean_expose_des_motifs(html):
+    """
+    the budget related texts have an exposé des motifs per article
+    at the depot step, we remove all of them except the last one
+    to make the later parsing easier
+    """
+    before_expose, after_expose = [], []
+    last_expose = []
+    expose = False
+    count = 0
+    for line in html.split('\n'):
+        if '>Exposé des motifs' in line:
+            expose = ['']
+            count += 1
+        # detect end of exposé
+        elif line and expose and \
+            ('"text-align: center">' in line or '<b>' in line or '</a>' in line or '<a name=' in line) and \
+            '<td valign="top">' not in line: # table inside exposé
+            last_expose = expose
+            before_expose += after_expose
+            after_expose = []
+            expose = False
+        if not expose:
+            after_expose.append(line)
+        else:
+            expose.append(line)
+    return '\n'.join(before_expose + last_expose + after_expose), count
+
+
 def parse(url):
     ALL_ARTICLES = []
 
@@ -78,6 +107,10 @@ def parse(url):
         string = resp.text
     else:
         string = open(url).read()
+
+    without_expose, count_expose = clean_expose_des_motifs(string)
+    if count_expose > 3:
+        string = without_expose
 
     if 'legifrance.gouv.fr' in url:
         for reg, res in clean_legifrance_regexps:
@@ -261,7 +294,6 @@ def parse(url):
     re_mat_ppl = re.compile(r"((<b>)?\s*pro.* loi|<h2>\s*pro.* loi\s*</h2>)", re.I)
     re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*(</b>\s*$|\(.*\))")
     re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
-    re_mat_exp_per_article = re.compile(r"Articles du projet de loi et exposé des motifs par article", re.I) # only happens for projet de loi (ex: budget)
     re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|<a>\*</a>\s*(<i>)?1)", re.I)
     re_mat_ann = re.compile(r"\s*<b>\s*ANNEXES?[\s<]+")
     re_mat_dots = re.compile(r"^(<i>)?[.…_]+(</i>)?$")
@@ -355,8 +387,6 @@ def parse(url):
             texte = save_text(texte)
             pr_js({"type": "echec", "texte": cl_line})
             break
-        elif re_mat_exp_per_article.match(line): # We can't parse texts with embedded exposé for now
-            break
         elif read == -1 or (indextext != -1 and curtext != indextext):
             continue
 
@@ -367,7 +397,6 @@ def parse(url):
             article["statut"] = 'conforme'
             line = line.replace('<i>(Conforme)</i>', '')
             cl_line = cl_line.replace('(Conforme)', '')
-
 
         # Identify section zones
         m = re_mat_sec.match(line)
