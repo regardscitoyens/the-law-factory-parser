@@ -70,10 +70,14 @@ def parse(url):
         print("WARNING: url corresponds to old AN website: %s skipping it..." % url)
         return ALL_ARTICLES
 
-    resp = download(url)
-    if '/textes/'in url:
-        resp.encoding = 'utf-8'
-    string = resp.text
+
+    if url.startswith('http'):
+        resp = download(url)
+        if '/textes/'in url:
+            resp.encoding = 'utf-8'
+        string = resp.text
+    else:
+        string = open(url).read()
 
     if 'legifrance.gouv.fr' in url:
         for reg, res in clean_legifrance_regexps:
@@ -82,32 +86,34 @@ def parse(url):
         for reg, res in clean_texte_regexps:
             string = reg.sub(res, string)
 
+
     definitif = re_definitif.search(string) is not None
     soup = BeautifulSoup(string, "html5lib")
     texte = {"type": "texte", "source": url, "definitif": definitif}
 
     # Generate Senat or AN ID from URL
-    if "legifrance.gouv.fr" in url:
-        m = re.search(r"cidTexte=(JORFTEXT\d+)(\D|$)", url, re.I)
-        texte["id"] = m.group(1)
-    elif re.search(r"assemblee-?nationale", url, re.I):
-        m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
-        numero = int(m.group(3))
-        texte["id"] = "A" + m.group(1) + "-"
-        if m.group(2) is not None:
-            texte["id"] += m.group(2)
-        texte["id"] += str(numero)
-        texte["nosdeputes_id"] = get_text_id(url)
-    else:
-        m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})(rec)?\d?(_mono)?\.", url, re.I)
-        if m is None:
-            m = re.search(r"/(-)?20(\d+)-\d+/(\d+)(_mono)?.html", url, re.I)
-        numero = int(m.group(3))
-        texte["id"] = "S" + m.group(2) + "-"
-        if m.group(1) is not None:
-            texte["id"] += m.group(1)
-        texte["id"] += "%03d" % numero
-        texte["nossenateurs_id"] = get_text_id(url)
+    if url.startswith('http'):
+        if "legifrance.gouv.fr" in url:
+            m = re.search(r"cidTexte=(JORFTEXT\d+)(\D|$)", url, re.I)
+            texte["id"] = m.group(1)
+        elif re.search(r"assemblee-?nationale", url, re.I):
+            m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
+            numero = int(m.group(3))
+            texte["id"] = "A" + m.group(1) + "-"
+            if m.group(2) is not None:
+                texte["id"] += m.group(2)
+            texte["id"] += str(numero)
+            texte["nosdeputes_id"] = get_text_id(url)
+        else:
+            m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})(rec)?\d?(_mono)?\.", url, re.I)
+            if m is None:
+                m = re.search(r"/(-)?20(\d+)-\d+/(\d+)(_mono)?.html", url, re.I)
+            numero = int(m.group(3))
+            texte["id"] = "S" + m.group(2) + "-"
+            if m.group(1) is not None:
+                texte["id"] += m.group(1)
+            texte["id"] += "%03d" % numero
+            texte["nossenateurs_id"] = get_text_id(url)
 
     texte["titre"] = re_clean_title_legif.sub('', soup.title.string.strip()) if soup.title else ""
     texte["expose"] = ""
