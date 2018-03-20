@@ -443,10 +443,14 @@ def parse(url):
                 m = re_mat_art.match(line)
                 article["titre"] = re_cl_uno.sub("1er", re_cl_sec_uno.sub("1er", m.group(1).strip())).strip(" -'")
 
+                if ':' in article["titre"]:  # removes inline article "nickname"
+                    article['titre'] = article['titre'].split(':')[0].strip()
+                    m = None  # erase status match, since it could match anything
+
                 assert article["titre"]  # avoid empty titles
                 assert not definitif or ' bis' not in article["titre"]  # detect invalid article names
 
-                if m.group(2) is not None:
+                if m and m.group(2) is not None:
                     article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
                 if section["id"] != "":
                     article["section"] = section["id"]
