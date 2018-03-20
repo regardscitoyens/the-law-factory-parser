@@ -325,6 +325,22 @@ def parse(url):
     re_stars = re.compile(r'^[\s*_]+$')
     re_art_uni = re.compile(r'\s*article\s*unique\s*$', re.I)
 
+    def clean_article_name(text):
+        # Only keep first line for article name
+        # but to do that while keeping the regexes the same
+        # we need to add our own marker
+        NEW_LINE_MARKER = 'NEW_LINE_MARKER'
+        html = str(text)
+        html = re.sub(r'<br/?>', NEW_LINE_MARKER, html)
+        line = clean_html(html)
+        cl_line = re_cl_html.sub("", line).strip()
+        cl_line = [l for l in cl_line.split(NEW_LINE_MARKER) if l][0]
+
+        # If there's a ':', what comes after is not related to the name
+        cl_line = cl_line.split(':')[0].strip()
+
+        return cl_line
+
     # 'read' can be
     #     -1 : the text is not detected yet
     #      0 : read the text
@@ -440,17 +456,13 @@ def parse(url):
                 article = {"type": "article", "order": art_num, "alineas": {}, "statut": "none"}
                 if srclst:
                     article["source_text"] = srclst[curtext]
-                m = re_mat_art.match(line)
+                m = re_mat_art.match(clean_article_name(text))
                 article["titre"] = re_cl_uno.sub("1er", re_cl_sec_uno.sub("1er", m.group(1).strip())).strip(" -'")
-
-                if ':' in article["titre"]:  # removes inline article "nickname"
-                    article['titre'] = article['titre'].split(':')[0].strip()
-                    m = None  # erase status match, since it could match anything
 
                 assert article["titre"]  # avoid empty titles
                 assert not definitif or ' bis' not in article["titre"]  # detect invalid article names
 
-                if m and m.group(2) is not None:
+                if m.group(2) is not None:
                     article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
                 if section["id"] != "":
                     article["section"] = section["id"]
