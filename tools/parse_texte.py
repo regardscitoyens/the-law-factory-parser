@@ -305,7 +305,7 @@ def parse(url):
     re_clean_art_spaces = re.compile(r'^\s*("?)\s+')
     re_clean_art_spaces2 = re.compile(r'\s+\.\s*-\s+')
     re_clean_conf = re.compile(r"\((conforme|non[\s-]*modifi..?)s?\)", re.I)
-    re_clean_supr = re.compile(r'\((dispositions?\s*d..?clar..?es?\s*irrecevable.*article 4.*Constitution.*|(maintien de la )?suppr(ession|im..?s?)(\s*(conforme|maintenue|par la commission mixte paritaire))*)\)["\s]*$', re.I)
+    re_clean_supr = re.compile(r'(?:\(|^)(dispositions?\s*d..?clar..?es?\s*irrecevable.*article 4.*Constitution.*|(maintien de la |Article )?suppr(ession|im..?s?)(\s*(conforme|maintenue|par la commission mixte paritaire))*)\)?[\"\s]*$', re.I)
     re_echec_hemi = re.compile(r"L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
     re_echec_hemi2 = re.compile(r"de loi (a été rejetée?|n'a pas été adoptée?) par l('Assemblée nationale|e Sénat)\.$", re.I)
     re_echec_hemi3 = re.compile(r"le Sénat décide qu'il n'y a pas lieu de poursuivre la délibération", re.I)
@@ -456,7 +456,8 @@ def parse(url):
         elif (not expose and re_mat_end.match(line)) or (read == 2 and re_mat_ann.match(line)):
             break
         elif (re.match(r"(<i>)?<b>", line) or re_art_uni.match(cl_line) or re.match(r"^Articles? ", line)
-            ) and not is_valid_table_row(text):
+            ) and not is_valid_table_row(text) and not re.search(r">Articles? supprimé", line):
+
             line = cl_line
             # Read a new article
             if re_mat_art.match(line):
