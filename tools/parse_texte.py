@@ -35,7 +35,7 @@ def non_recursive_find_all(node, test):
             yield from non_recursive_find_all(child, test)
 
 
-def clean_expose_des_motifs(html):
+def clean_extra_expose_des_motifs(html):
     """
     the budget related texts have an exposé des motifs per article
     at the depot step, we remove all of them except the last one
@@ -61,7 +61,9 @@ def clean_expose_des_motifs(html):
             after_expose.append(line)
         else:
             expose.append(line)
-    return '\n'.join(before_expose + last_expose + after_expose), count
+    if count > 3:
+        return '\n'.join(before_expose + last_expose + after_expose)
+    return html
 
 
 def parse(url):
@@ -108,9 +110,7 @@ def parse(url):
     else:
         string = open(url).read()
 
-    without_expose, count_expose = clean_expose_des_motifs(string)
-    if count_expose > 3:
-        string = without_expose
+    string = clean_extra_expose_des_motifs(string)
 
     if 'legifrance.gouv.fr' in url:
         for reg, res in clean_legifrance_regexps:
