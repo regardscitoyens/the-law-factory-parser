@@ -341,6 +341,19 @@ def parse(url):
 
         return cl_line
 
+    def is_valid_table_row(text):
+        # returns if the <p> is not the only cell in a table row or not
+        # the only row in the table
+        # (it would mean it could not be an article title or a section name
+        # even if the line starts with "Article X")
+        tr = text.parent.parent
+        if tr.name == 'tr' and len(tr.find_all('td', recursive=False)) > 1:
+            return True
+        tbody = tr.parent
+        if tr.name == 'tbody' and len(tr.find_all('tr', recursive=False)) > 1:
+            return True
+        return False
+
     # 'read' can be
     #     -1 : the text is not detected yet
     #      0 : read the text
@@ -442,7 +455,8 @@ def parse(url):
         # Identify titles and new article zones
         elif (not expose and re_mat_end.match(line)) or (read == 2 and re_mat_ann.match(line)):
             break
-        elif re.match(r"(<i>)?<b>", line) or re_art_uni.match(cl_line) or re.match(r"^Articles? ", line):
+        elif (re.match(r"(<i>)?<b>", line) or re_art_uni.match(cl_line) or re.match(r"^Articles? ", line)
+            ) and not is_valid_table_row(text):
             line = cl_line
             # Read a new article
             if re_mat_art.match(line):
