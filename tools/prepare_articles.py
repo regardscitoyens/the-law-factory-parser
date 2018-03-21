@@ -48,7 +48,7 @@ def create_step(step_id, article=None, echec_type=None):
 def mark_missing_articles_as_deleted(articles, old_step_id, step_id, last_match_with_previous_step, current_match):
     # we look for *non-deleted* articles in the previous step to mark them as deleted in this step
     # articles to recover = articles with index between last_match_with_previous_step and current_match
-    for article_id, article in articles.items():
+    for article_id, article in sorted(articles.items()):
         for step in article['steps']:
             if step['id_step'] == old_step_id \
                     and last_match_with_previous_step < step['_original_index'] < current_match \
