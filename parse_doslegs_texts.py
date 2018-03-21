@@ -16,36 +16,38 @@ def test_status(url):
     return resp
 
 
-def find_good_url(url):
+def find_good_url_resp(url):
     if 'senat.fr' in url:
         if '/leg/' in url and url.endswith('.html'):
             resp = test_status(url)
             if resp:
-                return url
+                return resp
         if '/rap/' in url:
             # we try to use the last page to get a clean text
-            clean_url = None
-            for page in '9', '8', '7', '6', '5', '4', '3', '2', '1', '0':
+            clean_url_resp = None
+            for page in '0123456789':
                 new_url = url.replace('.html', page + '.html')
                 resp = test_status(new_url)
-                if resp:
-                    text = resp.text.replace('<br>', '\n')
-                    # look for the "TEXTE ÉLABORÉ PAR .."" TITLE
-                    if re.match(r'.*TEXTE\s+&Eacute;LABOR&Eacute;\s+PAR.*', text, re.M | re.DOTALL) \
-                        or re.match(r'.*EXAMEN\s+EN\s+COMMISSION.*', text, re.M | re.DOTALL):
-                        # if the previous page was valid also, then the text is multi-page
-                        if clean_url:
-                            clean_url = None
-                            break
-                        clean_url = new_url
+                if not resp:
+                    break
+                text = resp.text.replace('<br>', '\n')
+                # look for the "TEXTE ÉLABORÉ PAR .."" TITLE
+                if re.match(r'.*TEXTE\s+&Eacute;LABOR&Eacute;\s+PAR.*', text, re.M | re.DOTALL) \
+                    or re.match(r'.*EXAMEN\s+EN\s+COMMISSION.*', text, re.M | re.DOTALL):
+                    # if the previous page was valid also, then the text is multi-page
+                    if clean_url_resp:
+                        clean_url_resp = None
+                        break
+                    clean_url_resp = resp
 
-            if clean_url:
-                return clean_url
+            if clean_url_resp:
+                return clean_url_resp
             else:
                 # use _mono as last resort
                 mono_url = url.replace('.html', '_mono.html')
-                if test_status(mono_url):
-                    return mono_url
+                resp = test_status(mono_url)
+                if resp:
+                    return resp
 
     if 'assemblee-nationale.fr' in url:
         if '/cr-' in url:
@@ -89,11 +91,11 @@ def find_good_url(url):
             or ">Cette division n'est pas encore distribuée<" in resp.text:
             return False
         else:
-            return url
+            return resp
 
     resp = test_status(url)
     if resp:
-        return url
+        return resp
     return False
 
 
@@ -130,14 +132,15 @@ def process(dos, debug_intermediary_files=False):
             # TODO: texte retire
             continue
         else:
-            fixed_url = find_good_url(url)
-            if fixed_url:
+            fixed_url_resp = find_good_url_resp(url)
+            if fixed_url_resp:
+                fixed_url = fixed_url_resp.url
                 if fixed_url != url:
                     print('        ^ text url fixed:', fixed_url)
 
                 step['source_url'] = fixed_url
 
-                step['articles'] = parse_texte.parse(fixed_url)
+                step['articles'] = parse_texte.parse(fixed_url, resp=fixed_url_resp)
                 assert step['articles']
 
                 step['articles'][0]['depot'] = step.get('step') == 'depot'

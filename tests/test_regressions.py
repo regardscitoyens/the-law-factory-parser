@@ -12,7 +12,7 @@ import glob, shutil, os, filecmp, sys, difflib
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import parse_one
-from parse_doslegs_texts import find_good_url
+from parse_doslegs_texts import find_good_url_resp
 from tools import parse_texte
 
 # use `test_regressions.py <directory> --regen` to update the tests directory
@@ -21,17 +21,17 @@ TEST_DIR = sys.argv[1]
 
 print('****** testing url fixing... ******')
 # AN .pdf
-assert find_good_url('http://www.assemblee-nationale.fr/13/pdf/pion1895.pdf') == 'http://www.assemblee-nationale.fr/13/propositions/pion1895.asp'
+assert find_good_url_resp('http://www.assemblee-nationale.fr/13/pdf/pion1895.pdf').url == 'http://www.assemblee-nationale.fr/13/propositions/pion1895.asp'
 # senat simple
-assert find_good_url('https://www.senat.fr/leg/tas11-040.html') == 'https://www.senat.fr/leg/tas11-040.html'
+assert find_good_url_resp('https://www.senat.fr/leg/tas11-040.html').url == 'https://www.senat.fr/leg/tas11-040.html'
 # senat multi-page but not last page
-assert find_good_url('https://www.senat.fr/rap/l07-485/l07-485.html') == 'https://www.senat.fr/rap/l07-485/l07-4851.html'
+assert find_good_url_resp('https://www.senat.fr/rap/l07-485/l07-485.html').url == 'https://www.senat.fr/rap/l07-485/l07-4851.html'
 # senat multi-page but not mono
-assert find_good_url('http://www.senat.fr/rap/l09-654/l09-654.html') == 'http://www.senat.fr/rap/l09-654/l09-6542.html'
+assert find_good_url_resp('http://www.senat.fr/rap/l09-654/l09-654.html').url == 'http://www.senat.fr/rap/l09-654/l09-6542.html'
 # senat multi-page text
-assert find_good_url('https://www.senat.fr/rap/l08-584/l08-584.html') == 'https://www.senat.fr/rap/l08-584/l08-584_mono.html'
+assert find_good_url_resp('https://www.senat.fr/rap/l08-584/l08-584.html').url == 'https://www.senat.fr/rap/l08-584/l08-584_mono.html'
 # senat multipage examen en commission
-assert find_good_url('https://www.senat.fr/rap/l09-535/l09-535.html') == 'https://www.senat.fr/rap/l09-535/l09-5358.html'
+assert find_good_url_resp('https://www.senat.fr/rap/l09-535/l09-535.html').url == 'https://www.senat.fr/rap/l09-535/l09-5358.html'
 print('****** => url fixing OK ******')
 
 print()

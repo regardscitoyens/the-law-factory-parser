@@ -66,7 +66,10 @@ def clean_extra_expose_des_motifs(html):
     return html
 
 
-def parse(url):
+def parse(url, resp=None):
+    """
+    parse the text of an url, an already cached  to`resp` can be passed to avoid an extra network request
+    """
     ALL_ARTICLES = []
 
     # Warning changing parenthesis in this regexp has multiple consequences throughout the code
@@ -103,7 +106,7 @@ def parse(url):
 
 
     if url.startswith('http'):
-        resp = download(url)
+        resp = download(url) if resp is None else resp
         if '/textes/'in url:
             resp.encoding = 'utf-8'
         string = resp.text
