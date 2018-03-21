@@ -146,7 +146,8 @@ def process(procedure):
                             if st['_original_index'] != last_match_with_previous_step + 1:
                                 mark_missing_articles_as_deleted(out['articles'], old_step_id, step_id, last_match_with_previous_step, st['_original_index'])
                             last_match_with_previous_step = st['_original_index']
-                            oldtext = [re_clean_alin.sub('', v) for v in st['text'] if not re_alin_sup.search(v)]
+                            if st['status'] != 'sup':
+                                oldtext = [re_clean_alin.sub('', v) for v in st['text'] if not re_alin_sup.search(v)]
                             break
 
                 if txt and (not oldtext or nstep < depots):
