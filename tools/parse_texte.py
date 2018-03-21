@@ -349,12 +349,25 @@ def parse(url, resp=None):
         # the only row in the table
         # (it would mean it could not be an article title or a section name
         # even if the line starts with "Article X")
-        tr = text.parent.parent
+        
+        def count_children(el):
+            return len([x for x in el.children if x.name])
+
+        td = text.parent
+        # goes one level deeper if it's not a td yet
+        if td.name != 'td' and count_children(td.parent) == 1 and count_children(td) == 1:
+            td = td.parent
+
+        tr = td.parent
+        # multiple columns ?
         if tr.name == 'tr' and len(tr.find_all('td', recursive=False)) > 1:
             return True
+
         tbody = tr.parent
-        if tr.name == 'tbody' and len(tr.find_all('tr', recursive=False)) > 1:
+        # multiple rows ?
+        if tbody.name == 'tbody' and len(tbody.find_all('tr', recursive=False)) > 1:
             return True
+
         return False
 
     # 'read' can be
@@ -461,7 +474,7 @@ def parse(url, resp=None):
         elif (re.match(r"(<i>)?<b>", line) or re_art_uni.match(cl_line) or re.match(r"^Articles? ", line)
             ) and not is_valid_table_row(text) and not re.search(r">Articles? supprimé", line):
 
-            line = cl_line
+            line = cl_line.strip()
             # Read a new article
             if re_mat_art.match(line):
                 if article is not None:
@@ -485,7 +498,7 @@ def parse(url, resp=None):
                 if section["id"] != "":
                     article["section"] = section["id"]
             # Read a section's title
-            elif read == 1:
+            elif read == 1 and line:
                 texte = save_text(texte)
                 section["titre"] = lower_but_first(line)
                 if article is not None:
