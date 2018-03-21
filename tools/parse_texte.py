@@ -484,6 +484,7 @@ def parse(url):
                     pr_js(article)
                     article = None
                 pr_js({"type": "dots"})
+                read = 0
                 continue
 
         # Read articles with alineas
