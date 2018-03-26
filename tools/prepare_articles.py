@@ -211,7 +211,7 @@ def process(procedure):
         #     sys.stderr.write("ERROR parsing step %s:\n%s: %s\n" % (str(step)[:50], type(e), e))
         #    exit(1)
 
-    for a in out['articles']:
+    for a in sorted(out['articles']):
         new_steps = []
         for s in out['articles'][a]['steps']:
             del s['text']
