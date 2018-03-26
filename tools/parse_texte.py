@@ -22,6 +22,42 @@ except SystemError:
     from common import get_text_id
 
 
+upcase_accents = "ÇÀÂÄÉÈÊËÎÏÔÖÙÛÜ"
+locase_accents = "çàâäéèêëîïôöùûü"
+
+
+def real_lower(text):
+    for a in upcase_accents:
+        text = text.replace(a, locase_accents[upcase_accents.find(a)])
+    return text.lower()
+
+
+# inspired by duralex/alinea_parser.py
+def word_to_number(word):
+    words = [
+        'premiere',
+        'deuxieme',
+        'troisieme',
+        'quatrieme',
+        'cinquieme',
+        'sixieme',
+        'septieme',
+        'huitieme',
+        'neuvieme',
+        'dixieme',
+        'onzieme',
+        'douzieme',
+        'treizieme',
+        'quatorzieme',
+        'quinzieme',
+        'seizieme',
+    ]
+
+    word = real_lower(word).replace('è', 'e')
+    if word in words:
+        return str(words.index(word) + 1)
+
+
 def non_recursive_find_all(node, test):
     """
     if there's a <p> inside a <p>, we don't want to process both
@@ -73,7 +109,7 @@ def parse(url, resp=None):
     ALL_ARTICLES = []
 
     # Warning changing parenthesis in this regexp has multiple consequences throughout the code
-    section_titles = "((chap|t)itre|volume|livre|tome|(sous-)?section)"
+    section_titles = "((chap|t)itre|partie|volume|livre|tome|(sous-)?section)"
 
     re_definitif = re.compile(r'<p[^>]*align[=:\s\-]*center"?>\(?<(b|strong)>\(?texte d[^f]*finitif\)?</(b|strong)>\)?</p>', re.I)
 
@@ -171,15 +207,6 @@ def parse(url, resp=None):
                 res += d
                 i += len(r)
         return res
-
-    upcase_accents = "ÇÀÂÄÉÈÊËÎÏÔÖÙÛÜ"
-    locase_accents = "çàâäéèêëîïôöùûü"
-
-
-    def real_lower(text):
-        for a in upcase_accents:
-            text = text.replace(a, locase_accents[upcase_accents.find(a)])
-        return text.lower()
 
 
     def lower_but_first(text):
@@ -292,6 +319,7 @@ def parse(url, resp=None):
     re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
     re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
     re_mat_sec = re.compile(r"(?:<b>)?%s(\s+(.+)e?r?)(?:</b>)?" % section_titles, re.I)
+    re_mat_sec_part = re.compile(r"(?:<b>)?((.+)e?r?)\s+partie(?:</b>)?$", re.I)
     re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
     re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
     re_mat_ppl = re.compile(r"((<b>)?\s*pro.* loi|<h2>\s*pro.* loi\s*</h2>)", re.I)
@@ -444,6 +472,9 @@ def parse(url, resp=None):
             cl_line = cl_line.replace('(Conforme)', '')
 
         # Identify section zones
+        # if "Xeme partie", transforms to "partie Xeme"
+        if re_mat_sec_part.match(line):
+            line = re_mat_sec_part.sub(r'partie \1', line)
         m = re_mat_sec.match(line)
         if m:
             read = 1 # Activate titles lecture
@@ -455,7 +486,10 @@ def parse(url, resp=None):
             if " LIMINAIRE" in line:
                 section_num = "L"
             else:
-                section_num = re_cl_uno.sub('1', re_cl_sec_uno.sub('1', re_cl_html.sub('', m.group(5).strip())).strip())
+                section_num = re_cl_html.sub('', m.group(5).strip())
+                if word_to_number(section_num) is not None:
+                    section_num = word_to_number(section_num)
+                section_num = re_cl_uno.sub('1', re_cl_sec_uno.sub('1', section_num).strip())
                 section_num = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), section_num)
                 section_num = re_mat_new.sub('', section_num).strip()
                 m2 = re_mat_romans.match(section_num)
