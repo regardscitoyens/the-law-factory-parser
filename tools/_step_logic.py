@@ -44,7 +44,7 @@ def get_previous_step(steps, curr_step_index, is_old_procedure=False, get_depot_
                 continue
 
             # for the old procedure, there's no text produced during the commission
-            if is_old_procedure and step.get('step') == 'commission':
+            if is_old_procedure and step.get('step') == 'commission' and step.get('stage') != 'CMP':
                 continue
 
             # if a CMP hemi fail, we ignore the CMP commission
