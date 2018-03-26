@@ -121,7 +121,7 @@ def complete(current, previous, step, table_concordance):
             return False
         return res
 
-    re_alin_sup = re.compile(r'^[^"]*supprimés?\)$', re.I)
+    re_alin_sup = re.compile(r'supprimés?\)$', re.I)
     re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
     get_alineas_text = lambda a: "\n".join([re_clean_alin.sub('', a[k]) for k in sorted(a.keys()) if not re_alin_sup.search(a[k])])
 
