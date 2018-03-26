@@ -144,6 +144,9 @@ def process(OUTPUT_DIR, procedure):
                 texte_url = an_url[0]
             elif step.get('institution') == 'senat' and senat_url:
                 texte_url = senat_url[0]
+            else:
+                print('WARNING - missing the CMP commission text for', step.get('source_url'), file=sys.stderr)
+                continue
 
         if texte_url is None:
             print('ERROR - no texte url', step.get('source_url'), file=sys.stderr)
