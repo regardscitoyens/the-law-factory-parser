@@ -388,7 +388,7 @@ def complete(current, previous, step, table_concordance):
                                 exit()
                             piece.extend(mark)
                     gd_text.extend(piece)
-                elif not re_alin_sup.search(text):
+                else:
                     gd_text.append(text)
             line['alineas'] = dict()
             line['order'] = order
