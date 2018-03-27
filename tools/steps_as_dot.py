@@ -93,7 +93,7 @@ if '1ère lecture • assemblee • depot' in nodes_names:
     """ % (get_node_id('1ère lecture • assemblee • depot'), get_node_id('1ère lecture • senat • depot')))
 
 for stage in ['1ère lecture', '2ème lecture', '3ème lecture', 'CMP']:
-    for step in ['commission', 'hemicycle']:
+    for step in ['depot', 'commission', 'hemicycle']:
         if stage == 'CMP' and step == 'commission': continue
         dot_result += ("""
           {
