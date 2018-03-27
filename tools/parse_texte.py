@@ -372,32 +372,6 @@ def parse(url, resp=None):
 
         return cl_line
 
-    def is_valid_table_row(text):
-        # returns if the <p> is not the only cell in a table row or not
-        # the only row in the table
-        # (it would mean it could not be an article title or a section name
-        # even if the line starts with "Article X")
-        
-        def count_children(el):
-            return len([x for x in el.children if x.name])
-
-        td = text.parent
-        # goes one level deeper if it's not a td yet
-        if td.name != 'td' and count_children(td.parent) == 1 and count_children(td) == 1:
-            td = td.parent
-
-        tr = td.parent
-        # multiple columns ?
-        if tr.name == 'tr' and len(tr.find_all('td', recursive=False)) > 1:
-            return True
-
-        tbody = tr.parent
-        # multiple rows ?
-        if tbody.name == 'tbody' and len(tbody.find_all('tr', recursive=False)) > 1:
-            return True
-
-        return False
-
     # 'read' can be
     #     -1 : the text is not detected yet
     #      0 : read the text
@@ -411,12 +385,21 @@ def parse(url, resp=None):
     srclst = []
     section = {"type": "section", "id": ""}
 
+    def should_be_parsed(x):
+        """returns True if x can contain useful information"""
+        if x.name not in ('p', 'table', 'h2', 'h4'):
+            return False
+        # hack: we don't want to parse the table containing the conclusion from the senat
+        # ex: https://www.senat.fr/leg/tas12-040.html
+        if x.name == "table" and "SESSION ORDINAIRE DE" in str(x):
+            return False
+        return True
 
-    for text in non_recursive_find_all(soup, lambda x: x.name == 'p' or x.name == 'h2' or x.name == 'h4'):
+    for text in non_recursive_find_all(soup, should_be_parsed):
         line = clean_html(str(text))
 
         # limit h2/h4 matches to PPL headers or Article unique
-        if text.name != 'p' and not re_mat_ppl.match(line) and not 'Article unique' in line:
+        if text.name not in ('p', 'table') and not re_mat_ppl.match(line) and 'Article unique' not in line:
             continue
 
         if re_stars.match(line):
@@ -501,12 +484,12 @@ def parse(url, resp=None):
             section_par = re.sub(r""+section_typ+"[\dL].*$", "", section["id"])
             section["id"] = section_par + section_typ + str(section_num)
             # check_section_is_not_a_duplicate(section["id"])
-
+        
         # Identify titles and new article zones
         elif (not expose and re_mat_end.match(line)) or (read == 2 and re_mat_ann.match(line)):
             break
         elif (re.match(r"(<i>)?<b>", line) or re_art_uni.match(cl_line) or re.match(r"^Articles? ", line)
-            ) and not is_valid_table_row(text) and not re.search(r">Articles? supprimé", line):
+            ) and not re.search(r">Articles? supprimé", line):
 
             line = cl_line.strip()
             # Read a new article
