@@ -92,6 +92,15 @@ if '1ère lecture • assemblee • depot' in nodes_names:
       }
     """ % (get_node_id('1ère lecture • assemblee • depot'), get_node_id('1ère lecture • senat • depot')))
 
+for stage in ['1ère lecture', '2ème lecture', '3ème lecture', 'CMP']:
+    for step in ['commission', 'hemicycle']:
+        if stage == 'CMP' and step == 'commission': continue
+        dot_result += ("""
+          {
+            rank=same; %s; %s;
+          }
+        """ % (get_node_id('%s • assemblee • %s' % (stage, step)), get_node_id('%s • senat • %s' % (stage, step))))
+
 dot_result += '\n}'
 
 open('_steps.log', 'w').write(steps_logs)
