@@ -319,8 +319,8 @@ def parse(url, resp=None):
     re_cl_par  = re.compile(r"[()\[\]]")
     re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
     re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
-    re_mat_sec = re.compile(r"(?:<b>)?%s(\s+([^:]+)e?r?)(?::(?P<titre>[^<]*)?(?:</b>))?" % section_titles, re.I)
-    re_cl_sec_part = re.compile(r"^(?:<b>)?(?P<num>\w{,11})\s+partie\s*(?::(?P<titre>[^<]*)?(?:</b>))$", re.I)
+    re_mat_sec = re.compile(r"(?:<b>)?%s(\s+([^:]+)e?r?)(?::(?P<titre>[^<]*))?(?:</b>)?" % section_titles, re.I)
+    re_cl_sec_part = re.compile(r"^(?:<b>)?(?P<num>\w{,11})\s+partie\s*(?::(?P<titre>[^<]*))?(?:</b>)?$", re.I)
     re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
     re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
     re_mat_ppl = re.compile(r"((<b>)?\s*pro.* loi|<h2>\s*pro.* loi\s*</h2>)", re.I)
@@ -494,9 +494,10 @@ def parse(url, resp=None):
             section["id"] = section_par + section_typ + str(section_num)
             # check_section_is_not_a_duplicate(section["id"])
 
-            if m.group('titre'):
+            titre = blank_none(m.group('titre')).strip()
+            if titre:
                 texte = save_text(texte)
-                section['titre'] = m.group('titre')
+                section['titre'] = titre
                 if article is not None:
                     pr_js(article)
                     article = None
