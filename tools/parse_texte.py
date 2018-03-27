@@ -34,28 +34,29 @@ def real_lower(text):
 
 # inspired by duralex/alinea_parser.py
 def word_to_number(word):
-    words = [
-        'premiere',
-        'deuxieme',
-        'troisieme',
-        'quatrieme',
-        'cinquieme',
-        'sixieme',
-        'septieme',
-        'huitieme',
-        'neuvieme',
-        'dixieme',
-        'onzieme',
-        'douzieme',
-        'treizieme',
-        'quatorzieme',
-        'quinzieme',
-        'seizieme',
-    ]
+    words = {
+        'premiere': 1,
+        'deuxieme': 2,
+        'seconde': 2,
+        'troisieme': 3,
+        'quatrieme': 4,
+        'cinquieme': 5,
+        'sixieme': 6,
+        'septieme': 7,
+        'huitieme': 8,
+        'neuvieme': 9,
+        'dixieme': 10,
+        'onzieme': 11,
+        'douzieme': 12,
+        'treizieme': 13,
+        'quatorzieme': 14,
+        'quinzieme': 15,
+        'seizieme': 16,
+    }
 
     word = real_lower(word).replace('è', 'e')
     if word in words:
-        return str(words.index(word) + 1)
+        return str(words[word])
 
 
 def non_recursive_find_all(node, test):
@@ -318,8 +319,8 @@ def parse(url, resp=None):
     re_cl_par  = re.compile(r"[()\[\]]")
     re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
     re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
-    re_mat_sec = re.compile(r"(?:<b>)?%s(\s+(.+)e?r?)(?:</b>)?" % section_titles, re.I)
-    re_mat_sec_part = re.compile(r"(?:<b>)?((.+)e?r?)\s+partie(?:</b>)?$", re.I)
+    re_mat_sec = re.compile(r"(?:<b>)?%s(\s+([^:]+)e?r?)(?::(?P<titre>[^<]*)?(?:</b>))?" % section_titles, re.I)
+    re_cl_sec_part = re.compile(r"^(?:<b>)?(?P<num>\w{,11})\s+partie\s*(?::(?P<titre>[^<]*)?(?:</b>))$", re.I)
     re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
     re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
     re_mat_ppl = re.compile(r"((<b>)?\s*pro.* loi|<h2>\s*pro.* loi\s*</h2>)", re.I)
@@ -355,6 +356,16 @@ def parse(url, resp=None):
     re_sep_text = re.compile(r'\s*<b>\s*(article|%s)\s*(I|uniqu|pr..?limina|1|prem)[ier]*\s*</b>\s*$' % section_titles, re.I)
     re_stars = re.compile(r'^[\s*_]+$')
     re_art_uni = re.compile(r'\s*article\s*unique\s*$', re.I)
+
+    def reorder_section_title(line):
+        # transforms "Xeme partie (: <titre>)" to "partie Xeme (: <titre>)"
+        m = re_cl_sec_part.match(line)
+        if m:
+            line = 'partie ' + m.group('num')
+            if m.group('titre'):
+                line += ' : ' + m.group('titre')
+            return line
+        return line
 
     def clean_article_name(text):
         # Only keep first line for article name
@@ -455,9 +466,7 @@ def parse(url, resp=None):
             cl_line = cl_line.replace('(Conforme)', '')
 
         # Identify section zones
-        # if "Xeme partie", transforms to "partie Xeme"
-        if re_mat_sec_part.match(line):
-            line = re_mat_sec_part.sub(r'partie \1', line)
+        line = reorder_section_title(line)
         m = re_mat_sec.match(line)
         if m:
             read = 1 # Activate titles lecture
@@ -484,6 +493,15 @@ def parse(url, resp=None):
             section_par = re.sub(r""+section_typ+"[\dL].*$", "", section["id"])
             section["id"] = section_par + section_typ + str(section_num)
             # check_section_is_not_a_duplicate(section["id"])
+
+            if m.group('titre'):
+                texte = save_text(texte)
+                section['titre'] = m.group('titre')
+                if article is not None:
+                    pr_js(article)
+                    article = None
+                pr_js(section)
+                read = 0
         
         # Identify titles and new article zones
         elif (not expose and re_mat_end.match(line)) or (read == 2 and re_mat_ann.match(line)):
