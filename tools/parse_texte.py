@@ -91,8 +91,12 @@ def clean_extra_expose_des_motifs(html):
             count += 1
         # detect end of exposé
         elif line and expose and \
-            ('"text-align: center">' in line or '<b>' in line or '</a>' in line or '<a name=' in line) and \
-            '<td valign="top">' not in line: # table inside exposé
+            (
+                '"text-align: center">' in line or \
+                '<b>' in line or \
+                '</a>' in line or \
+                '<a name=' in line
+            ) and '<td valign="top"' not in line: # table inside exposé
             last_expose = expose
             before_expose += after_expose
             after_expose = []
