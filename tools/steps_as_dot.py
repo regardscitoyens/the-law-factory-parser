@@ -25,7 +25,9 @@ steps_logs = ""
 for dos in all_senat_jo:
     last_step = ''
     for step_i, step in enumerate(dos.get('steps', [])):
-        step_name = ' • '.join((x for x in (step.get('stage'), step.get('institution'), step.get('step','')) if x))
+        step_name = ' • '.join((x for x in (step.get('stage'), step.get('institution')) if x))
+        if "CMP" in step_name:
+            step_name = "CMP"
         # step_name = step.get('stage')
         if step_name:
             # step_name = step['institution']
@@ -57,12 +59,62 @@ for prev, nexts in step_trans.items():
         prev_id = get_node_id(prev)
         for next, next_v in nexts.items():
             next_id = get_node_id(next)
+            if next_id == prev_id: continue
 
-            incorrect = procedure.get(prev, {}).get(next, False) is False
+            incorrect = False #procedure.get(prev, {}).get(next, False) is False
             color = '#F44336' if incorrect else '#a5a5a5'
 
             dot_result += '\n   %s -> %s [label="%s", penwidth="%d", color="%s", fontcolor="%s"];' % (
                 prev_id, next_id, next_v, next_v // 400 + 1, color, color)
+
+def xpos(n):
+    if "senat" in n:
+        return 0
+    if "assemblee" in n:
+        return 2
+    return 1
+
+def ypos(n):
+    if "promulgation" in n:
+        return 0
+    if "constitutionnalité" in n:
+        return 1
+    if "définitive" in n:
+        if "hemicycle" in n:
+            return 2
+        return 3
+    if "nouv." in n:
+        res = 4
+    elif "3ème" in n:
+        res = 7
+    elif "2ème" in n:
+        res = 10
+    elif "1ère" in n:
+        res = 13
+    elif "CMP" in n:
+        res = 8.5
+    if "commission" in n:
+        return res + 1
+    if "depot" in n:
+        return res + 2
+    return res
+
+def clean(n):
+    if "assemblee" in n:
+        n = n.replace("assemblee", "AN")
+    if "senat" in n:
+        n = n.replace("senat", "Sénat")
+    if "nouv. lect" in n:
+        n = n.replace("nouv. lect.", "Nouvelle lecture")
+    if "définitive" in n:
+        n = n.replace("l. définitive", "Lecture définitive")
+    if n == "CMP • CMP":
+        return "CMP • commission"
+    if n == "constitutionnalité • conseil constitutionnel":
+        return "Conseil Constitutionnel"
+    if "promulgation" in n:
+        return "Promulgation JO"
+    return n
 
 for name, id in nodes_names.items():
     # add previous step, mockup
@@ -73,33 +125,39 @@ for name, id in nodes_names.items():
     # generate node
     fillcolor = "#f3f3f3"
     if 'assemblee' in name:
-        fillcolor = '#B3E5FD'
+        fillcolor = '#ced6ff9d'
     if 'senat' in name:
-        fillcolor = '#f48fb1'
+        fillcolor = '#f99b909d'
     if 'CMP' in name:
-        fillcolor = '#FFD54F'
-    dot_result += '\n %s [label="%s %s", penwidth="%d", fillcolor="%s"];' % (
+        fillcolor = '#e7dd9e9d'
+    if 'constitutionnalité' in name:
+        fillcolor = '#aeeaaa9d'
+    dot_result += '\n %s [label="%s • %s", penwidth="%d", fillcolor="%s"];' % (
         id,
-        name,
+        clean(name),
         len(nodes_names_size[name]),
         len(nodes_names_size[name]) // 600 + 1,
         fillcolor)
 
-if '1ère lecture • assemblee • depot' in nodes_names:
+if '1ère lecture • assemblee' in nodes_names:
     dot_result += ("""
       {
         rank=source; %s; %s;
       }
-    """ % (get_node_id('1ère lecture • assemblee • depot'), get_node_id('1ère lecture • senat • depot')))
+    """ % (get_node_id('1ère lecture • assemblee'), get_node_id('1ère lecture • senat')))
 
-for stage in ['1ère lecture', '2ème lecture', '3ème lecture', 'CMP']:
-    for step in ['depot', 'commission', 'hemicycle']:
-        if stage == 'CMP' and step == 'commission': continue
-        dot_result += ("""
-          {
-            rank=same; %s; %s;
-          }
-        """ % (get_node_id('%s • assemblee • %s' % (stage, step)), get_node_id('%s • senat • %s' % (stage, step))))
+for stage in ['1ère lecture', '2ème lecture']:
+    dot_result += ("""
+      {
+        rank=same; %s; %s;
+      }
+    """ % (get_node_id('%s • assemblee' % stage), get_node_id('%s • senat' % stage)))
+
+dot_result += """
+{
+    rank=same; %s; %s; %s;
+}
+""" % (get_node_id('CMP'), get_node_id('3ème lecture • assemblee'), get_node_id('3ème lecture • senat'))
 
 dot_result += '\n}'
 
