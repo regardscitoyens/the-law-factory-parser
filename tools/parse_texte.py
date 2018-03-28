@@ -106,8 +106,8 @@ def clean_extra_expose_des_motifs(html):
         else:
             expose.append(line)
     if count > 3:
-        return '\n'.join(before_expose + last_expose + after_expose)
-    return html
+        return '\n'.join(before_expose + last_expose + after_expose), True
+    return html, False
 
 
 def parse(url, resp=None):
@@ -157,7 +157,7 @@ def parse(url, resp=None):
     else:
         string = open(url).read()
 
-    string = clean_extra_expose_des_motifs(string)
+    string, has_multiple_expose = clean_extra_expose_des_motifs(string)
 
     if 'legifrance.gouv.fr' in url:
         for reg, res in clean_legifrance_regexps:
@@ -380,8 +380,12 @@ def parse(url, resp=None):
         m = re_cl_sec_simple_num.match(line)
         if m:
             # those sections either start with <b> or <i>
-            # or they have a "<a name=XXX>" in the html
-            if m.group('tag') or '<a name=' in str(line_soup):
+            # hack: a "<a name=XXX>" in the html is sufficient
+            #       only for depot for pjlf/plfss (multiple expose)
+            #       since there are bugs in the AN HTML
+            #       ex: alinea III. in article 11 having <a name="XXX">:
+            #       http://www.assemblee-nationale.fr/14/ta/ta0208.asp
+            if m.group('tag') or ('<a name=' in str(line_soup) and has_multiple_expose):
                 # treats A, B, C as sub-sections and I, II, III as sections
                 type = 'sous-section' \
                     if m.group('tag') == 'b' or re.match(r'[A-H]', m.group('num')) \
