@@ -54,6 +54,9 @@ def word_to_number(word):
         'seizieme': 16,
     }
 
+    for i, let in enumerate('abcdefh'):
+        words[let] = i + 1
+
     word = real_lower(word).replace('è', 'e')
     if word in words:
         return str(words[word])
@@ -88,8 +91,12 @@ def clean_extra_expose_des_motifs(html):
             count += 1
         # detect end of exposé
         elif line and expose and \
-            ('"text-align: center">' in line or '<b>' in line or '</a>' in line or '<a name=' in line) and \
-            '<td valign="top">' not in line: # table inside exposé
+            (
+                '"text-align: center">' in line or \
+                '<b>' in line or \
+                '</a>' in line or \
+                '<a name=' in line
+            ) and '<td valign="top"' not in line: # table inside exposé
             last_expose = expose
             before_expose += after_expose
             after_expose = []
@@ -236,6 +243,7 @@ def parse(url, resp=None):
         (re.compile(r"−"), "-"),
         (re.compile(r" "), " "),
         (re.compile(r"<!--.*?-->", re.I), ""),
+        (re.compile(r"<span[^>]*color: #0070b9[^>]*>\(\d+\)\s+</span>", re.I), ""), # remove pastilles
         (re.compile(r"(<img[^>]*>\s*<br/>\s*)", re.I), ""), # remove <img><br/> before the next regex kills my precious '«'
         (re.compile(r"</?br/?>[«\"\s]+", re.I), " "),
         (re.compile(r'(«\s+|\s+»)'), '"'),
@@ -320,7 +328,8 @@ def parse(url, resp=None):
     re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
     re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
     re_mat_sec = re.compile(r"(?:<b>)?%s(\s+([^:]+)e?r?)(?::(?P<titre>[^<]*))?(?:</b>)?" % section_titles, re.I)
-    re_cl_sec_part = re.compile(r"^(?:<b>)?(?P<num>\w{,11})\s+partie\s*(?::(?P<titre>[^<]*))?(?:</b>)?$", re.I)
+    re_cl_sec_simple_num = re.compile(r"(?:<(?P<tag>i|b)>)?(?P<num>[A-Z]|[IVX]{,5})\. - (?P<titre>[^<]+)", re.I) # section name like "B. - XXX" or "<i>IV. - XXX"
+    re_cl_sec_part = re.compile(r"^(?:<b>)?(?P<num>\w{,11})\s+partie\s*(?::(?P<titre>[^<]*))?(?:</b>)?$", re.I) # partie name like "cinquiéme partie : XXXX"
     re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
     re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
     re_mat_ppl = re.compile(r"((<b>)?\s*pro.* loi|<h2>\s*pro.* loi\s*</h2>)", re.I)
@@ -357,7 +366,7 @@ def parse(url, resp=None):
     re_stars = re.compile(r'^[\s*_]+$')
     re_art_uni = re.compile(r'\s*article\s*unique\s*$', re.I)
 
-    def reorder_section_title(line):
+    def normalize_section_title(line, line_soup):
         # transforms "Xeme partie (: <titre>)" to "partie Xeme (: <titre>)"
         m = re_cl_sec_part.match(line)
         if m:
@@ -365,6 +374,17 @@ def parse(url, resp=None):
             if m.group('titre'):
                 line += ' : ' + m.group('titre')
             return line
+        # reformats A, B, C, I, II, III sections
+        m = re_cl_sec_simple_num.match(line)
+        if m:
+            # those sections either start with <b> or <i>
+            # or they have a "<a name=XXX>" in the html
+            if m.group('tag') or '<a name=' in str(line_soup):
+                # treats A, B, C as sub-sections and I, II, III as sections
+                type = 'sous-section' \
+                    if m.group('tag') == 'b' or re.match(r'[A-H]', m.group('num')) \
+                    else 'section'
+                return '%s %s : %s' % (type, m.group('num'), m.group('titre'))
         return line
 
     def clean_article_name(text):
@@ -466,7 +486,7 @@ def parse(url, resp=None):
             cl_line = cl_line.replace('(Conforme)', '')
 
         # Identify section zones
-        line = reorder_section_title(line)
+        line = normalize_section_title(line, text)
         m = re_mat_sec.match(line)
         if m:
             read = 1 # Activate titles lecture
