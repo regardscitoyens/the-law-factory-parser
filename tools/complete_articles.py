@@ -357,7 +357,6 @@ def complete(current, previous, step, table_concordance):
                     alineas = oldstep[line['titre']]
             gd_text = []
             for j, text in enumerate(alineas):
-                text = text
                 if "(Non modifi" in text and not line['titre'] in oldstep:
                     sys.stderr.write("WARNING: found repeated article missing %s from previous step: %s\n" % (line['titre'], text))
                 elif re_confo_with_txt.search(text):

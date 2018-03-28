@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+from functools import cmp_to_key
 
 # Handle all bis-ter words until 27 included
 # (adding 28 duodetrecies creates more complexity)
@@ -121,6 +122,7 @@ if __name__ == "__main__":
     # Test sorting an array of articles
     print("[TEST] Sorting randomized array of articles:")
     sorted_arts = [
+      "liminaire",
       "wrong name 1",
       "wrong name 2",
       "1er A",
@@ -167,7 +169,7 @@ if __name__ == "__main__":
 
     print("- Randomized array:")
     pprint(random_arts)
-    random_arts.sort(compare_articles)
+    random_arts.sort(key=cmp_to_key(compare_articles))
     pprint(random_arts)
     print("- Sorted array:")
     assert(random_arts == sorted_arts)

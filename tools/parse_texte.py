@@ -301,6 +301,8 @@ def parse(url, resp=None):
             # but there's a know side-effect, it may generate non-modifié articles of deleted
             # articles like in the text for article 35 bis:
             #   https://www.senat.fr/rap/l09-567/l09-5671.html
+            # or "non-modifié" during the depot for an empty article:
+            #   https://www.senat.fr/leg/pjl14-661.html - article 53
             elif not dic['statut'].startswith('suppr') and not len(dic['alineas']):
                 dic['alineas'] = {'001': '(Non modifié)'}
             multiples = re_clean_et.sub(',', dic['titre']).split(',')
