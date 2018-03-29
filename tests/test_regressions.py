@@ -40,7 +40,6 @@ assert len(parse_texte.parse('http://www.assemblee-nationale.fr/13/rapports/r256
 assert len(parse_texte.parse('https://www.senat.fr/leg/ppl08-039.html')) == 2
 print('****** => parse_texte OK ******')
 
-
 """ test full data generation """
 
 # https://stackoverflow.com/questions/4187564/recursive-dircmp-compare-two-directories-to-ensure-they-have-the-same-files-and

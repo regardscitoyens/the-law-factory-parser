@@ -107,7 +107,6 @@ def article_is_lower(a, b):
     return compare_articles(a, b) < 0
 
 if __name__ == "__main__":
-
     # Test split articles
     print("[TEST] Splitting article 1er A bis AA'")
     assert(split_article('1er A bis AA') == [1, 'A', 'bis', 'A', 'A'])
@@ -166,12 +165,12 @@ if __name__ == "__main__":
 
     random_arts = list(sorted_arts)
     random.shuffle(random_arts)
+    new_sorted_arts = list(sorted(random_arts, key=cmp_to_key(compare_articles)))
 
-    print("- Randomized array:")
-    pprint(random_arts)
-    random_arts.sort(key=cmp_to_key(compare_articles))
-    pprint(random_arts)
-    print("- Sorted array:")
-    assert(random_arts == sorted_arts)
+    if new_sorted_arts != sorted_arts:
+        print("- Randomized array:")
+        pprint(new_sorted_arts)
+        print("- Sorted array:")
+        pprint(sorted_arts)
+    assert new_sorted_arts == sorted_arts
     print(" -> Success!")
-

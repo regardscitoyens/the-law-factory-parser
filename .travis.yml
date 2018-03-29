@@ -5,6 +5,7 @@ python:
 install: pip install -r requirements.txt
 script:
    - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git tests_cases
+   - python tools/sort_articles.py
    - python tests/test_steps.py
    - python tests/test_regressions.py tests_cases
 notifications:
