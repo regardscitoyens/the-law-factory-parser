@@ -392,7 +392,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                         elif todo:
                             mark = get_mark_from_last(oldstep[line['titre']], todo, sep=part[1:])
                             if mark is False and gdoldstep:
-                                mark = get_mark_from_last(gdoldstep[line['titre']], start, end, sep=part[1:])
+                                mark = get_mark_from_last(gdoldstep[line['titre']], todo, sep=part[1:])
                             if mark is False:
                                 exit()
                             piece.extend(mark)
