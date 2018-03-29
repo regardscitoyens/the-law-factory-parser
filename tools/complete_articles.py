@@ -12,7 +12,7 @@ except SystemError:
     from sort_articles import bister, article_is_lower
 
 
-def complete(current, previous, step, table_concordance):
+def complete(current, previous, step, table_concordance, anteprevious=None):
     current = copy.deepcopy(current)
     previous = copy.deepcopy(previous)
     table_concordance = CaseInsensitiveDict(table_concordance)
@@ -35,9 +35,6 @@ def complete(current, previous, step, table_concordance):
     oldsects = []
     try:
         for line in previous:
-            if not line or not "type" in line:
-                log("JSON %s badly formatted, missing field type: %s" % (source, line))
-                exit()
             if line["type"] != "texte":
                 oldjson.append(line)
             else:
@@ -56,6 +53,15 @@ def complete(current, previous, step, table_concordance):
         print(type(e), e, file=sys.stderr)
         log("No previous step found at %s" % sys.argv[2])
         exit()
+
+    gdoldstep = None
+    if anteprevious:
+        gdoldstep = {}
+        for line in anteprevious:
+            if line["type"] == "article":
+                keys = list(line['alineas'].keys())
+                keys.sort()
+                gdoldstep[line["titre"]] = [line['alineas'][k] for k in keys]
 
     ALL_ARTICLES = []
     def write_json(data):
@@ -377,12 +383,16 @@ def complete(current, previous, step, table_concordance):
                             start = re.split(" à ", todo)[0]
                             end = re.split(" à ", todo)[1]
                             mark = get_mark_from_last(oldstep[line['titre']], start, end, sep=part[1:])
+                            if mark is False and gdoldstep:
+                                mark = get_mark_from_last(gdoldstep[line['titre']], start, end, sep=part[1:])
                             if mark is False:
                                 exit()
                             piece.extend(mark)
                         # Extract set of non-modified subsections of articles from previous version.
                         elif todo:
                             mark = get_mark_from_last(oldstep[line['titre']], todo, sep=part[1:])
+                            if mark is False and gdoldstep:
+                                mark = get_mark_from_last(gdoldstep[line['titre']], start, end, sep=part[1:])
                             if mark is False:
                                 exit()
                             piece.extend(mark)

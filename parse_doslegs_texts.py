@@ -195,11 +195,26 @@ def process(dos, debug_intermediary_files=False):
                 if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):
                     step['articles_completed'] = step['articles']
                 else:
+                    # get ante-previous step for hemicycle text where an alinea
+                    # can reference the depot step instead of the commission text
+                    anteprevious = None
+                    if step.get('step') == 'hemicycle':
+                        antestep_index = _step_logic.get_previous_step(steps, prev_step_index, dos.get('use_old_procedure', False), get_depot_step=True)
+                        if antestep_index is not None and steps[antestep_index].get('step') == 'depot':
+                            anteprevious = steps[antestep_index].get(
+                                'articles_completed',
+                                steps[antestep_index].get('articles', [])
+                            )
+
                     complete_args = {
                         'current': step.get('articles', []),
-                        'previous': steps[prev_step_index].get('articles_completed', steps[prev_step_index].get('articles', [])),
+                        'previous': steps[prev_step_index].get(
+                            'articles_completed',
+                            steps[prev_step_index].get('articles', [])
+                        ),
                         'step': step,
                         'table_concordance': dos.get('table_concordance', {}),
+                        'anteprevious': anteprevious,
                     }
                     if debug_intermediary_files:
                         _dump_json(complete_args, 'debug_complete_args_step_%d.json' % step_index)
