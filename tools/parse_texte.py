@@ -428,7 +428,7 @@ def parse(url, resp=None):
             return False
         # hack: we don't want to parse the table containing the conclusion from the senat
         # ex: https://www.senat.fr/leg/tas12-040.html
-        if x.name == "table" and "SESSION ORDINAIRE DE" in str(x):
+        if x.name == "table" and re.search("SESSION (EXTRA)?ORDINAIRE DE", str(x)):
             return False
         return True
 
