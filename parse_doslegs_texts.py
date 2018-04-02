@@ -114,7 +114,7 @@ def process(dos, debug_intermediary_files=False):
         url = step.get('source_url')
         print('    ^ text: ', url)
 
-        if dos.get('use_old_procedure') \
+        if (dos.get('use_old_procedure') or _step_logic.use_old_procedure(step) )\
             and step.get('institution') in ('senat', 'assemblee') \
             and step.get('step') == 'commission':
             continue

@@ -1,4 +1,6 @@
 
+def use_old_procedure(step):
+    return step.get("date", step.get("enddate", "9999-99-99")) < "2009-03-01"
 
 def get_previous_step(steps, curr_step_index, is_old_procedure=False, get_depot_step=False):
     # is_old_procedure: Budget, Financement Sécurité Sociale, lois organique
@@ -44,7 +46,7 @@ def get_previous_step(steps, curr_step_index, is_old_procedure=False, get_depot_
                 continue
 
             # for the old procedure, there's no text produced during the commission
-            if is_old_procedure and step.get('step') == 'commission' and step.get('stage') != 'CMP':
+            if (is_old_procedure or use_old_procedure(step)) and step.get('step') == 'commission' and step.get('stage') != 'CMP':
                 continue
 
             # if a CMP hemi fail, we ignore the CMP commission

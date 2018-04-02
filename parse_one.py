@@ -145,9 +145,6 @@ def process(API_DIRECTORY, url, disable_cache=True,
             if not dos.get('url_jo') and only_promulgated:
                 print('    ----- passed: no JO link')
                 return
-            if dos.get('use_old_procedure') and False:
-                print('    ----- passed: budget law')
-                return
 
             if debug_intermediary_files:
                 if an_dos:

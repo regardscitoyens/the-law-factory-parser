@@ -8,6 +8,7 @@ try:
 except:
     from common import json
 
+from tools import _step_logic
 
 def getParentFolder(root, f):
     abs = os.path.abspath(os.path.join(root, f))
@@ -103,8 +104,9 @@ def process(procedure):
         data = step.get('texte.json')
         if step['stage'] in ["promulgation", "constitutionnalité"]:
             continue
-        if not data and not step.get('echec') and not (procedure.get('is_old_procedure') and step.get('step') == 'commission'):
-            print('       WARNING: prepare_articles: no data for', step.get('stage'), step.get('step'), step.get('institution'), file=sys.stderr)
+        if not data and not step.get('echec'):
+            if not ((procedure.get('is_old_procedure') or _step_logic.use_old_procedure(step)) and step.get('step') == 'commission'):
+                print('       WARNING: prepare_articles: no data for', step.get('stage'), step.get('step'), step.get('institution'), file=sys.stderr)
             continue
 
         step_id = step['directory']
