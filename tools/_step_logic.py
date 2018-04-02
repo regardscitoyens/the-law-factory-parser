@@ -1,6 +1,6 @@
 
 def use_old_procedure(step):
-    return step.get("date", step.get("enddate", "9999-99-99")) < "2009-03-01"
+    return step.get("enddate", step.get("date", "9999-99-99")) < "2009-03-01"
 
 def get_previous_step(steps, curr_step_index, is_old_procedure=False, get_depot_step=False):
     # is_old_procedure: Budget, Financement Sécurité Sociale, lois organique
