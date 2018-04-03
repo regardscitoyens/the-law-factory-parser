@@ -61,3 +61,8 @@ To run the tests, you can follow the `.travis.yml` file.
 If you modify something, best in to re-generate the test-cases with the `--regen` flag:
 
     - python tests/test_regressions.py the-law-factory-parser-test-cases --regen
+
+
+### Credits
+
+This work is supported by a public grant overseen by the French National Research Agency (ANR) as part of the "Investissements d'Avenir" program within the framework of the LIEPP center of excellence (ANR11LABX0091, ANR 11 IDEX000502).
