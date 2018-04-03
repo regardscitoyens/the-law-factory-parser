@@ -65,6 +65,7 @@ for dos, path in dossiers:
     else:
         status = '%d amendements' % total_amendements
 
+    """
     last_intervention = [
         step['intervention_files'][-1] for step in dos['steps'] \
             if step.get('has_interventions')
@@ -73,10 +74,11 @@ for dos, path in dossiers:
         last_intervention = last_intervention[-1]
     else:
         last_intervention = None
+    """
 
     home_json_data.append({
         'total_amendements': total_amendements,
-        'last_intervention': last_intervention,
+        'end_jo': dos['end_jo'],
         'status': status,
         'loi': id,
         'titre': dos.get('short_title'),
@@ -96,14 +98,14 @@ home_json_final["focus"] = {
     "titre": "Les textes les plus amendés",
     "lien": "Explorer les textes les plus amendés",
     "url": "lois.html?action=quanti",
-    "textes": home_json_data[:4],
+    "textes": home_json_data[:6],
 }
-home_json_data.sort(key=lambda x: x['last_intervention'] if x['last_intervention'] else '0')
+home_json_data.sort(key=lambda x: x['end_jo'])
 home_json_final["recent"] = {
-    "titre": "Les derniers textes débattus",
+    "titre": "Les derniers textes promulgués",
     "lien": "Explorer les textes récents",
     "url": "lois.html",
-    "textes": home_json_data[-4:],
+    "textes": home_json_data[-6:],
 }
 open(os.path.join(API_DIRECTORY, 'home.json'), 'w').write(
     json.dumps(home_json_final, sort_keys=True, indent=2, ensure_ascii=False))
