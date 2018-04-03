@@ -119,7 +119,7 @@ def parse(url, resp=None):
     # Warning changing parenthesis in this regexp has multiple consequences throughout the code
     section_titles = "((chap|t)itre|partie|volume|livre|tome|(sous-)?section)"
 
-    re_definitif = re.compile(r'<p[^>]*align[=:\s\-]*center"?>\(?<(b|strong)>\(?texte d[^f]*finitif\)?</(b|strong)>\)?</p>', re.I)
+    re_definitif = re.compile(r'<p([^>]*align[=:\s\-]*center"?)?>\(?<(b|strong)>\(?texte d[^f]*finitif\)?</(b|strong)>\)?</p>', re.I)
 
     clean_texte_regexps = [
         (re.compile(r'[\n\t\r\s]+'), ' '),
