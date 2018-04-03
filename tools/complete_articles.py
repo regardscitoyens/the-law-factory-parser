@@ -172,7 +172,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                     print("ERROR: Problem while renumbering sections: ", line['titre'], " is not ", cursec, '\n', file=sys.stderr)
                     # exit()
                 if line["id"] != cursec["id"]:
-                    log("DEBUG: Matched section %s (%s) with old section %s (%s)" % (line["id"], line['titre'], cursec["id"], cursec['titre']))
+                    log("DEBUG: Matched section %s (%s) with old section %s (%s)" % (line["id"], line.get('titre'), cursec["id"], cursec.get('titre')))
                     line["newid"] = line["id"]
                     line["id"] = cursec["id"]
             write_json(line)
