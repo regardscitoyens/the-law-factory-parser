@@ -270,8 +270,8 @@ def parse(url, resp=None):
         (re.compile(r' pr..?liminaire', re.I), ' préliminaire'),
         (re.compile(r'<strike>[^<]*</strike>', re.I), ''),
         (re.compile(r'^<a>(\w)', re.I), r"\1"),
-        (re.compile(r'^\.{5,}(((suppr|conforme).{0,10}?)*)\.{5,}$', re.I), r"\1"),  # clean "......Conforme....." to "Conforme"
-        (re.compile(r'(\w\s*(\</[^>]*>)\s*)\.{10,}$', re.I), r"\1"),  # clean "III. - <i>Conforme</i>....." to "III. - Conforme"
+        (re.compile(r'^\.{5,}(((suppr|conforme).{0,10}?)+)\.{5,}$', re.I), r"\1"),  # clean "......Conforme....." to "Conforme"
+        (re.compile(r'(\w\s*(\</[^>]*>)*\s*)\.{10,}$', re.I), r"\1"),  # clean "III. - <i>Conforme</i>....." to "III. - Conforme"
         (re_clean_spaces, " ")
     ]
 
