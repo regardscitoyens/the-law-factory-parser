@@ -271,6 +271,7 @@ def parse(url, resp=None):
         (re.compile(r'<strike>[^<]*</strike>', re.I), ''),
         (re.compile(r'^<a>(\w)', re.I), r"\1"),
         (re.compile(r'^\.{5,}(((suppr|conforme).{0,10}?)*)\.{5,}$', re.I), r"\1"),  # clean "......Conforme....." to "Conforme"
+        (re.compile(r'(\w\s*(\</[^>]*>)\s*)\.{10,}$', re.I), r"\1"),  # clean "III. - <i>Conforme</i>....." to "III. - Conforme"
         (re_clean_spaces, " ")
     ]
 
@@ -348,7 +349,7 @@ def parse(url, resp=None):
     re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
     re_clean_art_spaces = re.compile(r'^\s*("?)\s+')
     re_clean_art_spaces2 = re.compile(r'\s+\.\s*-\s+')
-    re_clean_conf = re.compile(r"\((conforme|non[\s-]*modifi..?)s?\)", re.I)
+    re_clean_conf = re.compile(r"(?:\(|^)(conforme|non[\s-]*modifi..?)s?(?:\)|$)", re.I)
     re_clean_supr = re.compile(r'(?:\(|^)(dispositions?\s*d..?clar..?es?\s*irrecevable.*article 4.*Constitution.*|(maintien de la |Article )?suppr(ession|im..?s?)(\s*(conforme|maintenue|par la commission mixte paritaire))*)\)?[\"\s]*$', re.I)
     re_echec_hemi = re.compile(r"L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
     re_echec_hemi2 = re.compile(r"de loi (a été rejetée?|n'a pas été adoptée?) par l('Assemblée nationale|e Sénat)\.$", re.I)
@@ -530,7 +531,6 @@ def parse(url, resp=None):
                     article = None
                 pr_js(section)
                 read = 0
-        
         # Identify titles and new article zones
         elif (not expose and re_mat_end.match(line)) or (read == 2 and re_mat_ann.match(line)):
             break
