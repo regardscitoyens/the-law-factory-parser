@@ -485,7 +485,7 @@ def parse(url, resp=None):
         elif re_mat_exp.match(line):
             read = -1 # Deactivate description lecture
             expose = True
-        if read == 0 and definitif_before_congres in line or definitif_after_congres in line:
+        elif read == 0 and definitif_before_congres in line or definitif_after_congres in line:
             texte['definitif'] = True
             if all_articles:
                 all_articles[0]['definitif'] = True
