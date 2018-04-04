@@ -8,7 +8,7 @@ Outputs results to stdout
 Dependencies :
 html5lib, beautifulsoup4"""
 
-import sys, re, html5lib, copy
+import sys, re, copy
 import json
 from bs4 import BeautifulSoup
 
@@ -17,7 +17,7 @@ from lawfactory_utils.urls import download
 try:
     from .sort_articles import bister
     from .common import get_text_id
-except SystemError:
+except (SystemError, ImportError):
     from sort_articles import bister
     from common import get_text_id
 
