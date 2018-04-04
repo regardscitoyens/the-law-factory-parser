@@ -114,6 +114,8 @@ def clean_extra_expose_des_motifs(html):
 section_titles = "((chap|t)itre|partie|volume|livre|tome|(sous-)?section)"
 
 re_definitif = re.compile(r'<p([^>]*align[=:\s\-]*center"?)?>\(?<(b|strong)>\(?texte d[^f]*finitif\)?</(b|strong)>\)?</p>', re.I)
+definitif_before_congres = "<i>(Texte voté par les deux Assemblées du Parlement en termes identiques ; ce projet ne deviendra définitif, conformément à l'article 89 de la Constitution, qu'après avoir été approuvé par référendum ou par le Parlement réuni en Congrès)</i>"
+definitif_after_congres = "Le Parlement, réuni en Congrès, a approuvé dans les conditions prévues à l'article 89, alinéa 3, de la Constitution, le projet de loi constitutionnelle dont la teneur suit"
 
 clean_texte_regexps = [
     (re.compile(r'[\n\t\r\s]+'), ' '),
@@ -474,6 +476,11 @@ def parse(url, resp=None):
         elif re_mat_exp.match(line):
             read = -1 # Deactivate description lecture
             expose = True
+        if read == 0 and definitif_before_congres in line or definitif_after_congres in line:
+            texte['definitif'] = True
+            if all_articles:
+                all_articles[0]['definitif'] = True
+            continue
         elif (re_echec_cmp.search(cl_line)
                 or re_echec_com.search(cl_line)
                 or re_echec_com2.search(cl_line)
@@ -560,7 +567,7 @@ def parse(url, resp=None):
                 article["titre"] = re_cl_uno.sub("1er", re_cl_sec_uno.sub("1er", m.group(1).strip())).strip(" -'")
 
                 assert article["titre"]  # avoid empty titles
-                assert not definitif or ' bis' not in article["titre"]  # detect invalid article names
+                assert not texte['definitif'] or ' bis' not in article["titre"]  # detect invalid article names
 
                 if m.group(2) is not None:
                     article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
