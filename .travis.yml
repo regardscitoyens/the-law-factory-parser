@@ -4,11 +4,13 @@ python:
     - "3.5"
 install: pip install -r requirements.txt
 script:
+   - set -e # exit on first fail: see https://github.com/travis-ci/travis-ci/issues/1066
    - python tools/sort_articles.py
    - python tools/parse_texte.py --test
    - python tests/test_steps.py
    - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git tests_cases
    - python tests/test_regressions.py tests_cases
+   - set +e
 notifications:
   irc: 
     channels:
