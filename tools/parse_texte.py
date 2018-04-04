@@ -282,7 +282,7 @@ re_mat_single_char = re.compile(r'^\s*[LMN]\s*$')
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*("?)\s+')
 re_clean_art_spaces2 = re.compile(r'\s+\.\s*-\s+')
-re_clean_conf = re.compile(r"(?:\(|^([IVX]{1,3}\. - )?)(conforme|non[\s-]*modifi..?)s?(?:\)|$)", re.I)
+re_clean_conf = re.compile(r"(?:\(|^([IVX]{1,3}(?: et [IVX]{1,3})?\. - )?)(conforme|non[\s-]*modifi..?)s?(?:\)|$)", re.I)
 re_clean_supr = re.compile(r'(?:\(|^)(dispositions?\s*d..?clar..?es?\s*irrecevable.*article 4.*Constitution.*|(maintien de la |Article )?suppr(ession|im..?s?)(\s*(conforme|maintenue|par la commission mixte paritaire))*)\)?[\"\s]*$', re.I)
 re_echec_hemi = re.compile(r"L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
 re_echec_hemi2 = re.compile(r"de loi (a été rejetée?|n'a pas été adoptée?) par l('Assemblée nationale|e Sénat)\.$", re.I)
@@ -661,3 +661,4 @@ if __name__ == '__main__':
 
         # clean status
         assert_eq(re_clean_conf.sub(r'\1(Non modifié)', 'IV. - Non modifié'), 'IV. - (Non modifié)')
+        assert_eq(re_clean_conf.sub(r'\1(Non modifié)', 'III et IV. - Non modifié'), 'III et IV. - (Non modifié)')
