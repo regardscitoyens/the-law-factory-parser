@@ -226,7 +226,7 @@ def check_section_is_not_a_duplicate(section_id, articles):
         assert not (block['type'] == 'section' and block.get('id') == section_id)
 
 
-def cleanup(dic):
+def add_to_articles(dic, all_articles):
     # Clean empty articles with only "Supprimé" as text
     if not dic:
         return
@@ -247,10 +247,11 @@ def cleanup(dic):
         multiples = re_clean_et.sub(',', dic['titre']).split(',')
         if len(multiples) > 1:
             for d in multiples:
-                new = dict(dic)
+                new = copy.deepcopy(dic)
                 new['titre'] = d
-            return copy.deepcopy(new)
-    return copy.deepcopy(dic)
+                all_articles.append(new)
+            return
+    all_articles.append(copy.deepcopy(dic))
 
 
 blank_none = lambda x: x if x else ""
@@ -350,11 +351,10 @@ def parse(url, resp=None):
     all_articles = []
     def pr_js(article):
         nonlocal all_articles
-        all_articles.append(cleanup(article))
+        add_to_articles(article, all_articles)
 
     def save_text(txt):
         if "done" not in txt:
-            txt = cleanup(txt)
             pr_js(txt)
         txt["done"] = True
         return txt
@@ -486,7 +486,7 @@ def parse(url, resp=None):
                 or re_echec_hemi3.search(cl_line)
             ) and 'dont la teneur suit' not in cl_line:
             texte = save_text(texte)
-            all_articles.append(cleanup({"type": "echec", "texte": cl_line}))
+            pr_js({"type": "echec", "texte": cl_line})
             break
         elif read == -1 or (indextext != -1 and curtext != indextext):
             continue
