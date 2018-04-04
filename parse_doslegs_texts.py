@@ -129,8 +129,8 @@ def process(dos, debug_intermediary_files=False):
             and step.get('step') == 'commission':
             continue
 
-        # we do not parse CC / JO texte for now
-        if step.get('stage') in ('constitutionnalité', 'promulgation'):
+        # we parse the JO texte only if there's a CC decision
+        if step.get('stage') == 'promulgation':
             continue
 
         if url is None:
@@ -142,13 +142,16 @@ def process(dos, debug_intermediary_files=False):
             # TODO: texte retire
             continue
         else:
+            if step.get('stage') == 'constitutionnalité':
+                url = dos.get('url_jo')
             fixed_url_resp = find_good_url_resp(url)
             if fixed_url_resp:
                 fixed_url = fixed_url_resp.url
                 if fixed_url != url:
                     print('        ^ text url fixed:', fixed_url)
 
-                step['source_url'] = fixed_url
+                if step.get('stage') != 'constitutionnalité':
+                    step['source_url'] = fixed_url
 
                 step['articles'] = parse_texte.parse(fixed_url, resp=fixed_url_resp)
                 assert step['articles']

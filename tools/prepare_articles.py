@@ -105,7 +105,7 @@ def process(procedure):
     old_step_index = None
     for nstep, step in enumerate(steps):
         data = step.get('texte.json')
-        if step['stage'] in ["promulgation", "constitutionnalité"]:
+        if step['stage'] == 'promulgation':
             continue
         if not data and not step.get('echec'):
             if not ((procedure.get('is_old_procedure') or _step_logic.use_old_procedure(step)) and step.get('step') == 'commission'):

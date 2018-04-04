@@ -135,6 +135,7 @@ clean_legifrance_regexps = [
     (re.compile(r'\s*<br/>\s*', re.I), '</p><p>'),
     (re.compile(r'<div[^>]*class="titreSection[^>]*>\s*(%s\s+[\dIVXLCDM]+e?r?)\s*:\s*([^<]*?)\s*</div>' % section_titles, re.I), r'<p>\1</p><p><b>\5</b></p>'),
     (re.compile(r'<div[^>]*class="titreArt[^>]*>(.*?)\s*</div>', re.I), r'<p><b>\1</b></p>'),
+    (re.compile(r'\[Dispositions déclarées non conformes à la Constitution par la décision du Conseil constitutionnel n° \d+-\d+ DC du .{0,30}\]', re.I), ""),
 ]
 
 
