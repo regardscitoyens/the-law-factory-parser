@@ -264,6 +264,7 @@ cl_html_except_tables = lambda x: re_fix_missing_table.sub(r'\1</td></tr></tbody
 re_cl_par  = re.compile(r"[()\[\]]")
 re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
 re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
+re_cl_uno_uno = re.compile(r"^1(\s|$)")
 re_mat_sec = re.compile(r"(?:<b>)?%s(\s+([^:]+)e?r?)(?::(?P<titre>[^<]*))?(?:</b>)?" % section_titles, re.I)
 re_cl_sec_simple_num = re.compile(r"(?:<(?P<tag>i|b)>)?(?P<num>[A-Z]|[IVX]{,5})\. - (?P<titre>[^<]+)", re.I) # section name like "B. - XXX" or "<i>IV. - XXX"
 re_cl_sec_part = re.compile(r"^(?:<b>)?(?P<num>\w{,11})\s+partie\s*(?::(?P<titre>[^<]*))?(?:</b>)?$", re.I) # partie name like "cinquiéme partie : XXXX"
@@ -272,7 +273,7 @@ re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"((<b>)?\s*pro.* loi|<h2>\s*pro.* loi\s*</h2>)", re.I)
 re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*(</b>\s*$|\(.*\))")
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
-re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|États législatifs annexés|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|<a>\*</a>\s*(<i>)?1)", re.I)
+re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|États législatifs annexés|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|La présente loi sera exécutée comme loi de l'Etat|<a>\*</a>\s*(<i>)?1)", re.I)
 re_mat_ann = re.compile(r"\s*<b>\s*ANNEXES?[\s<]+")
 re_mat_dots = re.compile(r"^(<i>)?[.…_]+(</i>)?$")
 re_mat_st = re.compile(r"(<i>\s?|\(|\[)+(texte)?\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,30}$", re.I)
@@ -302,6 +303,14 @@ re_clean_footer_notes = re.compile(r"[\.\s]*\(*\d*\([\d\*]+[\)\d\*\.\s]*$")
 re_sep_text = re.compile(r'\s*<b>\s*(article|%s)\s*(I|uniqu|pr..?limina|1|prem)[ier]*\s*</b>\s*$' % section_titles, re.I)
 re_stars = re.compile(r'^[\s*_]+$')
 re_art_uni = re.compile(r'\s*article\s*unique\s*$', re.I)
+
+
+def normalize_1(name, one):
+    name = name.strip()
+    name = re_cl_uno.sub(one, name)
+    name = re_cl_sec_uno.sub(one, name)
+    name = re_cl_uno_uno.sub(one + r'\1', name)
+    return name.strip().strip(" -'")
 
 
 def normalize_section_title(line, line_soup, has_multiple_expose):
@@ -387,7 +396,7 @@ def parse(url, resp=None):
             string = reg.sub(res, string)
 
 
-    definitif = re_definitif.search(string) is not None
+    definitif = re_definitif.search(string) is not None or 'legifrance.gouv.fr' in url
     soup = BeautifulSoup(string, "html5lib")
     texte = {"type": "texte", "source": url, "definitif": definitif}
 
@@ -522,7 +531,7 @@ def parse(url, resp=None):
                 section_num = re_cl_html.sub('', m.group(5).strip())
                 if word_to_number(section_num) is not None:
                     section_num = word_to_number(section_num)
-                section_num = re_cl_uno.sub('1', re_cl_sec_uno.sub('1', section_num).strip())
+                section_num = normalize_1(section_num, '1')
                 section_num = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), section_num)
                 section_num = re_mat_new.sub('', section_num).strip()
                 m2 = re_mat_romans.match(section_num)
@@ -564,7 +573,7 @@ def parse(url, resp=None):
                 if srclst:
                     article["source_text"] = srclst[curtext]
                 m = re_mat_art.match(clean_article_name(text))
-                article["titre"] = re_cl_uno.sub("1er", re_cl_sec_uno.sub("1er", m.group(1).strip())).strip(" -'")
+                article["titre"] = normalize_1(m.group(1), "1er")
 
                 assert article["titre"]  # avoid empty titles
                 assert not texte['definitif'] or ' bis' not in article["titre"]  # detect invalid article names
@@ -662,3 +671,7 @@ if __name__ == '__main__':
         # clean status
         assert_eq(re_clean_conf.sub(r'\1(Non modifié)', 'IV. - Non modifié'), 'IV. - (Non modifié)')
         assert_eq(re_clean_conf.sub(r'\1(Non modifié)', 'III et IV. - Non modifié'), 'III et IV. - (Non modifié)')
+
+        assert_eq(normalize_1('1', '1er'), '1er')
+        assert_eq(normalize_1('17', '1er'), '17')
+        assert_eq(normalize_1('1 bis', '1er'), '1er bis')
