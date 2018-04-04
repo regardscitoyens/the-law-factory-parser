@@ -210,7 +210,7 @@ html_replace = [
     (re.compile(r'<strike>[^<]*</strike>', re.I), ''),
     (re.compile(r'^<a>(\w)', re.I), r"\1"),
     (re.compile(r'^\.{5,}(((suppr|conforme).{0,10}?)+)\.{5,}$', re.I), r"\1"),  # clean "......Conforme....." to "Conforme"
-    (re.compile(r'(\w\s*(\</[^>]*>)*\s*)\.{10,}$', re.I), r"\1"),  # clean "III. - <i>Conforme</i>....." to "III. - Conforme"
+    (re.compile(r'(\w\s*(?:\</[^>]*>)*\s*)\.{10,}(\s*;)?(</i>)?$', re.I), r"\1\2\3"),  # clean "III. - <i>Conform[e</i>.......]" to "III. - <i>Conform[e</i>]"
     (re_clean_spaces, " ")
 ]
 
@@ -282,7 +282,7 @@ re_mat_single_char = re.compile(r'^\s*[LMN]\s*$')
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*("?)\s+')
 re_clean_art_spaces2 = re.compile(r'\s+\.\s*-\s+')
-re_clean_conf = re.compile(r"(?:\(|^)(conforme|non[\s-]*modifi..?)s?(?:\)|$)", re.I)
+re_clean_conf = re.compile(r"(?:\(|^([IVX]{1,3}\. - )?)(conforme|non[\s-]*modifi..?)s?(?:\)|$)", re.I)
 re_clean_supr = re.compile(r'(?:\(|^)(dispositions?\s*d..?clar..?es?\s*irrecevable.*article 4.*Constitution.*|(maintien de la |Article )?suppr(ession|im..?s?)(\s*(conforme|maintenue|par la commission mixte paritaire))*)\)?[\"\s]*$', re.I)
 re_echec_hemi = re.compile(r"L('Assemblée nationale|e Sénat) (a rejeté|n'a pas adopté)[, ]+", re.I)
 re_echec_hemi2 = re.compile(r"de loi (a été rejetée?|n'a pas été adoptée?) par l('Assemblée nationale|e Sénat)\.$", re.I)
@@ -614,7 +614,7 @@ def parse(url, resp=None):
             line = re_clean_bister.sub(lambda m: m.group(1)+" "+real_lower(m.group(2)), line)
             # Clean different versions of same comment.
             line = re_clean_supr.sub('(Supprimé)', line)
-            line = re_clean_conf.sub('(Non modifié)', line)
+            line = re_clean_conf.sub(r'\1(Non modifié)', line)
             line = re_clean_subsec_space.sub(r'\1\4 \5', line)
             line = re_clean_subsec_space2.sub(r'\1 \2 \3\4', line)
 
@@ -656,3 +656,8 @@ if __name__ == '__main__':
         assert_eq(clean_html('...........Conforme.........'), 'Conforme')
         # or for alineas
         assert_eq(clean_html('II. - <i>Conforme</i>...............'), 'II. - <i>Conforme</i>')
+        # even midway alineas
+        assert_eq(clean_html('II. - <i>Conforme</i>............... ;'), 'II. - <i>Conforme</i> ;')
+
+        # clean status
+        assert_eq(re_clean_conf.sub(r'\1(Non modifié)', 'IV. - Non modifié'), 'IV. - (Non modifié)')
