@@ -65,7 +65,7 @@ for prev, nexts in step_trans.items():
             color = '#F44336' if incorrect else '#a5a5a5'
 
             dot_result += '\n   %s -> %s [label="%s", penwidth="%d", color="%s", fontcolor="%s"];' % (
-                prev_id, next_id, next_v, next_v // 400 + 1, color, color)
+                prev_id, next_id, next_v, next_v // 100 + 1, color, color)
 
 def xpos(n):
     if "senat" in n:
@@ -114,6 +114,8 @@ def clean(n):
         return "Conseil Constitutionnel"
     if "promulgation" in n:
         return "Promulgation JO"
+    if "congrès" in n:
+        return "Congrès"
     return n
 
 for name, id in nodes_names.items():
@@ -125,13 +127,15 @@ for name, id in nodes_names.items():
     # generate node
     fillcolor = "#f3f3f3"
     if 'assemblee' in name:
-        fillcolor = '#ced6ff9d'
+        fillcolor = '#ced6ff6d'
     if 'senat' in name:
-        fillcolor = '#f99b909d'
+        fillcolor = '#f99b906d'
     if 'CMP' in name:
-        fillcolor = '#e7dd9e9d'
+        fillcolor = '#e7dd9e6d'
     if 'constitutionnalité' in name:
-        fillcolor = '#aeeaaa9d'
+        fillcolor = '#aeeaaa6d'
+    if 'congrès' in name:
+        fillcolor = '#dfb3f36d'
     dot_result += '\n %s [label="%s • %s", penwidth="%d", fillcolor="%s"];' % (
         id,
         clean(name),
@@ -158,6 +162,12 @@ dot_result += """
     rank=same; %s; %s; %s;
 }
 """ % (get_node_id('CMP'), get_node_id('3ème lecture • assemblee'), get_node_id('3ème lecture • senat'))
+
+dot_result += """
+{
+    rank=same; %s; %s;
+}
+""" % (get_node_id('congrès • congrès'), get_node_id('constitutionnalité • conseil constitutionnel'))
 
 dot_result += '\n}'
 
