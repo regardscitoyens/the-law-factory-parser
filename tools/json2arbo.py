@@ -68,11 +68,6 @@ def get_step_id(nstep, step):
 def process(dos, OUTPUT_DIR):
     def log_err(txt, arg=None):
         raise Exception()
-        txt = "ERROR: %s" % txt
-        if arg:
-            txt += " %s" % arg
-        txt = "%s while working on %s\n" % (txt[:20], OUT)
-        sys.stderr.write(txt)
 
     for step_i, step in enumerate(dos['steps']):
 
