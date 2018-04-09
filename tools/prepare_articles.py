@@ -5,8 +5,10 @@ from difflib import ndiff, SequenceMatcher
 
 try:
     from .common import json
+    from .sort_articles import bister
 except:
     from common import json
+    from sort_articles import bister
 
 from tools import _step_logic
 
@@ -94,7 +96,6 @@ def process(procedure):
     # if not steps[-1].get('enddate'):
     #   steps.pop(-1)
 
-    bister = '(un|duo|tre|bis|qua|quin[tqu]*|sex|sept|octo?|novo?|non|dec|vic|ter|ies)+'
     re_alin_sup = re.compile(r'supprimés?\)$', re.I)
     re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
     re_upper_first = re.compile(r'^(.)(.*)$')
