@@ -72,18 +72,20 @@ def process(procedure):
     out = {'law_title': title, 'articles': {}, 'sections': {}, 'short_title': procedure.get("short_title", "")}
 
     # Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
-    dossier_id = procedure.get('senat_id')
+    senat_id = procedure.get('senat_id')
     first = None
     steps = []
     latersteps = []
-    for step in procedure['steps']:
+    for i, step in enumerate(procedure['steps']):
         if step.get('step', '') == 'depot':
-            if not first and (step.get('institution', '') == 'assemblee' or step.get('source_url', '').endswith("/%s.html" % dossier_id)):
+            if not first and (step.get('institution', '') == 'assemblee' or step.get('source_url', '').endswith("/%s.html" % senat_id)):
                 first = step
-            elif first and first.get('institution', '') == 'assemblee' and step.get('source_url', '').endswith("/%s.html" % dossier_id):
+            elif first and step.get('institution', '') == 'assemblee' and step.get('source_url', '').endswith("/%s.html" % senat_id):
                 continue
             elif step.get('institution', '') == 'senat' and "/ppl" in step.get('source_url', '') and step.get('stage', '') == '1ère lecture':
-                steps.append(step)
+                # check next step is a depot too
+                if len(procedure['steps']) > i + 1 and procedure['steps'][i + 1].get('step') == 'depot':
+                    steps.append(step)
             else:
                 continue
         else:
