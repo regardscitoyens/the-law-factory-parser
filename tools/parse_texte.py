@@ -265,7 +265,7 @@ re_cl_par  = re.compile(r"[()\[\]]")
 re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
 re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
 re_cl_uno_uno = re.compile(r"^1(\s|$)")
-re_mat_sec = re.compile(r"(?:<b>)?%s(\s+([^:]+)e?r?)(?::(?P<titre>[^<]*))?(?:</b>)?" % section_titles, re.I)
+re_mat_sec = re.compile(r"(?:<b>)?%s(\s+([^:-]+)e?r?)(?:[:-](?P<titre>[^<]*))?(?:</b>)?" % section_titles, re.I)
 re_cl_sec_simple_num = re.compile(r"(?:<(?P<tag>i|b)>)?(?P<num>[A-Z]|[IVX]{,5})\. - (?P<titre>[^<]+)", re.I) # section name like "B. - XXX" or "<i>IV. - XXX"
 re_cl_sec_part = re.compile(r"^(?:<b>)?(?P<num>\w{,11})\s+partie\s*(?::(?P<titre>[^<]*))?(?:</b>)?$", re.I) # partie name like "cinquiéme partie : XXXX"
 re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
@@ -677,3 +677,5 @@ if __name__ == '__main__':
         assert_eq(normalize_1('1', '1er'), '1er')
         assert_eq(normalize_1('17', '1er'), '17')
         assert_eq(normalize_1('1 bis', '1er'), '1er bis')
+
+        assert_eq(re_mat_sec.match('<b>Titre Ier - Cuire un oeuf</b>').group('titre').strip(), 'Cuire un oeuf')
