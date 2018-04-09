@@ -9,11 +9,19 @@ from functools import cmp_to_key
 # cf http://fr.wikipedia.org/wiki/Adverbe_multiplicatif
 # 27 is actually the biggest used case in all texts analyzed so far back to 2009
 # cf http://www.assemblee-nationale.fr/13/ta-commission/r3604-a0.asp
+# TODO: support multiple spellings
+#       ex: quatervecies/quatervicies, novies/nonies
 bis_27 = ['bis', 'ter', 'quater', 'quinquies', 'sexies', 'septies', 'octies', 'novies',
 'decies', 'undecies', 'duodecies', 'terdecies', 'quaterdecies', 'quindecies', 'sexdecies', 'septdecies', 'octodecies', 'novodecies',
 'vicies', 'unvicies', 'duovicies', 'tervicies', 'quatervicies', 'quinvicies', 'sexvicies', 'septvicies']
 
-bister = '(un|duo|tre|bis|qua|quin[tqu]*|sex|sept|octo?|novo?|non|dec|vic|ter|ies)+'
+# support 1 to 99, from https://framagit.org/parlement-ouvert/metslesliens/blob/master/docs/l%C3%A9gistique.md
+bister = '(' + \
+  '(?:un|duo|ter|quater|quin|sex?|sept|octo|novo|unde?|duode)?' + \
+  '(?:dec|v(?:i|e)c|tr(?:i|e)c|quadrag|quinquag|sexag|septuag|octog|nonag)' + \
+  'ies|semel|bis|ter|quater|' + \
+  '(?:quinqu|sex|sept|oct|no(?:n|v))ies' + \
+  ')'
 re_bister = re.compile(bister)
 
 re_article = re.compile(r'(\d+)e?r?(( ([A-Z]+|%s))*)' % bister)
@@ -110,6 +118,10 @@ if __name__ == "__main__":
     # Test split articles
     print("[TEST] Splitting article 1er A bis AA'")
     assert(split_article('1er A bis AA') == [1, 'A', 'bis', 'A', 'A'])
+    print(" -> Success!")
+
+    print("[TEST] Splitting article 1er A duodetrecies AA'")
+    assert(split_article('1er A duodetrecies AA') == [1, 'A', 'duodetrecies', 'A', 'A'])
     print(" -> Success!")
 
     # Test convert bis to numbers for 2 to 27
