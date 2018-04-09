@@ -9,11 +9,11 @@ from functools import cmp_to_key
 # cf http://fr.wikipedia.org/wiki/Adverbe_multiplicatif
 # 27 is actually the biggest used case in all texts analyzed so far back to 2009
 # cf http://www.assemblee-nationale.fr/13/ta-commission/r3604-a0.asp
-# TODO: support multiple spellings
+# TODO: support multiple spellings in tests + more values than continuous
 #       ex: quatervecies/quatervicies, novies/nonies
 bis_27 = ['bis', 'ter', 'quater', 'quinquies', 'sexies', 'septies', 'octies', 'novies',
 'decies', 'undecies', 'duodecies', 'terdecies', 'quaterdecies', 'quindecies', 'sexdecies', 'septdecies', 'octodecies', 'novodecies',
-'vicies', 'unvicies', 'duovicies', 'tervicies', 'quatervicies', 'quinvicies', 'sexvicies', 'septvicies']
+'vicies', 'unvicies', 'duovicies', 'tervicies', 'quatervicies', 'quinvicies', 'sexvicies', 'septvicies', 'duodetrecies', 'undetricies', 'tricies']
 
 # support 1 to 99, from https://framagit.org/parlement-ouvert/metslesliens/blob/master/docs/l%C3%A9gistique.md
 bister = '(' + \
@@ -40,17 +40,36 @@ def split_article(a):
     return res
 
 hash_bis = {'u': 1, 'b': 2, 't': 3, 'o': 8, 'n': 9,
-  'qua': 4, 'qui': 5, 'sex': 6, 'sep': 7, 'du': 2, 'de': 0, 'v': 0}
+  'qua': 4, 'qui': 5, 'sex': 6, 'sep': 7, 'du': 2, 'de': 0, 'tri': 0, 'v': 0}
 def quantify_bis(b):
     u = 0
-    for i in [1, 2, 3]:
-        if b[:i] in hash_bis:
-            u = hash_bis[b[:i]]
-            break
+    if b.startswith("und") and b != 'undecies':
+        u = -1
+    elif b.startswith("duode") and b != 'duodecies':
+        u = -2
+    else:
+        for i in [3, 2, 1]:
+            if b[:i] in hash_bis:
+                u = hash_bis[b[:i]]
+                break
     if 'decies' in b:
         u += 10
-    if 'vicies' in b:
+    elif 'vicies' in b or 'vecies' in b:
         u += 20
+    elif 'tricies' in b or 'trecies' in b:
+        u += 30
+    elif 'quadragies' in b:
+        u += 40
+    elif 'quinquagies' in b:
+        u += 50
+    elif 'sexagies' in b:
+        u += 60
+    elif 'septuagies' in b:
+        u += 70
+    elif 'octogies' in b:
+        u += 80
+    elif 'nonagies' in b:
+        u += 90
     return u
 
 def type_detail(d):
@@ -127,7 +146,11 @@ if __name__ == "__main__":
     # Test convert bis to numbers for 2 to 27
     print("[TEST] Converting bis expressions to numbers for 2 to 27:")
     for i, v in enumerate(bis_27):
-        assert(quantify_bis(v) == i + 2)
+        try:
+            assert(quantify_bis(v) == i + 2)
+        except Exception as e:
+            print("Wrong quantifying of '%s': %s" % (v, quantify_bis(v)))
+            raise e
     print(" -> Success!")
 
     # Test sorting an array of articles
