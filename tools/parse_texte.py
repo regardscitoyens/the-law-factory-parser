@@ -348,7 +348,7 @@ def clean_article_name(text):
     html = re.sub(r'<br/?>', NEW_LINE_MARKER, html)
     line = clean_html(html)
     cl_line = re_cl_html.sub("", line).strip()
-    cl_line = [l for l in cl_line.split(NEW_LINE_MARKER) if l][0]
+    cl_line = [l for l in cl_line.split(NEW_LINE_MARKER) if l.strip()][0]
 
     # If there's a ':', what comes after is not related to the name
     cl_line = cl_line.split(':')[0].strip()
