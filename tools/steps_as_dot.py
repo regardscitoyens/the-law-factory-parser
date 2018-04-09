@@ -23,21 +23,23 @@ nodes_names_size = {}
 step_trans = {}
 steps_logs = ""
 for dos in all_senat_jo:
+    prev_step = None
     last_step = ''
     for step_i, step in enumerate(dos.get('steps', [])):
         step_name = ' • '.join((x for x in (step.get('stage'), step.get('institution')) if x))
         if "CMP" in step_name:
             step_name = "CMP"
         # step_name = step.get('stage')
+        # step_name = step.get('institution')
         if step_name:
-            # step_name = step['institution']
-            if step_name != last_step or True:
+            if not (prev_step and prev_step.get('step') == 'depot' and step.get('step') == 'depot'):
                 if last_step not in step_trans:
                     step_trans[last_step] = {}
                 step_trans[last_step][step_name] = step_trans[last_step].get(step_name, 0) + 1
                 nodes_names_size[step_name] = nodes_names_size.get(step_name, set()).union(set([dos.get('url_dossier_senat')]))
                 steps_logs += '%s->%s:%s\n' % (last_step, step_name, dos.get('url_dossier_assemblee'))
             last_step = step_name
+            prev_step = step
 
 dot_result = """digraph g {
     node  [style="rounded,filled,bold", shape=box, fontname="xkcd"];
