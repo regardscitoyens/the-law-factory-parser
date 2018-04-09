@@ -1,6 +1,8 @@
-import sys, json, re
+import json, re
 
 from lawfactory_utils.urls import download
+from senapy.dosleg.parser import parse as senapy_parse
+
 from tools import parse_texte, complete_articles, _step_logic
 
 
@@ -18,6 +20,14 @@ def test_status(url):
 
 def find_good_url_resp(url):
     if 'senat.fr' in url:
+        # Depot steps can sometime link a previous abandonned dosleg
+        # ex: http://www.senat.fr/dossier-legislatif/ppl09-338.html
+        if '/dossier-legislatif/' in url:
+            resp = test_status(url)
+            if resp:
+                dos = senapy_parse(resp.text, url)
+                return find_good_url_resp(dos['steps'][0]['source_url'])
+
         if '/leg/' in url and url.endswith('.html'):
             resp = test_status(url)
             if resp:
