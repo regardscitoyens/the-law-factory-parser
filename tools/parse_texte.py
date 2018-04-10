@@ -96,7 +96,7 @@ def clean_extra_expose_des_motifs(html):
                 '<b>' in line or \
                 '</a>' in line or \
                 '<a name=' in line
-            ) and '<td valign="top"' not in line: # table inside exposé
+            ) and not re.search(r'<td[^>]+valign="top"', line): # table inside exposé
             last_expose = expose
             before_expose += after_expose
             after_expose = []
