@@ -7,7 +7,7 @@ import json, sys, os, random, glob
 
 if len(sys.argv) < 2:
     print('USAGE: `steps_as_dot.py <path_to_json>`')
-    os.exit()
+    sys.exit()
 
 procedure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'doc/valid_procedure.json')
 procedure = json.load(open(procedure_file))
