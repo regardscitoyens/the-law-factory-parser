@@ -1,4 +1,5 @@
 data/*
+data.*
 !data/.htaccess
 !data/HEADER.html
 config.inc
