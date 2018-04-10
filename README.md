@@ -2,54 +2,69 @@ the-law-factory-parser
 ======================
 [![Build Status](https://travis-ci.org/regardscitoyens/the-law-factory-parser.svg?branch=parser-refactor)](https://travis-ci.org/regardscitoyens/the-law-factory-parser)
 
-**WIP: rewrite of the parser**
+Data generator for [the-law-factory project](https://github.com/RegardsCitoyens/the-law-factory) (http://www.LaFabriqueDeLaLoi.fr)
 
-To get the parsed doslegs:
+Code used to generate the API available at: http://www.LaFabriqueDeLaLoi.fr/api/
+
+## Install the dependencies ##
+
+You can install them with the following:
+```
+virtualenv -p=/usr/bin/python3 venv
+source venv/bin/activate
+pip install --upgrade setuptools pip # not necessary but always a good idea
+pip install --upgrade -r requirements.txt
+```
+NOTE: this is Python 3 only for now
+
+## Generate data for one bill ##
+
+- search for the [bill procedure page on senat.fr](http://www.senat.fr/dossiers-legislatifs/index-general-projets-propositions-de-lois.html)
+
+- execute *parse_one.py* script using the procedure page :
+
+`python parse_one.py <url>`
+
+The data is generated in the "*data*" directory.
+
+For example, to generate data about the "*Enseignement supérieur et recherche*" bill:
 
 ```
-# let's install senapy, anpy and a few other things
-# NOTE: this is python 3 only for now
-# you might need to upgrade setuptools to get some of the dependencies before
-pip install --upgrade setuptools pip
-pip install -r requirements.txt
-
-# then you can parse any dosleg by url or id
-python parse_one.py data/ pjl12-688
-python parse_one.py data/ http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp
-
-# and to parse many of them
-senapy-cli doslegs_urls | python parse_many.py data/
-python generate_dossiers_csv.py data/
-python tools/assemble_procedures.py data/
+python parse_one.py http://www.senat.fr/dossier-legislatif/pjl12-614.html
+ls data/pjl12-614/
 ```
 
-###  Other things you can do
+## Generate data for many bills
 
-```
-# parse all the senat doslegs
-senapy-cli doslegs_urls | senapy-cli parse_many data/parsed/senat/
-# (optional) download and parse one senat dossier (no cache & output to shell)
-senapy-cli parse pjl15-610
+To generate all bills from 2008, you can use [senapy](https://github.com/regardscitoyens/senapy)
 
-# parse all the AN doslegs
-anpy-cli doslegs_urls | anpy-cli parse_many_doslegs data/parsed/an/
-# (optional) download and parse one AN dossier (no cache & output to shell)
-senapy-cli show_dossier_like_senapy http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp
+    senapy-cli doslegs_urls --min-year=2008 | python parse_many.py data/
 
-# generate a graph of the steps
-python tools/steps_as_dot.py data/ | dot -Tsvg > steps.svg
+See `senapy-cli doslegs_urls` help for more options. You can also use [anpy](https://github.com/regardscitoyens/anpy) with `anpy-cli doslegs_urls`
 
-# compare with previously-generated data
-python merge.py "data/parsed/senat/*" "data/parsed/an/*" data/parsed/merged/
-git clone git@github.com:mdamien/lafabrique-export.git lafabrique
-python tools/compare_all_thelawfactory_and_me.py "lafabrique/*" data/parsed/merged/all.json
+## Serve bills locally for the [law factory website](https://github.com/regardscitoyens/the-law-factory)
 
-# detect anomalies
-python tools/detect_anomalies data/parsed/merged/all.json
-# detect only in one
-senapy-cli parse pjl15-610 | python tools/detect_anomalies
-```
+First, you need to generate the files
 
+    python generate_dossiers_csv.py data/ # generate the home.json and the .csv to
+    python tools/assemble_procedures.py data/
+
+To be used in the law factory app, we need to enable cors. Just install *http-server* nodejs lib and run it in data directory on a given port (8002 in the example) :
+
+    npm install -g http-server
+    cd data & http-server -p 8002 --cors
+
+## Generate git version for a bill
+
+(coming back soon)
+
+### Other things you can do
+
+ - parse a sénat dosleg: `senapy-cli parse pjl15-610`
+ - parse all the sénat doslegs: `senapy-cli doslegs_urls | senapy-cli parse_many senat_doslegs/`
+ - parse all the AN doslegs `anpy-cli doslegs_urls | anpy-cli parse_many_doslegs an_doslegs/`
+ - parse an AN dosleg: `anpy-cli show_dossier_like_senapy http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp`
+ - generate a graph of the steps: `python tools/steps_as_dot.py data/ | dot -Tsvg > steps.svg`
 
 ### Tests
 
@@ -62,7 +77,10 @@ If you modify something, best in to re-generate the test-cases with the `--regen
 
     - python tests/test_regressions.py the-law-factory-parser-test-cases --regen
 
+To make the tests faster, you can also use the `--enable-cache` flag.
+
 
 ### Credits
 
 This work is supported by a public grant overseen by the French National Research Agency (ANR) as part of the "Investissements d'Avenir" program within the framework of the LIEPP center of excellence (ANR11LABX0091, ANR 11 IDEX000502).
+More details at https://lafabriquedelaloi.fr/a-propos.html

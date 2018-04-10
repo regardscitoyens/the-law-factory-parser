@@ -170,8 +170,9 @@ def process(API_DIRECTORY, url, disable_cache=True,
 
 
 if __name__ == '__main__':
-    API_DIRECTORY = sys.argv[1]
-    url = sys.argv[2]
+    args = [arg for arg in sys.argv[1:] if '--' not in arg]
+    url = args[0]
+    API_DIRECTORY = args[1] if len(args) > 1 else 'data'
     disable_cache = '--enable-cache' not in sys.argv
     debug_intermediary_files = '--debug' in sys.argv
     only_promulgated = '--only-promulgated' in sys.argv
