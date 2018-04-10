@@ -19,6 +19,9 @@ from tools import parse_texte
 REGEN_TESTS = '--regen' in sys.argv
 TEST_DIR = sys.argv[1]
 
+if '--enable-cache' in sys.argv:
+    from lawfactory_utils.urls import enable_requests_cache;enable_requests_cache()
+
 print('****** testing url fixing... ******')
 # AN .pdf
 assert find_good_url_resp('http://www.assemblee-nationale.fr/13/pdf/pion1895.pdf').url == 'http://www.assemblee-nationale.fr/13/propositions/pion1895.asp'
