@@ -85,22 +85,26 @@ def clean_extra_expose_des_motifs(html):
     last_expose = []
     expose = False
     count = 0
+    we_are_inside_an_expose_table = False
     for line in html.split('\n'):
         if '>Exposé des motifs' in line:
             expose = ['']
             count += 1
         # detect end of exposé
-        elif line and expose and \
-            (
-                '"text-align: center">' in line or \
-                '<b>' in line or \
-                '</a>' in line or \
-                '<a name=' in line
-            ) and not re.search(r'<td[^>]+valign="top"', line): # table inside exposé
-            last_expose = expose
-            before_expose += after_expose
-            after_expose = []
-            expose = False
+        elif line and expose:
+            if '<table' in line:
+                we_are_inside_an_expose_table = True
+            if '</table' in line:
+                we_are_inside_an_expose_table = False
+            if not we_are_inside_an_expose_table:
+                if '"text-align: center">' in line or \
+                        '<b>' in line or \
+                        '</a>' in line or \
+                        '<a name=' in line:
+                    last_expose = expose
+                    before_expose += after_expose
+                    after_expose = []
+                    expose = False
         if not expose:
             after_expose.append(line)
         else:
