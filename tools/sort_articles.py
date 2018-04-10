@@ -18,9 +18,9 @@ bis_27 = ['bis', 'ter', 'quater', 'quinquies', 'sexies', 'septies', 'octies', 'n
 # support 1 to 99, from https://framagit.org/parlement-ouvert/metslesliens/blob/master/docs/l%C3%A9gistique.md
 bister = '(' + \
   '(?:un|duo|ter|quater|quin|sex?|sept|octo|novo|unde?|duode)?' + \
-  '(?:dec|v(?:i|e)c|tr(?:i|e)c|quadrag|quinquag|sexag|septuag|octog|nonag)' + \
+  '(?:dec|v[ie]c|tr[ie]c|quadrag|quinquag|sexag|septuag|octog|nonag)' + \
   'ies|semel|bis|ter|quater|' + \
-  '(?:quinqu|sex|sept|oct|no(?:n|v))ies' + \
+  '(?:quinqu|sex|sept|oct|no[nv])ies' + \
   ')'
 re_bister = re.compile(bister)
 
