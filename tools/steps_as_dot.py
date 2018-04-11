@@ -9,6 +9,8 @@ if len(sys.argv) < 2:
     print('USAGE: `steps_as_dot.py <path_to_json>`')
     sys.exit()
 
+mode = "detailed" if len(sys.argv) == 3 else "simple"
+
 procedure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'doc/valid_procedure.json')
 procedure = json.load(open(procedure_file))
 
@@ -26,13 +28,14 @@ for dos in all_senat_jo:
     prev_step = None
     last_step = ''
     for step_i, step in enumerate(dos.get('steps', [])):
-        step_name = ' • '.join((x for x in (step.get('stage'), step.get('institution')) if x))
-        if "CMP" in step_name:
-            step_name = "CMP"
-        # step_name = step.get('stage')
-        # step_name = step.get('institution')
+        if mode == "simple":
+            step_name = ' • '.join((x for x in (step.get('stage'), step.get('institution')) if x))
+            if "CMP" in step_name:
+                step_name = "CMP"
+        else:
+            step_name = ' • '.join((x for x in (step.get('stage'), step.get('institution'), step.get('step')) if x))
         if step_name:
-            if not (prev_step and prev_step.get('step') == 'depot' and step.get('step') == 'depot'):
+            if mode == "detailed" or not (prev_step and prev_step.get('step') == 'depot' and step.get('step') == 'depot'):
                 if last_step not in step_trans:
                     step_trans[last_step] = {}
                 step_trans[last_step][step_name] = step_trans[last_step].get(step_name, 0) + 1
@@ -61,9 +64,9 @@ for prev, nexts in step_trans.items():
         prev_id = get_node_id(prev)
         for next, next_v in nexts.items():
             next_id = get_node_id(next)
-            if next_id == prev_id: continue
+            if next_id == prev_id and mode == "simple": continue
 
-            incorrect = False #procedure.get(prev, {}).get(next, False) is False
+            incorrect = mode == "detailed" and procedure.get(prev, {}).get(next, False) is False
             color = '#F44336' if incorrect else '#a5a5a5'
 
             dot_result += '\n   %s -> %s [label="%s", penwidth="%d", color="%s", fontcolor="%s"];' % (
@@ -145,31 +148,43 @@ for name, id in nodes_names.items():
         len(nodes_names_size[name]) // 600 + 1,
         fillcolor)
 
-if '1ère lecture • assemblee' in nodes_names:
+depot = " • depot" if mode == "detailed" else ""
+if '1ère lecture • assemblee' + depot in nodes_names:
     dot_result += ("""
       {
         rank=source; %s; %s;
       }
-    """ % (get_node_id('1ère lecture • assemblee'), get_node_id('1ère lecture • senat')))
+    """ % (get_node_id('1ère lecture • assemblee' + depot), get_node_id('1ère lecture • senat' + depot)))
 
-for stage in ['1ère lecture', '2ème lecture']:
-    dot_result += ("""
-      {
+
+if mode == "simple":
+    for stage in ['1ère lecture', '2ème lecture']:
+        dot_result += ("""
+          {
+            rank=same; %s; %s;
+          }
+        """ % (get_node_id('%s • assemblee' % stage), get_node_id('%s • senat' % stage)))
+    dot_result += """
+    {
+        rank=same; %s; %s; %s;
+    }
+    """ % (get_node_id('CMP'), get_node_id('3ème lecture • assemblee'), get_node_id('3ème lecture • senat'))
+
+    dot_result += """
+    {
         rank=same; %s; %s;
-      }
-    """ % (get_node_id('%s • assemblee' % stage), get_node_id('%s • senat' % stage)))
+    }
+    """ % (get_node_id('congrès • congrès'), get_node_id('constitutionnalité • conseil constitutionnel'))
+else:
+    for stage in ['1ère lecture', '2ème lecture', '3ème lecture', 'CMP']:
+        for step in ['depot', 'commission', 'hemicycle']:
+            if stage == 'CMP' and step == 'commission': continue
+            dot_result += ("""
+              {
+                rank=same; %s; %s;
+              }
+            """ % (get_node_id('%s • assemblee • %s' % (stage, step)), get_node_id('%s • senat • %s' % (stage, step))))
 
-dot_result += """
-{
-    rank=same; %s; %s; %s;
-}
-""" % (get_node_id('CMP'), get_node_id('3ème lecture • assemblee'), get_node_id('3ème lecture • senat'))
-
-dot_result += """
-{
-    rank=same; %s; %s;
-}
-""" % (get_node_id('congrès • congrès'), get_node_id('constitutionnalité • conseil constitutionnel'))
 
 dot_result += '\n}'
 
