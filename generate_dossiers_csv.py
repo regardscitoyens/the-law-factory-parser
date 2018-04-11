@@ -40,6 +40,14 @@ for dos, path in dossiers:
 
     total_amendements = sum([step.get('nb_amendements', 0) for step in dos['steps']])
 
+    decision_cc = None
+    decision_cc_date = None
+    for step in dos['steps']:
+        if step.get('stage') == 'constitutionnalité':
+            decision_cc = step.get('decision')
+            decision_cc_date = step.get('date')
+            break
+
     csvfile.writerow([
         id, # id
         dos.get('long_title'), # Titre
@@ -48,10 +56,10 @@ for dos, path in dossiers:
         dos.get('beginning'), # Date initiale
         dos.get('url_dossier_senat', dos.get('url_dossier_assemblee')), # URL du dossier
         'promulgué', # État du dossier
-        '', # Décision du CC
-        '', # Date de la décision
-        dos.get('end_jo'), # Date de promulgation
-        1234, # Numéro de la loi
+        decision_cc, # Décision du CC
+        decision_cc_date, # Date de la décision
+        dos.get('end'), # Date de promulgation
+        dos.get('law_name'), # Numéro de la loi
         ','.join(dos.get('themes', [])), # Thèmes
         total_amendements, # total_amendements
         total_mots, # total_mots
