@@ -5,12 +5,13 @@ Output in <api_directory>:
 - dossiers_promulgues.csv with all the doslegs ready
 - home.json for the homepage informations
 """
-import json, glob, os, sys, csv
+import json, glob, os, sys, csv, re
 
 API_DIRECTORY = sys.argv[1]
 
+re_dos_ok = re.compile(r"%s/[^.]+/" % API_DIRECTORY)
 dossiers = [(json.load(open(path)), path) for path \
-                in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json'))]
+                in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json')) if re_dos_ok.search(path)]
 dossiers = [(dos, path) for dos, path in dossiers if dos.get('end')]
 
 
@@ -99,7 +100,7 @@ print(total_doslegs, 'doslegs in csv')
 
 home_json_final = {
     "total": total_doslegs,
-    "maximum": len(glob.glob(os.path.join(API_DIRECTORY, '*/parsing.log'))) + len(glob.glob(os.path.join(API_DIRECTORY, 'logs/*')))
+    "maximum": len([path for path in glob.glob(os.path.join(API_DIRECTORY, '*/parsing.log')) if re_dos_ok.search(path)]) + len(glob.glob(os.path.join(API_DIRECTORY, 'logs/*')))
 }
 home_json_data.sort(key=lambda x: -x['total_amendements'])
 home_json_final["focus"] = {
