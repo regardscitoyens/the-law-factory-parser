@@ -188,8 +188,9 @@ else:
 
 dot_result += '\n}'
 
-open('_steps.log', 'w').write(steps_logs)
-open('steps_transitions.json', 'w').write(json.dumps(step_trans, ensure_ascii=False, indent=2, sort_keys=True))
+details = "_detailed" if mode == "detailed" else ""
+open('_steps%s.log' % details, 'w').write(steps_logs)
+open('steps%s_transitions.json' % details, 'w').write(json.dumps(step_trans, ensure_ascii=False, indent=2, sort_keys=True))
 
 print(dot_result)
 # open('steps.dot','w').write(dot_result)
