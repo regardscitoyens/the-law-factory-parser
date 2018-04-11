@@ -105,7 +105,7 @@ home_json_final["recent"] = {
     "titre": "Les derniers textes promulgués",
     "lien": "Explorer les textes récents",
     "url": "lois.html",
-    "textes": home_json_data[-6:],
+    "textes": list(reversed(home_json_data[-6:])),
 }
 open(os.path.join(API_DIRECTORY, 'home.json'), 'w').write(
     json.dumps(home_json_final, sort_keys=True, indent=2, ensure_ascii=False))
