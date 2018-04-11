@@ -15,7 +15,7 @@ source venv/bin/activate
 pip install --upgrade setuptools pip # not necessary but always a good idea
 pip install --upgrade -r requirements.txt
 ```
-NOTE: this is Python 3 only for now
+NOTE: You must have Python 3.5+ for now
 
 ## Generate data for one bill ##
 
