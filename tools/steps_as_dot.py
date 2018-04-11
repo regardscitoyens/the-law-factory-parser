@@ -17,7 +17,7 @@ procedure = json.load(open(procedure_file))
 API_DIRECTORY = sys.argv[1]
 all_senat_jo = [json.load(open(path)) for path \
                 in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json'))]
-all_senat_jo = [dos for dos in all_senat_jo if dos.get('end_jo')]
+all_senat_jo = [dos for dos in all_senat_jo if dos.get('end')]
 # all_senat_jo = [x for x in json.load(open(sys.argv[1])) if len(x['steps']) > 2]
 # all_senat_jo = random.sample(all_senat_jo, 5)
 
