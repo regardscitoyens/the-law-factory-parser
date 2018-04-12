@@ -1,64 +1,78 @@
 the-law-factory-parser
 ======================
+
 [![Build Status](https://travis-ci.org/regardscitoyens/the-law-factory-parser.svg?branch=parser-refactor)](https://travis-ci.org/regardscitoyens/the-law-factory-parser)
 
 Data generator for [the-law-factory project](https://github.com/RegardsCitoyens/the-law-factory) (http://www.LaFabriqueDeLaLoi.fr)
 
 Code used to generate the API available at: http://www.LaFabriqueDeLaLoi.fr/api/
 
+
 ## Install the dependencies ##
 
 You can install them with the following:
+
 ```
-virtualenv -p=/usr/bin/python3 venv
+virtualenv -p $(which python3) venv
 source venv/bin/activate
 pip install --upgrade setuptools pip # not necessary but always a good idea
 pip install --upgrade -r requirements.txt
 ```
 NOTE: You must have Python 3.5+ for now
 
+
 ## Generate data for one bill ##
 
-- search for the [bill procedure page on senat.fr](http://www.senat.fr/dossiers-legislatifs/index-general-projets-propositions-de-lois.html)
+- search for the [bill's procedure page on Senat.fr](http://www.senat.fr/dossiers-legislatifs/index-general-projets-propositions-de-lois.html) or [Assemblee-nationale.fr](http://www.assemblee-nationale.fr/15/documents/index-dossier.asp).
 
-- execute *parse_one.py* script using the procedure page :
+- execute *parse_one.py* script using the procedure page:
 
 `python parse_one.py <url>`
 
-The data is generated in the "*data*" directory.
+The data is generated in the "*data*" directory. You can change this default behavior by inputting a data path as extra argument: `python parse_one.py <url> <dataDir>`.
 
 For example, to generate data about the "*Enseignement supérieur et recherche*" bill:
 
-```
-python parse_one.py http://www.senat.fr/dossier-legislatif/pjl12-614.html
-ls data/pjl12-614/
-```
+    python parse_one.py http://www.senat.fr/dossier-legislatif/pjl12-614.html
+    ls data/pjl12-614/
+
+You can also use directly Senate's ids such as: `python parse_one.py pjl12-614`
+
+Development options `--debug`, `--enable-cache` and `--only-promulgated` can also be used.
+
 
 ## Generate data for many bills
 
-To generate all bills from 2008, you can use [senapy](https://github.com/regardscitoyens/senapy)
+To generate all bills from 2008, you can pipe a list of ids or urls into `parse_many.py`.
 
-    senapy-cli doslegs_urls --min-year=2008 | python parse_many.py data/
+A convenient way to do so is to use [senapy](https://github.com/regardscitoyens/senapy):
 
-See `senapy-cli doslegs_urls` help for more options. You can also use [anpy](https://github.com/regardscitoyens/anpy) with `anpy-cli doslegs_urls`
+   senapy-cli doslegs_urls --min-year=2008 | python parse_many.py data/
 
-## Serve bills locally for the [law factory website](https://github.com/regardscitoyens/the-law-factory)
+See `senapy-cli doslegs_urls` help for more options. You can also use [anpy](https://github.com/regardscitoyens/anpy) with `anpy-cli doslegs_urls`.
 
-First, you need to generate the files
 
-    python generate_dossiers_csv.py data/ # generate the home.json and the .csv to
-    python tools/assemble_procedures.py data/
+## Serve bills locally for [The Law Factory website](https://github.com/regardscitoyens/the-law-factory)
 
-To be used in the law factory app, we need to enable cors. Just install *http-server* nodejs lib and run it in data directory on a given port (8002 in the example) :
+First, you need to build data for all desired bills.
+
+Then generate the files required by the frontend:
+
+    python generate_dossiers_csv.py data/       # generates home.json and dossiers_promulgues.csv used by the searchbar
+    python tools/assemble_procedures.py data/   # generates dossiers_n.json files used by the Navettes viz
+
+Finally, serve the data directory however you like. For instance, you can serve it on a specific port with a simple http server like nodeJs', in which case, you'll need to enable cors: just install *http-server* with npm and run it in data directory on a given port (8002 in the example):
 
     npm install -g http-server
     cd data & http-server -p 8002 --cors
+
 
 ## Generate git version for a bill
 
 (coming back soon)
 
-### Other things you can do
+
+## Other things you can do
 
  - parse a sénat dosleg: `senapy-cli parse pjl15-610`
  - parse all the sénat doslegs: `senapy-cli doslegs_urls | senapy-cli parse_many senat_doslegs/`
@@ -66,21 +80,23 @@ To be used in the law factory app, we need to enable cors. Just install *http-se
  - parse an AN dosleg: `anpy-cli show_dossier_like_senapy http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp`
  - generate a graph of the steps: `python tools/steps_as_dot.py data/ | dot -Tsvg > steps.svg`
 
-### Tests
+
+## Tests
 
 To run the tests, you can follow the `.travis.yml` file.
 
-    - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git
-    - python tests/test_regressions.py the-law-factory-parser-test-cases
+    git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git
+    python tests/test_regressions.py the-law-factory-parser-test-cases
 
-If you modify something, best in to re-generate the test-cases with the `--regen` flag:
+If you modify something, best is to regenerate the test-cases with the `--regen` flag:
 
-    - python tests/test_regressions.py the-law-factory-parser-test-cases --regen
+    python tests/test_regressions.py the-law-factory-parser-test-cases --regen
 
 To make the tests faster, you can also use the `--enable-cache` flag.
 
 
-### Credits
+## Credits
 
-This work is supported by a public grant overseen by the French National Research Agency (ANR) as part of the "Investissements d'Avenir" program within the framework of the LIEPP center of excellence (ANR11LABX0091, ANR 11 IDEX000502).
+This work, a collaboration between [Regard Citoyens](https://www.regardscitoyens.org), [médialab Sciences Po](https://medialab.sciencespo.fr/fr/) and [CEE Sciences Po](http://www.sciencespo.fr/centre-etudes-europeennes/fr), is supported by a public grant overseen by the French National Research Agency (ANR) as part of the "Investissements d'Avenir" program within the framework of the LIEPP center of excellence (ANR11LABX0091, ANR 11 IDEX000502).
+
 More details at https://lafabriquedelaloi.fr/a-propos.html
