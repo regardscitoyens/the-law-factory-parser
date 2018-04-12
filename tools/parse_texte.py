@@ -140,6 +140,8 @@ clean_legifrance_regexps = [
     (re.compile(r'<div[^>]*class="titreSection[^>]*>\s*(%s\s+[\dIVXLCDM]+e?r?)\s*:\s*([^<]*?)\s*</div>' % section_titles, re.I), r'<p>\1</p><p><b>\5</b></p>'),
     (re.compile(r'<div[^>]*class="titreArt[^>]*>(.*?)\s*</div>', re.I), r'<p><b>\1</b></p>'),
     (re.compile(r'\[Dispositions déclarées non conformes à la Constitution par la décision du Conseil constitutionnel n° \d+-\d+ DC du .{0,30}\]', re.I), "(Censuré)"),
+    (re.compile(r'―'), '-'),
+    (re.compile(r'([\.\s]+)-([^\s\-]+)'), r'\1 - \2'),
 ]
 
 
@@ -189,7 +191,7 @@ html_replace = [
     (re.compile(r"<!--.*?-->", re.I), ""),
     (re.compile(r"<span[^>]*color: #0070b9[^>]*>\(\d+\)\s+</span>", re.I), ""), # remove pastilles
     (re.compile(r"(<img[^>]*>\s*<br/>\s*)", re.I), ""), # remove <img><br/> before the next regex kills my precious '«'
-    (re.compile(r"</?br/?>[\s]+", re.I), " "),
+    (re.compile(r"</?br/?>\s+", re.I), " "),
     (re.compile(r'(«\s+|\s+»)'), '"'),
     (re.compile(r'(«|»|“|”|„|‟|❝|❞|＂|〟|〞|〝)'), '"'),
     (re.compile(r"(’|＇|’|ߴ|՚|ʼ|❛|❜)"), "'"),
@@ -221,8 +223,12 @@ html_replace = [
 
 
 def clean_html(t):
-    for regex, repl in html_replace:
-        t = regex.sub(repl, t)
+    for i, (regex, repl) in enumerate(html_replace):
+        try:
+            t = regex.sub(repl, t)
+        except Exception as e:
+            print("Crashed while applying regexp", regex, "with replacement", repl, "to", t)
+            raise e
     return t.strip()
 
 re_clean_et = re.compile(r'(,|\s+et)\s+', re.I)
