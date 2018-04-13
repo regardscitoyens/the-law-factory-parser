@@ -228,6 +228,8 @@ def check_section_is_not_a_duplicate(section_id, articles):
     for block in articles:
         assert not (block['type'] == 'section' and block.get('id') == section_id)
 
+re_move_table_guillemets_left = re.compile(r'^(<table[^>]*>(?:<thead[^>]*>.*?</thead>)?(?:<tbody[^>]*>)?<tr[^>]*>)<td[^>]*>\s*"\s*</td>', re.I)
+re_move_table_guillemets_right = re.compile(r'<td[^>]*>\s*("\.?)\s*</td>(</tr>(?:</tbody>)?</table>)$', re.I)
 
 def add_to_articles(dic, all_articles):
     # Clean empty articles with only "Supprimé" as text
@@ -256,6 +258,34 @@ def add_to_articles(dic, all_articles):
                 new['titre'] = d
                 all_articles.append(new)
             return
+        # Cleanup guillemets around tables
+        if '<table' in "".join(dic["alineas"].values()):
+            als = {}
+            i = 1
+            prevguil = None
+            prevtabl = None
+            for aln in sorted(dic['alineas'].keys()):
+                al = dic['alineas'][aln].strip()
+                if al in ['"', '".', '";']:
+                    if prevtabl:
+                        if '"' not in als['%03d' % (i-1)][-2:]:
+                            als['%03d' % (i-1)] += al
+                        prevtabl = None
+                        continue
+                    prevguil = al
+                    continue
+                if '<table' in al:
+                    al = re_move_table_guillemets_left.sub(r'"\1', al)
+                    al = re_move_table_guillemets_right.sub(r'\2\1', al)
+                    prevtabl = True
+                    if prevguil and not al.startswith('"'):
+                        al = '"' + al
+                else:
+                    prevtabl = None
+                prevguil = False
+                als['%03d' % i] = al
+                i += 1
+            dic['alineas'] = als
     all_articles.append(copy.deepcopy(dic))
 
 
