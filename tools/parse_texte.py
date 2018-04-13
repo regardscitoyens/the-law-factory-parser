@@ -16,20 +16,10 @@ from lawfactory_utils.urls import download
 
 try:
     from .sort_articles import bister
-    from .common import get_text_id
+    from .common import get_text_id, upcase_accents, real_lower
 except (SystemError, ImportError):
     from sort_articles import bister
-    from common import get_text_id
-
-
-upcase_accents = "ÇÀÂÄÉÈÊËÎÏÔÖÙÛÜ"
-locase_accents = "çàâäéèêëîïôöùûü"
-
-
-def real_lower(text):
-    for a in upcase_accents:
-        text = text.replace(a, locase_accents[upcase_accents.find(a)])
-    return text.lower()
+    from common import get_text_id, upcase_accents, real_lower
 
 
 # inspired by duralex/alinea_parser.py

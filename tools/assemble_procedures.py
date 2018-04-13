@@ -4,7 +4,6 @@
 import os, sys
 from common import *
 from aggregates_data import DossierWalker,CountAmendementComputation
-from difflib import ndiff, SequenceMatcher
 
 sourcedir = sys.argv[1]
 if not sourcedir:
@@ -61,7 +60,7 @@ def read_text(text_id, step_id):
         for key in sorted(art['alineas'].keys()):
             if art['alineas'][key] != '':
                 texte.append(strip_text(art['alineas'][key]))
-    return texte
+    return clean_text_for_diff(texte)
 
 for d in dossiers:
     computation = CountAmendementComputation()
@@ -98,10 +97,11 @@ for d in dossiers:
             lastText = read_text(d['id'], s['directory'])
         if not first_found and s.get('step') == "depot":
             firstText = read_text(d['id'], s['directory'])
-    a = SequenceMatcher(None, "\n".join(firstText), "\n".join(lastText), autojunk=False)
-    proc["ratio_texte_modif"] = a.real_quick_ratio() # TODO: temporary downgrading quality since the real ratio is too slow
-    proc["input_text_length2"] = len("\n".join(firstText))
-    proc["output_text_length2"] = len("\n".join(lastText))
+    # TODO: temporary downgrading quality since the real ratio is too slow
+    #proc["ratio_texte_modif"] = 1 - compute_similarity(firstText, lastText)
+    proc["ratio_texte_modif"] = 1 - compute_similarity(firstText, lastText, fast=True)
+    proc["input_text_length2"] = len(firstText)
+    proc["output_text_length2"] = len(lastText)
 
 
 # TODO:

@@ -5,7 +5,12 @@ import sys, os, re, requests
 from datetime import date
 from html.entities import name2codepoint
 from csv import DictReader
+from difflib import SequenceMatcher
 import json
+try:
+    from .sort_articles import bister
+except:
+    from sort_articles import bister
 
 
 def open_csv(dirpath, filename, delimiter=";"):
@@ -68,6 +73,42 @@ clean_balises = lambda x: re_clean_balises.sub("", x)
 
 strip_text = lambda x: clean_spaces(clean_balises(x)).strip()
 
+re_non_alphanum = re.compile(r"\s*[^\w\s]+\s*")
+
+upcase_accents = "ÇÀÂÄÉÈÊËÎÏÔÖÙÛÜ"
+locase_accents = "çàâäéèêëîïôöùûü"
+case_noaccents = "caaaeeeeiioouuu"
+
+def real_lower(text):
+    for a in upcase_accents:
+        text = text.replace(a, locase_accents[upcase_accents.find(a)])
+    return text.lower()
+
+def clean_accents(text):
+    text = real_lower(text)
+    for a in locase_accents:
+        text = text.replace(a, case_noaccents[locase_accents.find(a)])
+    return text
+
+re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
+re_alin_sup = re.compile(r'\s*\((censur|supprim)és?\)$', re.I)
+
+def clean_text_for_diff(text):
+    if type(text) == list:
+        text = [re_alin_sup.sub('', re_clean_alin.sub('', t)) for t in text]
+        text = "\n".join([t for t in text if t])
+    else:
+        text = re_alin_sup.sub('', re_clean_alin.sub('', t))
+    text = clean_accents(text)
+    text = re_non_alphanum.sub(" ", text)
+    return text
+
+def compute_similarity(text1, text2, fast=False):
+    a = SequenceMatcher(None, text1, text2, autojunk=False)
+    if fast:
+        return 1 - a.real_quick_ratio()
+    b = a.get_matching_blocks()
+    return float(sum([m[2] for m in b])) / max(b[-1][0], b[-1][1])
 
 def identify_room(url_or_institution, legislature):
     typeparl = "depute" if 'nationale.fr' in url_or_institution \

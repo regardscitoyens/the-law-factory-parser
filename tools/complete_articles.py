@@ -8,8 +8,10 @@ from requests.structures import CaseInsensitiveDict
 
 try:
     from .sort_articles import bister, article_is_lower
+    from .common import clean_text_for_diff, compute_similarity
 except SystemError:
     from sort_articles import bister, article_is_lower
+    from common import clean_text_for_diff, compute_similarity
 
 
 def complete(current, previous, step, table_concordance, anteprevious=None):
@@ -127,9 +129,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
             return False
         return res
 
-    re_alin_sup = re.compile(r'supprimés?\)$', re.I)
-    re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
-    get_alineas_text = lambda a: "\n".join([re_clean_alin.sub('', a[k]) for k in sorted(a.keys()) if not re_alin_sup.search(a[k])])
+    get_alineas_text = lambda a: clean_text_for_diff([a[k] for k in sorted(a.keys())])
 
     re_clean_et = re.compile(r'(\s*[\&,]\s*|\s+et\s+)+', re.I)
     re_clean_virg = re.compile(r'\s*,\s*')
@@ -155,9 +155,8 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
             break
         elif line["type"] == "texte":
             texte = dict(line)
-            if texte["definitif"]:
-                from difflib import SequenceMatcher
-                # check number of sections is the same as the final text
+            # check number of sections is the same as the final text
+            #if texte["definitif"]:
                 # assert len(oldsects) == len([x for x in current if x['type'] == 'section'])
         else:
           if not done_titre:
@@ -273,10 +272,9 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
 
                 oldtxt = get_alineas_text(oldart["alineas"])
                 txt = get_alineas_text(line["alineas"])
-                a = SequenceMatcher(None, oldtxt, txt, autojunk=False).get_matching_blocks()
-                similarity = float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
+                similarity = compute_similarity(oldtxt, txt)
                 if similarity < 0.75 and not olddepot:
-                    print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len("".join(txt)), "chars, similarity; %.2f" % similarity, file=sys.stderr)
+                    print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len(txt), "chars, similarity; %.2f" % similarity, file=sys.stderr)
 
                 if line['titre'] != oldart['titre']:
                     line['newtitre'] = line['titre']

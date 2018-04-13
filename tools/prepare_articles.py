@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import re, os, sys
-from difflib import ndiff, SequenceMatcher
+from difflib import ndiff
 
 try:
-    from .common import json
-    from .sort_articles import bister
+    from .common import json, clean_text_for_diff, compute_similarity
 except:
-    from common import json
-    from sort_articles import bister
+    from common import json, clean_text_for_diff, compute_similarity
 
 from tools import _step_logic
 
@@ -98,8 +96,6 @@ def process(procedure):
     # if not steps[-1].get('enddate'):
     #   steps.pop(-1)
 
-    re_alin_sup = re.compile(r'supprimés?\)$', re.I)
-    re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
     re_upper_first = re.compile(r'^(.)(.*)$')
     step_id = ''
     old_step_index = None
@@ -141,7 +137,7 @@ def process(procedure):
                 s = create_step(step_id, article=article)
                 if 'newtitre' in article:
                     s['newnum'] = article['newtitre']
-                txt = "\n".join([re_clean_alin.sub('', v) for v in s['text'] if not re_alin_sup.search(v)])
+                txt = clean_text_for_diff(s['text'])
 
                 oldtext = []
                 if old_step_index is not None:
@@ -152,7 +148,7 @@ def process(procedure):
                                 mark_missing_articles_as_deleted(out['articles'], old_step_id, step_id, last_match_with_previous_step, st['_original_index'])
                             last_match_with_previous_step = st['_original_index']
                             if st['status'] != 'sup':
-                                oldtext = [re_clean_alin.sub('', v) for v in st['text'] if not re_alin_sup.search(v)]
+                                oldtext = st['text']
                             break
 
                 if txt and (not oldtext or nstep < depots):
@@ -163,7 +159,7 @@ def process(procedure):
                     s['diff'] = 'rem'
                     s['n_diff'] = 0
                 else:
-                    oldtxt = "\n".join(oldtext)
+                    oldtxt = clean_text_for_diff(oldtext)
                     s['status'] = 'none'
                     if txt == oldtxt:
                         s['diff'] = 'none'
@@ -184,8 +180,7 @@ def process(procedure):
                             s['diff'] = 'both'
                         else:
                             s['diff'] = 'none'
-                        a = SequenceMatcher(None, oldtxt, txt, autojunk=False).get_matching_blocks()
-                        s['n_diff'] = 1 - float(sum([m[2] for m in a])) / max(a[-1][0], a[-1][1])
+                        s['n_diff'] = 1 - compute_similarity(oldtxt, txt)
             else:
                 out['articles'][id] = {}
                 out['articles'][id]['id'] = id
@@ -202,7 +197,7 @@ def process(procedure):
                     s['status'] = 'new'
                 else:
                     s['status'] = 'depot'
-                txt = "\n".join(s['text'])
+                txt = clean_text_for_diff(s['text'])
             if s['status'] == 'sup':
                 s['length'] = 50
                 s['n_diff'] = 0
