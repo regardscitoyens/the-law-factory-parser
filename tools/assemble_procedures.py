@@ -108,6 +108,9 @@ for d in dossiers:
 # - take dates + décision CC from csv
 # - take état du dossier from csv when more than promulgués (and handle better end date then)
 
+    for f in ["table_concordance", "objet_du_texte"]:
+        proc.pop(f)
+
     tosave.append(proc)
     done += 1
     if done % pagesize == 0:
