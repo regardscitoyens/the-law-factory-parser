@@ -110,7 +110,8 @@ for d in dossiers:
 # - take état du dossier from csv when more than promulgués (and handle better end date then)
 
     for f in ["table_concordance", "objet_du_texte"]:
-        proc.pop(f)
+        if f in proc:
+            proc.pop(f)
 
     tosave.append(proc)
     done += 1
