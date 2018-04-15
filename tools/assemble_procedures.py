@@ -35,7 +35,7 @@ for d in dossiers:
 
 dossiers.sort(key=lambda k: format_date(k['Date de promulgation']), reverse=True)
 
-namefile = lambda npage: "dossiers_%s_%s.json" % (pagesize*npage, min(total, pagesize*(npage+1))-1)
+namefile = lambda npage: "dossiers_%s.json" % npage
 def save_json_page(tosave, done):
     npage = (done - 1) // pagesize
     data = {"total": total,
@@ -95,6 +95,7 @@ for d in dossiers:
         if s.get('step') != "depot":
             first_found = True
             lastText = read_text(d['id'], s['directory'])
+        # TODO take real first depot in case of multiple depots
         if not first_found and s.get('step') == "depot":
             firstText = read_text(d['id'], s['directory'])
     # TODO: temporary downgrading quality since the real ratio is too slow
