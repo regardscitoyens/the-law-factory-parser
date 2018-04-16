@@ -12,19 +12,19 @@ import parse_doslegs_texts
 import format_data_for_frontend
 
 
-def download_senat(url):
-    print('  [] download SENAT version')
+def download_senat(url, verbose=True):
+    if verbose: print('  [] download SENAT version')
     html = download(url).text
-    print('  [] parse SENAT version')
+    if verbose: print('  [] parse SENAT version')
     return senapy_parse(html, url)
 
 
-def download_an(url, url_senat=False):
-    print('  [] download AN version')
+def download_an(url, url_senat=False, verbose=True):
+    if verbose: print('  [] download AN version')
     resp = download(url)
     resp.encoding = 'Windows-1252'
     html = resp.text
-    print('  [] parse AN version')
+    if verbose: print('  [] parse AN version')
     # TODO: do both instead of first
     results = anpy_parse(html, url)
     if len(results) > 1:
@@ -32,7 +32,7 @@ def download_an(url, url_senat=False):
             for result in results:
                 if result.get('url_dossier_senat') == url_senat:
                     return result
-        print('     WARNING: TOOK FIRST DOSLEG BUT THERE ARE %d OF THEM' % len(results))
+        if verbose: print('     WARNING: TOOK FIRST DOSLEG BUT THERE ARE %d OF THEM' % len(results))
     return results[0]
 
 
@@ -48,6 +48,43 @@ def are_same_doslegs(senat_dos, an_dos):
         return True
     # it's not the same dosleg !
     return False
+
+
+def download_merged_dos(url, verbose=True):
+    """find dossier from url and returns (the_merged_dosleg, AN_dosleg, SENAT_dosleg)"""
+    if not url.startswith('http') and ('pjl' in url or 'ppl' in url or 'plfss' in url):
+        url = "http://www.senat.fr/dossier-legislatif/%s.html" % url
+
+    if verbose: print(' -= DOSLEG URL:', url, '=-')
+
+    dos = None
+    an_dos = None
+    senat_dos = None
+
+    if 'senat.fr' in url:
+        senat_dos = download_senat(url, verbose=verbose)
+        if not senat_dos:
+            if verbose: print('  /!\ INVALID SENAT DOS')
+            return None, None, None
+        # Add AN version if there's one
+        if 'url_dossier_assemblee' in senat_dos:
+            an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'], verbose=verbose)
+            if 'url_dossier_senat' in an_dos:
+                assert are_same_doslegs(senat_dos, an_dos)
+            dos = merge_senat_with_an(senat_dos, an_dos)
+        else:
+            dos = senat_dos
+    elif 'assemblee-nationale.fr' in url:
+        an_dos = download_an(url, verbose=verbose)
+        # Add senat version if there's one
+        if 'url_dossier_senat' in an_dos:
+            senat_dos = download_senat(an_dos['url_dossier_senat'])
+            dos = merge_senat_with_an(senat_dos, an_dos)
+        else:
+            dos = an_dos
+    else:
+        if verbose: print(' INVALID URL:', url)
+    return dos, an_dos, senat_dos
 
 
 def _dump_json(data, filename):
@@ -106,37 +143,9 @@ def process(API_DIRECTORY, url, disable_cache=True,
             # Download senat version
             if not disable_cache:
                 enable_requests_cache()
-            if not url.startswith('http') and ('pjl' in url or 'ppl' in url or 'plfss' in url):
-                url = "http://www.senat.fr/dossier-legislatif/%s.html" % url
 
-            print(' -= DOSLEG URL:', url, '=-')
-
-            an_dos = None
-            senat_dos = None
-
-            if 'senat.fr' in url:
-                senat_dos = download_senat(url)
-                if not senat_dos:
-                    print('  /!\ INVALID SENAT DOS')
-                    return
-                # Add AN version if there's one
-                if 'url_dossier_assemblee' in senat_dos:
-                    an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'])
-                    if 'url_dossier_senat' in an_dos:
-                        assert are_same_doslegs(senat_dos, an_dos)
-                    dos = merge_senat_with_an(senat_dos, an_dos)
-                else:
-                    dos = senat_dos
-            elif 'assemblee-nationale.fr' in url:
-                an_dos = download_an(url)
-                # Add senat version if there's one
-                if 'url_dossier_senat' in an_dos:
-                    senat_dos = download_senat(an_dos['url_dossier_senat'])
-                    dos = merge_senat_with_an(senat_dos, an_dos)
-                else:
-                    dos = an_dos
-            else:
-                print(' INVALID URL:', url)
+            dos, an_dos, senat_dos = download_merged_dos(url)
+            if not dos:
                 return
 
             print('        title:', dos.get('long_title'))

@@ -12,8 +12,11 @@ import glob, shutil, os, filecmp, sys, difflib
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import parse_one
+from parse_one import download_merged_dos
 from parse_doslegs_texts import find_good_url_resp
+from tools.detect_anomalies import find_anomalies
 from tools import parse_texte
+
 
 # use `test_regressions.py <directory> --regen` to update the tests directory
 REGEN_TESTS = '--regen' in sys.argv
@@ -43,6 +46,17 @@ assert len(parse_texte.parse('http://www.assemblee-nationale.fr/13/rapports/r256
 assert len(parse_texte.parse('https://www.senat.fr/leg/ppl08-039.html')) == 2
 print('****** => parse_texte OK ******')
 
+print()
+print('*** testing merge ****')
+# complete AN urls
+dos, *_ = download_merged_dos('pjl11-497', verbose=False)
+assert find_anomalies([dos], verbose=False) == 0
+for step in dos['steps']:
+    if step.get('institution') == 'assemblee':
+        assert step['source_url']
+print('****** => merge OK ******')
+
+print()
 """ test full data generation """
 
 # https://stackoverflow.com/questions/4187564/recursive-dircmp-compare-two-directories-to-ensure-they-have-the-same-files-and
