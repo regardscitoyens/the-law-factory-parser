@@ -7,3 +7,7 @@
 *.sqlite
 *.pyc
 the-law-factory-parser-test-cases/
+
+.coverage
+/htmlcov/
+/tests_tmp/

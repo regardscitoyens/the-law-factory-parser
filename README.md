@@ -1,7 +1,7 @@
 the-law-factory-parser
 ======================
 
-[![Build Status](https://travis-ci.org/regardscitoyens/the-law-factory-parser.svg?branch=parser-refactor)](https://travis-ci.org/regardscitoyens/the-law-factory-parser)
+[![Build Status](https://travis-ci.org/regardscitoyens/the-law-factory-parser.svg?branch=parser-refactor)](https://travis-ci.org/regardscitoyens/the-law-factory-parser) [![Coverage Status](https://coveralls.io/repos/github/regardscitoyens/the-law-factory-parser/badge.svg?branch=master)](https://coveralls.io/github/regardscitoyens/the-law-factory-parser?branch=master)
 
 Data generator for [the-law-factory project](https://github.com/RegardsCitoyens/the-law-factory) (http://www.LaFabriqueDeLaLoi.fr)
 
