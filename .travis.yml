@@ -2,14 +2,12 @@ sudo: false
 language: python
 python:
     - "3.5"
-install: pip install -r test_requirements.txt
+install: pip install -r requirements.txt
 script:
    - set -e # exit on first fail: see https://github.com/travis-ci/travis-ci/issues/1066
-   - coverage run --include="./*.py" tools/sort_articles.py
-   - coverage run --include="./*.py" tools/parse_texte.py --test
-   - coverage run --include="./*.py" tests/test_steps.py
+   - python tools/sort_articles.py
+   - python tools/parse_texte.py --test
+   - python tests/test_steps.py
    - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git tests_cases
-   - coverage run --include="./*.py" tests/test_regressions.py tests_cases
+   - python tests/test_regressions.py tests_cases
    - set +e
-after_success:
-  - coveralls

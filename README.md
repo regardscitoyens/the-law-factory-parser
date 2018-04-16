@@ -94,6 +94,11 @@ If you modify something, best is to regenerate the test-cases with the `--regen`
 
 To make the tests faster, you can also use the `--enable-cache` flag.
 
+You can also watch for parts of the code not yet covered by the tests:
+
+   - First, install `coverage`: `pip install coverage`
+   - Then, you can execute `bash coverage.sh`
+   - Then, the report is in `htmlcov/index.html`
 
 ## Credits
 
