@@ -274,7 +274,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                 txt = get_alineas_text(line["alineas"])
                 similarity = compute_similarity(oldtxt, txt)
                 if similarity < 0.75 and not olddepot:
-                    print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len(txt), "chars, similarity; %.2f" % similarity, file=sys.stderr)
+                    print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len(oldtxt), "Vs", len(txt), "chars, similarity; %.2f" % similarity, file=sys.stderr)
 
                 if line['titre'] != oldart['titre']:
                     line['newtitre'] = line['titre']

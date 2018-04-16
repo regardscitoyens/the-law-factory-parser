@@ -202,7 +202,7 @@ def process(procedure):
                 s['length'] = 50
                 s['n_diff'] = 0
             else:
-                s['length'] = len(txt)
+                s['length'] = len("\n".join(s['text']))
             s['_original_index'] = article_index
             out['articles'][id]['steps'].append(s)
         old_step_index = nstep

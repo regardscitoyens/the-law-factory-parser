@@ -60,7 +60,7 @@ def read_text(text_id, step_id):
         for key in sorted(art['alineas'].keys()):
             if art['alineas'][key] != '':
                 texte.append(strip_text(art['alineas'][key]))
-    return clean_text_for_diff(texte)
+    return texte
 
 for d in dossiers:
     computation = CountAmendementComputation()
@@ -100,9 +100,9 @@ for d in dossiers:
             firstText = read_text(d['id'], s['directory'])
     # TODO: temporary downgrading quality since the real ratio is too slow
     #proc["ratio_texte_modif"] = 1 - compute_similarity(firstText, lastText)
-    proc["ratio_texte_modif"] = 1 - compute_similarity(firstText, lastText, fast=True)
-    proc["input_text_length2"] = len(firstText)
-    proc["output_text_length2"] = len(lastText)
+    proc["ratio_texte_modif"] = 1 - compute_similarity(clean_text_for_diff(firstText), clean_text_for_diff(lastText), fast=True)
+    proc["input_text_length2"] = len("\n".join(firstText))
+    proc["output_text_length2"] = len("\n".join(lastText))
 
 
 # TODO:

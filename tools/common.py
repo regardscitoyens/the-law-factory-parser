@@ -73,7 +73,7 @@ clean_balises = lambda x: re_clean_balises.sub("", x)
 
 strip_text = lambda x: clean_spaces(clean_balises(x)).strip()
 
-re_non_alphanum = re.compile(r"\s*[^\w\s]+\s*")
+re_non_alphanum = re.compile(r"[^a-z0-9]+")
 
 upcase_accents = "ÇÀÂÄÉÈÊËÎÏÔÖÙÛÜ"
 locase_accents = "çàâäéèêëîïôöùûü"
@@ -90,7 +90,7 @@ def clean_accents(text):
         text = text.replace(a, case_noaccents[locase_accents.find(a)])
     return text
 
-re_clean_alin = re.compile(r'^"?([IVXCDLM]+|\d+|[a-z]|[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
+re_clean_alin = re.compile(r'^"?(([IVXCDLM]+|\d+|[a-z])[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
 re_alin_sup = re.compile(r'\s*\((censur|supprim)és?\)$', re.I)
 
 def clean_text_for_diff(text):
@@ -98,9 +98,10 @@ def clean_text_for_diff(text):
         text = [re_alin_sup.sub('', re_clean_alin.sub('', t)) for t in text]
         text = "\n".join([t for t in text if t])
     else:
-        text = re_alin_sup.sub('', re_clean_alin.sub('', t))
+        text = re_alin_sup.sub('', re_clean_alin.sub('', text))
+    text = clean_balises(text)
     text = clean_accents(text)
-    text = re_non_alphanum.sub(" ", text)
+    text = re_non_alphanum.sub('', text)
     return text
 
 def compute_similarity(text1, text2, fast=False):
