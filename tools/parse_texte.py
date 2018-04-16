@@ -223,13 +223,13 @@ def clean_html(t):
 
 re_clean_et = re.compile(r'(,|\s+et)\s+', re.I)
 
-
 def check_section_is_not_a_duplicate(section_id, articles):
     for block in articles:
         assert not (block['type'] == 'section' and block.get('id') == section_id)
 
 re_move_table_guillemets_left = re.compile(r'^(<table[^>]*>(?:<thead[^>]*>.*?</thead>)?(?:<tbody[^>]*>)?<tr[^>]*>)<td[^>]*>\s*"\s*</td>', re.I)
 re_move_table_guillemets_right = re.compile(r'<td[^>]*>\s*("\.?)\s*</td>(</tr>(?:</tbody>)?</table>)$', re.I)
+re_move_table_guillemets_within = re.compile(r'^(<table[^>]*>(?:<thead[^>]*>.*?</thead>)?(?:<tbody[^>]*>)?<tr[^>]*><td[^>]*>)\s*"\s*([^"]+)\s*("\.?)\s*(</td></tr>(?:</tbody>)?</table>)$', re.I)
 
 def add_to_articles(dic, all_articles):
     # Clean empty articles with only "Supprimé" as text
@@ -277,6 +277,7 @@ def add_to_articles(dic, all_articles):
                 if '<table' in al:
                     al = re_move_table_guillemets_left.sub(r'"\1', al)
                     al = re_move_table_guillemets_right.sub(r'\2\1', al)
+                    al = re_move_table_guillemets_within.sub(r'"\1\2\4\3', al)
                     prevtabl = True
                     if prevguil and not al.startswith('"'):
                         al = '"' + al
