@@ -134,7 +134,7 @@ def process(dos, debug_intermediary_files=False):
             continue
 
         if url is None:
-            if step == steps[-1] and not dos.get('url_jo'):
+            if not dos.get('url_jo') and not any([1 for step in steps[step_index:] if 'source_url' in step]):
                 print('     * ignore empty last step since the law is not yet promulgated')
                 continue
             if step.get('echec') is None:
