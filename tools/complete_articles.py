@@ -79,7 +79,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
     make_sta_reg = lambda x: re.compile(r'^("?Art[\s\.]*)?%s\s*(([\.°\-]+\s*)+)' % re_clean_art.sub('', x))
     make_end_reg = lambda x, rich: re.compile(r'^%s[IVXDCLM\d\-]+([\-\.\s]+\d*)*((%s|[A-Z])\s*)*(\(|et\s|%s)' % ('("?[LA][LArRtTO\.\s]+)?' if rich else "", bister, x))
     re_sect_chg = re.compile(r'^((chap|t)itre|volume|livre|tome|(sous-)?section)\s+[1-9IVXDC]', re.I)
-    def get_mark_from_last(text, s, l="", sep="", force=False):
+    def get_mark_from_last(text, s, l="", sep="", enable_copyall=False, copyall=False):
         log("- GET Extract from " + s + " to " + l)
         res = []
         try:
@@ -111,7 +111,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                     re_end = last
                 else:
                     re_end = make_end_reg(sep, rich)
-            elif force:
+            elif copyall is True:
                 record = True
                 re_end = null_reg
                 if n == 0:
@@ -121,11 +121,9 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                 res.append(i)
         # retry and get everything as I before II added if not found
         if not res:
-            if not l and not force:
-                # log("   nothing found, grabbing all article now...")
-                # TODO: ADD WARNING, SHOULD NOT USE THE 'FORCE' MULTIPLE
-                # TIMES FOR THE SAME ARTICLE
-                return get_mark_from_last(text, s, l, sep=sep, force=True)
+            if not l and enable_copyall_failover and not copyall:
+                log("   nothing found, grabbing all article now...")
+                return get_mark_from_last(text, s, l, sep=sep, copyall=True)
             print('ERROR: could not retrieve', s, file=sys.stderr)
             return False
         return res
@@ -361,6 +359,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                     log("DEBUG: get back Art %s" % line['titre'])
                     alineas = oldstep[line['titre']]
             gd_text = []
+            enable_copyall = True
             for j, text in enumerate(alineas):
                 if "(Non modifi" in text and not line['titre'] in oldstep:
                     sys.stderr.write("WARNING: found repeated article missing %s from previous step: %s\n" % (line['titre'], text))
@@ -374,26 +373,28 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                         log("ERROR trying to get non-modifiés")
                         exit()
                     pieces = re_clean_et.sub(',', part[0])
-                    log("EXTRACT non-modifiés for "+line['titre']+": " + pieces)
+                    log("EXTRACT non-modifiés for " + line['titre'] + ": " + pieces)
                     piece = []
                     for todo in pieces.split(','):
                         # Extract series of non-modified subsections of articles from previous version.
                         if " à " in todo:
                             start = re.split(" à ", todo)[0]
                             end = re.split(" à ", todo)[1]
-                            mark = get_mark_from_last(oldstep[line['titre']], start, end, sep=part[1:])
+                            mark = get_mark_from_last(oldstep[line['titre']], start, end, sep=part[1:], enable_copyall=enable_copyall)
                             if mark is False and gdoldstep:
-                                mark = get_mark_from_last(gdoldstep[line['titre']], start, end, sep=part[1:])
+                                mark = get_mark_from_last(gdoldstep[line['titre']], start, end, sep=part[1:], enable_copyall=enable_copyall)
                             if mark is False:
                                 exit()
+                            enable_copyall = True
                             piece.extend(mark)
                         # Extract set of non-modified subsections of articles from previous version.
                         elif todo:
-                            mark = get_mark_from_last(oldstep[line['titre']], todo, sep=part[1:])
+                            mark = get_mark_from_last(oldstep[line['titre']], todo, sep=part[1:], enable_copyall=enable_copyall)
                             if mark is False and gdoldstep:
-                                mark = get_mark_from_last(gdoldstep[line['titre']], todo, sep=part[1:])
+                                mark = get_mark_from_last(gdoldstep[line['titre']], todo, sep=part[1:], enable_copyall=enable_copyall)
                             if mark is False:
                                 exit()
+                            enable_copyall = True
                             piece.extend(mark)
                     gd_text.extend(piece)
                 else:
