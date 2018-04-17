@@ -387,6 +387,9 @@ def clean_article_name(text):
     # If there's a ':', what comes after is not related to the name
     cl_line = cl_line.split(':')[0].strip()
 
+    # simple cleaning of 1er. -> 1er
+    cl_line = cl_line.rstrip('.')
+
     return cl_line
 
 def parse(url, resp=None):
@@ -711,5 +714,7 @@ if __name__ == '__main__':
         assert_eq(normalize_1('1', '1er'), '1er')
         assert_eq(normalize_1('17', '1er'), '17')
         assert_eq(normalize_1('1 bis', '1er'), '1er bis')
+
+        assert_eq(clean_article_name('Article 5.'), 'Article 5')
 
         assert_eq(re_mat_sec.match('<b>Titre Ier - Cuire un oeuf</b>').group('titre').strip(), 'Cuire un oeuf')
