@@ -122,7 +122,7 @@ def log_print(file):
 def dump_error_log(url, exception, api_dir, log):
     log = log.getvalue() + '\n' + ''.join(traceback.format_tb(exception.__traceback__))
 
-    url_id = None
+    url_id = url.replace('/', '')
     if 'assemblee-nationale' in url:
         legi = url.split('.fr/')[1].split('/')[0]
         url_id = legi + url.split('/')[-1].replace('.asp', '')
