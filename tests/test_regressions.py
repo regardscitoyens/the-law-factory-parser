@@ -15,7 +15,7 @@ import parse_one
 from parse_one import download_merged_dos
 from parse_doslegs_texts import find_good_url_resp
 from tools.detect_anomalies import find_anomalies
-from tools import parse_texte
+from tools import parse_texte, download_groupes
 
 
 # use `test_regressions.py <directory> --regen` to update the tests directory
@@ -23,7 +23,8 @@ REGEN_TESTS = '--regen' in sys.argv
 TEST_DIR = sys.argv[1]
 
 if '--enable-cache' in sys.argv:
-    from lawfactory_utils.urls import enable_requests_cache;enable_requests_cache()
+    from lawfactory_utils.urls import enable_requests_cache
+    enable_requests_cache()
 
 print('****** testing url fixing... ******')
 # AN .pdf
@@ -90,6 +91,7 @@ if REGEN_TESTS:
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
+download_groupes.process(TEST_DIR)
 for directory in sorted(glob.glob(TEST_DIR + '/p*')):
     if '_tmp' in directory:
         continue
