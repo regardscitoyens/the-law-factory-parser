@@ -74,6 +74,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
     re_mat_uno = re.compile(r'[I1]$')
     re_mat_simple = re.compile(r'[IVXDCLM\d]')
     re_mat_complex = re.compile(r'L[O.\s]*[IVXDCLM\d]')
+    re_mat_complex2 = re.compile(r'\d+-\d+')
     re_clean_art = re.compile(r'^"?Art\.?\s*', re.I)
     make_sta_reg = lambda x: re.compile(r'^("?Art[\s\.]*)?%s\s*(([\.°\-]+\s*)+)' % re_clean_art.sub('', x))
     make_end_reg = lambda x, rich: re.compile(r'^%s[IVXDCLM\d\-]+([\-\.\s]+\d*)*((%s|[A-Z])\s*)*(\(|et\s|%s)' % ('("?[LA][LArRtTO\.\s]+)?' if rich else "", bister, x))
@@ -86,7 +87,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
         except Exception as e:
             print('ERROR', type(e), e, s, l, file=sys.stderr)
             exit()
-        rich = re_mat_complex.match(s) or not re_mat_simple.match(s)
+        rich = re_mat_complex.match(s) or re_mat_complex2.match(s) or not re_mat_simple.match(s)
         if l:
             last = make_sta_reg(l)
         re_end = None
