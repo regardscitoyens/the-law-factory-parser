@@ -59,6 +59,7 @@ def mark_missing_articles_as_deleted(articles, old_step_id, step_id, last_match_
                 def_s['id_step'] = step_id
                 def_s['directory'] = step_id
                 def_s['status'] = 'sup'
+                def_s['length'] = 0
                 def_s['diff'] = 'rem'
                 def_s['n_diff'] = 0
                 articles[article_id]['steps'].append(def_s)
