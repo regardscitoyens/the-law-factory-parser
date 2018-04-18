@@ -2,11 +2,14 @@
 # -*- coding: utf-8 -*-
 import re, os, sys
 from difflib import ndiff
+from functools import cmp_to_key
 
 try:
     from .common import json, clean_text_for_diff, compute_similarity
+    from .sort_articles import compare_articles
 except:
     from common import json, clean_text_for_diff, compute_similarity
+    from sort_articles import compare_articles
 
 from tools import _step_logic
 
@@ -37,12 +40,10 @@ def create_step(step_id, article=None, echec_type=None):
         for key in sorted(article['alineas'].keys()):
             if article['alineas'][key] != '':
                 s['text'].append(article['alineas'][key])
-        s['order'] = article['order']
     else:
         s['status'] = echec_type.upper()
         s['length'] = 0
         s['n_diff'] = 0
-        s['order'] = 1
     return s
 
 
@@ -222,6 +223,11 @@ def process(procedure):
                 continue
             new_steps.append(s)
         out['articles'][a]['steps'] = new_steps
+
+    # Set articles' order values after having reinserted missing ones
+    orders = {k: n for n, k in enumerate(sorted([a['titre'] for a in out['articles'].values()], key=cmp_to_key(compare_articles)))}
+    for a in out['articles'].values():
+        a['order'] = orders[a['titre']]
 
     return out
 
