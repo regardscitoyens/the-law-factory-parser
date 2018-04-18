@@ -84,4 +84,4 @@ def process(OUTPUT_DIR, procedure):
     return procedure
 
 if __name__ == '__main__':
-    process(sys.argv[1], json.load(open(os.path.join(sys.argv[1], 'viz/procedufjson'))))
+    process(sys.argv[1], json.load(open(os.path.join(sys.argv[1], 'viz/procedure.json'))))
