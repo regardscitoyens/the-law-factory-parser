@@ -271,7 +271,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                 oldtxt = get_alineas_text(oldart["alineas"])
                 txt = get_alineas_text(line["alineas"])
                 similarity = compute_similarity(oldtxt, txt)
-                if similarity < 0.75 and not olddepot:
+                if similarity < 0.75 and not olddepot and not step.get('stage') == 'constitutionnalité':
                     print("WARNING BIG DIFFERENCE BETWEEN RENUMBERED ARTICLE", oldart["titre"], "<->", line["titre"], len(oldtxt), "Vs", len(txt), "chars, similarity; %.2f" % similarity, file=sys.stderr)
 
                 if line['titre'] != oldart['titre']:
