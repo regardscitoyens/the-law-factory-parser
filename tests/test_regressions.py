@@ -91,7 +91,7 @@ if REGEN_TESTS:
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-download_groupes.process(TEST_DIR)
+download_groupes.process(output_dir)
 for directory in sorted(glob.glob(TEST_DIR + '/p*')):
     if '_tmp' in directory:
         continue
