@@ -121,7 +121,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                 res.append(i)
         # retry and get everything as I before II added if not found
         if not res:
-            if not l and enable_copyall_failover and not copyall:
+            if not l and enable_copyall and not copyall:
                 log("   nothing found, grabbing all article now...")
                 return get_mark_from_last(text, s, l, sep=sep, copyall=True)
             print('ERROR: could not retrieve', s, file=sys.stderr)
@@ -385,7 +385,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                                 mark = get_mark_from_last(gdoldstep[line['titre']], start, end, sep=part[1:], enable_copyall=enable_copyall)
                             if mark is False:
                                 exit()
-                            enable_copyall = True
+                            enable_copyall = False
                             piece.extend(mark)
                         # Extract set of non-modified subsections of articles from previous version.
                         elif todo:
@@ -394,7 +394,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                                 mark = get_mark_from_last(gdoldstep[line['titre']], todo, sep=part[1:], enable_copyall=enable_copyall)
                             if mark is False:
                                 exit()
-                            enable_copyall = True
+                            enable_copyall = False
                             piece.extend(mark)
                     gd_text.extend(piece)
                 else:
