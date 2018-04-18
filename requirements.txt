@@ -1,3 +1,4 @@
 -e git+https://github.com/RegardsCitoyens/lawfactory_utils.git#egg=lawfactory_utils
+-e git+https://github.com/regardscitoyens/legipy.git#egg=legipy
 -e git+https://github.com/regardscitoyens/senapy.git#egg=senapy
 -e git+https://github.com/regardscitoyens/anpy.git#egg=anpy

@@ -7,6 +7,7 @@ from lawfactory_utils.urls import download, enable_requests_cache
 from tools.detect_anomalies import find_anomalies
 from tools.json2arbo import mkdirs
 from tools.download_groupes import process as download_groupes
+from tools.download_lois_dites import process as download_lois_dites
 from merge import merge_senat_with_an
 import parse_doslegs_texts
 import format_data_for_frontend
@@ -164,6 +165,11 @@ def process(API_DIRECTORY, url, disable_cache=True,
 
             # download the groupes in case they are not there yet
             download_groupes(API_DIRECTORY)
+
+            # Add potential common name from Legifrance's "Lois dites"
+            common_laws = download_lois_dites(API_DIRECTORY)
+            if dos.get('legifrance_cidTexte') in common_laws:
+                dos['loi_dite'] = common_laws[dos['legifrance_cidTexte']]
 
             print('  [] parse the texts')
             dos_with_texts = parse_doslegs_texts.process(dos, debug_intermediary_files=debug_intermediary_files)
