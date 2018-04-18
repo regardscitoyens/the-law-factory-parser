@@ -17,7 +17,7 @@ dossiers = [(dos, path) for dos, path in dossiers if dos.get('end')]
 
 csvfile = csv.writer(open(os.path.join(API_DIRECTORY, 'dossiers_promulgues.csv'), 'w'), delimiter=';')
 csvfile.writerow(('id;Titre;Type de dossier;Date initiale;URL du dossier;État du dossier;Décision du CC;' \
-    + 'Date de la décision;Date de promulgation;Numéro de la loi;Thèmes;total_amendements;total_mots;short_title').split(';'))
+    + 'Date de la décision;Date de promulgation;Numéro de la loi;Thèmes;total_amendements;total_mots;short_title;loi_dite').split(';'))
 
 home_json_data = []
 
@@ -64,7 +64,8 @@ for dos, path in dossiers:
         ','.join(dos.get('themes', [])), # Thèmes
         total_amendements, # total_amendements
         total_mots, # total_mots
-        dos.get('short_title') # short_title
+        dos.get('short_title'), # short_title
+        dos.get('loi_dite') # Nom commun de la loi
     ])
 
     if total_amendements == 0:
