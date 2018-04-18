@@ -17,10 +17,11 @@ from parse_doslegs_texts import find_good_url_resp
 from tools.detect_anomalies import find_anomalies
 from tools import parse_texte, download_groupes, download_lois_dites
 
-
-# use `test_regressions.py <directory> --regen` to update the tests directory
 REGEN_TESTS = '--regen' in sys.argv
+# directory with the test-cases
 TEST_DIR = sys.argv[1] if len(sys.argv) > 1 else 'tests_tmp'
+# directory where we generate the output to be tested for regression
+OUTPUT_DIR = TEST_DIR if REGEN_TESTS else 'tests_tmp'
 
 if '--enable-cache' in sys.argv:
     from lawfactory_utils.urls import enable_requests_cache
@@ -83,14 +84,11 @@ def _is_same_helper(dircmp):
            return False
     return True
 
-if REGEN_TESTS:
-    for f in glob.glob(os.path.join(TEST_DIR, '*es.json')):
-        os.remove(f)
-if not os.path.exists(TEST_DIR):
-    os.makedirs(TEST_DIR)
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
 
-download_groupes.process(TEST_DIR)
-download_lois_dites.process(TEST_DIR)
+download_groupes.process(OUTPUT_DIR)
+download_lois_dites.process(OUTPUT_DIR)
 for directory in sorted(glob.glob(TEST_DIR + '/p*')):
     if '_tmp' in directory:
         continue
@@ -99,8 +97,8 @@ for directory in sorted(glob.glob(TEST_DIR + '/p*')):
     print('****** testing', senat_id, '*******')
     print()
 
-    parse_one.process(TEST_DIR, senat_id)
-    comp = filecmp.dircmp(directory, TEST_DIR + '/' + senat_id)
+    parse_one.process(OUTPUT_DIR, senat_id)
+    comp = filecmp.dircmp(directory, OUTPUT_DIR + '/' + senat_id)
     if _is_same_helper(comp):
         print()
         print('  -> test passed')
@@ -110,6 +108,6 @@ for directory in sorted(glob.glob(TEST_DIR + '/p*')):
         raise Exception()
 
 if not REGEN_TESTS:
-    shutil.rmtree('tests_tmp')
+    shutil.rmtree(OUTPUT_DIR)
 else:
     print('TESTS REGEN OK')
