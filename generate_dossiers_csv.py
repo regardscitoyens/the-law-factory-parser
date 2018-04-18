@@ -7,6 +7,8 @@ Output in <api_directory>:
 """
 import json, glob, os, sys, csv, re
 
+from tools.common import upper_first
+
 API_DIRECTORY = sys.argv[1]
 
 re_dos_ok = re.compile(r"%s/[^.]+/" % API_DIRECTORY)
@@ -86,12 +88,15 @@ for dos, path in dossiers:
         last_intervention = None
     """
 
+    title = dos.get('short_title')
+    if dos.get('loi_dite'):
+        title = "%s (%s)" % (upper_first(dos.get('loi_dite')), title)
     home_json_data.append({
         'total_amendements': total_amendements,
         'end': dos['end'],
         'status': status,
         'loi': id,
-        'titre': dos.get('short_title'),
+        'titre': title
     })
 
     total_doslegs += 1
