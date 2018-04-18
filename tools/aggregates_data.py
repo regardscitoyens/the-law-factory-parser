@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, os, glob
+import os, glob
 
-from common import open_json, print_json
+from common import open_json
 
 
 def amendementIsFromGouvernement(amdt):

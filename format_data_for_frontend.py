@@ -1,4 +1,4 @@
-import os, glob, sys, json, csv, random, shutil, io
+import os, json, shutil, io
 
 from tools import json2arbo, prepare_articles, update_procedure, \
     prepare_amendements, prepare_interventions, reorder_interventions_and_correct_procedure

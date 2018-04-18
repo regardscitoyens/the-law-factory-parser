@@ -82,7 +82,7 @@ def process(dos, OUTPUT_DIR):
         mkdirs(step_dir)
         for data in articles:
             if not data or not "type" in data:
-                log_err("JSON %s badly formatted, missing field type: %s" % (f, data))
+                log_err("JSON badly formatted, missing field type: %s" % data)
                 sys.exit(1)
             if data["type"] == "texte":
                 textid = data["id"]

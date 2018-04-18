@@ -71,7 +71,6 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
         ALL_ARTICLES.append(data)
 
     null_reg = re.compile(r'^$')
-    re_mat_uno = re.compile(r'[I1]$')
     re_mat_simple = re.compile(r'[IVXDCLM\d]')
     re_mat_complex = re.compile(r'L[O.\s]*[IVXDCLM\d]')
     re_mat_complex2 = re.compile(r'\d+-\d+')
@@ -131,7 +130,6 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
     get_alineas_text = lambda a: clean_text_for_diff([a[k] for k in sorted(a.keys())])
 
     re_clean_et = re.compile(r'(\s*[\&,]\s*|\s+et\s+)+', re.I)
-    re_clean_virg = re.compile(r'\s*,\s*')
     re_suppr = re.compile(r'\W*suppr(ess|im)', re.I)
     re_confo = re.compile(r'\W*(conforme|non[\s\-]*modifi)', re.I)
     re_confo_with_txt = re.compile(r'\s*\(\s*(conforme|non[\s\-]*modifié)\s*\)\s*([\W]*\w+)', re.I)
@@ -139,9 +137,10 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
     order = 1
     cursec = {'id': ''}
     done_titre = False
+    texte = None
     for line_i, line in enumerate(current):
         if not line or not "type" in line:
-            sys.stderr.write("JSON %s badly formatted, missing field type: %s\n" % (FILE, line))
+            sys.stderr.write("JSON badly formatted, missing field type: %s\n" % line)
             exit()
         if oldnum and 'source_text' in line and oldnum != line['source_text']:
             continue

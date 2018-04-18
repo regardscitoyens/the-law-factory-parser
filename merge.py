@@ -1,49 +1,12 @@
-import glob, json, sys, copy, os
+import copy
 
-from lawfactory_utils.urls import clean_url
 from tools.detect_anomalies import find_anomalies
 
-def dedup_by_key(list, key, alt_key=None, alt_key2=None, verbose=False):
-    uniqs = set()
-    for el in list:
-        v = el.get(key)
-        if not v and alt_key:
-            v = el.get(alt_key)
-            if not v and alt_key2:
-                v = el.get(alt_key2)
-        if not v:
-            yield el
-            continue
-        if v not in uniqs:
-            yield el
-            uniqs.add(v)
-        elif verbose:
-            print('dedup', v)
-
-
-def is_after_13_legislature(dos):
-    try:
-        legislature = int(dos['url_dossier_assemblee'].split('.fr/')[1].split('/')[0])
-        return legislature >= 13
-    except:
-        pass
-    return False
-
-
-def date_is_after_2008_reform(date):
-    # https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000019237256&dateTexte=&categorieLien=id
-    year, month, *rest = date.split('-')
-    year, month = int(year), int(month)
-    # return year >= 1996 and year <= 2016
-    return year >= 2008
-    # return year > 2008 or (year == 2008 and month >= 9) # we take september 2008
-
-
+# TODO: unused but can be useful in the futur
+"""
 def merge_previous_works_an(doslegs):
-    """
-    Takes the AN doslegs and merge those that goes over multiple legislature with
-    the previous ones
-    """
+    # Takes the AN doslegs and merge those that goes over multiple legislature with
+    # the previous ones
     all_an_hash_an = {an['url_dossier_assemblee']: an for an in all_an if 'url_dossier_assemblee' in an and an['url_dossier_assemblee']}
 
     merged_dos_urls = set()
@@ -82,7 +45,7 @@ def merge_previous_works_an(doslegs):
     print(len(merged_dos_urls), 'AN doslegs merged with previous ones')
 
     return [dos for dos in doslegs if dos.get('url_dossier_assemblee') not in merged_dos_urls]
-
+"""
 
 def fix_an_cmp_step_url(senat, an):
     # detect missing AN CMP step in senat data
