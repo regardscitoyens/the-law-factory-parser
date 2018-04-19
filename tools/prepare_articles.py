@@ -70,6 +70,8 @@ def process(procedure):
     title = procedure.get("long_title", "Missing title").replace(procedure.get("short_title", "").lower(), procedure.get("short_title", ""))
     title = title[0].upper() + title[1:]
     out = {'law_title': title, 'articles': {}, 'sections': {}, 'short_title': procedure.get("short_title", "")}
+    if 'loi_dite' in procedure:
+        out['loi_dite'] = procedure['loi_dite']
 
     # Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
     senat_id = procedure.get('senat_id')
