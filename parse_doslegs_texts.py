@@ -189,7 +189,7 @@ def process(dos, debug_intermediary_files=False):
     if cmp_hemi_steps and len(cmp_hemi_steps) == 2:
         first, second = [dos['steps'][i] for i in cmp_hemi_steps]
         first_i, second_i = cmp_hemi_steps
-        if first.get('articles', [{}])[0].get('definitif'):
+        if first.get('articles', [{}])[0].get('definitif') or first.get('echec'):
             print('     * re-ordered CMP steps')
             steps = dos['steps']
             steps[first_i], steps[second_i] = steps[second_i], steps[first_i]
