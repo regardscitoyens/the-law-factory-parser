@@ -168,7 +168,7 @@ def process(API_DIRECTORY, url, disable_cache=True,
 
             # Add potential common name from Legifrance's "Lois dites"
             common_laws = download_lois_dites(API_DIRECTORY)
-            if dos.get('legifrance_cidTexte') in common_laws:
+            if dos.get('legifrance_cidTexte') in common_laws and common_laws[dos['legifrance_cidTexte']].lower() not in dos['short_title'].lower():
                 dos['loi_dite'] = common_laws[dos['legifrance_cidTexte']]
 
             print('  [] parse the texts')
