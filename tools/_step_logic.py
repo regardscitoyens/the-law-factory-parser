@@ -2,14 +2,18 @@
 def use_old_procedure(step):
     return step.get("enddate", step.get("date", "9999-99-99")) < "2009-03-01"
 
+
 def get_previous_step(steps, curr_step_index, is_old_procedure=False, get_depot_step=False):
     # is_old_procedure: Budget, Financement Sécurité Sociale, lois organique
     # get_depot_step: Instead of real last step, get the step the amendements are done on
 
     curr_step = steps[curr_step_index]
 
-    if curr_step.get('stage') == 'l. définitive' and curr_step.get('step') == 'hemicycle' and not get_depot_step:
-        print('[step_logic] l. définitive / hemicycle: fetching last AN hemi or last CMP commission')
+    if curr_step.get('stage') == 'l. définitive' and (
+            (curr_step.get('step') == 'hemicycle'and not get_depot_step) or
+            curr_step.get('step') == 'depot'
+        ):
+        print('[step_logic] l. définitive / %s: fetching last AN hemi or last CMP commission' % curr_step.get('step'))
         for i in reversed(range(curr_step_index)):
             step = steps[i]
             if step.get('echec'):
@@ -20,7 +24,6 @@ def get_previous_step(steps, curr_step_index, is_old_procedure=False, get_depot_
                 return i
         else:
             raise Exception('[step_logic] l. définitive / depot: no good text found, this should never happen !')
-
 
     cmp_hemi_failed = False
     i = curr_step_index

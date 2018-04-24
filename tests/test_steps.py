@@ -24,6 +24,10 @@ assert get_previous_step(steps, 1) == 0
 assert get_previous_step(steps, 16) == 11
 # lect. def. hemi -> lect. def. depot (we want the real text number)
 assert get_previous_step(steps, 16, get_depot_step=True) == 15
+# lect. def. depot -> nouv. lect AN hemicycle text
+assert get_previous_step(steps, 15) == 11
+# lect. def. depot -> nouv. lect AN hemicycle text
+assert get_previous_step(steps, 15, get_depot_step=True) == 11
 
 # Aprés l'échec en commission qui a suivi le renvoi en commission, les amendements sont posés
 # sur le texte de depot (le texte voté a l'AN)

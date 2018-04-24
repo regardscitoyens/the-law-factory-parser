@@ -124,10 +124,17 @@ def process(dos, debug_intermediary_files=False):
         url = step.get('source_url')
         print('    ^ text: ', url)
 
-        if (dos.get('use_old_procedure') or _step_logic.use_old_procedure(step) )\
+        if (dos.get('use_old_procedure') or _step_logic.use_old_procedure(step))\
             and step.get('institution') in ('senat', 'assemblee') \
             and step.get('step') == 'commission':
             continue
+
+        # ignore intermediary depot
+        if step.get('step') == 'depot':
+            if step_index > 0:
+                last_step = steps[step_index - 1]
+                if not last_step.get('step') == 'depot':
+                    continue
 
         # we parse the JO texte only if there's a CC decision
         if step.get('stage') == 'promulgation':
@@ -171,13 +178,6 @@ def process(dos, debug_intermediary_files=False):
                 if not step.get('echec') and len(step['articles']) < 2:
                     raise Exception('parsing failed for %s (no text)' % fixed_url)
             else:
-                # ignore missing intermediate depot
-                if step.get('step') == 'depot':
-                    if step_index > 0:
-                        last_step = steps[step_index-1]
-                        if not last_step.get('echec') and last_step.get('step') == 'hemicycle':
-                            print('     * ignore missing depot', url)
-                            continue
                 raise Exception('[parse_texts] Invalid response %s' % url)
 
         if debug_intermediary_files:
@@ -197,12 +197,12 @@ def process(dos, debug_intermediary_files=False):
     for step_index, step in enumerate(steps):
         print('    ^ complete text: ', step.get('source_url'))
 
+        prev_step_index = _step_logic.get_previous_step(steps, step_index, dos.get('use_old_procedure', False))
         if step.get('echec') == 'renvoi en commission':
-            step['articles'] = steps[step_index-2].get('articles')
+            step['articles'] = steps[prev_step_index].get('articles')
             # TODO: texte retire
             # TODO: stats of None urls
         if 'articles' in step:
-            prev_step_index = _step_logic.get_previous_step(steps, step_index, dos.get('use_old_procedure', False))
             if prev_step_index is not None and not step.get('echec'):
                 # multiple-depots
                 if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):

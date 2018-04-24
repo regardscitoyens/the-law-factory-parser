@@ -384,7 +384,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                                 mark = get_mark_from_last(gdoldstep[line['titre']], start, end, sep=part[1:], enable_copyall=enable_copyall)
                             if mark is False:
                                 exit()
-                            enable_copyall = True
+                            enable_copyall = False
                             piece.extend(mark)
                         # Extract set of non-modified subsections of articles from previous version.
                         elif todo:
@@ -393,7 +393,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                                 mark = get_mark_from_last(gdoldstep[line['titre']], todo, sep=part[1:], enable_copyall=enable_copyall)
                             if mark is False:
                                 exit()
-                            enable_copyall = True
+                            enable_copyall = False
                             piece.extend(mark)
                     gd_text.extend(piece)
                 else:
