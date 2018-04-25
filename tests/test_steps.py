@@ -1,6 +1,7 @@
 """
 Tests all the little subtilities of the steps
 """
+
 import sys, os, json
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

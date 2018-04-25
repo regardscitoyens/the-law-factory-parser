@@ -118,8 +118,7 @@ def process(procedure):
         # hack
         step['echec'] = step.get('echec')
 
-        echec = step.get('echec')
-        if echec:
+        if step['echec']:
             if 'echec' not in out['articles']:
                 out['articles']['echec'] = {'id': 'echec', 'titre': step['echec'], 'section': 'echec', 'steps': []}
             next_step = create_step(step_id, echec_type=step['echec'])

@@ -2,7 +2,7 @@ import os, json, shutil, io
 
 from tools import json2arbo, prepare_articles, update_procedure, \
     prepare_amendements, prepare_interventions, reorder_interventions_and_correct_procedure
-
+from tools.common import debug_file
 
 def project_header_template(dos_id, procedure):
     return """
@@ -43,6 +43,7 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
 
     print(' - process article versions')
     json2arbo.mkdirs(os.path.join(output_dir, 'viz'))
+    debug_file(dos, 'debug_before_prepare_articles.json')
     articles_etapes = prepare_articles.process(dos)
     open(output_dir + '/viz/articles_etapes.json', 'w').write(json.dumps(articles_etapes, indent=2, sort_keys=True, ensure_ascii=True))
 

@@ -1,11 +1,18 @@
 
-def use_old_procedure(step):
+def use_old_procedure(step, dos=None):
+    if dos and dos.get('use_old_procedure'):
+        return True
     return step.get("enddate", step.get("date", "9999-99-99")) < "2009-03-01"
+
+
+def is_one_of_the_initial_depots(steps, step_index):
+    # Detect if the step is one of the multiple initial depot
+    return step_index == 0 or (steps[step_index - 1].get('step') == steps[step_index].get('step') == 'depot')
 
 
 def get_previous_step(steps, curr_step_index, is_old_procedure=False, get_depot_step=False):
     # is_old_procedure: Budget, Financement Sécurité Sociale, lois organique
-    # get_depot_step: Instead of real last step, get the step the amendements are done on
+    # get_depot_step: get the step the amendments are done on (including the depot steps)
 
     curr_step = steps[curr_step_index]
 
@@ -43,12 +50,12 @@ def get_previous_step(steps, curr_step_index, is_old_procedure=False, get_depot_
             if cmp_hemi_failed:
                 continue
 
-        if not step.get('echec') or step.get('echec') == 'renvoi en commission':
-            # the amendments are done on the depot text for a renvoi en commission
-            if step.get('echec') == 'renvoi en commission':
-                i -= 1 # we skip the commission step
-                continue
+        # the amendments are done on the depot text for a renvoi en commission
+        if step.get('echec') == 'renvoi en commission':
+            i -= 1 # we skip the commission step
+            continue
 
+        if not step.get('echec'):
             # for the old procedure, there's no text produced during the commission
             if (is_old_procedure or use_old_procedure(step)) and step.get('step') == 'commission' and step.get('stage') != 'CMP':
                 continue
@@ -58,8 +65,7 @@ def get_previous_step(steps, curr_step_index, is_old_procedure=False, get_depot_
                 continue
 
             # do not take previous depot if it's not one of the initial depot
-            if not get_depot_step:
-                if i > 0 and steps[i].get('step') == 'depot' and steps[i-1].get('step') != 'depot':
-                    continue
+            if not get_depot_step and step.get('step') == 'depot' and not is_one_of_the_initial_depots(steps, i):
+                continue
 
             return i

@@ -13,6 +13,12 @@ except:
     from sort_articles import bister
 
 
+def debug_file(data, filename):
+    if '--debug' in sys.argv:
+        json.dump(data, open(filename, 'w'), ensure_ascii=False, indent=2, sort_keys=True)
+        print('   DEBUG - dumped', filename)
+
+
 def open_csv(dirpath, filename, delimiter=";"):
     try:
         data = []
@@ -24,6 +30,7 @@ def open_csv(dirpath, filename, delimiter=";"):
         print(type(e), e, file=sys.stderr)
         sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
         raise e
+
 
 def open_json(dirpath, filename=None):
     if filename:
@@ -37,6 +44,7 @@ def open_json(dirpath, filename=None):
         print(type(e), e, file=sys.stderr)
         sys.stderr.write("ERROR: Could not open file %s" % (path,))
         raise e
+
 
 def print_json(dico, filename=None):
     if filename:

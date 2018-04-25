@@ -1,14 +1,11 @@
-import json, re
+import re
 
 from lawfactory_utils.urls import download
 from senapy.dosleg.parser import parse as senapy_parse
 
-from tools import parse_texte, complete_articles, _step_logic
-
-
-def _dump_json(data, filename):
-    json.dump(data, open(filename, 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-    print('   DEBUG - dumped', filename)
+from tools import parse_texte, complete_articles
+from tools._step_logic import get_previous_step, use_old_procedure, is_one_of_the_initial_depots
+from tools.common import debug_file
 
 
 def test_status(url):
@@ -109,13 +106,12 @@ def find_good_url_resp(url):
     return False
 
 
-def _dos_id(dos):
-    return dos.get('senat_id', dos.get('assemblee_id'))
+def should_ignore_commission_text(step, dos):
+    return use_old_procedure(step, dos) and step.get('step') == 'commission' and step['institution'] in ('senat', 'assemblee')
 
 
-def process(dos, debug_intermediary_files=False):
-    dos_id = _dos_id(dos)
-    print('** parsing texts of', dos_id)
+def parse_texts(dos):
+    print('** parsing texts')
 
     steps = dos['steps']
 
@@ -124,26 +120,24 @@ def process(dos, debug_intermediary_files=False):
         url = step.get('source_url')
         print('    ^ text: ', url)
 
-        if (dos.get('use_old_procedure') or _step_logic.use_old_procedure(step))\
-            and step.get('institution') in ('senat', 'assemblee') \
-            and step.get('step') == 'commission':
+        if should_ignore_commission_text(step, dos):
             continue
 
         # we parse the JO texte only if there's a CC decision
+        if step.get('stage') == 'constitutionnalité':
+            url = dos.get('url_jo')
         if step.get('stage') == 'promulgation':
             continue
 
         if url is None:
             if not dos.get('url_jo') and not any([1 for step in steps[step_index:] if 'source_url' in step]):
                 print('     * ignore empty last step since the law is not yet promulgated')
-                continue
+                break
             if step.get('echec') is None:
                 raise Exception('[parse_texts] Empty url for step: %s.%s.%s' % (step.get('institution'), step.get('stage'), step.get('step')))
             # TODO: texte retire
             continue
         else:
-            if step.get('stage') == 'constitutionnalité':
-                url = dos.get('url_jo')
             fixed_url_resp = find_good_url_resp(url)
             if fixed_url_resp:
                 fixed_url = fixed_url_resp.url
@@ -156,7 +150,8 @@ def process(dos, debug_intermediary_files=False):
                 step['articles'] = parse_texte.parse(fixed_url, resp=fixed_url_resp)
                 assert step['articles']
 
-                step['articles'][0]['depot'] = step.get('step') == 'depot'
+                text = step['articles'][0]
+                text['depot'] = step.get('step') == 'depot'
 
                 # echec detected ? we update the step
                 echec_line = [article for article in step['articles'] if article.get('type') == 'echec']
@@ -171,83 +166,70 @@ def process(dos, debug_intermediary_files=False):
                 if not step.get('echec') and len(step['articles']) < 2:
                     raise Exception('parsing failed for %s (no text)' % fixed_url)
             else:
-                # ignore missing intermediate depot
-                if step.get('step') == 'depot':
-                    if step_index > 0:
-                        last_step = steps[step_index-1]
-                        if not last_step.get('echec') and last_step.get('step') == 'hemicycle':
-                            print('     * ignore missing depot', url)
-                            continue
+                if is_one_of_the_initial_depots(steps, step_index):
+                    print('     * ignore missing depot', url)
+                    continue
                 raise Exception('[parse_texts] Invalid response %s' % url)
+        debug_file(step.get('articles'), 'debug_parsed_text_step_%d.json' % step_index)
 
-        if debug_intermediary_files:
-            _dump_json(step.get('articles'), 'debug_parsed_text_step_%d.json' % step_index)
 
+def re_order_cmp(dos):
     # re-order CMPs via texte définitif detection
+    steps = dos['steps']
+
     cmp_hemi_steps = [i for i, step in enumerate(dos['steps']) if
         step.get('stage') == 'CMP' and step.get('step') == 'hemicycle']
+
     if cmp_hemi_steps and len(cmp_hemi_steps) == 2:
-        first, second = [dos['steps'][i] for i in cmp_hemi_steps]
         first_i, second_i = cmp_hemi_steps
+        first = dos['steps'][first_i]
         if first.get('articles', [{}])[0].get('definitif') or first.get('echec'):
             print('     * re-ordered CMP steps')
             steps = dos['steps']
             steps[first_i], steps[second_i] = steps[second_i], steps[first_i]
 
+
+def complete_texts(dos):
+    steps = dos['steps']
     for step_index, step in enumerate(steps):
         print('    ^ complete text: ', step.get('source_url'))
 
-        #if step.get('echec') == 'renvoi en commission':
-        #    step['articles'] = steps[step_index-2].get('articles')
-            # TODO: texte retire
-            # TODO: stats of None urls
         if 'articles' in step:
-            prev_step_index = _step_logic.get_previous_step(steps, step_index, dos.get('use_old_procedure', False))
+            prev_step_index = get_previous_step(steps, step_index, use_old_procedure(step, dos))
             if prev_step_index is not None and not step.get('echec'):
-                # multiple-depots
-                if step_index == 0 or (step_index > 0 and steps[step_index-1].get('step') == 'depot' and step.get('step') == 'depot'):
+                if is_one_of_the_initial_depots(steps, step_index):
                     step['articles_completed'] = step['articles']
                 else:
                     # get ante-previous step for hemicycle text where an alinea
                     # can reference the depot step instead of the commission text
                     anteprevious = None
                     if step.get('step') == 'hemicycle' and steps[prev_step_index].get('step') == 'commission':
-                        antestep_index = _step_logic.get_previous_step(steps, prev_step_index, dos.get('use_old_procedure', False), get_depot_step=True)
+                        antestep_index = get_previous_step(steps, prev_step_index, use_old_procedure(step, dos), get_depot_step=True)
                         if antestep_index is not None and steps[antestep_index].get('step') == 'depot':
                             anteprevious = steps[antestep_index].get(
                                 'articles_completed',
                                 steps[antestep_index].get('articles', [])
                             )
 
+                    prev_step = steps[prev_step_index]
                     complete_args = {
                         'current': step.get('articles', []),
-                        'previous': steps[prev_step_index].get(
+                        'previous': prev_step.get(
                             'articles_completed',
-                            steps[prev_step_index].get('articles', [])
+                            prev_step.get('articles', [])
                         ),
                         'step': step,
                         'table_concordance': dos.get('table_concordance', {}),
                         'anteprevious': anteprevious,
                     }
-                    if debug_intermediary_files:
-                        _dump_json(complete_args, 'debug_complete_args_step_%d.json' % step_index)
+                    debug_file(complete_args, 'debug_complete_args_step_%d.json' % step_index)
                     step['articles_completed'] = complete_articles.complete(**complete_args)
+        debug_file(step.get('articles_completed'), 'debug_completed_text_step_%d.json' % step_index)
 
-        if debug_intermediary_files:
-            _dump_json(step.get('articles_completed'), 'debug_completed_text_step_%d.json' % step_index)
 
+def process(dos):
+    # TODO(cleanup): articles_completed/articles attributes are hacky
+    parse_texts(dos)
+    re_order_cmp(dos)
+    complete_texts(dos)
     return dos
-
-
-"""
-A gerer:
- - Votre commission vous propose d'adopter le projet de loi sans modification.
-    - https://www.senat.fr/rap/l07-372/l07-3722.html#toc16
- - http://www.assemblee-nationale.fr/13/rapports/r1151.asp
-    "Suivant les conclusions du rapporteur, la commission adopte les projets de loi (nos 1038, 1039 et 1040)."
- - tableaux comparatif - http://www.assemblee-nationale.fr/13/rapports/r0771.asp
- - tomes: http://www.assemblee-nationale.fr/13/rapports/r1211.asp
- - plf - https://www.senat.fr/rap/l08-162/l08-162_mono.html#toc40
- - revenir au sommaire depuis une page - https://www.senat.fr/rap/l11-038/l11-0389.html#toc50
- - alineas bis non modifiés - https://www.senat.fr/leg/tas11-064.html
-"""

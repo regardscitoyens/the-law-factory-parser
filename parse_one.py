@@ -8,6 +8,7 @@ from tools.detect_anomalies import find_anomalies
 from tools.json2arbo import mkdirs
 from tools.download_groupes import process as download_groupes
 from tools.download_lois_dites import process as download_lois_dites
+from tools.common import debug_file
 from merge import merge_senat_with_an
 import parse_doslegs_texts
 import format_data_for_frontend
@@ -88,11 +89,6 @@ def download_merged_dos(url, verbose=True):
     return dos, an_dos, senat_dos
 
 
-def _dump_json(data, filename):
-    json.dump(data, open(filename, 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-    print('   DEBUG - dumped', filename)
-
-
 @contextlib.contextmanager
 def log_print(file):
     # capture all outputs to a log file while still printing it
@@ -137,8 +133,7 @@ def dump_error_log(url, exception, api_dir, log):
     open(logfile, 'w').write(log)
 
 
-def process(API_DIRECTORY, url, disable_cache=True,
-        debug_intermediary_files=False, only_promulgated=False):
+def process(API_DIRECTORY, url, disable_cache=True, only_promulgated=False):
     with log_print(io.StringIO()) as log:
         try:
             # Download senat version
@@ -156,12 +151,9 @@ def process(API_DIRECTORY, url, disable_cache=True,
                 print('    ----- passed: no JO link')
                 return
 
-            if debug_intermediary_files:
-                if an_dos:
-                    _dump_json(an_dos, 'debug_an_dos.json')
-                if senat_dos:
-                    _dump_json(senat_dos, 'debug_senat_dos.json')
-                _dump_json(dos, 'debug_dos.json')
+            debug_file(an_dos, 'debug_an_dos.json')
+            debug_file(senat_dos, 'debug_senat_dos.json')
+            debug_file(dos, 'debug_dos.json')
 
             # download the groupes in case they are not there yet
             download_groupes(API_DIRECTORY)
@@ -172,7 +164,7 @@ def process(API_DIRECTORY, url, disable_cache=True,
                 dos['loi_dite'] = common_laws[dos['legifrance_cidTexte']]
 
             print('  [] parse the texts')
-            dos_with_texts = parse_doslegs_texts.process(dos, debug_intermediary_files=debug_intermediary_files)
+            dos_with_texts = parse_doslegs_texts.process(dos)
 
             print('  [] format data for the frontend')
             format_data_for_frontend.process(dos_with_texts, API_DIRECTORY, log=log)
@@ -189,6 +181,5 @@ if __name__ == '__main__':
     url = args[0]
     API_DIRECTORY = args[1] if len(args) > 1 else 'data'
     disable_cache = '--enable-cache' not in sys.argv
-    debug_intermediary_files = '--debug' in sys.argv
     only_promulgated = '--only-promulgated' in sys.argv
-    process(API_DIRECTORY, url, disable_cache, debug_intermediary_files, only_promulgated)
+    process(API_DIRECTORY, url, disable_cache, only_promulgated)

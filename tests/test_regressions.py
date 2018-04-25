@@ -7,6 +7,7 @@ Usage: python tests_regressions.py <tests_cases_directory>
 
 Optional: There's a `--regen` flag to generate the tests cases
 """
+# TODO(cleanup): test.sh/test runner to run all the small tests before the big ones (like travis)
 
 import glob, shutil, os, filecmp, sys, difflib
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
