@@ -10,9 +10,10 @@ def get_previous_step(steps, curr_step_index, is_old_procedure=False, get_depot_
     curr_step = steps[curr_step_index]
 
     if curr_step.get('stage') == 'l. définitive' and (
-            (curr_step.get('step') == 'hemicycle'and not get_depot_step) or
+            (curr_step.get('step') == 'hemicycle' and not get_depot_step) or
             curr_step.get('step') == 'depot'
         ):
+        # cf Constitution Article 45 alinéa 4 https://www.legifrance.gouv.fr/affichTexteArticle.do?idArticle=LEGIARTI000006527521&dateTexte=&categorieLien=cid
         print('[step_logic] l. définitive / %s: fetching last AN hemi or last CMP commission' % curr_step.get('step'))
         for i in reversed(range(curr_step_index)):
             step = steps[i]

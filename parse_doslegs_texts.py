@@ -197,8 +197,8 @@ def process(dos, debug_intermediary_files=False):
     for step_index, step in enumerate(steps):
         print('    ^ complete text: ', step.get('source_url'))
 
-        if step.get('echec') == 'renvoi en commission':
-            step['articles'] = steps[step_index-2].get('articles')
+        #if step.get('echec') == 'renvoi en commission':
+        #    step['articles'] = steps[step_index-2].get('articles')
             # TODO: texte retire
             # TODO: stats of None urls
         if 'articles' in step:
@@ -211,7 +211,7 @@ def process(dos, debug_intermediary_files=False):
                     # get ante-previous step for hemicycle text where an alinea
                     # can reference the depot step instead of the commission text
                     anteprevious = None
-                    if step.get('step') == 'hemicycle':
+                    if step.get('step') == 'hemicycle' and steps[prev_step_index].get('step') == 'commission':
                         antestep_index = _step_logic.get_previous_step(steps, prev_step_index, dos.get('use_old_procedure', False), get_depot_step=True)
                         if antestep_index is not None and steps[antestep_index].get('step') == 'depot':
                             anteprevious = steps[antestep_index].get(

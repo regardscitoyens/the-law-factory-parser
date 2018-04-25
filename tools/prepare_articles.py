@@ -118,7 +118,7 @@ def process(procedure):
         # hack
         step['echec'] = step.get('echec')
 
-        echec = (step['echec'] and step['echec'] != "renvoi en commission")
+        echec = step.get('echec')
         if echec:
             if 'echec' not in out['articles']:
                 out['articles']['echec'] = {'id': 'echec', 'titre': step['echec'], 'section': 'echec', 'steps': []}
