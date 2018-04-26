@@ -31,9 +31,9 @@ class BasicComputation(object):
 #######################################################
 
 class CountAmendementComputation(object):
-    
+
     def __init__(self):
-        
+
         #Amendement
         self.countAmdt = 0
         self.countAmdtAdoptes = 0
@@ -62,12 +62,12 @@ class CountAmendementComputation(object):
         #"le Gouvernement" pour l'AN and "Le Gouvernement" for Senat
         if not amendementIsFromGouvernement(amdt):
             self.countAmdtParl += 1
-        
+
         if amdt["sort"] == "adopté":
             self.countAmdtAdoptes += 1
             if not amendementIsFromGouvernement(amdt):
                 self.countAmdtParlAdoptes += 1
-        
+
 
     def computeInterventions(self,interv):
         #total_mots of a dossier is excluding some low valuable sections
@@ -91,7 +91,7 @@ class CountAmendementComputation(object):
 
     def computeStep(self, step):
         #print "Compute Step"
-        if step.get("echec") != None or step.get("echec") == "renvoi en commission":
+        if step.get("echec") != None:
             self.countAccidentProcedure += 1
         if self.firstStep == "":
             self.firstStep = step["directory"]
@@ -99,13 +99,13 @@ class CountAmendementComputation(object):
             self.lastStep = step["directory"]
 
     def computeArticleEtapes(self, artEtape):
-        
+
         for article in artEtape["articles"]:
             art = artEtape["articles"][article]
             artId = art["id"]
             self.dicoArticles[artId]={}
             myArt = self.dicoArticles[artId]
-            myArt["firstStep"] = "" 
+            myArt["firstStep"] = ""
 
             for step in art["steps"]:
                 if myArt["firstStep"] == "":
@@ -155,7 +155,7 @@ class DossierWalker(object):
     def step_walker(self,step):
         #Intervention treatment
         if "intervention_directory" in step:
-            intervDir = os.path.join(self.procedurePath, 
+            intervDir = os.path.join(self.procedurePath,
                 step["intervention_directory"])
             if not os.path.exists(intervDir):
                 print(">No Intervention Directory ")
@@ -168,7 +168,7 @@ class DossierWalker(object):
 
                 for interv in seance["seance"]:
                     self.computationClass.computeInterventions(interv)
-        
+
         #Text Treatment
         if "working_text_directory" in step:
             textDir = os.path.join(self.procedurePath,
@@ -178,13 +178,13 @@ class DossierWalker(object):
                 return;
 
             text = open_json(textDir, "texte.json")
-            
+
             self.computationClass.computeText(text)
 
-        #Article Etape 
+        #Article Etape
         articleEtape = open_json(self.vizPath, "articles_etapes.json")
         self.computationClass.computeArticleEtapes(articleEtape)
-        
+
 
 ####################################################
 
@@ -206,11 +206,11 @@ class DossierWalker(object):
 
 
 
-    
+
 
 #######################################################
 ####################################################
- 
+
 #dossiersId = sys.argv[1]
 #if not dossiersId:
 #    sys.stderr.write('Error, no input directory given')
