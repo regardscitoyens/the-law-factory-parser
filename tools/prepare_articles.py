@@ -5,10 +5,10 @@ from difflib import ndiff
 from functools import cmp_to_key
 
 try:
-    from .common import json, clean_text_for_diff, compute_similarity
+    from .common import json, clean_text_for_diff, compute_similarity, format_display_date
     from .sort_articles import compare_articles
 except:
-    from common import json, clean_text_for_diff, compute_similarity
+    from common import json, clean_text_for_diff, compute_similarity, format_display_date
     from sort_articles import compare_articles
 
 from tools import _step_logic
@@ -125,6 +125,8 @@ def process(procedure):
             out['articles']['echec']['steps'].append(next_step)
             if 'echec' not in out['sections']:
                 out['sections']['echec'] = {}
+            if step['echec'] == 'renvoi en commission' and not data:
+                data = {'expose': 'Siégeant en hémicycle le %s, les %s ont adopté une motion de renvoi du texte en commission.' % (format_display_date(step.get('enddate', step['date'])), "sénateurs" if step['institution'] == "senat" else "députés")}
             out['sections']['echec'][step_id] = {'title': data['expose'] if data else '', 'type': step['echec'].upper()}
             continue
         for section in data['sections']:

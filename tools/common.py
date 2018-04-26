@@ -2,11 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import sys, os, re, requests
-from datetime import date
+from datetime import date, datetime
 from html.entities import name2codepoint
 from csv import DictReader
 from difflib import SequenceMatcher
 import json
+import dateparser
+import locale
+locale.setlocale(locale.LC_TIME, 'fr_FR.utf8')
 try:
     from .sort_articles import bister
 except:
@@ -66,6 +69,9 @@ def format_date(d):
     da = d.split('/')
     da.reverse()
     return "-".join(da)
+
+def format_display_date(d):
+    return datetime.strftime(datize(d), '%A %d %B %Y').replace(' 0', ' ')
 
 upper_first = lambda t: t[0].upper() + t[1:] if len(t) > 1 else t.upper()
 
