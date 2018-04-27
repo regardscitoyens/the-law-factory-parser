@@ -5,10 +5,10 @@ from difflib import ndiff
 from functools import cmp_to_key
 
 try:
-    from .common import json, clean_text_for_diff, compute_similarity, format_display_date
+    from .common import open_json, print_json, clean_text_for_diff, compute_similarity, format_display_date
     from .sort_articles import compare_articles
 except:
-    from common import json, clean_text_for_diff, compute_similarity, format_display_date
+    from common import open_json, print_json, clean_text_for_diff, compute_similarity, format_display_date
     from sort_articles import compare_articles
 
 from tools import _step_logic
@@ -236,8 +236,4 @@ def process(procedure):
 
 
 if __name__ == '__main__':
-    print((
-        json.dumps(
-            process(json.load(open(sys.argv[1]))),
-            indent=2, sort_keys=True, ensure_ascii=False
-        )))
+    print_json(process(open_json(sys.argv[1])))

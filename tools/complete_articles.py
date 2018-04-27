@@ -2,16 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import sys, re, copy
-import json
 
 from requests.structures import CaseInsensitiveDict
 
 try:
     from .sort_articles import bister, article_is_lower
-    from .common import clean_text_for_diff, compute_similarity
+    from .common import clean_text_for_diff, compute_similarity, open_json, print_json
 except SystemError:
     from sort_articles import bister, article_is_lower
-    from common import clean_text_for_diff, compute_similarity
+    from common import clean_text_for_diff, compute_similarity, open_json, print_json
 
 
 def complete(current, previous, step, table_concordance, anteprevious=None):
@@ -444,6 +443,6 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
     return ALL_ARTICLES
 
 if __name__ == '__main__':
-    serialized = json.load(open(sys.argv[1]))
+    serialized = open_json(sys.argv[1])
     result = complete(**serialized)
-    # print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
+    # print_json(result)

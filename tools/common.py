@@ -15,12 +15,6 @@ except:
     from sort_articles import bister
 
 
-def debug_file(data, filename):
-    if '--debug' in sys.argv:
-        json.dump(data, open(filename, 'w'), ensure_ascii=False, indent=2, sort_keys=True)
-        print('   DEBUG - dumped', filename)
-
-
 def open_csv(dirpath, filename, delimiter=";"):
     try:
         data = []
@@ -49,10 +43,11 @@ def open_json(dirpath, filename=None):
 
 
 def print_json(dico, filename=None):
+    jdump = json.dumps(dico, ensure_ascii=False, sort_keys=True, indent=2)
     if filename:
         try:
             with open("%s.tmp" % filename, 'w') as f:
-                f.write(json.dumps(dico, ensure_ascii=False, sort_keys=True, indent=2))
+                f.write(jdump)
             if os.path.exists(filename):
                 os.remove(filename)
             os.rename("%s.tmp" % filename, filename)
@@ -61,7 +56,14 @@ def print_json(dico, filename=None):
             sys.stderr.write("ERROR: Could not write in file %s" % filename)
             raise e
     else:
-        print(json.dumps(dico, ensure_ascii=False))
+        print(jdump)
+
+
+def debug_file(data, filename):
+    if '--debug' in sys.argv:
+        print_json(data, filename)
+        print('   DEBUG - dumped', filename)
+
 
 datize = lambda d: date(*tuple([int(a) for a in d.split('-')]))
 def format_date(d):

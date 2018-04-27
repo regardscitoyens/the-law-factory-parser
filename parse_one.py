@@ -1,4 +1,4 @@
-import sys, json, contextlib, io, os, traceback
+import sys, contextlib, io, os, traceback
 
 from senapy.dosleg.parser import parse as senapy_parse
 from anpy.dossier_like_senapy import parse as anpy_parse

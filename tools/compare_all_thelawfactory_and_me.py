@@ -2,7 +2,12 @@
 Debugging tool to compare between the old parser and the new one
 """
 
-import json, sys
+import sys
+
+try:
+    from .common import open_json
+except SystemError:
+    from common import open_json
 
 def compare(proc, me, verbose=True):
     score_ok = 0
@@ -29,7 +34,7 @@ def compare(proc, me, verbose=True):
                     # 1ère lecture VS 1ere lecture, should be standardized
                     return obj.replace('è', 'e')
                 return obj
-            
+
             if b is None:
                 b = a
             a_val = clean(a_key(proc.get(a)))
@@ -94,7 +99,7 @@ if __name__ == '__main__':
     perfect = 0
     less_than_1 = 0
 
-    all_doslegs = json.load(open(sys.argv[2]))
+    all_doslegs = open_json(sys.argv[2])
     lafabrique_doslegs = list(sorted(glob.glob(sys.argv[1])))
     scored = []
     for file in lafabrique_doslegs:
@@ -102,7 +107,7 @@ if __name__ == '__main__':
         print('======')
         print(file)
         me = None
-        proc = json.load(open(file))
+        proc = open_json(file)
         proc_url_senat = proc.get('url_dossier_senat', '').replace('http://', 'https://').replace('/dossierleg/', '/dossier-legislatif/')
         for dos in all_doslegs:
             dos_url_senat = dos.get('url_dossier_senat', '').replace('http://', 'https://').replace('/dossierleg/', '/dossier-legislatif/')
@@ -128,7 +133,7 @@ if __name__ == '__main__':
         if nok == 0:
             perfect += 1
         if nok <= 1:
-            less_than_1 += 1 
+            less_than_1 += 1
 
     print('-----')
     print('TOTAL:')

@@ -9,17 +9,16 @@ Dependencies :
 html5lib, beautifulsoup4"""
 
 import sys, re, copy
-import json
 from bs4 import BeautifulSoup
 
 from lawfactory_utils.urls import download
 
 try:
     from .sort_articles import bister
-    from .common import get_text_id, upcase_accents, real_lower
+    from .common import get_text_id, upcase_accents, real_lower, print_json
 except (SystemError, ImportError):
     from sort_articles import bister
-    from common import get_text_id, upcase_accents, real_lower
+    from common import get_text_id, upcase_accents, real_lower, print_json
 
 
 # inspired by duralex/alinea_parser.py
@@ -690,7 +689,7 @@ def parse(url, resp=None):
 
 if __name__ == '__main__':
     if '--test' not in sys.argv:
-        print(json.dumps(parse(sys.argv[1]), sort_keys=True, ensure_ascii=False, indent=2))
+        print_json(parse(sys.argv[1]))
     else:
         def assert_eq(x, y):
             if x != y:

@@ -2,8 +2,12 @@
 # use "python steps_as_dot.py <data_directory>| dot -Tpng > steps.png" to produce the diagram
 
 # the XKCD font is available here: https://github.com/ipython/xkcd-font/tree/master/xkcd/build
-import json, sys, os, random, glob
+import sys, os, random, glob
 
+try:
+    from .common import open_json, print_json
+except:
+    from common import open_json, print_json
 
 if len(sys.argv) < 2:
     print('USAGE: `steps_as_dot.py <path_to_json>`')
@@ -11,14 +15,14 @@ if len(sys.argv) < 2:
 
 mode = "detailed" if len(sys.argv) == 3 else "simple"
 
-procedure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'doc/valid_procedure.json')
-procedure = json.load(open(procedure_file))
+procedure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'doc', 'valid_procedure.json')
+procedure = open_json(procedure_file)
 
 API_DIRECTORY = sys.argv[1]
-all_senat_jo = [json.load(open(path)) for path \
+all_senat_jo = [open_json(path) for path \
                 in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json'))]
 all_senat_jo = [dos for dos in all_senat_jo if dos.get('end')]
-# all_senat_jo = [x for x in json.load(open(sys.argv[1])) if len(x['steps']) > 2]
+# all_senat_jo = [x for x in open_json(sys.argv[1]) if len(x['steps']) > 2]
 # all_senat_jo = random.sample(all_senat_jo, 5)
 
 nodes_names_size = {}
@@ -190,7 +194,7 @@ dot_result += '\n}'
 
 details = "_detailed" if mode == "detailed" else ""
 open('_steps%s.log' % details, 'w').write(steps_logs)
-open('steps%s_transitions.json' % details, 'w').write(json.dumps(step_trans, ensure_ascii=False, indent=2, sort_keys=True))
+print_json(step_trans, 'steps%s_transitions.json' % details)
 
 print(dot_result)
 # open('steps.dot','w').write(dot_result)

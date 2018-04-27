@@ -164,7 +164,7 @@ class DossierWalker(object):
             #interventions = open_json(amdtDir, "amendements.json")
             seance_files = step["intervention_files"]
             for seance_file in seance_files:
-                seance = open_json(intervDir, "%s.json"%seance_file)
+                seance = open_json(intervDir, "%s.json" % seance_file)
 
                 for interv in seance["seance"]:
                     self.computationClass.computeInterventions(interv)

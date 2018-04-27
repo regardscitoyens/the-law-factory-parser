@@ -1,7 +1,12 @@
-import json, sys, os
+import sys, os
 
-procedure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'doc/valid_procedure.json')
-procedure = json.load(open(procedure_file))
+try:
+    from .common import open_json
+except:
+    from common import open_json
+
+procedure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'doc', 'valid_procedure.json')
+procedure = open_json(procedure_file)
 
 def find_anomalies(dossiers, verbose=True):
     anomalies = 0
@@ -15,7 +20,7 @@ def find_anomalies(dossiers, verbose=True):
                     print(dos.get('url_dossier_senat'), '|',dos.get('url_dossier_assemblee'))
                     print()
                 anomalies += 1
-            
+
             #print(step_name, '      \t\t\t\t===>>', procedure.get(prev_step, {}).get(step_name))
 
             prev_step = step_name
@@ -31,9 +36,10 @@ TODO:
 
 if __name__ == '__main__':
     if not os.isatty(0):
+        import json
         dossiers = json.loads(sys.stdin.read())
         if type(dossiers) is not list:
             dossiers = [dossiers]
     else:
-        dossiers = json.load(open(sys.argv[1]))
+        dossiers = open_json(sys.argv[1])
     find_anomalies(dossiers)

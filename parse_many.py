@@ -1,11 +1,13 @@
-import os, sys, glob, traceback, json
+import os, sys, glob, traceback
 
 import parse_one
+
+from tools.common import open_json
 
 
 API_DIRECTORY = sys.argv[1]
 
-already_done = {json.load(open(dos)).get('url_dossier_senat') for dos \
+already_done = {open_json(dos).get('url_dossier_senat') for dos \
                 in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json'))}
 
 for url in sys.stdin:

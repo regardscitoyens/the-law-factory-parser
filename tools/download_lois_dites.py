@@ -1,6 +1,11 @@
-import sys, os, time, json
+import sys, os, time
 
 from legipy.services import LawService
+
+try:
+    from .common import open_json, print_json
+except:
+    from common import open_json, print_json
 
 
 def process(output_directory):
@@ -11,11 +16,9 @@ def process(output_directory):
     destfile = os.path.join(output_directory, dfile)
     if not os.path.exists(destfile) or os.path.getmtime(destfile) < yesterday:
         common_laws = {l.id_legi: l.common_name for l in LawService().common_laws()}
-        with open(destfile, 'w') as f:
-            json.dump(common_laws, f)
+        print_json(common_laws, destfile)
     else:
-        with open(destfile) as f:
-            common_laws = json.load(f)
+        common_laws = open_json(destfile)
     return common_laws
 
 

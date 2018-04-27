@@ -5,14 +5,14 @@ Output in <api_directory>:
 - dossiers_promulgues.csv with all the doslegs ready
 - home.json for the homepage informations
 """
-import json, glob, os, sys, csv, re
+import glob, os, sys, csv, re
 
-from tools.common import upper_first
+from tools.common import upper_first, open_json, print_json
 
 API_DIRECTORY = sys.argv[1]
 
 re_dos_ok = re.compile(r"%s/[^.]+/" % API_DIRECTORY)
-dossiers = [(json.load(open(path)), path) for path \
+dossiers = [(open_json(path), path) for path \
                 in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json')) if re_dos_ok.search(path)]
 dossiers = [(dos, path) for dos, path in dossiers if dos.get('end')]
 
@@ -33,7 +33,7 @@ for dos, path in dossiers:
 
     total_mots = 0
     try:
-        intervs = json.load(open(path.replace('procedure.json', 'interventions.json')))
+        intervs = open_json(path.replace('procedure.json', 'interventions.json'))
         total_mots = sum([
             sum(i['total_mots'] for i in step['divisions'].values())
                 for step in intervs.values()
@@ -122,6 +122,5 @@ home_json_final["recent"] = {
     "url": "lois.html",
     "textes": list(reversed(home_json_data[-6:])),
 }
-open(os.path.join(API_DIRECTORY, 'home.json'), 'w').write(
-    json.dumps(home_json_final, sort_keys=True, indent=2, ensure_ascii=False))
+print_json(home_json_final, os.path.join(API_DIRECTORY, 'home.json'))
 print('home.json OK')

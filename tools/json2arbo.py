@@ -4,13 +4,13 @@
 
 Run with python json2arbo.py JSON_FILE PROJECT
 where LAW_FILE results from perl download_loi.pl URL > LAW_FILE
-Outputs results to stdout
-
-Dependencies :
-simplejson"""
+Outputs results to stdout"""
 
 import os, sys, re
-import json
+try:
+    from .common import print_json
+except:
+    from common import print_json
 
 def mkdirs(d):
     if not os.path.exists(d):
@@ -19,9 +19,6 @@ def mkdirs(d):
 re_sec_path = re.compile(r"(\de?r?)([TCVLS])")
 def sec_path(s):
     return re_sec_path.sub(r"\1/\2", s)
-
-def write_json(j, p):
-    write_text(json.dumps(j, sort_keys=True, indent=2, ensure_ascii=False), p)
 
 def orderabledir(titre):
     extrazero = ''
@@ -49,11 +46,6 @@ def clean_text(t):
 #  return t
     return t.strip()
 
-def write_text(t, p):
-    # print('         write to', p)
-    f = open(p, "w")
-    f.write(t)
-
 
 def get_step_id(nstep, step):
     clean = lambda x: x.replace(' ', '').replace('è','e').lower() if x else ''
@@ -78,7 +70,7 @@ def process(dos, OUTPUT_DIR):
         if not articles:
             # print('no articles for step')
             continue
-        
+
         mkdirs(step_dir)
         for data in articles:
             if not data or not "type" in data:
@@ -109,7 +101,7 @@ def process(dos, OUTPUT_DIR):
             elif data["type"] == "echec":
                 alldata['expose'] = data['texte']
 
-        write_json(alldata, step_dir + '/texte.json')
+        print_json(alldata, os.path.join(step_dir, 'texte.json'))
 
         step['texte.json'] = alldata
 

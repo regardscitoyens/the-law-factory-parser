@@ -1,8 +1,8 @@
-import os, json, shutil, io
+import os, shutil, io
 
 from tools import json2arbo, prepare_articles, update_procedure, \
     prepare_amendements, prepare_interventions, reorder_interventions_and_correct_procedure
-from tools.common import debug_file
+from tools.common import debug_file, print_json
 
 def project_header_template(dos_id, procedure):
     return """
@@ -45,7 +45,7 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
     json2arbo.mkdirs(os.path.join(output_dir, 'viz'))
     debug_file(dos, 'debug_before_prepare_articles.json')
     articles_etapes = prepare_articles.process(dos)
-    open(output_dir + '/viz/articles_etapes.json', 'w').write(json.dumps(articles_etapes, indent=2, sort_keys=True, ensure_ascii=True))
+    print_json(articles_etapes, os.path.join(output_dir, 'viz', 'articles_etapes.json'))
 
     procedure = update_procedure.process(dos, articles_etapes)
 
@@ -74,8 +74,7 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
     if 'short_title' not in procedure:
         procedure['short_title'] = procedure['long_title']
 
-    open(os.path.join(output_dir, 'viz/procedure.json'), 'w').write(
-        json.dumps(procedure, indent=2, sort_keys=True, ensure_ascii=False))
+    print_json(procedure, os.path.join(output_dir, 'viz', 'procedure.json'))
 
     open(os.path.join(output_dir, 'HEADER.html'), 'w').write(
         project_header_template(dos_id, procedure))

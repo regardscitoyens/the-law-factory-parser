@@ -1,10 +1,10 @@
-import json, glob, os, sys, csv, random, traceback
+import glob, os, sys, csv, random, traceback
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from lawfactory_utils.urls import enable_requests_cache
 from senapy.dosleg import opendata
 
-from tools.common import upper_first, format_date, datize, strip_text
+from tools.common import upper_first, format_date, datize, strip_text, open_json
 from tools.process_conscons import get_decision_length
 from tools.process_jo import count_signataires, get_texte_length
 from tools import parse_texte
@@ -37,7 +37,7 @@ def parse_senat_open_data():
 def find_parsed_doslegs(api_directory):
     dossiers_json = {}
     for path in glob.glob(os.path.join(api_directory, 'dossiers_*.json')):
-        for dos in json.load(open(path))['dossiers']:
+        for dos in open_json(path)['dossiers']:
             if dos.get('senat_id'):
                 dossiers_json[dos['senat_id']] = dos
     print(len(dossiers_json), 'parsed found')
