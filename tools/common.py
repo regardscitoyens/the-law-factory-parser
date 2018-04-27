@@ -7,7 +7,6 @@ from html.entities import name2codepoint
 from csv import DictReader
 from difflib import SequenceMatcher
 import json
-import dateparser
 import locale
 locale.setlocale(locale.LC_TIME, 'fr_FR.utf8')
 try:
