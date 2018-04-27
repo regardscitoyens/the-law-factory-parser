@@ -5,6 +5,13 @@ def use_old_procedure(step, dos=None):
     return step.get("enddate", step.get("date", "9999-99-99")) < "2009-03-01"
 
 
+def should_ignore_commission_text(step, dos):
+    return step.get('step') == 'commission' and (
+        step.get('stage') == 'l. définitive' or (
+        use_old_procedure(step, dos) and step['institution'] in ('senat', 'assemblee'))
+    )
+
+
 def is_one_of_the_initial_depots(steps, step_index):
     # Detect if the step is one of the multiple initial depot
     return step_index == 0 or (steps[step_index - 1].get('step') == steps[step_index].get('step') == 'depot')

@@ -4,7 +4,7 @@ from lawfactory_utils.urls import download
 from senapy.dosleg.parser import parse as senapy_parse
 
 from tools import parse_texte, complete_articles
-from tools._step_logic import get_previous_step, use_old_procedure, is_one_of_the_initial_depots
+from tools._step_logic import get_previous_step, use_old_procedure, is_one_of_the_initial_depots, should_ignore_commission_text
 from tools.common import debug_file
 
 
@@ -104,10 +104,6 @@ def find_good_url_resp(url):
     if resp:
         return resp
     return False
-
-
-def should_ignore_commission_text(step, dos):
-    return use_old_procedure(step, dos) and step.get('step') == 'commission' and step['institution'] in ('senat', 'assemblee')
 
 
 def parse_texts(dos):
