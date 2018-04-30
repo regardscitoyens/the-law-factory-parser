@@ -2,3 +2,4 @@
 -e git+https://github.com/regardscitoyens/legipy.git#egg=legipy
 -e git+https://github.com/regardscitoyens/senapy.git#egg=senapy
 -e git+https://github.com/regardscitoyens/anpy.git#egg=anpy
+diff-match-patch==20121119

@@ -98,9 +98,7 @@ for d in dossiers:
         # TODO take real first depot in case of multiple depots
         if not first_found and s.get('step') == "depot":
             firstText = read_text(d['id'], s['directory'])
-    # TODO: temporary downgrading quality since the real ratio is too slow
-    #proc["ratio_texte_modif"] = 1 - compute_similarity(firstText, lastText)
-    proc["ratio_texte_modif"] = 1 - compute_similarity(clean_text_for_diff(firstText), clean_text_for_diff(lastText), fast=True)
+    proc["ratio_texte_modif"] = 1 - compute_similarity(clean_text_for_diff(firstText), clean_text_for_diff(lastText))
     proc["input_text_length2"] = len("\n".join(firstText))
     proc["output_text_length2"] = len("\n".join(lastText))
 

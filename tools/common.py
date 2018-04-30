@@ -5,7 +5,7 @@ import sys, os, re, requests
 from datetime import date, datetime
 from html.entities import name2codepoint
 from csv import DictReader
-from difflib import SequenceMatcher
+from diff_match_patch import diff_match_patch
 import json
 import locale
 locale.setlocale(locale.LC_TIME, 'fr_FR.utf8')
@@ -119,12 +119,22 @@ def clean_text_for_diff(text):
     text = re_non_alphanum.sub('', text)
     return text
 
-def compute_similarity(text1, text2, fast=False):
-    a = SequenceMatcher(None, text1, text2, autojunk=False)
-    if fast:
-        return 1 - a.real_quick_ratio()
-    b = a.get_matching_blocks()
-    return float(sum([m[2] for m in b])) / max(b[-1][0], b[-1][1])
+
+def compute_similarity(text1, text2):
+    dmp = diff_match_patch()
+    dmp.Diff_Timeout = 10
+    dmp.Diff_EditCost = 25
+    diff = dmp.diff_main(text1, text2)
+    dmp.diff_cleanupSemantic(diff)
+    dmp.diff_cleanupEfficiency(diff)
+
+    # similarity
+    common_text = sum([len(txt) for op, txt in diff if op == 0])
+    text_length = max(len(text1), len(text2))
+    sim = common_text / text_length
+
+    return sim
+
 
 def identify_room(url_or_institution, legislature):
     typeparl = "depute" if 'nationale.fr' in url_or_institution \
