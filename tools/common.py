@@ -122,7 +122,7 @@ def clean_text_for_diff(text):
 
 def compute_similarity(text1, text2):
     dmp = diff_match_patch()
-    dmp.Diff_Timeout = 10
+    dmp.Diff_Timeout = 0
     dmp.Diff_EditCost = 25
     diff = dmp.diff_main(text1, text2)
     dmp.diff_cleanupSemantic(diff)
