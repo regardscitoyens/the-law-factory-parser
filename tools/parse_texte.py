@@ -171,7 +171,7 @@ re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4}
 re_clean_subsec_space2 = re.compile(r'^("?[IVX0-9]{1,4})\s*([a-z]*)\s*([A-H]{1,4})([\.°\-])', re.I)
 re_clean_punc_space = re.compile('([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])')
 re_clean_spaces = re.compile(r'\s+')
-re_clean_coord = re.compile(r'^(<i>)?(["\(\s]+|pour)*coordination[\)\s\.]*(</i>)?', re.I)
+re_clean_coord = re.compile(r'^(<i>)?([\["\(\s]+|pour)*coordination[\]\)\s\.]*(</i>)?', re.I)
 # Clean html and special chars
 lower_inner_title = lambda x: x.group(1)+lower_but_first(x.group(3))+" "
 html_replace = [
