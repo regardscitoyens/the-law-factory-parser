@@ -11,7 +11,7 @@ from tools.common import upper_first, open_json, print_json
 
 API_DIRECTORY = sys.argv[1]
 
-re_dos_ok = re.compile(r"%s/[^.]+/" % API_DIRECTORY)
+re_dos_ok = re.compile(r"%s/[^.]+/" % API_DIRECTORY.strip('/'))
 dossiers = [(open_json(path), path) for path \
                 in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json')) if re_dos_ok.search(path)]
 dossiers = [(dos, path) for dos, path in dossiers if dos.get('end')]
