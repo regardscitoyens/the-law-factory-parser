@@ -125,47 +125,58 @@ def parse_texts(dos):
         if step.get('stage') == 'promulgation':
             continue
 
-        if url is None:
-            if not dos.get('url_jo') and not any([1 for step in steps[step_index:] if 'source_url' in step]):
-                print('     * ignore empty last step since the law is not yet promulgated')
-                break
-            if step.get('echec') is None:
-                raise Exception('[parse_texts] Empty url for step: %s.%s.%s' % (step.get('institution'), step.get('stage'), step.get('step')))
-            # TODO: texte retire
-            continue
-        else:
-            fixed_url_resp = find_good_url_resp(url)
-            if fixed_url_resp:
-                fixed_url = fixed_url_resp.url
-                if fixed_url != url:
-                    print('        ^ text url fixed:', fixed_url)
 
-                if step.get('stage') != 'constitutionnalité':
-                    step['source_url'] = fixed_url
-
-                step['articles'] = parse_texte.parse(fixed_url, resp=fixed_url_resp)
-                assert step['articles']
-
-                text = step['articles'][0]
-                text['depot'] = step.get('step') == 'depot'
-
-                # echec detected ? we update the step
-                echec_line = [article for article in step['articles'] if article.get('type') == 'echec']
-                if echec_line:
-                    assert step.get('step') != 'depot'
-                    echec_line = echec_line[0]
-                    if step.get('stage') == 'CMP':
-                        step['echec'] = 'échec'
-                    else:
-                        step['echec'] = 'rejet'
-
-                if not step.get('echec') and len(step['articles']) < 2:
-                    raise Exception('parsing failed for %s (no text)' % fixed_url)
+        try:
+            if url is None:
+                if step.get('echec') is None:
+                    raise Exception('[parse_texts] Empty url for step: %s.%s.%s' % (step.get('institution'), step.get('stage'), step.get('step')))
+                continue
             else:
-                if is_one_of_the_initial_depots(steps, step_index):
-                    print('     * ignore missing depot', url)
-                    continue
-                raise Exception('[parse_texts] Invalid response %s' % url)
+                fixed_url_resp = find_good_url_resp(url)
+                if fixed_url_resp:
+                    fixed_url = fixed_url_resp.url
+                    if fixed_url != url:
+                        print('        ^ text url fixed:', fixed_url)
+
+                    if step.get('stage') != 'constitutionnalité':
+                        step['source_url'] = fixed_url
+
+                    articles = parse_texte.parse(fixed_url, resp=fixed_url_resp)
+
+                    if not articles:
+                        raise Exception('[parse_texts] Empty parsing %s' % url)
+
+                    step['articles'] = articles
+                    text = articles[0]
+                    text['depot'] = step.get('step') == 'depot'
+
+                    # echec detected ? we update the step
+                    echec_line = [article for article in articles if article.get('type') == 'echec']
+                    if echec_line:
+                        assert step.get('step') != 'depot'
+                        echec_line = echec_line[0]
+                        if step.get('stage') == 'CMP':
+                            step['echec'] = 'échec'
+                        else:
+                            step['echec'] = 'rejet'
+
+                    if not step.get('echec') and len(articles) == 1:
+                        raise Exception('parsing failed for %s (no text)' % fixed_url)
+                else:
+                    raise Exception('[parse_texts] Invalid response %s' % url)
+        except Exception as e:
+            if step.get('step') == 'depot' and not is_one_of_the_initial_depots(steps, step_index):
+                print('     * ignore missing intermediary depot', url)
+                continue
+
+            step_in_discussion = not dos.get('url_jo') and \
+                not any([1 for step in steps[step_index+1:] if 'source_url' in step])
+            if step_in_discussion:
+                print('     * ignore step in discussion')
+                break
+
+            raise e
+
         debug_file(step.get('articles'), 'debug_parsed_text_step_%d.json' % step_index)
 
 
