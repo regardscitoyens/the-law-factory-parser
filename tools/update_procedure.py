@@ -15,14 +15,15 @@ def process(procedure, articles, intervs={}):
 
     # detect current step
     currently_debated_step = None
-    for i, s in reversed(list(enumerate(procedure['steps']))):
-        if s['directory'] in good_steps:
-            break
-        if s.get('step') in ('hemicycle', 'commission'):
-            currently_debated_step = i
+    if not procedure.get('end'):
+        for i, s in reversed(list(enumerate(procedure['steps']))):
+            if s['directory'] in good_steps:
+                break
+            if s.get('step') in ('hemicycle', 'commission'):
+                currently_debated_step = i
 
     for i, s in enumerate(procedure['steps']):
-        s['enddate'] = s.get('date') if i == currently_debated_step else ''
+        s['enddate'] = s.get('date') if i != currently_debated_step else ''
 
         s['debats_order'] = None
         if 'has_interventions' in s and s['has_interventions'] and s['directory'] not in intervs:
