@@ -22,7 +22,7 @@ def process(procedure, articles, intervs={}):
             currently_debated_step = i
 
     for i, s in enumerate(procedure['steps']):
-        s['enddate'] = s.get('date') if i != currently_debated_step else ''
+        s['enddate'] = s.get('date') if i < currently_debated_step else ''
 
         s['debats_order'] = None
         if 'has_interventions' in s and s['has_interventions'] and s['directory'] not in intervs:

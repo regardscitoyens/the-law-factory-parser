@@ -35,7 +35,7 @@ def process(OUTPUT_DIR, procedure):
                     print('ERROR: PB date of', interv_file, ', step begins', step['date'], 'and prev date ends', prev_step['enddate'])
 
             # if enddate is earlier than end of interventions, use interventions date
-            if step['enddate'] < date:
+            if step['enddate'] and step['enddate'] < date:
                 # check that next step start_date is later than this intervention date
                 if not next_step or next_step['date'] >= date:
                     step['enddate'] = date
