@@ -4,7 +4,7 @@ TODAY=$(date +%Y%m%d)
 DATADIR=data.$TODAY
 mkdir -p $DATADIR
 
-senapy-cli doslegs_urls | python parse_many.py $DATADIR
+senapy-cli doslegs_urls | python parse_many.py $DATADIR --only-promulgated
 
 python generate_dossiers_csv.py $DATADIR
 

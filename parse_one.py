@@ -133,10 +133,11 @@ def dump_error_log(url, exception, api_dir, log):
     open(logfile, 'w').write(log)
 
 
-def process(API_DIRECTORY, url, disable_cache=True, only_promulgated=False):
+def process(API_DIRECTORY, url):
+    disable_cache = '--enable-cache' not in sys.argv
+    only_promulgated = '--only-promulgated' in sys.argv
     with log_print(io.StringIO()) as log:
         try:
-            # Download senat version
             if not disable_cache:
                 enable_requests_cache()
 
@@ -180,6 +181,4 @@ if __name__ == '__main__':
     args = [arg for arg in sys.argv[1:] if '--' not in arg]
     url = args[0]
     API_DIRECTORY = args[1] if len(args) > 1 else 'data'
-    disable_cache = '--enable-cache' not in sys.argv
-    only_promulgated = '--only-promulgated' in sys.argv
-    process(API_DIRECTORY, url, disable_cache, only_promulgated)
+    process(API_DIRECTORY, url)

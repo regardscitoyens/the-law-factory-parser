@@ -14,12 +14,11 @@ for url in sys.stdin:
     print()
     print('======')
     url = url.strip()
-    if url in already_done:
+    if url in already_done and '--enable-cache' in sys.argv:
         print('  + passed, already done:', url)
         continue
-
     try:
-        parse_one.process(API_DIRECTORY, url, only_promulgated=True)
+        parse_one.process(API_DIRECTORY, url)
     except KeyboardInterrupt:
         break
     except Exception as e:

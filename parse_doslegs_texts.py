@@ -142,6 +142,7 @@ def parse_texts(dos):
                         step['source_url'] = fixed_url
 
                     articles = parse_texte.parse(fixed_url, resp=fixed_url_resp)
+                    debug_file(articles, 'debug_parsed_text_step_%d.json' % step_index)
 
                     if not articles:
                         raise Exception('[parse_texts] Empty parsing %s' % url)
@@ -176,8 +177,6 @@ def parse_texts(dos):
                 break
 
             raise e
-
-        debug_file(step.get('articles'), 'debug_parsed_text_step_%d.json' % step_index)
 
 
 def re_order_cmp(dos):
@@ -231,7 +230,7 @@ def complete_texts(dos):
                     }
                     debug_file(complete_args, 'debug_complete_args_step_%d.json' % step_index)
                     step['articles_completed'] = complete_articles.complete(**complete_args)
-        debug_file(step.get('articles_completed'), 'debug_completed_text_step_%d.json' % step_index)
+                    debug_file(step.get('articles_completed'), 'debug_completed_text_step_%d.json' % step_index)
 
 
 def process(dos):
