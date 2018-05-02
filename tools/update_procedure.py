@@ -22,6 +22,7 @@ def process(procedure, articles, intervs={}):
             if s.get('step') in ('hemicycle', 'commission'):
                 currently_debated_step = i
 
+    currentstep_found = False
     for i, s in enumerate(procedure['steps']):
         s['enddate'] = s.get('date') if i != currently_debated_step else ''
 
@@ -31,9 +32,11 @@ def process(procedure, articles, intervs={}):
             s['has_interventions'] = False
         if 'directory' in s:
             if not s['enddate']:
-                # no good steps, it means the parsing failed
                 if good_steps:
-                    s['debats_order'] = max(good_steps.values()) + 1
+                    if not currentstep_found:
+                        s['debats_order'] = max(good_steps.values()) + 1
+                        currentstep_found = True
+                # no good steps, it means the parsing failed
                 else:
                     print('[update_procedure] no good steps, parsing must have failed')
             else:
