@@ -228,9 +228,17 @@ def process(procedure):
         out['articles'][a]['steps'] = new_steps
 
     # Set articles' order values after having reinserted missing ones
-    orders = {k: n for n, k in enumerate(sorted([a['titre'] for a in out['articles'].values()], key=cmp_to_key(compare_articles)))}
+    orders = {k: n for n, k in enumerate(
+        sorted(
+            [a['titre'] for a in out['articles'].values() if a['id'] != 'echec'],
+            key=cmp_to_key(compare_articles)
+        ))
+    }
     for a in out['articles'].values():
-        a['order'] = orders[a['titre']]
+        if a['id'] == 'echec':
+            a['order'] = -1
+        else:
+            a['order'] = orders[a['titre']]
 
     return out
 
