@@ -7,8 +7,11 @@ from tools.common import open_json
 
 API_DIRECTORY = sys.argv[1]
 
-already_done = {open_json(dos).get('url_dossier_senat') for dos \
-                in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json')) if dos.get('url_jo')}
+already_done = {}
+for jsondos in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json')):
+    dos = open_json(jsondos)
+    if dos.get('url_jo'):
+        already_done[dos.get('url_dossier_senat')] = True
 
 for url in sys.stdin:
     print()
