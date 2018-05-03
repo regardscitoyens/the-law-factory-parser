@@ -19,6 +19,7 @@ if len(sys.argv) > 2:
         exit(1)
 
 dossiers = open_csv(sourcedir, 'dossiers_promulgues.csv')
+dossiers = [d for d in dossiers if d.get('Date de promulgation')]
 total = len(dossiers)
 
 # Compute dates and length

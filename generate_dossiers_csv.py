@@ -14,7 +14,7 @@ API_DIRECTORY = sys.argv[1]
 re_dos_ok = re.compile(r"%s/[^.]+/" % API_DIRECTORY.strip('/'))
 dossiers = [(open_json(path), path) for path \
                 in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json')) if re_dos_ok.search(path)]
-dossiers = [(dos, path) for dos, path in dossiers if dos.get('end')]
+dossiers = [(dos, path) for dos, path in dossiers if "_tmp" not in path]
 
 
 csvfile = csv.writer(open(os.path.join(API_DIRECTORY, 'dossiers_promulgues.csv'), 'w'), delimiter=';')
@@ -94,7 +94,7 @@ for dos, path in dossiers:
     if total_amendements:
         home_json_data.append({
             'total_amendements': total_amendements,
-            'end': dos['end'],
+            'end': dos.get('end'),
             'status': status,
             'loi': id,
             'titre': title
@@ -116,7 +116,7 @@ home_json_final["focus"] = {
     "url": "lois.html?action=quanti",
     "textes": home_json_data[:6],
 }
-home_json_data.sort(key=lambda x: x['end'])
+home_json_data.sort(key=lambda x: x['end'] or "0")
 home_json_final["recent"] = {
     "titre": "Les derniers textes promulgués",
     "lien": "Explorer les textes récents",
