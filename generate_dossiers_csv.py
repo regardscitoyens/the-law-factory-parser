@@ -91,13 +91,14 @@ for dos, path in dossiers:
     title = dos.get('short_title')
     if dos.get('loi_dite'):
         title = "%s (%s)" % (upper_first(dos.get('loi_dite')), title)
-    home_json_data.append({
-        'total_amendements': total_amendements,
-        'end': dos['end'],
-        'status': status,
-        'loi': id,
-        'titre': title
-    })
+    if total_amendements:
+        home_json_data.append({
+            'total_amendements': total_amendements,
+            'end': dos['end'],
+            'status': status,
+            'loi': id,
+            'titre': title
+        })
 
     total_doslegs += 1
 
