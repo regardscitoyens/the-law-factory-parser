@@ -53,6 +53,10 @@ def save_json_page(tosave, done):
 done = 0
 tosave = []
 
+def read_articles(text_id, step_id):
+    articles = open_json(os.path.join(sourcedir, text_id, 'procedure', step_id, 'texte'), 'texte.json')['articles']
+    return {art['titre']: clean_text_for_diff([art['alineas'][al] for al in sorted(art['alineas'].keys())]) for art in articles}
+
 def read_text(text_id, step_id):
     articles = open_json(os.path.join(sourcedir, text_id, 'procedure', step_id, 'texte'), 'texte.json')['articles']
     texte = []
@@ -95,10 +99,14 @@ for d in dossiers:
         if s.get('step') != "depot":
             first_found = True
             lastText = read_text(d['id'], s['directory'])
+            #lastArts = read_articles(d['id'], s['directory'])
         # TODO take real first depot in case of multiple depots
         if not first_found and s.get('step') == "depot":
             firstText = read_text(d['id'], s['directory'])
-    proc["ratio_texte_modif"] = 1 - compute_similarity(clean_text_for_diff(firstText), clean_text_for_diff(lastText))
+            #firstArts = read_articles(d['id'], s['directory'])
+    proc["ratio_texte_modif"] = 1 - compute_approx_similarity(firstText, lastText)
+    #proc["ratio_texte_modif"] = 1 - compute_similarity(firstArts, lastArts)
+    #proc["ratio_texte_modif"] = 1 - compute_similarity_by_articles(firstArts, lastArts)
     proc["input_text_length2"] = len("\n".join(firstText))
     proc["output_text_length2"] = len("\n".join(lastText))
 

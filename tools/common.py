@@ -5,6 +5,7 @@ import sys, os, re, requests
 from datetime import date, datetime
 from html.entities import name2codepoint
 from csv import DictReader
+from difflib import SequenceMatcher
 from diff_match_patch import diff_match_patch
 import json
 import locale
@@ -119,20 +120,37 @@ def clean_text_for_diff(text):
     text = re_non_alphanum.sub('', text)
     return text
 
+def compute_approx_similarity(text1, text2):
+    a = SequenceMatcher(None, text1, text2, autojunk=False)
+    return 1 - a.real_quick_ratio()
 
 def compute_similarity(text1, text2):
     dmp = diff_match_patch()
     dmp.Diff_Timeout = 0
-    dmp.Diff_EditCost = 25
     diff = dmp.diff_main(text1, text2)
-    dmp.diff_cleanupSemantic(diff)
-    dmp.diff_cleanupEfficiency(diff)
 
     # similarity
     common_text = sum([len(txt) for op, txt in diff if op == 0])
     text_length = max(len(text1), len(text2))
     sim = common_text / text_length
+    return sim
 
+def compute_similarity_by_articles(text1, text2):
+    dmp = diff_match_patch()
+    dmp.Diff_Timeout = 0
+    arts = set(text1.keys()) | set (text2.keys())
+    common_text = 0
+    text_length = 0
+    for a in arts:
+        if a in text1 and a in text2:
+            diff = dmp.diff_main(text1[a], text2[a])
+            common_text += sum([len(txt) for op, txt in diff if op == 0])
+            text_length += max(len(text1[a]), len(text2[a]))
+        elif a in text1:
+            text_length += len(text1[a])
+        else:
+            text_length += len(text2[a])
+    sim = common_text / text_length
     return sim
 
 
