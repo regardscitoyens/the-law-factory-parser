@@ -171,7 +171,7 @@ def parse_texts(dos):
                 continue
 
             step_in_discussion = not dos.get('url_jo') and \
-                not any([1 for step in steps[step_index+1:] if 'source_url' in step])
+                not any([1 for step in steps[step_index+1:] if 'source_url' in step and step.get('step') != 'depot'])
             if step_in_discussion:
                 print('     * ignore step in discussion')
                 break
