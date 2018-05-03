@@ -311,7 +311,7 @@ if __name__ == '__main__':
     senat_csv.sort(key=lambda x: x['Date de promulgation'])
 
     # output the metrics CSV
-    out = os.path.join(sys.argv[1], 'metrics%s.csv' % ('-old' if run_old else '')
+    out = os.path.join(sys.argv[1], 'metrics%s.csv' % ('-old' if run_old else ''))
     print('output:', out)
     writer = csv.DictWriter(open(out, 'w'), fieldnames=HEADERS, extrasaction='ignore')
     writer.writeheader()
