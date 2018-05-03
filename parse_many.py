@@ -8,13 +8,13 @@ from tools.common import open_json
 API_DIRECTORY = sys.argv[1]
 
 already_done = {open_json(dos).get('url_dossier_senat') for dos \
-                in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json'))}
+                in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json')) if dos.get('url_jo')}
 
 for url in sys.stdin:
     print()
     print('======')
     url = url.strip()
-    if url in already_done and '--enable-cache' in sys.argv:
+    if url in already_done:
         print('  + passed, already done:', url)
         continue
     try:
