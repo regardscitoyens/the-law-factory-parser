@@ -4,6 +4,7 @@ import parse_one
 
 from tools.common import open_json
 
+verbose = "--quiet" not in sys.argv
 
 API_DIRECTORY = sys.argv[1]
 
@@ -14,11 +15,13 @@ for jsondos in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json')):
         already_done[dos.get('url_dossier_senat')] = True
 
 for url in sys.stdin:
-    print()
-    print('======')
     url = url.strip()
     if url in already_done:
-        print('  + passed, already done:', url)
+        if verbose:
+            print()
+            print('======')
+            print(url)
+            print('  + passed, already done:', url)
         continue
     try:
         parse_one.process(API_DIRECTORY, url)

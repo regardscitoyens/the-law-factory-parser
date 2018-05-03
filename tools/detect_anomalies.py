@@ -25,7 +25,7 @@ def find_anomalies(dossiers, verbose=True):
 
             prev_step = step_name
 
-    if verbose:
+    if verbose and anomalies:
         print(anomalies, 'anomalies (', len(dossiers), 'doslegs)')
     return anomalies
 

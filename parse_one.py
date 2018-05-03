@@ -14,21 +14,21 @@ import parse_doslegs_texts
 import format_data_for_frontend
 
 
-def download_senat(url, verbose=True):
+def download_senat(url, log=sys.stderr, verbose=True):
     if verbose: print('  [] download SENAT version')
     html = download(url).text
     if verbose: print('  [] parse SENAT version')
-    return senapy_parse(html, url)
+    return senapy_parse(html, url, logfile=log)
 
 
-def download_an(url, url_senat=False, verbose=True):
+def download_an(url, url_senat=False, log=sys.stderr, verbose=True):
     if verbose: print('  [] download AN version')
     resp = download(url)
     resp.encoding = 'Windows-1252'
     html = resp.text
     if verbose: print('  [] parse AN version')
     # TODO: do both instead of first
-    results = anpy_parse(html, url)
+    results = anpy_parse(html, url, logfile=log, verbose=verbose)
     if len(results) > 1:
         if url_senat:
             for result in results:
@@ -52,7 +52,7 @@ def are_same_doslegs(senat_dos, an_dos):
     return False
 
 
-def download_merged_dos(url, verbose=True):
+def download_merged_dos(url, log=sys.stderr, verbose=True):
     """find dossier from url and returns (the_merged_dosleg, AN_dosleg, SENAT_dosleg)"""
     if not url.startswith('http') and ('pjl' in url or 'ppl' in url or 'plfss' in url):
         url = "http://www.senat.fr/dossier-legislatif/%s.html" % url
@@ -64,23 +64,23 @@ def download_merged_dos(url, verbose=True):
     senat_dos = None
 
     if 'senat.fr' in url:
-        senat_dos = download_senat(url, verbose=verbose)
+        senat_dos = download_senat(url, verbose=verbose, log=log)
         if not senat_dos:
             if verbose: print('  /!\ INVALID SENAT DOS')
             return None, None, None
         # Add AN version if there's one
         if 'url_dossier_assemblee' in senat_dos:
-            an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'], verbose=verbose)
+            an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'], verbose=verbose, log=log)
             if 'url_dossier_senat' in an_dos:
                 assert are_same_doslegs(senat_dos, an_dos)
             dos = merge_senat_with_an(senat_dos, an_dos)
         else:
             dos = senat_dos
     elif 'assemblee-nationale.fr' in url:
-        an_dos = download_an(url, verbose=verbose)
+        an_dos = download_an(url, verbose=verbose, log=log)
         # Add senat version if there's one
         if 'url_dossier_senat' in an_dos:
-            senat_dos = download_senat(an_dos['url_dossier_senat'])
+            senat_dos = download_senat(an_dos['url_dossier_senat'], log=log)
             dos = merge_senat_with_an(senat_dos, an_dos)
         else:
             dos = an_dos
@@ -136,21 +136,32 @@ def dump_error_log(url, exception, api_dir, log):
 def process(API_DIRECTORY, url):
     disable_cache = '--enable-cache' not in sys.argv
     only_promulgated = '--only-promulgated' in sys.argv
+    verbose = '--quiet' not in sys.argv
+    if not disable_cache:
+        enable_requests_cache()
     with log_print(io.StringIO()) as log:
         try:
-            if not disable_cache:
-                enable_requests_cache()
+            if verbose:
+                print('======')
+                print(url)
 
-            dos, an_dos, senat_dos = download_merged_dos(url)
+            dos, an_dos, senat_dos = download_merged_dos(url, log=log, verbose=verbose)
             if not dos:
                 return
 
-            print('        title:', dos.get('long_title'))
-            find_anomalies([dos])
+            if verbose:
+                print('        title:', dos.get('long_title'))
+            find_anomalies([dos], verbose=verbose)
 
             if not dos.get('url_jo') and only_promulgated:
-                print('    ----- passed: no JO link')
+                if verbose:
+                    print('    ----- passed: no JO link')
                 return
+
+            if not verbose:
+                print()
+                print('======')
+                print(url)
 
             debug_file(an_dos, 'debug_an_dos.json')
             debug_file(senat_dos, 'debug_senat_dos.json')

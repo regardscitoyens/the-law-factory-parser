@@ -103,8 +103,8 @@ def add_metrics(dos, parsed_dos):
     dos['Taille initiale'] = parsed_dos['input_text_length2']
 
 
-def add_metrics_via_adhoc_parsing(dos):
-    senat_dos = download_senat(dos['URL du dossier'])
+def add_metrics_via_adhoc_parsing(dos, verbose=True):
+    senat_dos = download_senat(dos['URL du dossier'], verbose=verbose)
     if not senat_dos:
         print('  /!\ INVALID SENAT DOS')
         return
@@ -112,7 +112,7 @@ def add_metrics_via_adhoc_parsing(dos):
     # Add AN version if there's one
     parsed_dos = senat_dos
     if 'url_dossier_assemblee' in senat_dos:
-        an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'])
+        an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'], verbose=verbose)
         if 'url_dossier_senat' in an_dos and are_same_doslegs(senat_dos, an_dos):
             parsed_dos = merge_senat_with_an(senat_dos, an_dos)
     dos['Titre court'] = parsed_dos['short_title']
@@ -248,6 +248,9 @@ HEADERS = [
 # - check accords internationaux : taille should include annexes and finale == initiale
 
 if __name__ == '__main__':
+    verbose = "--quiet" not in sys.argv
+    if not verbose:
+        sys.argv.remove("--quiet")
     run_old = len(sys.argv) > 2
     enable_requests_cache()
     senat_csv = parse_senat_open_data(run_old=run_old)
@@ -258,8 +261,9 @@ if __name__ == '__main__':
     c = 0
     fixed = 0
     for dos in senat_csv:
-        print()
-        print(dos['URL du dossier'])
+        if verbose:
+            print()
+            print(dos['URL du dossier'])
 
         dos['Année initiale'] = annee(dos['Date initiale'])
         dos['Date initiale'] = format_date(dos['Date initiale'])
@@ -271,7 +275,8 @@ if __name__ == '__main__':
 
         senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
         if senat_id in dossiers_json:
-            print(' - matched')
+            if verbose:
+                print(' - matched')
             c += 1
             parsed_dos = dossiers_json[senat_id]
             try:
@@ -283,13 +288,13 @@ if __name__ == '__main__':
             # do a custom parsing when the parsed dos is missing
             try:
                 dos['Source données'] = 'parsing ad-hoc'
-                add_metrics_via_adhoc_parsing(dos)
+                add_metrics_via_adhoc_parsing(dos, verbose=verbose)
                 fixed += 1
             except KeyboardInterrupt:
                 break
             except Exception as e:
                 traceback.print_tb(e.__traceback__)
-                print('- adhoc parsing failed', e)
+                print('- adhoc parsing failed for', dos['URL du dossier'], e)
                 continue
 
         if not dos["Décision du CC"]:
