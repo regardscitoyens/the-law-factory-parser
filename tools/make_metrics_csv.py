@@ -24,12 +24,15 @@ def find_last_depot(steps):
     return last_depot
 
 
-def parse_senat_open_data():
+def parse_senat_open_data(run_old=False):
     senat_csv = opendata.fetch_csv()
     # filter non-promulgués
     senat_csv = [dos for dos in senat_csv if dos['Date de promulgation']]
     # filter before 2008
-    senat_csv = [dos for dos in senat_csv if annee(dos['Date initiale']) >= 2008]
+    if run_old:
+        senat_csv = [dos for dos in senat_csv if annee(dos['Date initiale']) < 2008]
+    else:
+        senat_csv = [dos for dos in senat_csv if annee(dos['Date initiale']) >= 2008]
     senat_csv.sort(key=lambda dos: annee(dos['Date initiale']))
     return senat_csv
 
@@ -245,8 +248,9 @@ HEADERS = [
 # - check accords internationaux : taille should include annexes and finale == initiale
 
 if __name__ == '__main__':
+    run_old = len(sys.argv) > 2
     enable_requests_cache()
-    senat_csv = parse_senat_open_data()
+    senat_csv = parse_senat_open_data(run_old=run_old)
     dossiers_json = find_parsed_doslegs(sys.argv[1])
 
     random.shuffle(senat_csv)
@@ -307,7 +311,7 @@ if __name__ == '__main__':
     senat_csv.sort(key=lambda x: x['Date de promulgation'])
 
     # output the metrics CSV
-    out = os.path.join(sys.argv[1], 'metrics.csv')
+    out = os.path.join(sys.argv[1], 'metrics%s.csv' % ('-old' if run_old else '')
     print('output:', out)
     writer = csv.DictWriter(open(out, 'w'), fieldnames=HEADERS, extrasaction='ignore')
     writer.writeheader()
