@@ -5,13 +5,13 @@ from tools import json2arbo, prepare_articles, update_procedure, \
     compute_stats
 from tools.common import debug_file, print_json
 
-def project_header_template(dos_id, procedure):
+def project_header_template(procedure):
     return """
 <h1>Les données pour: "{long_title}"</h1>
 <p>Les données mises à disposition dans ces répertoires sont celles utilisées par <a href="http://lafabriquedelaloi.fr/">La Fabrique de la Loi</a> pour visualiser "<a href="http://lafabriquedelaloi.fr/lois.html?loi={dos_id}">{long_title}</a>".</p>
 <p>Elles ont été constituées par <a href="http://regardscitoyens.org">Regards Citoyens</a> à partir de <a href="http://nosdeputes.Fr/">NosDéputés.fr</a>, <a href="http://NosSénateurs.fr">NosSénateurs.fr<a/> et les sites du <a href="http://senat.fr/">Sénat</a> et de l'<a href="http://assemblee-nationale.fr">Assemblée nationale</a>. Elles sont réutilisables librement en <img src="http://www.nosdeputes.fr/images/opendata.png" alt="Open Data"/> sous la licence <a href="http://opendatacommons.org/licenses/odbl/">ODBL</a>.</p>
 <p>Le répertoire <a href="procedure/"><img src="http://www.lafabriquedelaloi.fr/icons/folder.gif"/>&nbsp;procedure/</a> contient les données brutes au format JSON sur les textes, les interventions et les amendements à chaque étape de la procédure. Le répertoire <a href="viz/"><img src="http://www.lafabriquedelaloi.fr/icons/folder.gif"/>&nbsp;viz/</a> contient les fichiers utilisés par l'application.</p>
-""".format(long_title=procedure.get('long_title'), dos_id=dos_id)
+""".format(long_title=procedure.get('long_title'), dos_id=procedure['id'])
 
 
 def dump_success_log(output_dir, log):
@@ -27,11 +27,11 @@ def dump_success_log(output_dir, log):
 
 
 def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
-    dos_id = dos.get('senat_id', dos.get('assemblee_id'))
+    dos['id'] = dos.get('senat_id', dos.get('assemblee_id'))
 
-    output_dir = os.path.join(OUTPUT_DIR, dos_id + '_tmp')
-    final_output_dir = os.path.join(OUTPUT_DIR, dos_id)
-    print('     writing to:', dos_id + '_tmp')
+    output_dir = os.path.join(OUTPUT_DIR, dos['id'] + '_tmp')
+    final_output_dir = os.path.join(OUTPUT_DIR, dos['id'])
+    print('     writing to:', dos['id'] + '_tmp')
 
     if skip_already_done and os.path.exists(final_output_dir):
         print(' - already done')
@@ -61,7 +61,7 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
 
     print(' - compute stats')
     debug_file(dos, 'debug_before_stats.json')
-    procedure['stats'] = compute_stats.process(procedure)
+    procedure['stats'] = compute_stats.process(output_dir, procedure)
 
     # remove intermediate data
     for step in procedure['steps']:
@@ -82,11 +82,11 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
     print_json(procedure, os.path.join(output_dir, 'viz', 'procedure.json'))
 
     with open(os.path.join(output_dir, 'HEADER.html'), 'w') as f:
-        f.write(project_header_template(dos_id, procedure))
+        f.write(project_header_template(procedure))
 
     shutil.rmtree(final_output_dir, ignore_errors=True)
     os.rename(output_dir, final_output_dir)
 
-    print('  FINISHED -', dos_id)
+    print('  FINISHED -', dos['id'])
 
     dump_success_log(final_output_dir, log)

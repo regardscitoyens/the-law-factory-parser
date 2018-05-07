@@ -39,10 +39,10 @@ def parse_senat_open_data(run_old=False):
 
 def find_parsed_doslegs(api_directory):
     dossiers_json = {}
-    for path in glob.glob(os.path.join(api_directory, 'dossiers_*.json')):
-        for dos in open_json(path)['dossiers']:
-            if dos.get('senat_id'):
-                dossiers_json[dos['senat_id']] = dos
+    for path in glob.glob(os.path.join(api_directory, '**/procedure.json'), recursive=True):
+        dos = open_json(path)
+        if dos.get('senat_id'):
+            dossiers_json[dos['senat_id']] = dos
     print(len(dossiers_json), 'parsed found')
     return dossiers_json
 
@@ -94,13 +94,13 @@ def add_metrics(dos, parsed_dos):
     dos['URL CC'] = cc_step[0] if cc_step else ''
     dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
-    dos['Taille finale'] = parsed_dos['output_text_length2']
+    dos['Taille finale'] = parsed_dos['stats']['output_text_length']
 
     # skip budget law text initial length if from AN since our parsing is not working for now
     last_depot = find_last_depot(parsed_dos['steps'])
     if dos['Type de texte'] == 'budgétaire' and 'assemblee-nationale.fr' in last_depot['source_url']:
         return
-    dos['Taille initiale'] = parsed_dos['input_text_length2']
+    dos['Taille initiale'] = parsed_dos['stats']['input_text_length']
 
 
 def add_metrics_via_adhoc_parsing(dos, verbose=True):

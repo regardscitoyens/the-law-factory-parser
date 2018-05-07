@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import os, sys
 from common import *
-from aggregates_data import DossierWalker, CountAmendementComputation
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 sourcedir = sys.argv[1]
 if not sourcedir:
@@ -54,48 +52,9 @@ def save_json_page(tosave, done):
 done = 0
 tosave = []
 
-def read_articles(text_id, step_id):
-    articles = open_json(os.path.join(sourcedir, text_id, 'procedure', step_id, 'texte'), 'texte.json')['articles']
-    return {art['titre']: clean_text_for_diff([art['alineas'][al] for al in sorted(art['alineas'].keys())]) for art in articles}
-
-def read_text(text_id, step_id):
-    articles = open_json(os.path.join(sourcedir, text_id, 'procedure', step_id, 'texte'), 'texte.json')['articles']
-    texte = []
-    for art in articles:
-        for key in sorted(art['alineas'].keys()):
-            if art['alineas'][key] != '':
-                texte.append(strip_text(art['alineas'][key]))
-    return texte
-
 for d in dossiers:
-    computation = CountAmendementComputation()
-    myWalker = DossierWalker(d["id"], computation, sourcedir)
-    myWalker.walk()
-
     proc = open_json(os.path.join(sourcedir, d['id'], 'viz'), 'procedure.json')
     proc["id"] = d["id"]
-    proc["beginning"] = format_date(d["Date initiale"])
-    proc["end"] = format_date(d["Date de promulgation"])
-    proc["total_days"] = (datize(proc["end"]) - datize(proc["beginning"])).days + 1
-    # proc["procedure"] = proc["type"]
-    proc["type"] = d["Type de dossier"]
-    proc["themes"] = [a.strip().lower() for a in d["Thèmes"].split(',')]
-    proc["total_amendements"] = int(d["total_amendements"])
-    proc["total_amendements_adoptes"] = computation.countAmdtAdoptes
-    proc["total_amendements_parlementaire"] = computation.countAmdtParl
-    proc["total_amendements_parlementaire_adoptes"] = computation.countAmdtParlAdoptes
-    proc["total_mots"] = int(d["total_mots"])
-    proc["total_mots2"] = computation.countNbMots
-    proc["total_intervenant"] = len(computation.dicoIntervenants)
-    proc["total_accident_procedure"] = computation.countAccidentProcedure
-    proc["total_articles"] = computation.totalArticles
-    proc["total_articles_modified"] = computation.totalArticlesModified
-    proc["ratio_article_modif"] = computation.totalArticlesModified/computation.totalArticles if computation.totalArticles != 0 else 0
-
-
-# TODO:
-# - take dates + décision CC from csv
-# - take état du dossier from csv when more than promulgués (and handle better end date then)
 
     for f in ["table_concordance", "objet_du_texte"]:
         if f in proc:
@@ -110,4 +69,3 @@ for d in dossiers:
 
 if tosave:
     save_json_page(tosave, done)
-

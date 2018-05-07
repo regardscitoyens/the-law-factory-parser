@@ -25,23 +25,9 @@ home_json_data = []
 
 total_doslegs = 0
 for dos, path in dossiers:
-    id = dos.get('senat_id', dos.get('assemblee_id'))
-
     if not dos.get('beginning'):
-        print('INVALID BEGGINING DATE:', id)
+        print('INVALID BEGGINING DATE:', dos['id'])
         continue
-
-    total_mots = 0
-    try:
-        intervs = open_json(path.replace('procedure.json', 'interventions.json'))
-        total_mots = sum([
-            sum(i['total_mots'] for i in step['divisions'].values())
-                for step in intervs.values()
-        ])
-    except FileNotFoundError:
-        pass
-
-    total_amendements = sum([step.get('nb_amendements', 0) for step in dos['steps']])
 
     decision_cc = None
     decision_cc_date = None
@@ -52,51 +38,40 @@ for dos, path in dossiers:
             break
 
     csvfile.writerow([
-        id, # id
+        dos['id'], # id
         dos.get('long_title'), # Titre
         # TODO: detect propo/pjl in AN doslegs
-        'projet de loi' if 'pjl' in dos.get('senat_id', '') else 'proposition de loi', # Type de dossier
+        'proposition de loi' if dos.get('proposal_type') == 'PPL' else 'projet de loi', # Type de dossier
         dos.get('beginning'), # Date initiale
         dos.get('url_dossier_senat', dos.get('url_dossier_assemblee')), # URL du dossier
-        'promulgué', # État du dossier
+        'promulgué' if dos.get('end') else '', # État du dossier
         decision_cc, # Décision du CC
         decision_cc_date, # Date de la décision
         dos.get('end'), # Date de promulgation
         dos.get('law_name'), # Numéro de la loi
         ','.join(dos.get('themes', [])), # Thèmes
-        total_amendements, # total_amendements
-        total_mots, # total_mots
+        dos['stats']['total_amendements'], # total_amendements
+        dos['stats']['total_mots'], # total_mots
         dos.get('short_title'), # short_title
         dos.get('loi_dite') # Nom commun de la loi
     ])
 
-    if total_amendements == 0:
+    if dos['stats']['total_amendements'] == 0:
         status = 'Aucun amendement'
-    elif total_amendements == 1:
+    elif dos['stats']['total_amendements'] == 1:
         status = 'Un amendement'
     else:
-        status = '%d amendements' % total_amendements
-
-    """
-    last_intervention = [
-        step['intervention_files'][-1] for step in dos['steps'] \
-            if step.get('has_interventions')
-    ]
-    if last_intervention:
-        last_intervention = last_intervention[-1]
-    else:
-        last_intervention = None
-    """
+        status = '%d amendements' % dos['stats']['total_amendements']
 
     title = dos.get('short_title')
     if dos.get('loi_dite'):
         title = "%s (%s)" % (upper_first(dos.get('loi_dite')), title)
-    if total_amendements:
+    if dos['stats']['total_amendements']:
         home_json_data.append({
-            'total_amendements': total_amendements,
+            'total_amendements': dos['stats']['total_amendements'],
             'end': dos.get('end'),
             'status': status,
-            'loi': id,
+            'loi': dos['id'],
             'titre': title
         })
 

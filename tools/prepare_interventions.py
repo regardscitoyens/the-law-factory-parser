@@ -63,7 +63,7 @@ re_id_laststep = re.compile(r'/[^/\d]*(\d+)\D[^/]*$')
 
 def process(OUTPUT_DIR, procedure):
     context = Context([0, OUTPUT_DIR])
-    
+
     gouv_members = {}
     rapporteurs = {}
     orat_gpes = {}
@@ -218,6 +218,7 @@ def process(OUTPUT_DIR, procedure):
             steps[step['directory']] = {'groupes': groupes, 'orateurs': orateurs, 'divisions': sections}
 
     print_json(steps, os.path.join(context.sourcedir, 'viz/interventions.json'))
+
 
 if __name__ == '__main__':
     process(sys.argv[1], json.load(open(os.path.join(sys.argv[1], 'viz/procedure.json'))))
