@@ -31,7 +31,7 @@ def process(dos):
     stats = {}
 
     first_text, last_text = find_first_and_last_texts(dos)
-    stats["ratio_texte_modif"] = 1 - compute_similarity(first_text, last_text)
+    stats["ratio_texte_modif"] = 1 - compute_similarity_by_articles(first_text, last_text)
     stats["input_text_length2"] = len("\n".join(first_text))
     stats["output_text_length2"] = len("\n".join(last_text))
 
