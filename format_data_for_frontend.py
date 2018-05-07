@@ -81,8 +81,8 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
 
     print_json(procedure, os.path.join(output_dir, 'viz', 'procedure.json'))
 
-    open(os.path.join(output_dir, 'HEADER.html'), 'w').write(
-        project_header_template(dos_id, procedure))
+    with open(os.path.join(output_dir, 'HEADER.html'), 'w') as f:
+        f.write(project_header_template(dos_id, procedure))
 
     shutil.rmtree(final_output_dir, ignore_errors=True)
     os.rename(output_dir, final_output_dir)
