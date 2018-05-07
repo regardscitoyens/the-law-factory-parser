@@ -3,7 +3,7 @@
 
 import os, sys
 from common import *
-from aggregates_data import DossierWalker,CountAmendementComputation
+from aggregates_data import DossierWalker, CountAmendementComputation
 
 sourcedir = sys.argv[1]
 if not sourcedir:
@@ -91,25 +91,6 @@ for d in dossiers:
     proc["total_articles"] = computation.totalArticles
     proc["total_articles_modified"] = computation.totalArticlesModified
     proc["ratio_article_modif"] = computation.totalArticlesModified/computation.totalArticles if computation.totalArticles != 0 else 0
-    proc["input_text_length"] = computation.firstStepTextLength
-    proc["output_text_length"] = computation.lastStepTextLength
-    first_found = False
-    for s in proc['steps']:
-        if s['debats_order'] == None or s.get('echec'):
-            continue
-        if s.get('step') != "depot":
-            first_found = True
-            lastText = read_text(d['id'], s['directory'])
-            #lastArts = read_articles(d['id'], s['directory'])
-        # TODO take real first depot in case of multiple depots
-        if not first_found and s.get('step') == "depot":
-            firstText = read_text(d['id'], s['directory'])
-            #firstArts = read_articles(d['id'], s['directory'])
-    proc["ratio_texte_modif"] = 1 - compute_approx_similarity(firstText, lastText)
-    #proc["ratio_texte_modif"] = 1 - compute_similarity(firstArts, lastArts)
-    #proc["ratio_texte_modif"] = 1 - compute_similarity_by_articles(firstArts, lastArts)
-    proc["input_text_length2"] = len("\n".join(firstText))
-    proc["output_text_length2"] = len("\n".join(lastText))
 
 
 # TODO:

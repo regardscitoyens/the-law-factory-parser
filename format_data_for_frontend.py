@@ -1,7 +1,8 @@
 import os, shutil, io
 
 from tools import json2arbo, prepare_articles, update_procedure, \
-    prepare_amendements, prepare_interventions, reorder_interventions_and_correct_procedure
+    prepare_amendements, prepare_interventions, reorder_interventions_and_correct_procedure, \
+    compute_stats
 from tools.common import debug_file, print_json
 
 def project_header_template(dos_id, procedure):
@@ -57,6 +58,10 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
 
     print(' - prepare interventions.json')
     prepare_interventions.process(output_dir, procedure)
+
+    print(' - compute stats')
+    debug_file(dos, 'debug_before_stats.json')
+    procedure['stats'] = compute_stats.process(procedure)
 
     # remove intermediate data
     for step in procedure['steps']:
