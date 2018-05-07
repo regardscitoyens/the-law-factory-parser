@@ -14,6 +14,11 @@ def read_text(step):
     return texte
 
 
+def read_articles(text_id, step_id):
+    articles = open_json(os.path.join(sourcedir, text_id, 'procedure', step_id, 'texte'), 'texte.json')['articles']
+    return {art['titre']: clean_text_for_diff([art['alineas'][al] for al in sorted(art['alineas'].keys())]) for art in articles}
+
+
 def find_first_and_last_texts(dos):
     first_found = False
     for s in dos['steps']:
@@ -22,16 +27,18 @@ def find_first_and_last_texts(dos):
         if s.get('step') != "depot":
             first_found = True
             last_text = read_text(s)
+            last_arts = read_articles(d['id'], s['directory'])
         if not first_found and s.get('step') == "depot":
             first_text = read_text(s)
-    return first_text, last_text
+            first_arts = read_articles(d['id'], s['directory'])
+    return first_text, first_arts, last_text, last_arts
 
 
 def process(dos):
     stats = {}
 
-    first_text, last_text = find_first_and_last_texts(dos)
-    stats["ratio_texte_modif"] = 1 - compute_similarity_by_articles(first_text, last_text)
+    first_text, first_arts, last_text, last_arts = find_first_and_last_texts(dos)
+    stats["ratio_texte_modif"] = 1 - compute_similarity_by_articles(first_arts, last_arts)
     stats["input_text_length2"] = len("\n".join(first_text))
     stats["output_text_length2"] = len("\n".join(last_text))
 
