@@ -17,6 +17,9 @@ before_install:
         echo 'Setting up pip...'
         ./pypy3 -m ensurepip
         ln -s pip3 pip
+        cd -
+        python --version
+        pip --version
     fi
 install: pip install -r test_requirements.txt
 script:
