@@ -2,8 +2,9 @@ import os, shutil, io
 
 from tools import json2arbo, prepare_articles, update_procedure, \
     prepare_amendements, prepare_interventions, reorder_interventions_and_correct_procedure, \
-    compute_stats
+    compute_stats, add_links
 from tools.common import debug_file, print_json
+
 
 def project_header_template(procedure):
     return """
@@ -39,7 +40,11 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
 
     shutil.rmtree(output_dir, ignore_errors=True)
 
+    debug_file(dos, 'debug_before_add_links.json')
+    dos = add_links.process(dos)
+
     # add texte.json and write all the text files tree
+    debug_file(dos, 'debug_before_json2arbo.json')
     dos = json2arbo.process(dos, output_dir + '/procedure')
 
     print(' - process article versions')

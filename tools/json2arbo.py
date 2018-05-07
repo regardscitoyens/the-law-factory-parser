@@ -7,44 +7,16 @@ where LAW_FILE results from perl download_loi.pl URL > LAW_FILE
 Outputs results to stdout"""
 
 import os, sys, re
+import urllib.parse
 try:
-    from .common import print_json
+    from .common import print_json, open_json
 except:
-    from common import print_json
+    from common import print_json, open_json
+
 
 def mkdirs(d):
     if not os.path.exists(d):
         os.makedirs(d)
-
-re_sec_path = re.compile(r"(\de?r?)([TCVLS])")
-def sec_path(s):
-    return re_sec_path.sub(r"\1/\2", s)
-
-def orderabledir(titre):
-    extrazero = ''
-    try:
-        titre2num = int(re.compile(r"\D.*$").sub('', titre))
-        if (titre2num < 10):
-            extrazero = '00'
-        elif (titre2num < 100):
-            extrazero = '0'
-    except:
-        pass
-    return extrazero+re_cl_ids.sub('_', titre)
-
-re_cl_ids = re.compile(r"\s+")
-
-replace_str = [
-#  (re.compile(r'"'), ""),
-#  (re.compile(r"^[IVXLCDM]+[\.\s-]+"), ""),
-#  (re.compile(r"^([0-9]+|[a-z])[°)\s]+"), ""),
-    (re.compile(r"\s+"), " ")
-]
-def clean_text(t):
-    for regex, repl in replace_str:
-        t = regex.sub(repl, t.strip())
-#  return t
-    return t.strip()
 
 
 def get_step_id(nstep, step):
@@ -68,7 +40,6 @@ def process(dos, OUTPUT_DIR):
 
         articles = step.get('articles_completed', step.get('articles'))
         if not articles:
-            # print('no articles for step')
             continue
 
         mkdirs(step_dir)
@@ -85,24 +56,19 @@ def process(dos, OUTPUT_DIR):
                 log_err("JSON missing first line with text infos")
                 sys.exit(1)
             elif data["type"] == "section":
-                path = step_dir + '/' + sec_path(data["id"])
                 alldata['sections'].append(data)
             elif data["type"] == "article":
-                path = step_dir + '/'
-                if "section" in data:
-                    path += sec_path(data["section"])+"/"
-                path += "A"+orderabledir(data["titre"])+"/"
                 alldata['articles'].append(data)
-                text = ""
-                for i in range(len(data["alineas"])):
-                    if text != "":
-                        text += "\n"
-                    text += clean_text(data["alineas"]["%03d" % (i+1)])
             elif data["type"] == "echec":
                 alldata['expose'] = data['texte']
+
 
         print_json(alldata, os.path.join(step_dir, 'texte.json'))
 
         step['texte.json'] = alldata
 
     return dos
+
+
+if __name__ == '__main__':
+    print_json(process(open_json(sys.argv[1]), 'test_out'))
