@@ -14,8 +14,8 @@ def read_text(step):
     return texte
 
 
-def read_articles(text_id, step_id):
-    articles = open_json(os.path.join(sourcedir, text_id, 'procedure', step_id, 'texte'), 'texte.json')['articles']
+def read_articles(step):
+    articles = step['texte.json']['articles']
     return {art['titre']: clean_text_for_diff([art['alineas'][al] for al in sorted(art['alineas'].keys())]) for art in articles}
 
 
@@ -27,10 +27,10 @@ def find_first_and_last_texts(dos):
         if s.get('step') != "depot":
             first_found = True
             last_text = read_text(s)
-            last_arts = read_articles(d['id'], s['directory'])
+            last_arts = read_articles(s)
         if not first_found and s.get('step') == "depot":
             first_text = read_text(s)
-            first_arts = read_articles(d['id'], s['directory'])
+            first_arts = read_articles(s)
     return first_text, first_arts, last_text, last_arts
 
 
