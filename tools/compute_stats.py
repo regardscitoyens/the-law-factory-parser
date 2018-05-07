@@ -1,7 +1,7 @@
 import os, sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from common import strip_text, compute_similarity, open_json, print_json
+from common import strip_text, compute_similarity_by_articles, open_json, print_json
 
 
 def read_text(step):
