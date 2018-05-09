@@ -1,6 +1,6 @@
 import sys, os, time
 
-from legipy.services import LawService
+from legipy.services.law_service import LawService
 
 try:
     from .common import open_json, print_json
