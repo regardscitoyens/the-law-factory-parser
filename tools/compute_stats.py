@@ -5,31 +5,12 @@ from common import strip_text, compute_similarity_by_articles, open_json, print_
     clean_text_for_diff, datize
 
 
-def articles_modified(path, dos):
-    etapes = open_json(os.path.join(path, 'viz/articles_etapes.json'))
-    modified = 0
-    first_step, _ = find_first_and_last_steps(dos)
-    first_step_directory = dos['steps'][first_step]['directory']
-    for art in etapes["articles"].values():
-        first_step_found = False
-        for step in art["steps"]:
-            if step['directory'] == first_step_directory:
-                first_step_found = True
-                continue
-            if first_step_found and step['n_diff'] != 0:
-                modified += 1
-                break
-    return modified
-
-
 def find_amendements(path):
-    amdts = []
     for amdts_file in glob.glob(os.path.join(path, '**/amendements_*'), recursive=True):
         amendements = open_json(amdts_file)
         for subject in amendements.get('sujets', {}).values():
             for amdt in subject.get('amendements', []):
-                amdts.append(amdt)
-    return amdts
+                yield amdt
 
 
 def find_interventions(path):
@@ -82,32 +63,46 @@ def process(output_dir, dos):
     stats = {}
 
     intervs = open_json(os.path.join(output_dir, 'viz/interventions.json'))
-    stats['total_mots'] = sum([ # TOOODO [0] +
+    stats['total_mots'] = sum([
         sum(i['total_mots'] for i in step['divisions'].values())
             for step in intervs.values()
     ])
 
-    amendements = find_amendements(output_dir)
-    stats['total_amendements'] = len(amendements)
-    stats["total_amendements_adoptes"] = len([amdt for amdt in amendements if amdt["sort"] == "adopté"])
-    stats["total_amendements_parlementaire"] = len([amdt for amdt in amendements if amdt["groupe"] != "Gouvernement"])
-    stats["total_amendements_parlementaire_adoptes"] = len([amdt for amdt in amendements if amdt["sort"] == "adopté" and amdt["groupe"] != "Gouvernement"])
-    stats["total_amendements_gouvernement"] = len([amdt for amdt in amendements if amdt["groupe"] == "Gouvernement"])
-    stats["total_amendements_gouvernement_adoptes"] = len([amdt for amdt in amendements if amdt["sort"] == "adopté" and amdt["groupe"] == "Gouvernement"])
+    stats['total_amendements'] \
+        = stats['total_amendements'] \
+        = stats["total_amendements_adoptes"] \
+        = stats["total_amendements_parlementaire"] \
+        = stats["total_amendements_parlementaire_adoptes"] \
+        = stats["total_amendements_gouvernement"] \
+        = stats["total_amendements_gouvernement_adoptes"] \
+        = 0
 
-    stats["total_intervenants"] = len({interv["intervention"]["intervenant_slug"] for interv in find_interventions(output_dir)}) # TOOODO typpooo
+    for amdt in find_amendements(output_dir):
+        stats['total_amendements'] += 1
+        if amdt["sort"] == "adopté":
+            stats["total_amendements_adoptes"] += 1
+            if amdt["groupe"] == "Gouvernement":
+                stats["total_amendements_gouvernement_adoptes"] += 1
+            else:
+                stats["total_amendements_parlementaire_adoptes"] += 1
 
-    stats["echecs_procedure"] = len([step for step in dos['steps'] if step.get("echec")]) # TOOODO typpoooo
+        if amdt["groupe"] == "Gouvernement":
+            stats["total_amendements_gouvernement"] += 1
+        else:
+            stats["total_amendements_parlementaire"] += 1
 
-    last_date = [step.get('date') for step in dos['steps'] if step.get('date')][-1]
-    stats["total_days"] = (datize(dos.get("end") or last_date) - datize(dos["beginning"])).days + 1
+    stats["total_intervenants"] = len({interv["intervention"]["intervenant_slug"] for interv in find_interventions(output_dir)})
+
+    stats["echecs_procedure"] = len([step for step in dos['steps'] if step.get("echec")])
 
     if 'end' in dos:
+        stats["total_days"] = (datize(dos["end"]) - datize(dos["beginning"])).days + 1
+
         first_text, first_arts, last_text, last_arts = find_first_and_last_texts(dos)
 
-        stats["total_articles"] = max(len(first_arts), len(last_arts))
-        stats["total_articles_modified"] = articles_modified(output_dir, dos)
-        stats["ratio_article_modif"] = stats["total_articles_modified"] / stats["total_articles"] if stats["total_articles"] != 0 else 0
+        stats["total_input_articles"] = len(first_arts)
+        stats["total_output_articles"] = len(last_arts)
+        stats["ratio_articles_growth"] = len(last_arts) / len(first_arts)
 
         stats["ratio_texte_modif"] = 1 - compute_similarity_by_articles(first_arts, last_arts)
         stats["input_text_length"] = len("\n".join(first_text))
