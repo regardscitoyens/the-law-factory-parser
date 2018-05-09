@@ -10,7 +10,7 @@ before_install:
         deactivate
         cd ..
         wget https://bitbucket.org/squeaky/portable-pypy/downloads/pypy3.5-6.0.0-linux_x86_64-portable.tar.bz2
-        tar -jxvf pypy3.5-6.0.0-linux_x86_64-portable.tar.bz2
+        tar -jxf pypy3.5-6.0.0-linux_x86_64-portable.tar.bz2
         echo 'Setting up aliases...'
         cd pypy3.5-6.0.0-linux_x86_64-portable/bin/
         export PATH=$PWD:$PATH
@@ -26,11 +26,11 @@ install: pip install -r test_requirements.txt
 script:
    - set -e # exit on first fail: see https://github.com/travis-ci/travis-ci/issues/1066
    - flake8 --ignore=E501,F405,F403,F401,F841 --select=F . # mainly detect undefined variables
-   - coverage run --include="./*.py" python tools/sort_articles.py
-   - coverage run -a --include="./*.py" python tools/parse_texte.py --test
-   - coverage run -a --include="./*.py" python tests/test_steps.py
+   - coverage run --include="./*.py" tools/sort_articles.py
+   - coverage run -a --include="./*.py" tools/parse_texte.py --test
+   - coverage run -a --include="./*.py" tests/test_steps.py
    - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git tests_cases
-   - coverage run -a --include="./*.py" python tests/test_regressions.py tests_cases
+   - coverage run -a --include="./*.py" tests/test_regressions.py tests_cases
    - set +e
 after_success:
    - coveralls
