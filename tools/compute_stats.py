@@ -13,13 +13,6 @@ def find_amendements(path):
                 yield amdt
 
 
-def find_interventions(path):
-    intervs = []
-    for seance_file in glob.glob(os.path.join(path, '**/interventions/*.json'), recursive=True):
-        intervs += open_json(seance_file)["seance"]
-    return intervs
-
-
 def read_text(step):
     articles = step['texte.json']['articles']
     texte = ''
@@ -68,6 +61,9 @@ def process(output_dir, dos):
             for step in intervs.values()
     ])
 
+    stats["total_intervenants"] = len({orat for step in intervs.values() for orat in step['orateurs'].keys()})
+    stats["total_interventions"] = sum({division['total_intervs'] for step in intervs.values() for division in step['divisions'].values()})
+
     stats['total_amendements'] \
         = stats['total_amendements'] \
         = stats["total_amendements_adoptes"] \
@@ -90,8 +86,6 @@ def process(output_dir, dos):
             stats["total_amendements_gouvernement"] += 1
         else:
             stats["total_amendements_parlementaire"] += 1
-
-    stats["total_intervenants"] = len({interv["intervention"]["intervenant_slug"] for interv in find_interventions(output_dir)})
 
     stats["echecs_procedure"] = len([step for step in dos['steps'] if step.get("echec")])
 
