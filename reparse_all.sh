@@ -18,16 +18,16 @@ python tools/steps_as_dot.py $DATADIR 1 | dot -Tsvg > $DATADIR/steps-detailed.sv
 python tools/steps_as_dot.py $DATADIR 1 | dot -Tpng > $DATADIR/steps-detailed.png
 
 for f in .htaccess HEADER.html; do
-  cp {data,$DATADIR}/$f
+  cp data/$f $DATADIR/$f
 done
 
 echo "Everything finished, data processed in $DATADIR"
 echo "A few stats:"
 
-echo PARSED: $(ls $DATADIR/p*/viz/procedure.json | wl) "/ "$(ls data/p*/viz/procedure.json | wl)
-echo ERROR: $(ls $DATADIR/logs/ | wl) "/ "$(ls data/logs/ | wl)
+echo PARSED: $(ls $DATADIR/p*/viz/procedure.json | wc -l) "/ "$(ls data/p*/viz/procedure.json | wc -l)
+echo ERROR: $(ls $DATADIR/logs/ | wc -l) "/ "$(ls data/logs/ | wc -l)
 echo
-tail -n 1 $DATADIR/logs/* | grep -v '^==>' | grep . | count | sort -rn
+tail -n 1 $DATADIR/logs/* | grep -v '^==>' | grep . | uniq --count | sort -rn
 echo
 echo "REGRESSIONS:"
 ls $DATADIR/logs/ | while read id; do
@@ -35,7 +35,7 @@ ls $DATADIR/logs/ | while read id; do
 done
 echo
 echo "NEWLY HANDLED:"
-ls data.20180502/ | grep '^p' | grep -v '_tmp' | while read id; do
+ls $DATADIR/ | grep '^p' | grep -v '_tmp' | while read id; do
   ls data/logs/$id > /dev/null 2>&1 && echo "  ->  $id"
 done
 echo
