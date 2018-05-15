@@ -232,11 +232,11 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                 # detect matching errors
                 if oldart['titre'] in table_concordance:
                     new_art = table_concordance[oldart['titre']]
-                    if new_art != line['titre']:
+                    if new_art.lower() != line['titre'].lower():
                         print("ERROR: true concordance is different: when parsing article '%s', we matched it with '%s' which should be matched to '%s' (from concordance table) " % (line['titre'] , oldart['titre'], new_art))
                         match = None
                         for oldart_title, newart_title in table_concordance.items():
-                            if newart_title == line['titre']:
+                            if newart_title.lower() == line['titre'].lower():
                                 match = oldart_title
                                 print('    -> it should have been matched with article %s' % oldart_title)
                                 break
