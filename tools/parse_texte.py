@@ -120,7 +120,7 @@ clean_texte_regexps = [
     (re.compile(r'<(em|s)> </(em|s)>'),  r' '), # remove empty tags with only one space inside
 ]
 
-re_clean_title_legif = re.compile("[\s|]*l[eé]gifrance(.gouv.fr)?$", re.I)
+re_clean_title_legif = re.compile(r"[\s|]*l[eé]gifrance(.gouv.fr)?$", re.I)
 clean_legifrance_regexps = [
     (re.compile(r'[\n\t\r\s]+'), ' '),
     (re.compile(r'<a[^>]*>\s*En savoir plus sur ce[^<]*</a>', re.I), ''),
@@ -156,7 +156,7 @@ def lower_but_first(text):
     return text[0].upper() + real_lower(text[1:])
 
 
-re_fullupcase = re.compile("^([\W0-9]*)([A-Z%s][\W0-9A-Z%s]*)$" % (upcase_accents, upcase_accents), re.U)
+re_fullupcase = re.compile(r"^([\W0-9]*)([A-Z%s][\W0-9A-Z%s]*)$" % (upcase_accents, upcase_accents), re.U)
 
 
 def clean_full_upcase(text):
@@ -169,7 +169,7 @@ re_clean_premier = re.compile(r'((PREM)?)(1|I)ER?')
 re_clean_bister = re.compile(r'([IXV\d]+e?r?)\s+(%s)' % bister, re.I)
 re_clean_subsec_space = re.compile(r'^("?[IVX0-9]{1,4}(\s+[a-z]+)?(\s+[A-Z]{1,4})?)\s*([\.°\-]+)\s*([^\s\)])', re.I)
 re_clean_subsec_space2 = re.compile(r'^("?[IVX0-9]{1,4})\s*([a-z]*)\s*([A-H]{1,4})([\.°\-])', re.I)
-re_clean_punc_space = re.compile('([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])')
+re_clean_punc_space = re.compile(r'([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])')
 re_clean_spaces = re.compile(r'\s+')
 re_clean_coord = re.compile(r'^(<i>)?([\["\(\s]+|pour)*coordination[\]\)\s\.]*(</i>)?', re.I)
 # Clean html and special chars
@@ -186,7 +186,7 @@ html_replace = [
     (re.compile(r'(«|»|“|”|„|‟|❝|❞|＂|〟|〞|〝)'), '"'),
     (re.compile(r"(’|＇|’|ߴ|՚|ʼ|❛|❜)"), "'"),
     (re.compile(r"(‒|–|—|―|⁓|‑|‐|⁃|⏤)"), "-"),
-    (re.compile(r"(</?\w+)[^>]*>"), r"\1>"),
+    (re.compile(r"(</?\w+)[^>]*>"), r"\1>"), # removes html attributes
     (re.compile(r"(</?)em>", re.I), r"\1i>"),
     (re.compile(r"(</?)strong>", re.I), r"\1b>"),
     (re.compile(r"<(![^>]*|/?(p|span))>", re.I), ""),
@@ -194,6 +194,7 @@ html_replace = [
     (re.compile(r"<[^/>]*></[^>]*>"), ""),
     (re.compile(r"^<b><i>", re.I), "<i><b>"),
     (re.compile(r"</b>(\s*)<b>", re.I), r"\1"),
+    (re.compile(r"<a>(\s*)</a>", re.I), r"\1"), # remove bad copy pastes of <a name=..> </a> where the content has been removed
     (re.compile(r"</?sup>", re.I), ""),
     (re.compile(r"^((<[bi]>)*)\((S|AN)[12]\)\s*", re.I), r"\1"),
     (re.compile(r"<s>(.*)</s>", re.I), ""),
@@ -694,7 +695,7 @@ if __name__ == '__main__':
     else:
         def assert_eq(x, y):
             if x != y:
-                print(x, "!=", y)
+                print(repr(x), "!=", repr(y))
                 raise Exception()
         # keep the dots
         assert_eq(clean_html('<i>....................</i>'), '<i>....................</i>')
@@ -707,6 +708,9 @@ if __name__ == '__main__':
         assert_eq(clean_html('II. - <i>Conforme</i>...............'), 'II. - <i>Conforme</i>')
         # even midway alineas
         assert_eq(clean_html('II. - <i>Conforme</i>............... ;'), 'II. - <i>Conforme</i> ;')
+
+        # clean empty <a> tags
+        assert_eq(clean_html('<b><a name="P302_55065"></a>ANNEXE N° 1 :<a name="P302_55081"><br/> </a>TEXTE ADOPTÉ PAR LA COMMISSION</b>'), '<b>ANNEXE N° 1 : TEXTE ADOPTÉ PAR LA COMMISSION</b>')
 
         # clean status
         assert_eq(re_clean_conf.sub(r'\1(Non modifié)', 'IV. - Non modifié'), 'IV. - (Non modifié)')
