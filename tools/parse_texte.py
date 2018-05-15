@@ -710,7 +710,7 @@ if __name__ == '__main__':
         assert_eq(clean_html('II. - <i>Conforme</i>............... ;'), 'II. - <i>Conforme</i> ;')
 
         # clean empty <a> tags
-        assert_eq(clean_html('<b><a name="P302_55065"></a>ANNEXE N° 1 :<a name="P302_55081"><br/> </a>TEXTE ADOPTÉ PAR LA COMMISSION</b>'), '<b>ANNEXE N° 1 : TEXTE ADOPTÉ PAR LA COMMISSION</b>')
+        assert_eq(clean_html('<b><a name="P302_55065"></a>ANNEXE N° 1 :<a name="P302_55081"><br/> </a>TEXTE ADOPTÉ PAR LA COMMISSION</b>'), '<b>ANNEXE N° 1 : TEXTE ADOPTÉ PAR LA COMMISSION</b>')
 
         # clean status
         assert_eq(re_clean_conf.sub(r'\1(Non modifié)', 'IV. - Non modifié'), 'IV. - (Non modifié)')
