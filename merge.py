@@ -93,10 +93,9 @@ def merge_senat_with_an(senat, an):
 
         # CMP commission: get extra urls from AN side if there's a different one
         if step.get('stage') == 'CMP' and step.get('step') == 'commission':
-            an_index = i + an_offset
-            if len(an['steps']) > an_index and an_index > 0:
-                an_step = an['steps'][an_index]
+            for an_index, an_step in enumerate(an['steps']):
                 if same_stage_step_instit(an_step, step):
+                    an_offset = an_index - i
                     if 'cmp_commission_other_url' in an_step:
                         if an_step['cmp_commission_other_url'] == step['source_url']:
                             step['cmp_commission_other_url'] = an_step['source_url']
