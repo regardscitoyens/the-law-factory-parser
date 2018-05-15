@@ -2,50 +2,6 @@ import copy
 
 from tools.detect_anomalies import find_anomalies
 
-# TODO: unused but can be useful in the futur
-"""
-def merge_previous_works_an(doslegs):
-    # Takes the AN doslegs and merge those that goes over multiple legislature with
-    # the previous ones
-    all_an_hash_an = {an['url_dossier_assemblee']: an for an in all_an if 'url_dossier_assemblee' in an and an['url_dossier_assemblee']}
-
-    merged_dos_urls = set()
-    for dos in doslegs:
-        if dos['url_dossier_assemblee'] not in merged_dos_urls:
-            try:
-                legislature = int(dos['url_dossier_assemblee'].split('.fr/')[1].split('/')[0])
-            except:
-                print("INVALID URL AN -", dos['url_dossier_assemblee'])
-                continue
-
-            current_last_dos = dos
-            for i in (1, 2, 3, 4):
-                if dos.get('previous_works'):
-                    older_url = dos['url_dossier_assemblee'].replace(str(legislature), str(legislature - i))
-                    if older_url in all_an_hash_an:
-                        older_dos = all_an_hash_an[older_url]
-
-                        # remove promulgation step
-                        if older_dos['steps'] and older_dos['steps'][-1].get('stage') == 'promulgation':
-                            older_dos['steps'] = older_dos['steps'][:-1]
-
-                        if dos['steps'] and older_dos['steps'] and older_dos['steps'][-1]['source_url'] == dos['steps'][0]['source_url']:
-                            dos['steps'] = older_dos['steps'][:-1] + dos['steps']
-                        elif dos['steps'] and len(older_dos['steps']) > 1 and older_dos['steps'][-2]['source_url'] == dos['steps'][0]['source_url']:
-                            dos['steps'] = older_dos['steps'][:-2] + dos['steps']
-                        else:
-                            dos['steps'] = older_dos['steps'] + dos['steps']
-                        merged_dos_urls.add(older_url)
-
-                        if 'url_dossier_senat' in older_dos and not 'url_dossier_senat' in dos:
-                            dos['url_dossier_senat'] = older_dos['url_dossier_senat']
-
-                        current_last_dos = older_dos
-
-    print(len(merged_dos_urls), 'AN doslegs merged with previous ones')
-
-    return [dos for dos in doslegs if dos.get('url_dossier_assemblee') not in merged_dos_urls]
-"""
 
 def fix_an_cmp_step_url(senat, an):
     # detect missing AN CMP step in senat data
