@@ -178,7 +178,7 @@ html_replace = [
     (re.compile(r"−"), "-"),
     (re.compile(r" "), " "),
     (re.compile(r"<!--.*?-->", re.I), ""),
-    (re.compile(r"<span[^>]*color: #0070b9[^>]*>\(\d+\)\s+</span>", re.I), ""), # remove pastilles
+    (re.compile(r"<span[^>]*color: #(0070b9|006fb9)[^>]*>\(\d+\)\s*</span>", re.I), ""), # remove pastilles
     (re.compile(r"<span[^>]*color: white[^>]*>.*?</span>", re.I), ""), # remove invisible text
     (re.compile(r"(<img[^>]*>\s*<br/>\s*)", re.I), ""), # remove <img><br/> before the next regex kills my precious '«'
     (re.compile(r"</?br/?>\s+", re.I), " "),
