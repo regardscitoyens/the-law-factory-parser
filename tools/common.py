@@ -181,6 +181,7 @@ groupe_link = lambda obj, urlapi: personalize_link("https://##URLAPI##.fr/groupe
 amdapi_link = lambda urlapi: personalize_link("https://##URLAPI##.fr/api/document/Amendement/", {'slug': 'na'}, urlapi)
 
 def slug_groupe(g):
+    # on the senat side, some senators have obsolete groups
     g = g.upper()
     g = g.replace("SOCV", "SOC")
     g = g.replace("CRC-SPG", "CRC")

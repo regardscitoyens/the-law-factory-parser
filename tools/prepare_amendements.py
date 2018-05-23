@@ -1,18 +1,15 @@
 import os
 import sys
+import re
 from time import time
 from functools import cmp_to_key
 
 from lawfactory_utils.urls import download
 
-try:
-    from .common import *
-    from .sort_articles import compare_articles
-    from tools._step_logic import get_previous_step
-except SystemError:
-    from common import *
-    from sort_articles import compare_articles
-    from _step_logic import get_previous_step
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from common import Context, slug_groupe, open_json, get_text_id, identify_room, print_json, amdapi_link
+from sort_articles import compare_articles
+from _step_logic import get_previous_step
 
 
 def process(OUTPUT_DIR, procedure):
@@ -42,7 +39,15 @@ def process(OUTPUT_DIR, procedure):
         maxc = 0
         result = ""
         for gpe in amd['groupes_parlementaires']:
-            g = slug_groupe(gpe['groupe'])
+            g = gpe['groupe']
+            count = 1
+
+            # the new api compact the groups
+            if ':' in g:
+                g, count = gpe['groupe'].split(':')
+                count = int(count)
+
+            g = slug_groupe(g)
             if g not in ct:
                 ct[g] = 0
             ct[g] += 1
@@ -358,4 +363,4 @@ def process(OUTPUT_DIR, procedure):
 
 
 if __name__ == '__main__':
-    process(sys.argv[1], json.load(open(os.path.join(sys.argv[1], 'viz/procedure.json'))))
+    process(sys.argv[1], open_json(os.path.join(sys.argv[1], 'viz/procedure.json')))
