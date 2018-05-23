@@ -2,5 +2,5 @@
 -e git+https://github.com/regardscitoyens/legipy.git#egg=legipy
 -e git+https://github.com/regardscitoyens/senapy.git#egg=senapy
 -e git+https://github.com/regardscitoyens/anpy.git#egg=anpy
--e git+https://framagit.org/parlement-ouvert/metslesliens.git@1.1.0#egg=metslesliens
+-e git+https://framagit.org/parlement-ouvert/metslesliens.git@1.1.1#egg=metslesliens
 diff-match-patch==20121119
