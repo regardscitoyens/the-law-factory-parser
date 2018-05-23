@@ -50,7 +50,7 @@ def process(OUTPUT_DIR, procedure):
             g = slug_groupe(g)
             if g not in ct:
                 ct[g] = 0
-            ct[g] += 1
+            ct[g] += count
             if ct[g] > maxc:
                 maxc = ct[g]
                 result = g
