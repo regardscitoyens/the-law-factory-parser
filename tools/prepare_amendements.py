@@ -47,6 +47,9 @@ def process(OUTPUT_DIR, procedure):
                 g, count = gpe['groupe'].split(':')
                 count = int(count)
 
+            if not g:
+                continue
+
             g = slug_groupe(g)
             if g not in ct:
                 ct[g] = 0
