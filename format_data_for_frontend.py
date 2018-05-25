@@ -89,6 +89,9 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
     with open(os.path.join(output_dir, 'HEADER.html'), 'w') as f:
         f.write(project_header_template(procedure))
 
+    if 'assemblee_id' in dos:
+        an_output_dir = os.path.join(OUTPUT_DIR, dos['assemblee_id'])
+        shutil.rmtree(an_output_dir, ignore_errors=True)
     shutil.rmtree(final_output_dir, ignore_errors=True)
     os.rename(output_dir, final_output_dir)
 
