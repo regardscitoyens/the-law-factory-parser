@@ -22,9 +22,10 @@ def process(dos):
                 for i in range(len(data["alineas"])):
                     text = data["alineas"]["%03d" % (i+1)]
                     for candidat in metslesliens.donnelescandidats(text, 'structuré'):
-                        if 'texte' in candidat:
+                        if 'texte' in candidat and not 'relatif' in candidat['texte']:
                             link = text[candidat['index'][0]:candidat['index'][1]]
-                            data['liens'].append(link)
+                            if not re.search( r'(même|présent|précédent) ', link ):
+                                data['liens'].append(link)
                             """
                             data['liens'].append({
                                 'url': 'https://duckduckgo.com/?q=!ducky+' + urllib.parse.quote_plus(link),
