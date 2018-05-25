@@ -26,6 +26,7 @@ def merge_senat_with_an(senat, an):
     dos = copy.deepcopy(senat)
 
     dos['url_dossier_assemblee'] = an['url_dossier_assemblee']
+    dos['assemblee_slug'] = an['assemblee_slug']
 
     if ('url_jo' not in dos or 'jo_pdf' in dos['url_jo']) and 'url_jo' in an:
         dos['url_jo'] = an['url_jo']
