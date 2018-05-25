@@ -2,7 +2,7 @@
 def use_old_procedure(step, dos=None):
     if dos and dos.get('use_old_procedure'):
         return True
-    return step.get("enddate", step.get("date", "9999-99-99")) < "2009-03-01"
+    return (step.get("enddate", step.get("date", "9999-99-99")) or "9999-99-99") < "2009-03-01"
 
 
 def should_ignore_commission_text(step, dos):
