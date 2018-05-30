@@ -35,29 +35,7 @@ def process(OUTPUT_DIR, procedure):
     def find_groupe(amd):
         if amd['signataires'] and "gouvernement" in amd['signataires'].lower():
             return "Gouvernement"
-        ct = {}
-        maxc = 0
-        result = ""
-        for gpe in amd['groupes_parlementaires']:
-            g = gpe['groupe']
-            count = 1
-
-            # the new api compact the groups
-            if ':' in g:
-                g, count = gpe['groupe'].split(':')
-                count = int(count)
-
-            if not g:
-                continue
-
-            g = slug_groupe(g)
-            if g not in ct:
-                ct[g] = 0
-            ct[g] += count
-            if ct[g] > maxc:
-                maxc = ct[g]
-                result = g
-        return result
+        return amd['auteur_groupe_acronyme']
 
     def add_link(links, pA, pB, weight=1):
         p1 = min(pA, pB)
