@@ -8,6 +8,9 @@ DATADIR=data
 
 senapy-cli doslegs_urls --min-year=$((`date +%Y`)) | python parse_many.py $DATADIR --only-promulgated --quiet
 
+# Update RGPD
+python parse_one.py pjl17-296
+
 echo
 python generate_dossiers_csv.py $DATADIR
 python tools/assemble_procedures.py $DATADIR
