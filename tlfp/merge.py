@@ -1,6 +1,6 @@
 import copy
 
-from tools.detect_anomalies import find_anomalies
+from .tools.detect_anomalies import find_anomalies
 
 
 def fix_an_cmp_step_url(senat, an):
