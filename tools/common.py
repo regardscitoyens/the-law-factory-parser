@@ -9,7 +9,12 @@ from difflib import SequenceMatcher
 from diff_match_patch import diff_match_patch
 import json
 import locale
-locale.setlocale(locale.LC_TIME, 'fr_FR.utf8')
+
+try:
+    locale.setlocale(locale.LC_TIME, 'fr_FR.utf8')
+except locale.Error:
+    locale.setlocale(locale.LC_TIME, 'fr_FR.utf-8')
+
 try:
     from .sort_articles import bister
 except:
