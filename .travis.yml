@@ -26,8 +26,8 @@ install: pip install -r test_requirements.txt
 script:
    - set -e # exit on first fail: see https://github.com/travis-ci/travis-ci/issues/1066
    - flake8 --ignore=E501,F405,F403,F401,F841 --select=F . # mainly detect undefined variables
-   - python tools/sort_articles.py
-   - python tools/parse_texte.py --test
+   - python tlfp/tools/sort_articles.py
+   - python tlfp/tools/parse_texte.py --test
    - python tests/test_steps.py
    - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git tests_cases
    - python tests/test_regressions.py tests_cases

@@ -11,7 +11,7 @@ except:
     from common import open_json, print_json, clean_text_for_diff, compute_similarity, format_display_date
     from sort_articles import compare_articles
 
-from tools import _step_logic
+from tlfp.tools import _step_logic
 
 def getParentFolder(root, f):
     abs = os.path.abspath(os.path.join(root, f))
