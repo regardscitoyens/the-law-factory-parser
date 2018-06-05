@@ -17,7 +17,7 @@ setup(
 
     description='Data generator for the-law-factory project lafabriquedelaloi.fr',
     long_description=LONG_DESC,
-    license="MIT",
+    license="GPL",
 
     url='https://github.com/regardscitoyens/the-law-factory-parser',
     author='Regards Citoyens',
@@ -27,7 +27,7 @@ setup(
 
     classifiers=[
         'Development Status :: 1 - Planning',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
     ],
