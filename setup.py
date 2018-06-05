@@ -40,6 +40,8 @@ setup(
     packages=['tlfp'],
 
     install_requires=[
+        "senapy",
+        "anpy",
         "lawfactory_utils",
         "beautifulsoup4==4.6.0",
         "diff-match-patch==20121119",
