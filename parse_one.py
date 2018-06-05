@@ -8,6 +8,7 @@ from tools.detect_anomalies import find_anomalies
 from tools.json2arbo import mkdirs
 from tools.download_groupes import process as download_groupes
 from tools.download_lois_dites import process as download_lois_dites
+from tools.download_AN_opendata import process as download_AN_opendata
 from tools.common import debug_file
 from merge import merge_senat_with_an
 import parse_doslegs_texts
@@ -21,14 +22,14 @@ def download_senat(url, log=sys.stderr, verbose=True):
     return senapy_parse(html, url, logfile=log)
 
 
-def download_an(url, url_senat=False, log=sys.stderr, verbose=True):
+def download_an(url, cached_opendata_an, url_senat=False, log=sys.stderr, verbose=True):
     if verbose: print('  [] download AN version')
-    resp = download(url)
-    resp.encoding = 'Windows-1252'
-    html = resp.text
     if verbose: print('  [] parse AN version')
     # TODO: do both instead of first
-    results = anpy_parse(html, url, logfile=log, verbose=verbose)
+    results = anpy_parse(url, logfile=log, verbose=verbose, cached_opendata_an=cached_opendata_an)
+    if not results:
+        if verbose: print('     WARNING: AN DOS NOT FOUND', url)
+        return
     if len(results) > 1:
         if url_senat:
             for result in results:
@@ -52,7 +53,7 @@ def are_same_doslegs(senat_dos, an_dos):
     return False
 
 
-def download_merged_dos(url, log=sys.stderr, verbose=True):
+def download_merged_dos(url, cached_opendata_an, log=sys.stderr, verbose=True):
     """find dossier from url and returns (the_merged_dosleg, AN_dosleg, SENAT_dosleg)"""
     if not url.startswith('http') and ('pjl' in url or 'ppl' in url or 'plfss' in url):
         url = "http://www.senat.fr/dossier-legislatif/%s.html" % url
@@ -70,14 +71,16 @@ def download_merged_dos(url, log=sys.stderr, verbose=True):
             return None, None, None
         # Add AN version if there's one
         if 'url_dossier_assemblee' in senat_dos:
-            an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'], verbose=verbose, log=log)
+            an_dos = download_an(senat_dos['url_dossier_assemblee'], cached_opendata_an, senat_dos['url_dossier_senat'], verbose=verbose, log=log)
+            if not an_dos:
+                return senat_dos, None, senat_dos
             if 'url_dossier_senat' in an_dos:
                 assert are_same_doslegs(senat_dos, an_dos)
             dos = merge_senat_with_an(senat_dos, an_dos)
         else:
             dos = senat_dos
     elif 'assemblee-nationale.fr' in url:
-        an_dos = download_an(url, verbose=verbose, log=log)
+        an_dos = download_an(url, cached_opendata_an, verbose=verbose, log=log)
         # Add senat version if there's one
         if 'url_dossier_senat' in an_dos:
             senat_dos = download_senat(an_dos['url_dossier_senat'], log=log)
@@ -145,7 +148,10 @@ def process(API_DIRECTORY, url):
                 print('======')
                 print(url)
 
-            dos, an_dos, senat_dos = download_merged_dos(url, log=log, verbose=verbose)
+            # download the groupes in case they are not there yet
+            opendata_an = download_AN_opendata(API_DIRECTORY)
+
+            dos, an_dos, senat_dos = download_merged_dos(url, opendata_an, log=log, verbose=verbose)
             if not dos:
                 return
 
