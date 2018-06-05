@@ -16,7 +16,7 @@ from tlfp import parse_one
 from tlfp.parse_one import download_merged_dos
 from tlfp.parse_doslegs_texts import find_good_url_resp
 from tlfp.tools.detect_anomalies import find_anomalies
-from tlfp.tools import parse_texte, download_groupes, download_lois_dites
+from tlfp.tools import parse_texte, download_groupes, download_lois_dites, download_AN_opendata
 
 REGEN_TESTS = '--regen' in sys.argv
 # directory with the test-cases
@@ -49,10 +49,18 @@ assert len(parse_texte.parse('http://www.assemblee-nationale.fr/13/rapports/r256
 assert len(parse_texte.parse('https://www.senat.fr/leg/ppl08-039.html')) == 2
 print('****** => parse_texte OK ******')
 
+
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
+
+download_groupes.process(OUTPUT_DIR)
+download_lois_dites.process(OUTPUT_DIR)
+opendata_an = download_AN_opendata.process(OUTPUT_DIR)
+
 print()
 print('*** testing merge ****')
 # complete AN urls
-dos, *_ = download_merged_dos('pjl11-497', verbose=False)
+dos, *_ = download_merged_dos('pjl11-497', opendata_an, verbose=False)
 assert find_anomalies([dos], verbose=False) == 0
 for step in dos['steps']:
     if step.get('institution') == 'assemblee':
@@ -85,11 +93,6 @@ def _is_same_helper(dircmp):
            return False
     return True
 
-if not os.path.exists(OUTPUT_DIR):
-    os.makedirs(OUTPUT_DIR)
-
-download_groupes.process(OUTPUT_DIR)
-download_lois_dites.process(OUTPUT_DIR)
 for directory in sorted(glob.glob(TEST_DIR + '/p*')):
     if '_tmp' in directory:
         continue
