@@ -1,9 +1,7 @@
 import os, sys
 
-try:
-    from common import *
-except ImportError:
-    from .common import *
+from .common import *
+
 
 def list_get_or_none(arr, i):
     if 0 <= i < len(arr):

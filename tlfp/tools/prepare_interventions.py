@@ -3,10 +3,7 @@
 
 import os, sys, re
 
-try:
-    from common import *
-except ImportError:
-    from .common import *
+from .common import *
 
 re_short_orga = re.compile(r'(,| et) (à |aux |d).*$')
 def clean_orga(orga):

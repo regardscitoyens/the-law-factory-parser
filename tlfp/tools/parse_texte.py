@@ -13,12 +13,8 @@ from bs4 import BeautifulSoup
 
 from lawfactory_utils.urls import download
 
-try:
-    from .sort_articles import bister
-    from .common import get_text_id, upcase_accents, real_lower, print_json
-except (SystemError, ImportError):
-    from sort_articles import bister
-    from common import get_text_id, upcase_accents, real_lower, print_json
+from .sort_articles import bister
+from .common import get_text_id, upcase_accents, real_lower, print_json
 
 
 # inspired by duralex/alinea_parser.py

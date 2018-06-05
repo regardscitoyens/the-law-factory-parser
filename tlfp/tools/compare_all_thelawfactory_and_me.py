@@ -4,10 +4,8 @@ Debugging tool to compare between the old parser and the new one
 
 import sys
 
-try:
-    from .common import open_json
-except SystemError:
-    from common import open_json
+from .common import open_json
+
 
 def compare(proc, me, verbose=True):
     score_ok = 0

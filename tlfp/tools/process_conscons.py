@@ -1,11 +1,9 @@
 import re
 import sys
 
-try:
-    from common import strip_text
-except:
-    from .common import strip_text
 from lawfactory_utils.urls import download, enable_requests_cache
+
+from .common import strip_text
 
 # TODO:
 # - parse by <p>

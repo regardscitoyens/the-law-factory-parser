@@ -4,14 +4,10 @@ import re, os, sys
 from difflib import ndiff
 from functools import cmp_to_key
 
-try:
-    from .common import open_json, print_json, clean_text_for_diff, compute_similarity, format_display_date
-    from .sort_articles import compare_articles
-except:
-    from common import open_json, print_json, clean_text_for_diff, compute_similarity, format_display_date
-    from sort_articles import compare_articles
+from . import _step_logic
+from .common import open_json, print_json, clean_text_for_diff, compute_similarity, format_display_date
+from .sort_articles import compare_articles
 
-from tlfp.tools import _step_logic
 
 def getParentFolder(root, f):
     abs = os.path.abspath(os.path.join(root, f))
