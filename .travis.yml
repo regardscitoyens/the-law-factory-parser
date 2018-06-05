@@ -22,13 +22,15 @@ before_install:
         python --version
         pip --version
     fi
-install: pip install -r test_requirements.txt
+install:
+    - pip install -e .
+    - pip install -r test_requirements.txt
 script:
-   - set -e # exit on first fail: see https://github.com/travis-ci/travis-ci/issues/1066
-   - flake8 --ignore=E501,F405,F403,F401,F841 --select=F . # mainly detect undefined variables
-   - python tlfp/tools/sort_articles.py
-   - python tlfp/tools/parse_texte.py --test
-   - python tests/test_steps.py
-   - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git tests_cases
-   - python tests/test_regressions.py tests_cases
-   - set +e
+    - set -e # exit on first fail: see https://github.com/travis-ci/travis-ci/issues/1066
+    - flake8 --ignore=E501,F405,F403,F401,F841 --select=F . # mainly detect undefined variables
+    - python tlfp/tools/sort_articles.py
+    - python tests/test_parse_texte.py
+    - python tests/test_steps.py
+    - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git tests_cases
+    - python tests/test_regressions.py tests_cases
+    - set +e
