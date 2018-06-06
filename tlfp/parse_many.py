@@ -1,8 +1,8 @@
 import os, sys, glob, traceback
 
-import parse_one
+from . import parse_one
 
-from tools.common import open_json
+from .tools.common import open_json
 
 verbose = "--quiet" not in sys.argv
 

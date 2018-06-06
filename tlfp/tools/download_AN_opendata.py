@@ -1,9 +1,8 @@
 import sys, os, time
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from anpy.dossier_from_opendata import download_open_data_doslegs
 
-from common import print_json, open_json
+from .common import print_json, open_json
 
 
 def process(output_directory):

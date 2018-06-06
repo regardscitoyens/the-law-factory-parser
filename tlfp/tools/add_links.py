@@ -5,10 +5,9 @@
 import os, sys, re
 import urllib.parse
 import metslesliens
-try:
-    from .common import open_json, print_json
-except:
-    from common import open_json, print_json
+
+from .common import open_json, print_json
+
 
 def process(dos):
     for step_i, step in enumerate(dos['steps']):

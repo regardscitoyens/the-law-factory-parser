@@ -6,10 +6,9 @@ from functools import cmp_to_key
 
 from lawfactory_utils.urls import download
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from common import Context, slug_groupe, open_json, get_text_id, identify_room, print_json, amdapi_link
-from sort_articles import compare_articles
-from _step_logic import get_previous_step
+from .common import Context, slug_groupe, open_json, get_text_id, identify_room, print_json, amdapi_link
+from .sort_articles import compare_articles
+from ._step_logic import get_previous_step
 
 
 def process(OUTPUT_DIR, procedure):

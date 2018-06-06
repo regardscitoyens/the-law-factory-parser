@@ -8,10 +8,8 @@ Outputs results to stdout"""
 
 import os, sys, re
 import urllib.parse
-try:
-    from .common import print_json, open_json
-except:
-    from common import print_json, open_json
+
+from .common import print_json, open_json
 
 
 def mkdirs(d):

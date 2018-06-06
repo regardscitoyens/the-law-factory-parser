@@ -6,7 +6,7 @@ import sys, os, json
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from tools._step_logic import get_previous_step
+from tlfp.tools._step_logic import get_previous_step
 
 
 def name(i):

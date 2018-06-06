@@ -2,10 +2,7 @@ import sys, os, time
 
 from legipy.services.law_service import LawService
 
-try:
-    from .common import open_json, print_json
-except:
-    from common import open_json, print_json
+from .common import open_json, print_json
 
 
 def process(output_directory):

@@ -1,9 +1,9 @@
 import os, shutil, io
 
-from tools import json2arbo, prepare_articles, update_procedure, \
+from .tools import json2arbo, prepare_articles, update_procedure, \
     prepare_amendements, prepare_interventions, reorder_interventions_and_correct_procedure, \
     compute_stats, add_links
-from tools.common import debug_file, print_json
+from .tools.common import debug_file, print_json
 
 
 def project_header_template(procedure):

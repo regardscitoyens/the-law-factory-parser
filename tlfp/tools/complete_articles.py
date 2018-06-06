@@ -5,12 +5,8 @@ import sys, re, copy
 
 from requests.structures import CaseInsensitiveDict
 
-try:
-    from .sort_articles import bister, article_is_lower
-    from .common import clean_text_for_diff, compute_similarity, open_json, print_json
-except SystemError:
-    from sort_articles import bister, article_is_lower
-    from common import clean_text_for_diff, compute_similarity, open_json, print_json
+from .sort_articles import bister, article_is_lower
+from .common import clean_text_for_diff, compute_similarity, open_json, print_json
 
 
 def complete(current, previous, step, table_concordance, anteprevious=None):

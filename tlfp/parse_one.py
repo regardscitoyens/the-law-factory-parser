@@ -4,15 +4,15 @@ from senapy.dosleg.parser import parse as senapy_parse
 from anpy.dossier_like_senapy import parse as anpy_parse
 from lawfactory_utils.urls import download, enable_requests_cache
 
-from tools.detect_anomalies import find_anomalies
-from tools.json2arbo import mkdirs
-from tools.download_groupes import process as download_groupes
-from tools.download_lois_dites import process as download_lois_dites
-from tools.download_AN_opendata import process as download_AN_opendata
-from tools.common import debug_file
-from merge import merge_senat_with_an
-import parse_doslegs_texts
-import format_data_for_frontend
+from . import format_data_for_frontend
+from . import parse_doslegs_texts
+from .tools.detect_anomalies import find_anomalies
+from .tools.json2arbo import mkdirs
+from .tools.download_groupes import process as download_groupes
+from .tools.download_lois_dites import process as download_lois_dites
+from .tools.download_AN_opendata import process as download_AN_opendata
+from .tools.common import debug_file
+from .merge import merge_senat_with_an
 
 
 def download_senat(url, log=sys.stderr, verbose=True):

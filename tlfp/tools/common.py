@@ -12,10 +12,7 @@ import locale
 
 locale.setlocale(locale.LC_TIME, 'fr_FR.utf-8')
 
-try:
-    from .sort_articles import bister
-except:
-    from sort_articles import bister
+from .sort_articles import bister
 
 
 def open_csv(dirpath, filename, delimiter=";"):

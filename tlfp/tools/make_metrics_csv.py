@@ -1,14 +1,13 @@
 import glob, os, sys, csv, random, traceback
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from lawfactory_utils.urls import enable_requests_cache
 from senapy.dosleg import opendata
 
-from tools.common import upper_first, format_date, datize, strip_text, open_json
-from tools.process_conscons import get_decision_length
-from tools.process_jo import count_signataires, get_texte_length
-from tools import parse_texte
-from parse_one import *
+from ..parse_one import *
+from . import parse_texte
+from .common import upper_first, format_date, datize, strip_text, open_json
+from .process_conscons import get_decision_length
+from .process_jo import count_signataires, get_texte_length
 
 
 def annee(date):

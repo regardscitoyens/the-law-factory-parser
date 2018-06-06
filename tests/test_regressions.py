@@ -12,12 +12,11 @@ Optional: There's a `--regen` flag to generate the tests cases
 import glob, shutil, os, filecmp, sys, difflib
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import parse_one
-from parse_one import download_merged_dos
-from parse_doslegs_texts import find_good_url_resp
-from tools.detect_anomalies import find_anomalies
-from tools import parse_texte, download_groupes, download_lois_dites, download_AN_opendata
-
+from tlfp import parse_one
+from tlfp.parse_one import download_merged_dos
+from tlfp.parse_doslegs_texts import find_good_url_resp
+from tlfp.tools.detect_anomalies import find_anomalies
+from tlfp.tools import parse_texte, download_groupes, download_lois_dites, download_AN_opendata
 
 REGEN_TESTS = '--regen' in sys.argv
 # directory with the test-cases
