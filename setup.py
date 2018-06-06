@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from setuptools import setup
+from setuptools import find_packages, setup
 from codecs import open
 from os import path
 
@@ -37,7 +37,7 @@ setup(
 
     keywords='scraping politics data',
 
-    packages=['tlfp'],
+    packages=find_packages(),
 
     install_requires=[
         "senapy",
