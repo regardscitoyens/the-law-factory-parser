@@ -24,7 +24,7 @@ before_install:
         pip --version
     fi
 install:
-    - pip install -e .
+    - pip install --process-dependency-links -e .
     - pip install -r test_requirements.txt
 script:
     - set -e # exit on first fail: see https://github.com/travis-ci/travis-ci/issues/1066

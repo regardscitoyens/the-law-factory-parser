@@ -1,8 +1,11 @@
-import os, sys, glob, traceback
+import os
+import sys
+import glob
+import traceback
 
-from . import parse_one
+from tlfp.tools.common import open_json
+from tlfp import parse_one
 
-from .tools.common import open_json
 
 verbose = "--quiet" not in sys.argv
 

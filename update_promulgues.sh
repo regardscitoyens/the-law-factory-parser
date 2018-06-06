@@ -6,10 +6,10 @@ workon lawfactory
 
 DATADIR=data
 
-senapy-cli doslegs_urls --min-year=$((`date +%Y`)) | python tlfp/parse_many.py $DATADIR --only-promulgated --quiet
+senapy-cli doslegs_urls --min-year=$((`date +%Y`)) | tlfp-parse-many $DATADIR --only-promulgated --quiet
 
 # Update RGPD
-python tlfp/parse_one.py pjl17-296
+tlfp-parse pjl17-296
 
 echo
 python tlfp/generate_dossiers_csv.py $DATADIR

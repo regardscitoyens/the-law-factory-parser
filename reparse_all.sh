@@ -4,7 +4,7 @@ TODAY=$(date +%Y%m%d)
 DATADIR=data.$TODAY
 mkdir -p $DATADIR
 
-senapy-cli doslegs_urls | python tlfp/parse_many.py $DATADIR --only-promulgated
+senapy-cli doslegs_urls | tlfp-parse-many $DATADIR --only-promulgated
 
 python tlfp/generate_dossiers_csv.py $DATADIR
 

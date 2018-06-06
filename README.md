@@ -16,7 +16,7 @@ You can install them with the following:
 virtualenv -p $(which python3) venv
 source venv/bin/activate
 pip install --upgrade setuptools pip # not necessary but always a good idea
-pip install --upgrade -r requirements.txt
+pip install --process-dependency-links -e .
 ```
 NOTE: You must have Python 3.5+ for now
 
@@ -25,29 +25,29 @@ NOTE: You must have Python 3.5+ for now
 
 - search for the [bill's procedure page on Senat.fr](http://www.senat.fr/dossiers-legislatifs/index-general-projets-propositions-de-lois.html) or [Assemblee-nationale.fr](http://www.assemblee-nationale.fr/15/documents/index-dossier.asp).
 
-- execute *parse_one.py* script using the procedure page:
+- execute *tlfp-parse* script using the procedure page:
 
-`python parse_one.py <url>`
+`tlfp-parse <url>`
 
-The data is generated in the "*data*" directory. You can change this default behavior by inputting a data path as extra argument: `python parse_one.py <url> <dataDir>`.
+The data is generated in the "*data*" directory. You can change this default behavior by inputting a data path as extra argument: `tlfp-parse <url> <dataDir>`.
 
 For example, to generate data about the "*Enseignement supérieur et recherche*" bill:
 
-    python parse_one.py http://www.senat.fr/dossier-legislatif/pjl12-614.html
+    tlfp-parse http://www.senat.fr/dossier-legislatif/pjl12-614.html
     ls data/pjl12-614/
 
-You can also use directly Senate's ids such as: `python parse_one.py pjl12-614`
+You can also use directly Senate's ids such as: `tlfp-parse pjl12-614`
 
 Development options `--debug`, `--enable-cache` and `--only-promulgated` can also be used.
 
 
 ## Generate data for many bills
 
-To generate all bills from 2008, you can pipe a list of ids or urls into `parse_many.py`.
+To generate all bills from 2008, you can pipe a list of ids or urls into `tlfp-parse-many`.
 
 A convenient way to do so is to use [senapy](https://github.com/regardscitoyens/senapy):
 
-   senapy-cli doslegs_urls --min-year=2008 | python parse_many.py data/
+   senapy-cli doslegs_urls --min-year=2008 | tlfp-parse-many data/
 
 See `senapy-cli doslegs_urls` help for more options. You can also use [anpy](https://github.com/regardscitoyens/anpy) with `anpy-cli doslegs_urls`.
 
@@ -58,8 +58,8 @@ First, you need to build data for all desired bills.
 
 Then generate the files required by the frontend:
 
-    python generate_dossiers_csv.py data/       # generates home.json and dossiers_promulgues.csv used by the searchbar
-    python tools/assemble_procedures.py data/   # generates dossiers_n.json files used by the Navettes viz
+    python tlfp/generate_dossiers_csv.py data/       # generates home.json and dossiers_promulgues.csv used by the searchbar
+    python tlfp/tools/assemble_procedures.py data/   # generates dossiers_n.json files used by the Navettes viz
 
 Finally, serve the data directory however you like. For instance, you can serve it on a specific port with a simple http server like nodeJs', in which case, you'll need to enable cors: just install *http-server* with npm and run it in data directory on a given port (8002 in the example):
 

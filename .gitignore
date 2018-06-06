@@ -6,6 +6,7 @@
 /debug_*.json
 *.sqlite
 *.pyc
+/dist/
 the-law-factory-parser-test-cases/
 
 .coverage
