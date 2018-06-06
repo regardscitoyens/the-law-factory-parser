@@ -96,6 +96,7 @@ def merge_senat_with_an(senat, an):
         if step.get('stage') == 'CMP' and step.get('step') == 'commission':
             for an_index, an_step in enumerate(an['steps']):
                 if same_stage_step_instit(an_step, step) and an_step.get('source_url'):
+                    an_offset = an_index - i
                     if 'cmp_commission_other_url' in an_step:
                         if an_step['cmp_commission_other_url'] == step['source_url']:
                             step['cmp_commission_other_url'] = an_step['source_url']

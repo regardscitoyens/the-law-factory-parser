@@ -148,7 +148,7 @@ def process(API_DIRECTORY, url):
                 print('======')
                 print(url)
 
-            # download the groupes in case they are not there yet
+            # download the AN open data or just retrieve the last stored version
             opendata_an = download_AN_opendata(API_DIRECTORY)
 
             dos, an_dos, senat_dos = download_merged_dos(url, opendata_an, log=log, verbose=verbose)
