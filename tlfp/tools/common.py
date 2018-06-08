@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, os, re, requests
+import sys, os, time, re, requests
 from datetime import date, datetime
 from html.entities import name2codepoint
 from csv import DictReader
@@ -13,6 +13,8 @@ import locale
 locale.setlocale(locale.LC_TIME, 'fr_FR.utf-8')
 
 from .sort_articles import bister
+
+from lawfactory_utils.urls import download
 
 
 def open_csv(dirpath, filename, delimiter=";"):
@@ -40,6 +42,23 @@ def open_json(dirpath, filename=None):
         print(type(e), e, file=sys.stderr)
         sys.stderr.write("ERROR: Could not open file %s" % (path,))
         raise e
+
+
+def download_daily(url_or_collecter, filename, output_directory):
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
+    yesterday = time.time() - 86400
+    destfile = os.path.join(output_directory, filename + ".json")
+    if not os.path.exists(destfile) or os.path.getmtime(destfile) < yesterday:
+        print('downloading', filename)
+        if isinstance(url_or_collecter, str):
+            jsondata = download(url_or_collecter).json()
+        else:
+            jsondata = url_or_collecter()
+        print_json(jsondata, destfile)
+    else:
+        jsondata = open_json(destfile)
+    return jsondata
 
 
 def print_json(dico, filename=None):
