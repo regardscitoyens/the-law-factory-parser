@@ -57,6 +57,7 @@ re_rapporteur = re.compile(r'((vice|co|pr[eéÉ]sidente?)[,\-\s]*)?rapporte', re
 
 re_id_laststep = re.compile(r'/[^/\d]*(\d+)\D[^/]*$')
 
+DEBUG = False
 
 def process(OUTPUT_DIR, procedure):
     context = Context(OUTPUT_DIR)
@@ -101,7 +102,7 @@ def process(OUTPUT_DIR, procedure):
             for i in seance:
                 del(i['intervention']['contenu'])
                 if has_tag_loi > 2 and {"loi": id_laststep} not in i['intervention']['lois']:
-                    if context.DEBUG:
+                    if DEBUG:
                         print("SKIPPING interv " + i['intervention']['id'] + " with missing tag loi", file=sys.stderr)
                     continue
                 intervs.append(i)
@@ -146,12 +147,12 @@ def process(OUTPUT_DIR, procedure):
             elif not gpe and re_parl.search(i['intervenant_fonction']+' '+i['intervenant_nom']):
                 gpe = "Autres parlementaires"
                 # unmeaningful information hard to rematch to the groups, usually invectives, skipping it
-                if context.DEBUG and i['intervenant_nom'] not in warndone:
+                if DEBUG and i['intervenant_nom'] not in warndone:
                     warndone.append(i['intervenant_nom'])
                     print('WARNING: skipping interventions from %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl]), file=sys.stderr)
                 continue
             if not gpe:
-                if context.DEBUG and i['intervenant_nom'] not in warndone:
+                if DEBUG and i['intervenant_nom'] not in warndone:
                     warndone.append(i['intervenant_nom'])
                     print('WARNING: neither groupe nor function found for %s at %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl]), file=sys.stderr)
                 gm = get_gm(i)
@@ -190,7 +191,7 @@ def process(OUTPUT_DIR, procedure):
                     orateurs[orateur]['color'] = context.allgroupes[urlapi][i['intervenant_groupe'].upper()]['color']
             else:
                 if len(i['intervenant_fonction']) > len(orateurs[orateur]['fonction']):
-                    if context.DEBUG and ((orateurs[orateur]['fonction'] and not i['intervenant_fonction'].startswith(orateurs[orateur]['fonction'])) or
+                    if DEBUG and ((orateurs[orateur]['fonction'] and not i['intervenant_fonction'].startswith(orateurs[orateur]['fonction'])) or
                       (not orateurs[orateur]['fonction'] and not (i['intervenant_fonction'].startswith('rapporte') or i['intervenant_fonction'].startswith('président')))):
                         print('WARNING: found different functions for %s at %s : %s / %s\n' % (i['intervenant_nom'], i['url_nos%ss' % typeparl], orateurs[orateur]['fonction'], i['intervenant_fonction']), file=sys.stderr)
                     orateurs[orateur]['fonction'] = i['intervenant_fonction']
@@ -218,4 +219,5 @@ def process(OUTPUT_DIR, procedure):
 
 
 if __name__ == '__main__':
+    DEBUG = True
     process(sys.argv[1], json.load(open(os.path.join(sys.argv[1], 'viz/procedure.json'))))
