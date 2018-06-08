@@ -209,9 +209,8 @@ def slug_groupe(g):
 
 class Context(object):
 
-    def __init__(self, sysargs, load_parls=False):
-        self.DEBUG = (len(sysargs) > 2)
-        self.sourcedir = sysargs[1] if (len(sysargs) > 1) else ""
+    def __init__(self, sourcedir, load_parls=False):
+        self.sourcedir = sourcedir
         if not self.sourcedir:
             sys.stderr.write('ERROR: no input directory given\n')
             exit(1)

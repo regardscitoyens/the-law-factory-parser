@@ -59,7 +59,7 @@ re_id_laststep = re.compile(r'/[^/\d]*(\d+)\D[^/]*$')
 
 
 def process(OUTPUT_DIR, procedure):
-    context = Context([0, OUTPUT_DIR])
+    context = Context(OUTPUT_DIR)
 
     gouv_members = {}
     rapporteurs = {}

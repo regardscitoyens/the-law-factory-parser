@@ -12,7 +12,7 @@ from ._step_logic import get_previous_step
 
 
 def process(OUTPUT_DIR, procedure):
-    context = Context([0, OUTPUT_DIR], load_parls=True)
+    context = Context(OUTPUT_DIR, load_parls=True)
 
     #['Indéfini', 'Adopté', 'Irrecevable', 'Rejeté', 'Retiré', 'Tombe', 'Non soutenu', 'Retiré avant séance', 'Rectifié', 'Favorable' ,'Satisfait']
     def simplify_sort(sort):

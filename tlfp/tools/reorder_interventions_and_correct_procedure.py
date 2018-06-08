@@ -8,7 +8,7 @@ def list_get_or_none(arr, i):
         return arr[i]
 
 def process(OUTPUT_DIR, procedure):
-    context = Context([0, OUTPUT_DIR])
+    context = Context(OUTPUT_DIR)
     steps = procedure['steps']
     for step_i, step in enumerate(steps):
 
