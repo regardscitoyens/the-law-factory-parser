@@ -31,9 +31,16 @@ def process(OUTPUT_DIR, procedure):
             return ""
         return re_clean_first.sub(r'\1, …', signataires)
 
-    def find_groupe(amd):
+    def find_groupe(amd, typeparl, urlapi):
         if amd['signataires'] and "gouvernement" in amd['signataires'].lower():
             return "Gouvernement"
+
+        # Fix groupes not historicized in NosSénateurs
+        if typeparl == "senateur" and amd["parlementaires"]:
+            gpe = context.get_senateur_groupe(amd["parlementaires"][0]["parlementaire"], amd["date"], urlapi)
+            if gpe:
+                return gpe
+
         return amd['auteur_groupe_acronyme']
 
     def add_link(links, pA, pB, weight=1):
@@ -239,7 +246,7 @@ def process(OUTPUT_DIR, procedure):
                 if a['ordre_article'] > 9000:
                     fix_order = True
 
-                gpe = find_groupe(a)
+                gpe = find_groupe(a, typeparl, urlapi)
                 if not gpe:
                     if a["sort"] != "Irrecevable":
                         sys.stderr.write('WARNING: no groupe found for %s\n' % a['url_nos%ss' % typeparl])

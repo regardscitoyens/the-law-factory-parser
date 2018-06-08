@@ -60,7 +60,7 @@ re_id_laststep = re.compile(r'/[^/\d]*(\d+)\D[^/]*$')
 DEBUG = False
 
 def process(OUTPUT_DIR, procedure):
-    context = Context(OUTPUT_DIR)
+    context = Context(OUTPUT_DIR, load_parls=True)
 
     gouv_members = {}
     rapporteurs = {}
@@ -132,6 +132,12 @@ def process(OUTPUT_DIR, procedure):
                 continue
             sections[i[sectype]]['total_intervs'] += 1
             sections[i[sectype]]['total_mots'] += int(i['nbmots'])
+
+            # Fix groupes not historicized in NosSénateurs
+            if typeparl == "senateur" and i["intervenant_slug"]:
+                gpe = context.get_senateur_groupe(i["intervenant_slug"], i["date"], urlapi)
+                if gpe:
+                    i["intervenant_groupe"] = gpe
 
             # Consider as separate groups cases such as: personnalités, présidents and rapporteurs
             gpe = i['intervenant_groupe']

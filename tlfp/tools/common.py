@@ -216,6 +216,7 @@ class Context(object):
             exit(1)
         self.allgroupes = {}
         self.get_groupes()
+        self.get_historique_groupes_senat()
         self.parlementaires = {}
         if load_parls:
             self.get_parlementaires()
@@ -271,6 +272,35 @@ class Context(object):
                 except Exception as e:
                     sys.stderr.write('WARNING: could not read groupes file %s in data\n' % f)
                     sys.stderr.write('%s: %s\n' % (type(e), e))
+
+    def get_historique_groupes_senat(self):
+        senateurs = {}
+        gfile = os.path.join(self.sourcedir, '..', 'historique-groupes-senat.json')
+        for row in open_json(gfile)["results"]:
+            sid = row['Matricule'].lower()
+            if sid not in senateurs:
+                senateurs[sid] = []
+            st = row.get('Date_de_debut_de_la_fonction') or row.get('Date_de_debut_d_appartenance') or '0000-00-00'
+            ed = row.get('Date_de_fin_de_la_fonction') or row.get('Date_de_fin_d_appartenance') or '9999-99-99'
+            senateurs[sid].append({
+                'debut': st[:10].replace('/', '-'),
+                'fin': ed[:10].replace('/', '-'),
+                'groupe': slug_groupe(row['Code_du_groupe_politique'])
+            })
+        for sid in senateurs:
+            senateurs[sid] = sorted(senateurs[sid], key=lambda x: (x['debut'], x['fin']))
+        self.groupes_senateurs = senateurs
+
+    def get_senateur_groupe(self, slug, object_date, urlapi):
+        senator = self.get_parlementaire(urlapi, slug)
+        senid = senator["id_institution"][-6:].lower()
+        if senid not in self.groupes_senateurs:
+            print('WARNING - cannot find %s in OpenData Sénat' % slug)
+        else:
+            for period in self.groupes_senateurs[senid]:
+                if period["debut"] <= object_date <= period["fin"]:
+                    return period["groupe"]
+            print('WARNING - cannot find groupe of %s in OpenData Sénat for date %s' % (slug, object_date), self.groupes_senateurs[senid])
 
     def add_groupe(self, groupes, gpe, urlapi):
         gpid = upper_first(gpe.lower())
