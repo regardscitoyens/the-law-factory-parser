@@ -15,7 +15,6 @@ from lawfactory_utils.urls import download
 from .common import get_text_id, upcase_accents, real_lower
 from .sort_articles import bister
 
-DEBUG = "--debug" in sys.argv
 
 # inspired by duralex/alinea_parser.py
 def word_to_number(word):
@@ -389,7 +388,7 @@ def clean_article_name(text):
 
     return cl_line
 
-def parse(url, resp=None):
+def parse(url, resp=None, DEBUG=False):
     """
     parse the text of an url, an already cached  to`resp` can be passed to avoid an extra network request
     """
