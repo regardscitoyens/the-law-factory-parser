@@ -7,6 +7,7 @@ Outputs results to stdout
 
 import copy
 import re
+import sys
 
 from bs4 import BeautifulSoup
 from lawfactory_utils.urls import download
@@ -14,6 +15,7 @@ from lawfactory_utils.urls import download
 from .common import get_text_id, upcase_accents, real_lower
 from .sort_articles import bister
 
+DEBUG = "--debug" in sys.argv
 
 # inspired by duralex/alinea_parser.py
 def word_to_number(word):
@@ -485,9 +487,13 @@ def parse(url, resp=None):
 
     for text in non_recursive_find_all(soup, should_be_parsed):
         line = clean_html(str(text))
+        if DEBUG:
+            print(read, line, file=sys.stderr)
 
         # limit h2/h4 matches to PPL headers or Article unique
         if text.name not in ('p', 'table') and not re_mat_ppl.match(line) and not re_mat_tco.match(line) and 'Article unique' not in line:
+            if DEBUG:
+                print(" -> IGNORING LINE", file=sys.stderr)
             continue
 
         if re_stars.match(line):
