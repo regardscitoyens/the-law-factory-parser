@@ -27,7 +27,7 @@ echo "A few stats:"
 echo PARSED: $(ls $DATADIR/p*/viz/procedure.json | wc -l) "/ "$(ls data/p*/viz/procedure.json | wc -l)
 echo ERROR: $(ls $DATADIR/logs/ | wc -l) "/ "$(ls data/logs/ | wc -l)
 echo
-tail -n 1 $DATADIR/logs/* | grep -v '^==>' | grep . | uniq --count | sort -rn
+tail -n 1 $DATADIR/logs/* | grep -v '^==>' | grep . | sort | uniq --count | sort -rn
 echo
 echo "REGRESSIONS:"
 ls $DATADIR/logs/ | while read id; do
