@@ -30,6 +30,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
     oldartids = []
     oldarts = []
     oldsects = []
+    olddepot = None
     try:
         for line in previous:
             if line["type"] != "texte":
