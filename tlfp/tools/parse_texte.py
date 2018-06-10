@@ -300,7 +300,7 @@ re_cl_sec_part = re.compile(r"^(?:<b>)?(?P<num>\w{,11})\s+partie\s*(?::(?P<titre
 re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
 re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"((<b>)?\s*pro.* loi|<h2>\s*pro.* loi\s*</h2>)", re.I)
-re_mat_tco = re.compile(r"\s*<b>\s*(ANNEXE[^:]*:\s*|\d+\)\s+)?TEXTES?\s*(ADOPTÉS?\s*PAR|DE)\s*LA\s*COMMISSION.*(</b>\s*$|\(.*\))")
+re_mat_tco = re.compile(r"\s*<(b|h1)>\s*(ANNEXE[^:]*:\s*|\d+\)\s+|<a name[^>]*>\s*</a>\s*)*TEXTES?\s*(([ÉE]LABOR|ADOPT)[EÉ]S?\s*PAR|DE)\s*LA\s*COMMISSION.*(</(b|h1)>\s*$|\(.*\))")
 re_mat_exp = re.compile(r"(<b>)?expos[eéÉ]", re.I)
 re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|États législatifs annexés|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|La présente loi sera exécutée comme loi de l'Etat|<a>\*</a>\s*(<i>)?1)", re.I)
 re_mat_ann = re.compile(r"\s*<b>\s*ANNEXES?[\s<]+")
@@ -475,7 +475,7 @@ def parse(url, resp=None):
 
     def should_be_parsed(x):
         """returns True if x can contain useful information"""
-        if x.name not in ('p', 'table', 'h2', 'h4'):
+        if x.name not in ('p', 'table', 'h1', 'h2', 'h4'):
             return False
         # hack: we don't want to parse the table containing the conclusion from the senat
         # ex: https://www.senat.fr/leg/tas12-040.html
@@ -487,7 +487,7 @@ def parse(url, resp=None):
         line = clean_html(str(text))
 
         # limit h2/h4 matches to PPL headers or Article unique
-        if text.name not in ('p', 'table') and not re_mat_ppl.match(line) and 'Article unique' not in line:
+        if text.name not in ('p', 'table') and not re_mat_ppl.match(line) and not re_mat_tco.match(line) and 'Article unique' not in line:
             continue
 
         if re_stars.match(line):
