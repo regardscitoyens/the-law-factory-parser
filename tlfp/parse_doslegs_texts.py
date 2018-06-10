@@ -124,6 +124,12 @@ def parse_url_for_step(url, step, step_index):
             print('        ^ empty parsing, trying url rapport :', fixed_url)
             return parse_url_for_step(fixed_url, step, step_index)
 
+        re_rapport_senat = re.compile(r'(senat.fr/rap/([^/]+)/\2)\d.html')
+        if not articles and re_rapport_senat.search(fixed_url):
+            fixed_url = re_rapport_senat.sub(r'\1_mono.html', fixed_url)
+            print('        ^ empty parsing, trying url mono :', fixed_url)
+            return parse_url_for_step(fixed_url, step, step_index)
+
         if not articles:
             raise Exception('[parse_texts] Empty parsing %s' % url)
 
