@@ -106,6 +106,47 @@ def find_good_url_resp(url):
     return False
 
 
+def parse_url_for_step(url, step, step_index):
+    fixed_url_resp = find_good_url_resp(url)
+    if fixed_url_resp:
+        fixed_url = fixed_url_resp.url
+        if fixed_url != url:
+            print('        ^ text url fixed:', fixed_url)
+
+        if step.get('stage') != 'constitutionnalité':
+            step['source_url'] = fixed_url
+
+        articles = parse_texte.parse(fixed_url, resp=fixed_url_resp)
+        debug_file(articles, 'debug_parsed_text_step_%d.json' % step_index)
+
+        if not articles and 'ta-commission' in fixed_url:
+            fixed_url = fixed_url.replace('ta-commission', 'rapports').replace('-a0', '')
+            print('        ^ empty parsing, trying url rapport :', fixed_url)
+            return parse_url_for_step(fixed_url, step, step_index)
+
+        if not articles:
+            raise Exception('[parse_texts] Empty parsing %s' % url)
+
+        step['articles'] = articles
+        text = articles[0]
+        text['depot'] = step.get('step') == 'depot'
+
+        # echec detected ? we update the step
+        echec_line = [article for article in articles if article.get('type') == 'echec']
+        if echec_line:
+            assert step.get('step') != 'depot'
+            echec_line = echec_line[0]
+            if step.get('stage') == 'CMP':
+                step['echec'] = 'échec'
+            else:
+                step['echec'] = 'rejet'
+
+        if not step.get('echec') and len(articles) == 1:
+            raise Exception('parsing failed for %s (no text)' % fixed_url)
+    else:
+        raise Exception('[parse_texts] Invalid response %s' % url)
+
+
 def parse_texts(dos):
     print('** parsing texts')
 
@@ -132,39 +173,7 @@ def parse_texts(dos):
                     raise Exception('[parse_texts] Empty url for step: %s.%s.%s' % (step.get('institution'), step.get('stage'), step.get('step')))
                 continue
             else:
-                fixed_url_resp = find_good_url_resp(url)
-                if fixed_url_resp:
-                    fixed_url = fixed_url_resp.url
-                    if fixed_url != url:
-                        print('        ^ text url fixed:', fixed_url)
-
-                    if step.get('stage') != 'constitutionnalité':
-                        step['source_url'] = fixed_url
-
-                    articles = parse_texte.parse(fixed_url, resp=fixed_url_resp)
-                    debug_file(articles, 'debug_parsed_text_step_%d.json' % step_index)
-
-                    if not articles:
-                        raise Exception('[parse_texts] Empty parsing %s' % url)
-
-                    step['articles'] = articles
-                    text = articles[0]
-                    text['depot'] = step.get('step') == 'depot'
-
-                    # echec detected ? we update the step
-                    echec_line = [article for article in articles if article.get('type') == 'echec']
-                    if echec_line:
-                        assert step.get('step') != 'depot'
-                        echec_line = echec_line[0]
-                        if step.get('stage') == 'CMP':
-                            step['echec'] = 'échec'
-                        else:
-                            step['echec'] = 'rejet'
-
-                    if not step.get('echec') and len(articles) == 1:
-                        raise Exception('parsing failed for %s (no text)' % fixed_url)
-                else:
-                    raise Exception('[parse_texts] Invalid response %s' % url)
+                parse_url_for_step(url, step, step_index)
         except Exception as e:
             if step.get('step') == 'depot' and not is_one_of_the_initial_depots(steps, step_index):
                 print('     * ignore missing intermediary depot', url)
