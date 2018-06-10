@@ -1,8 +1,8 @@
 #!/bin/bash
 
 cd $(dirname $0)
-source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
-workon lawfactory
+source ~/.bash_profile
+pyenv activate lafabrique
 
 DATADIR=data
 
