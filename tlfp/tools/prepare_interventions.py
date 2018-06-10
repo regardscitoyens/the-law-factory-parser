@@ -57,7 +57,7 @@ re_rapporteur = re.compile(r'((vice|co|pr[eéÉ]sidente?)[,\-\s]*)?rapporte', re
 
 re_id_laststep = re.compile(r'/[^/\d]*(\d+)\D[^/]*$')
 
-DEBUG = False
+DEBUG = '--debug' in sys.argv
 
 def process(OUTPUT_DIR, procedure):
     context = Context(OUTPUT_DIR, load_parls=True)
@@ -225,5 +225,4 @@ def process(OUTPUT_DIR, procedure):
 
 
 if __name__ == '__main__':
-    DEBUG = True
     process(sys.argv[1], json.load(open(os.path.join(sys.argv[1], 'viz/procedure.json'))))
