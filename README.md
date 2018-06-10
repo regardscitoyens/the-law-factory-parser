@@ -10,16 +10,27 @@ Code used to generate the API available at: http://www.LaFabriqueDeLaLoi.fr/api/
 
 ## Install the dependencies ##
 
-You can install them with the following:
+You sould set up a dedicated virtualenv with Python 3.5+:
 
-```
+```bash
 virtualenv -p $(which python3) venv
 source venv/bin/activate
+```
+
+Using Pypy can seriously boost performance. You can easily install it and create a virtualenv with it for instance by [installing Pyenv](https://github.com/pyenv/pyenv-installer#pyenv-installer):
+
+```bash
+pyenv install pypy3.5-6.0.0
+pyenv virtualenv pypy3.5-6.0.0 lafabrique
+pyenv activate lafabrique
+```
+
+Then with your choice of virtualenv activated, install the dependencies:
+
+```bash
 pip install --upgrade setuptools pip # not necessary but always a good idea
 pip install --process-dependency-links -e .
 ```
-NOTE: You must have Python 3.5+ for now
-
 
 ## Generate data for one bill ##
 
