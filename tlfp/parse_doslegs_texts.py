@@ -149,6 +149,10 @@ def parse_url_for_step(url, step, step_index):
                 return parse_url_for_step(fixed_url, step, step_index)
 
             raise Exception('parsing failed for %s (no text)' % fixed_url)
+    elif 'ta-commission' in url:
+        fixed_url = url.replace('ta-commission', 'rapports').replace('-a0', '')
+        print('        ^ empty response, trying url rapport :', fixed_url)
+        parse_url_for_step(fixed_url, step, step_index)
     else:
         raise Exception('[parse_texts] Invalid response %s' % url)
 
