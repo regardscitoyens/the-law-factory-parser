@@ -4,7 +4,7 @@
 # the XKCD font is available here: https://github.com/ipython/xkcd-font/tree/master/xkcd/build
 import sys, os, random, glob
 
-from .common import open_json, print_json
+from tlfp.tools.common import open_json, print_json
 
 if len(sys.argv) < 2:
     print('USAGE: `steps_as_dot.py <path_to_json>`')

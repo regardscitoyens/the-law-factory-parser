@@ -7,7 +7,7 @@ Output in <api_directory>:
 """
 import glob, os, sys, csv, re
 
-from .tools.common import upper_first, open_json, print_json
+from tlfp.tools.common import upper_first, open_json, print_json
 
 API_DIRECTORY = sys.argv[1]
 

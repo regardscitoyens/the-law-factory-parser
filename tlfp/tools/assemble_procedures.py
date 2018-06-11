@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os, sys
 
-from .common import *
+from tlfp.tools.common import *
 
 sourcedir = sys.argv[1]
 if not sourcedir:
