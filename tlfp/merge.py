@@ -67,7 +67,8 @@ def merge_senat_with_an(senat, an):
                     # only take source_url from the AN, we've got better infos for now
                     # from the senat
                     common_step = copy.deepcopy(step)
-                    common_step['source_url'] = an_step.get('source_url')
+                    if an_step.get('source_url'):
+                        common_step['source_url'] = an_step.get('source_url')
                     if 'date' not in common_step:
                         common_step['date'] = an_step.get('date')
                     steps_to_add.append(common_step)
