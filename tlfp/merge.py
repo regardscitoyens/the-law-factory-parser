@@ -1,6 +1,7 @@
 import copy
 
-from .tools.detect_anomalies import find_anomalies
+from tlfp.tools.detect_anomalies import find_anomalies
+from tlfp.tools._step_logic import should_ignore_commission_text
 
 
 def fix_an_cmp_step_url(senat, an):
@@ -32,6 +33,7 @@ def merge_senat_with_an(senat, an):
         dos['url_jo'] = an['url_jo']
 
     dos['steps'] = []
+    an['steps'] = [s for s in an['steps'] if not should_ignore_commission_text(s, an)]
 
     def same_stage_step_instit(a, b):
         return a.get('stage') == b.get('stage') and a.get('step') == b.get('step') \
