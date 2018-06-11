@@ -10,7 +10,7 @@ Code used to generate the API available at: http://www.LaFabriqueDeLaLoi.fr/api/
 
 ## Install the dependencies ##
 
-You sould set up a dedicated virtualenv with Python 3.5+:
+You should set up a dedicated virtualenv with Python 3.5+:
 
 ```bash
 virtualenv -p $(which python3) venv
