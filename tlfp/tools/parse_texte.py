@@ -167,6 +167,7 @@ re_clean_subsec_space2 = re.compile(r'^("?[IVX0-9]{1,4})\s*([a-z]*)\s*([A-H]{1,4
 re_clean_punc_space = re.compile(r'([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])')
 re_clean_spaces = re.compile(r'\s+')
 re_clean_coord = re.compile(r'^(<i>)?([\["\(\s]+|pour)*coordination[\]\)\s\.]*(</i>)?', re.I)
+re_liminaire = re.compile(r' pr..?liminaire', re.I)
 # Clean html and special chars
 lower_inner_title = lambda x: x.group(1)+lower_but_first(x.group(3))+" "
 html_replace = [
@@ -199,7 +200,7 @@ html_replace = [
     (re.compile(r"œ([A-Z])"), r"OE\1"),
     (re.compile(r"œ\s*", re.I), "oe"),
     (re.compile(r'^((<[^>]*>)*")%s ' % section_titles, re.I), lower_inner_title),
-    (re.compile(r' pr..?liminaire', re.I), ' préliminaire'),
+    (re_liminaire, ' préliminaire'),
     (re.compile(r'<strike>[^<]*</strike>', re.I), ''),
     (re.compile(r'^<a>(\w)', re.I), r"\1"),
     (re.compile(r'^[.…]{5,}\s*(((suppr|conforme).{0,10}?)+)\s*[.…]{5,}\s*$', re.I), r"\1"),  # clean "......Conforme....." to "Conforme"
@@ -562,7 +563,7 @@ def parse(url, resp=None, DEBUG=False):
             if m.group(3) is not None:
                 section_typ += "S"
 
-            if " LIMINAIRE" in line:
+            if re.search(re_liminaire, line):
                 section_num = "L"
             else:
                 section_num = re_cl_html.sub('', m.group(5).strip())
