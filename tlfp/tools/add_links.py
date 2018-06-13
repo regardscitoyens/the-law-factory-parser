@@ -21,18 +21,19 @@ def process(dos):
                 for i in range(len(data["alineas"])):
                     text = data["alineas"]["%03d" % (i+1)]
                     for candidat in metslesliens.donnelescandidats(text, 'structuré'):
-                        if 'texte' in candidat and not 'relatif' in candidat['texte']:
-                            link = text[candidat['index'][0]:candidat['index'][1]]
-                            if not re.search( r'(même|présent|précédent) ', link ):
-                                data['liens'].append(link)
-                            """
-                            data['liens'].append({
-                                'url': 'https://duckduckgo.com/?q=!ducky+' + urllib.parse.quote_plus(link),
-                                'texte': link,
-                                'alinea': i,
-                                # 'index': candidat['index'],
-                            })
-                            """
+                        if 'texte' in candidat and 'relatif' not in candidat['texte']:
+                            link_text = text[candidat['index'][0]:candidat['index'][1]]
+                            link_text = re.sub(r'^(aux?|les?|la|du|des)(dite?s?)? ', '', link_text, 0, re.I)
+                            link_text = re.sub(r"^l'", '', link_text, 0, re.I)
+                            if not re.search(r'(même|présente?|précédente?) ', link_text ):
+                                """
+                                link = {
+                                    'texte': link_text
+                                }
+                                if 'eli_alias' in candidat:
+                                    link['url'] = "https://www.legifrance.gouv.fr/" + candidat['eli_alias']
+                                """
+                                data['liens'].append(link_text)
     return dos
 
 

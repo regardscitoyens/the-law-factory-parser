@@ -2,5 +2,5 @@ lawfactory_utils
 senapy
 -e git+https://github.com/regardscitoyens/legipy.git#egg=legipy
 -e git+https://github.com/regardscitoyens/anpy.git#egg=anpy
--e git+https://framagit.org/mdamien/metslesliens.git@1.1.1-manifest#egg=metslesliens
+metslesliens==1.3.0
 diff-match-patch==20121119
