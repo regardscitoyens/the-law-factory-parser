@@ -19,7 +19,9 @@ def download_senat(url, log=sys.stderr, verbose=True):
     if verbose: print('  [] download SENAT version')
     html = download(url).text
     if verbose: print('  [] parse SENAT version')
-    return senapy_parse(html, url, logfile=log)
+    senat_dos = senapy_parse(html, url, logfile=log)
+    debug_file(senat_dos, 'debug_senat_dos.json')
+    return senat_dos
 
 
 def download_an(url, cached_opendata_an, url_senat=False, log=sys.stderr, verbose=True):
@@ -30,13 +32,17 @@ def download_an(url, cached_opendata_an, url_senat=False, log=sys.stderr, verbos
     if not results:
         if verbose: print('     WARNING: AN DOS NOT FOUND', url)
         return
+    an_dos = results[0]
     if len(results) > 1:
         if url_senat:
             for result in results:
                 if result.get('url_dossier_senat') == url_senat:
-                    return result
+                    an_dos = result
+                    break
         if verbose: print('     WARNING: TOOK FIRST DOSLEG BUT THERE ARE %d OF THEM' % len(results))
-    return results[0]
+
+    debug_file(an_dos, 'debug_an_dos.json')
+    return an_dos
 
 
 def are_same_doslegs(senat_dos, an_dos):
@@ -169,8 +175,6 @@ def process(API_DIRECTORY, url):
                 print('======')
                 print(url)
 
-            debug_file(an_dos, 'debug_an_dos.json')
-            debug_file(senat_dos, 'debug_senat_dos.json')
             debug_file(dos, 'debug_dos.json')
 
             # download the groupes in case they are not there yet
