@@ -184,6 +184,10 @@ def identify_room(url_or_institution, legislature):
     return typeparl, urlapi
 
 
+def national_assembly_text_legislature(url_text):
+    return int(url_text.split('.fr/')[1].split('/')[0])
+
+
 def personalize_link(link, obj, urlapi):
     if isinstance(obj, dict):
         slug = obj.get('intervenant_slug', obj.get('slug', ''))

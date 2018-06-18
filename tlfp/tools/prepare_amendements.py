@@ -6,13 +6,9 @@ from functools import cmp_to_key
 
 from lawfactory_utils.urls import download
 
-from .common import Context, slug_groupe, open_json, get_text_id, identify_room, print_json, amdapi_link
+from .common import Context, slug_groupe, open_json, get_text_id, identify_room, print_json, amdapi_link, national_assembly_text_legislature
 from .sort_articles import compare_articles
 from ._step_logic import get_previous_step
-
-
-def national_assembly_text_legislature(url):
-    return int(url.split('.fr/')[1].split('/')[0])
 
 
 def process(OUTPUT_DIR, procedure):

@@ -81,6 +81,7 @@ def process(OUTPUT_DIR, procedure):
     steps = {}
     id_step = None
     for step in procedure['steps']:
+        legislature = step.get('assemblee_legislature', procedure.get('assemblee_legislature'))
         done_links = {}
         id_laststep = id_step
         try:
@@ -92,14 +93,14 @@ def process(OUTPUT_DIR, procedure):
         intervs = []
         step['intervention_files'].sort()
         warndone = []
-        for interv_file in step['intervention_files']:
-            seance = open_json(os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions'), "%s.json" % interv_file)['seance']
+        for seance_file in step['intervention_files']:
+            interventions = open_json(os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions'), "%s.json" % seance_file)['seance']
             has_tag_loi = 0
             if id_laststep:
-                for i in seance:
+                for i in interventions:
                     if {"loi": id_laststep} in i['intervention']['lois']:
                         has_tag_loi += 1
-            for i in seance:
+            for i in interventions:
                 del(i['intervention']['contenu'])
                 if has_tag_loi > 2 and {"loi": id_laststep} not in i['intervention']['lois']:
                     if DEBUG:
@@ -107,8 +108,9 @@ def process(OUTPUT_DIR, procedure):
                     continue
                 intervs.append(i)
 
-        typeparl, urlapi = identify_room(step.get('institution'),
-            legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
+        if step.get('institution') == 'assemblee' and intervs:
+            legislature = national_assembly_text_legislature(intervs[0]['intervention']['source'])
+        typeparl, urlapi = identify_room(step.get('institution'), legislature)
 
         # By default divide in subsections, or by seance if no subsection
         sections = {}
