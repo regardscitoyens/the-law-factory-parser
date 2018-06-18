@@ -219,7 +219,7 @@ def process(OUTPUT_DIR, procedure):
             amendements_src = sort_amendements(texte['articles'], amendements_src)
 
 
-            typeparl, urlapi = identify_room(texte_url, legislature=legislature)
+            typeparl, urlapi = identify_room(texte_url, legislature)
 
             sujets = {}
             groupes = {}
