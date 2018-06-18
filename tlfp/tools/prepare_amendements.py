@@ -11,6 +11,10 @@ from .sort_articles import compare_articles
 from ._step_logic import get_previous_step
 
 
+def national_assembly_text_legislature(url):
+    return int(url.split('.fr/')[1].split('/')[0])
+
+
 def process(OUTPUT_DIR, procedure):
     context = Context(OUTPUT_DIR, load_parls=True)
 
@@ -67,7 +71,7 @@ def process(OUTPUT_DIR, procedure):
         def solveorder(art):
             nonlocal articles
             art = art.lower()
-            order = 10000;
+            order = 10000
             if art == 'titre' or art.startswith('intitul'):
                 return 0
             elif art.startswith('motion'):
@@ -143,6 +147,10 @@ def process(OUTPUT_DIR, procedure):
             print('ERROR - no texte url', step.get('source_url'), file=sys.stderr)
             continue
 
+        legislature = None
+        if 'assemblee-nationale.fr' in texte_url:
+            legislature = national_assembly_text_legislature(texte_url)
+
         texte = open_json(os.path.join(context.sourcedir, 'procedure', last_step['directory']), 'texte/texte.json')
 
         amdt_url = None
@@ -150,7 +158,7 @@ def process(OUTPUT_DIR, procedure):
             if 'assemblee_legislature' not in procedure:
                 print('         + no AN legislature - pass text')
                 continue
-            amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json?%s' % (procedure.get('assemblee_legislature'), get_text_id(texte_url), CACHE_BUSTING)
+            amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json?%s' % (legislature, get_text_id(texte_url), CACHE_BUSTING)
         elif "senat.fr" in texte_url:
             amdt_url = 'https://nossenateurs.fr/amendements/%s/json?%s' % (get_text_id(texte_url), CACHE_BUSTING)
 
@@ -210,8 +218,8 @@ def process(OUTPUT_DIR, procedure):
         if len(amendements_src) > 0:
             amendements_src = sort_amendements(texte['articles'], amendements_src)
 
-            typeparl, urlapi = identify_room(texte_url,
-                legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
+
+            typeparl, urlapi = identify_room(texte_url, legislature=legislature)
 
             sujets = {}
             groupes = {}
@@ -311,8 +319,7 @@ def process(OUTPUT_DIR, procedure):
         # TODO: move this to a dedicated file
 
         print('      * downloading interventions')
-        typeparl, urlapi = identify_room(texte_url,
-            legislature=step.get('assemblee_legislature', procedure.get('assemblee_legislature')))
+        typeparl, urlapi = identify_room(texte_url, legislature)
         inter_dir = os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions')
         commission_or_hemicycle = '?commission=1' if step.get('step') == 'commission' else '?hemicycle=1'
         # TODO: TA texts can be zero-paded or not (TA0XXX or TAXXX), we should try both
