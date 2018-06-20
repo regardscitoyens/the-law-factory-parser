@@ -310,12 +310,11 @@ def process(OUTPUT_DIR, procedure):
                     'parlementaires': dict((p["i"], dict((k, p[k]) for k in "psang")) for p in list(parls.values()))}
             # print_json(data, linksfile)
 
-
         ###########  INTERVENTIONS #############
         # TODO: move this to a dedicated file
 
         print('      * downloading interventions')
-        typeparl, urlapi = identify_room(texte_url, legislature)
+        typeparl, _ = identify_room(texte_url, legislature)
         inter_dir = os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions')
         commission_or_hemicycle = '?commission=1' if step.get('step') == 'commission' else '?hemicycle=1'
         # TODO: TA texts can be zero-paded or not (TA0XXX or TAXXX), we should try both
@@ -327,10 +326,18 @@ def process(OUTPUT_DIR, procedure):
             texts = (get_text_id(texte_url), last_text_id)
 
         for loiid in texts:
-            url_seances = 'https://{}.fr/seances/{}/json{}'.format(urlapi, loiid, commission_or_hemicycle)
+            if typeparl == 'depute':
+                url_seances = 'https://nosdeputes.fr/%s/seances/%s/json%s' % (legislature, loiid, commission_or_hemicycle)
+            else:
+                url_seances = 'https://nossenateurs.fr/seances/%s/json%s' % (loiid, commission_or_hemicycle)
+
             print('        * downloading seances - ', url_seances)
             for id_seance_obj in sorted(download(url_seances).json().get('seances', []), key=lambda x: x["seance"]):
-                url_seance = 'https://{}.fr/seance/{}/{}/json'.format(urlapi, id_seance_obj['seance'], loiid)
+                if typeparl == 'depute':
+                    url_seance = 'https://nosdeputes.fr/%s/seance/%s/%s/json' % (legislature, id_seance_obj['seance'], loiid)
+                else:
+                    url_seance = 'https://nossenateurs.fr/seance/%s/%s/json' % (id_seance_obj['seance'], loiid)
+
                 print('           downloading seance - ', url_seance)
                 resp = download(url_seance).json()
                 if resp.get('seance'):
