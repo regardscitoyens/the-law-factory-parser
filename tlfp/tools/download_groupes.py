@@ -13,7 +13,7 @@ def process(output_directory):
             output_directory
         )
         download_daily(
-            "http://%s.fr/%s/json" %
+            "https://%s.fr/%s/json" %
                 (url, 'deputes' if 'deputes' in url else 'senateurs'),
             '%s.parlementaires' % url,
             output_directory
