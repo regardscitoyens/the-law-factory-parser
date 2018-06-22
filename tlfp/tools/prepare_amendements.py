@@ -149,14 +149,16 @@ def process(OUTPUT_DIR, procedure):
 
         texte = open_json(os.path.join(context.sourcedir, 'procedure', last_step['directory']), 'texte/texte.json')
 
+        typeparl, urlapi = identify_room(texte_url, legislature)
+
         amdt_url = None
         if "nationale.fr" in texte_url:
             if 'assemblee_legislature' not in procedure:
                 print('         + no AN legislature - pass text')
                 continue
-            amdt_url = 'https://nosdeputes.fr/%s/amendements/%s/json?%s' % (legislature, get_text_id(texte_url), CACHE_BUSTING)
+            amdt_url = 'https://%s.fr/%s/amendements/%s/json?%s' % (urlapi, legislature, get_text_id(texte_url), CACHE_BUSTING)
         elif "senat.fr" in texte_url:
-            amdt_url = 'https://nossenateurs.fr/amendements/%s/json?%s' % (get_text_id(texte_url), CACHE_BUSTING)
+            amdt_url = 'https://%s.fr/amendements/%s/json?%s' % (urlapi, get_text_id(texte_url), CACHE_BUSTING)
 
         if amdt_url is None:
             continue
@@ -213,9 +215,6 @@ def process(OUTPUT_DIR, procedure):
 
         if len(amendements_src) > 0:
             amendements_src = sort_amendements(texte['articles'], amendements_src)
-
-
-            typeparl, urlapi = identify_room(texte_url, legislature)
 
             sujets = {}
             groupes = {}
@@ -314,7 +313,7 @@ def process(OUTPUT_DIR, procedure):
         # TODO: move this to a dedicated file
 
         print('      * downloading interventions')
-        typeparl, _ = identify_room(texte_url, legislature)
+        typeparl, urlapi = identify_room(texte_url, legislature)
         inter_dir = os.path.join(context.sourcedir, 'procedure', step['directory'], 'interventions')
         commission_or_hemicycle = '?commission=1' if step.get('step') == 'commission' else '?hemicycle=1'
         # TODO: TA texts can be zero-paded or not (TA0XXX or TAXXX), we should try both
@@ -327,16 +326,16 @@ def process(OUTPUT_DIR, procedure):
 
         for loiid in texts:
             if typeparl == 'depute':
-                url_seances = 'https://nosdeputes.fr/%s/seances/%s/json%s' % (legislature, loiid, commission_or_hemicycle)
+                url_seances = 'https://%s.fr/%s/seances/%s/json%s' % (urlapi, legislature, loiid, commission_or_hemicycle)
             else:
-                url_seances = 'https://nossenateurs.fr/seances/%s/json%s' % (loiid, commission_or_hemicycle)
+                url_seances = 'https://%s.fr/seances/%s/json%s' % (urlapi, loiid, commission_or_hemicycle)
 
             print('        * downloading seances - ', url_seances)
             for id_seance_obj in sorted(download(url_seances).json().get('seances', []), key=lambda x: x["seance"]):
                 if typeparl == 'depute':
-                    url_seance = 'https://nosdeputes.fr/%s/seance/%s/%s/json' % (legislature, id_seance_obj['seance'], loiid)
+                    url_seance = 'https://%s.fr/%s/seance/%s/%s/json' % (urlapi, legislature, id_seance_obj['seance'], loiid)
                 else:
-                    url_seance = 'https://nossenateurs.fr/seance/%s/%s/json' % (id_seance_obj['seance'], loiid)
+                    url_seance = 'https://%s.fr/seance/%s/%s/json' % (urlapi, id_seance_obj['seance'], loiid)
 
                 print('           downloading seance - ', url_seance)
                 resp = download(url_seance).json()
