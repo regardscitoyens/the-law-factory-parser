@@ -63,7 +63,7 @@ def process(OUTPUT_DIR, procedure):
                             if 'intervention_files' not in test_step:
                                 test_step['has_interventions'] = True
                                 test_step['intervention_files'] = []
-                                os.mkdir(test_interv_dirpath)
+                                os.makedirs(test_interv_dirpath)
 
                             test_step['intervention_files'].append(interv_file)
                             test_step['intervention_files'].sort()
