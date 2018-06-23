@@ -8,9 +8,6 @@ DATADIR=data
 
 senapy-cli doslegs_urls --min-year=$((`date +%Y`)) | tlfp-parse-many $DATADIR --only-promulgated --quiet
 
-# Update RGPD
-tlfp-parse pjl17-296
-
 echo
 python tlfp/generate_dossiers_csv.py $DATADIR
 python tlfp/tools/assemble_procedures.py $DATADIR
