@@ -6,6 +6,15 @@ mkdir -p $DATADIR
 
 senapy-cli doslegs_urls | tlfp-parse-many $DATADIR --only-promulgated
 
+echo
+echo "Handle non promulgated texts already parsed in data:"
+ls data/ | grep '^p' | grep -v '_tmp' | while read id; do
+  ls $DATADIR/$id > /dev/null 2>&1          ||
+    ls $DATADIR/logs/$id > /dev/null 2>&1   ||
+    tlfp-parse $id $DATADIR
+done
+echo
+
 python tlfp/generate_dossiers_csv.py $DATADIR
 
 python tlfp/tools/assemble_procedures.py $DATADIR
