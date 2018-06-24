@@ -429,6 +429,16 @@ def parse(url, resp=None, DEBUG=False):
         for reg, res in clean_texte_regexps:
             string = reg.sub(res, string)
 
+    source_avenants = False
+    if "NB : le texte des avenants et de l&#8217;accord figure en annexe aux projets de loi (n°<sup>s </sup>" in string:
+        source_avenants = True
+        srclst = [int(s.strip()) for s in (
+                    string.split('figure en annexe aux projets de loi (n°<sup>s </sup>')[1]
+                    .strip()
+                    .split(')')[0]
+                    .strip()
+                    .replace(' et ', ', ')
+                    .split(', '))]
 
     definitif = re_definitif.search(string) is not None or 'legifrance.gouv.fr' in url
     soup = BeautifulSoup(string, "html5lib")
@@ -505,10 +515,10 @@ def parse(url, resp=None, DEBUG=False):
             art_num = 0
         srcl = re_src_mult.search(line)
         cl_line = re_cl_html.sub("", line).strip()
-        if srcl and read < 1:
+        if not source_avenants and srcl and read < 1:
             srclst.append(int(srcl.group(1)))
             continue
-        elif re_rap_mult.match(line):
+        if re_rap_mult.match(line):
             line = cl_line
             line = re_clean_mult_1.sub(",", line)
             line = re_clean_mult_2.sub("", line)
