@@ -479,7 +479,7 @@ def parse(url, resp=None, DEBUG=False):
     READ_TITLE = 1 # titles lecture
     READ_ALINEAS = 2 # alineas lecture
 
-    read = READ_DISABLED
+    read = READ_TEXT
     art_num = ali_num = 0
     article = None
     indextext = -1
@@ -517,7 +517,7 @@ def parse(url, resp=None, DEBUG=False):
             art_num = 0
         srcl = re_src_mult.search(line)
         cl_line = re_cl_html.sub("", line).strip()
-        if not source_avenants and srcl and read == READ_DISABLED:
+        if not source_avenants and srcl and read in (READ_DISABLED, READ_TEXT):
             srclst.append(int(srcl.group(1)))
             continue
         if re_rap_mult.match(line):
@@ -620,7 +620,7 @@ def parse(url, resp=None, DEBUG=False):
                 pr_js(section)
                 read = READ_TEXT
         # Identify titles and new article zones
-        elif (not expose and re_mat_end.match(line)) or (read == READ_DISABLED and re_mat_ann.match(line)):
+        elif (not expose and re_mat_end.match(line)) or (read == READ_ALINEAS and re_mat_ann.match(line)):
             break
         elif (re.match(r"(<i>)?<b>", line) or
                 re_art_uni.match(cl_line) or
