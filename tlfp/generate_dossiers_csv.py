@@ -24,7 +24,7 @@ csvfile.writerow(('id;Titre;Type de dossier;Date initiale;URL du dossier;État d
 
 home_json_data = []
 
-total_doslegs = 0
+total_doslegs = total_promulgues = 0
 for dos, path in dossiers:
     if not dos.get('beginning'):
         print('INVALID BEGGINING DATE:', dos['id'])
@@ -78,13 +78,20 @@ for dos, path in dossiers:
         })
 
     total_doslegs += 1
+    if dos.get('url_jo'):
+        total_promulgues += 1
+
+erreurs = len(glob.glob(os.path.join(API_DIRECTORY, 'logs/*')))
 
 print(total_doslegs, 'doslegs in csv')
-
+print(total_promulgues, 'promulgués')
+print(erreurs, 'parsings échoués')
+print('%.1f%s OK' % (100*total_promulgues/(total_promulgues + erreurs), '%'))
 
 home_json_final = {
-    "total": total_doslegs,
-    "maximum": len([path for path in glob.glob(os.path.join(API_DIRECTORY, '*/parsing.log')) if re_dos_ok.search(path)]) + len(glob.glob(os.path.join(API_DIRECTORY, 'logs/*')))
+    "total": total_promulgues,
+    "encours": total_doslegs - total_promulgues,
+    "maximum": total_promulgues + erreurs
 }
 home_json_data.sort(key=lambda x: -x['total_amendements'])
 home_json_final["focus"] = {
