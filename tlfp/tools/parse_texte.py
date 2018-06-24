@@ -629,7 +629,7 @@ def parse(url, resp=None, DEBUG=False):
 
             line = cl_line.strip()
             # Read a new article
-            if re_mat_art.match(line) or (read != READ_ALINEAS and re_approb.match(line)):
+            if re_mat_art.match(line):
                 if article is not None:
                     texte = save_text(texte)
                     pr_js(article)
@@ -646,7 +646,7 @@ def parse(url, resp=None, DEBUG=False):
                 assert article["titre"]  # avoid empty titles
                 assert not texte['definitif'] or ' bis' not in article["titre"]  # detect invalid article names
 
-                if m and m.group(2) is not None:
+                if m.group(2) is not None:
                     article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
                 if section["id"] != "":
                     article["section"] = section["id"]
