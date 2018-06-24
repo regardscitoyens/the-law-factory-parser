@@ -194,7 +194,7 @@ html_replace = [
     (re.compile(r"</?sup>", re.I), ""),
     (re.compile(r"^((<[bi]>)*)\((S|AN)[12]\)\s*", re.I), r"\1"),
     (re.compile(r"<s>(.*)</s>", re.I), ""),
-    (re.compile(r"^(<b>Article\s*)\d+\s*(?:<s>\s*)+", re.I), r"\1"),
+    (re.compile(r"^(<b>Article\s*)\d+\s*(?:<s>\s*)+", re.I), r"\1"), # take old barred number of an article instead of renumbered one
     (re.compile(r"</?s>", re.I), ""),
     (re.compile(r"\s*</?img>\s*", re.I), ""),
     (re.compile(r"œ([A-Z])"), r"OE\1"),
@@ -527,7 +527,7 @@ def parse(url, resp=None, DEBUG=False):
                 indextext += 1
                 if int(n_t) == numero:
                     break
-        elif re_mat_ppl.match(line) or re_mat_tco.match(line):
+        elif re_mat_ppl.match(line) or re_mat_tco.match(line) or (read == -1 and line == "<b>Article 1er</b>"):
             read = 0
             texte = save_text(texte)
         elif re_mat_exp.match(line):
