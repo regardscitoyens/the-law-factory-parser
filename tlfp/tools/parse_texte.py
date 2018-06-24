@@ -605,11 +605,11 @@ def parse(url, resp=None, DEBUG=False):
         elif (not expose and re_mat_end.match(line)) or (read == 2 and re_mat_ann.match(line)):
             break
         elif (re.match(r"(<i>)?<b>", line) or re_art_uni.match(cl_line) or re.match(r"^Articles? ", line)
-            ) and not re.search(r">Articles? supprimé", line):
+              or (read != 2 and line.startswith("Est autorisée l'approbation de l"))) and not re.search(r">Articles? supprimé", line):
 
             line = cl_line.strip()
             # Read a new article
-            if re_mat_art.match(line):
+            if re_mat_art.match(line) or (read != 2 and line.startswith("Est autorisée l'approbation de l")):
                 if article is not None:
                     texte = save_text(texte)
                     pr_js(article)
@@ -621,12 +621,12 @@ def parse(url, resp=None, DEBUG=False):
                 if srclst:
                     article["source_text"] = srclst[curtext]
                 m = re_mat_art.match(clean_article_name(text))
-                article["titre"] = normalize_1(m.group(1), "1er")
+                article["titre"] = normalize_1(m.group(1) if m else "1er", "1er")
 
                 assert article["titre"]  # avoid empty titles
                 assert not texte['definitif'] or ' bis' not in article["titre"]  # detect invalid article names
 
-                if m.group(2) is not None:
+                if m and m.group(2) is not None:
                     article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
                 if section["id"] != "":
                     article["section"] = section["id"]
