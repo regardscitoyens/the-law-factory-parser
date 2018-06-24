@@ -310,6 +310,7 @@ re_mat_dots = re.compile(r"^(<i>)?([.…_]\s?)+(</i>)?$")
 re_mat_st = re.compile(r"(<i>\s?|\(|\[)+(texte)?\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,30}$", re.I)
 re_mat_new = re.compile(r"\s*\(\s*nouveau\s*\)\s*", re.I)
 re_mat_texte = re.compile(r'\((Adoption du )?texte (modifié|élaboré|voté|d(u|e l))', re.I)
+re_approb = re.compile(r"^Est autorisée l'approbation de l'", re.I)
 re_mat_single_char = re.compile(r'^\s*[LMN]\s*$')
 re_clean_idx_spaces = re.compile(r'^([IVXLCDM0-9]+)\s*\.\s*')
 re_clean_art_spaces = re.compile(r'^\s*("?)\s+')
@@ -472,13 +473,14 @@ def parse(url, resp=None, DEBUG=False):
     texte["expose"] = ""
     expose = False
 
-    # 'read' can be
-    #     -1 : the text is not detected yet
-    #      0 : read the text
-    #      1 : titles lecture
-    #      2 : alineas lecture
-    read = art_num = ali_num = 0
-    section_id = ""
+    # states 'read' can be set to:
+    READ_DISABLED = -1 # the text is not detected yet
+    READ_TEXT = 0 # read the text
+    READ_TITLE = 1 # titles lecture
+    READ_ALINEAS = 2 # alineas lecture
+
+    read = READ_DISABLED
+    art_num = ali_num = 0
     article = None
     indextext = -1
     curtext = -1
@@ -509,13 +511,13 @@ def parse(url, resp=None, DEBUG=False):
         if re_stars.match(line):
             continue
         if line == "<b>RAPPORT</b>" or line == "Mesdames, Messieurs,":
-            read = -1
+            read = READ_DISABLED
         if (srclst or indextext != -1) and re_sep_text.match(line):
             curtext += 1
             art_num = 0
         srcl = re_src_mult.search(line)
         cl_line = re_cl_html.sub("", line).strip()
-        if not source_avenants and srcl and read < 1:
+        if not source_avenants and srcl and read == READ_DISABLED:
             srclst.append(int(srcl.group(1)))
             continue
         if re_rap_mult.match(line):
@@ -527,13 +529,14 @@ def parse(url, resp=None, DEBUG=False):
                 indextext += 1
                 if int(n_t) == numero:
                     break
-        elif re_mat_ppl.match(line) or re_mat_tco.match(line) or (read == -1 and line == "<b>Article 1er</b>"):
-            read = 0
+        elif re_mat_ppl.match(line) or re_mat_tco.match(line) or (
+                read == READ_DISABLED and line == "<b>Article 1er</b>"):
+            read = READ_TEXT
             texte = save_text(texte)
         elif re_mat_exp.match(line):
-            read = -1 # Deactivate description lecture
+            read = READ_DISABLED # Deactivate description lecture
             expose = True
-        elif read == 0 and definitif_before_congres in line or definitif_after_congres in line:
+        elif read == READ_TEXT and definitif_before_congres in line or definitif_after_congres in line:
             texte['definitif'] = True
             if all_articles:
                 all_articles[0]['definitif'] = True
@@ -552,7 +555,7 @@ def parse(url, resp=None, DEBUG=False):
             texte = save_text(texte)
             pr_js({"type": "echec", "texte": cl_line})
             break
-        elif read == -1 or (indextext != -1 and curtext != indextext):
+        elif read == READ_DISABLED or (indextext != -1 and curtext != indextext):
             continue
 
         # crazy edge case: "(Conforme)Article 24 bis A (nouveau)" on one line
@@ -563,11 +566,26 @@ def parse(url, resp=None, DEBUG=False):
             line = line.replace('<i>(Conforme)</i>', '')
             cl_line = cl_line.replace('(Conforme)', '')
 
+        # another crazy edge case: the text is inside the annexe
+        # ex: http://www.assemblee-nationale.fr/13/rapports/r2083.asp
+        # TODO: could detect via "le présent projet de loi dans le texte figurant en annexe"
+        #       like the source_avenants logic
+        if read != READ_ALINEAS and re_approb.match(line):
+            art_num += 1
+            article = {
+                "type": "article",
+                "order": art_num,
+                "alineas": {},
+                "statut": "none",
+                "titre": "1er"
+            }
+            read = READ_ALINEAS
+
         # Identify section zones
         line = normalize_section_title(line, text, has_multiple_expose)
         m = re_mat_sec.match(line)
         if m:
-            read = 1 # Activate titles lecture
+            read = READ_TITLE # Activate titles lecture
             section["type_section"] = real_lower(m.group(1))
             section_typ = m.group(1).upper()[0]
             if m.group(3) is not None:
@@ -600,20 +618,22 @@ def parse(url, resp=None, DEBUG=False):
                     pr_js(article)
                     article = None
                 pr_js(section)
-                read = 0
+                read = READ_TEXT
         # Identify titles and new article zones
-        elif (not expose and re_mat_end.match(line)) or (read == 2 and re_mat_ann.match(line)):
+        elif (not expose and re_mat_end.match(line)) or (read == READ_DISABLED and re_mat_ann.match(line)):
             break
-        elif (re.match(r"(<i>)?<b>", line) or re_art_uni.match(cl_line) or re.match(r"^Articles? ", line)
-              or (read != 2 and line.startswith("Est autorisée l'approbation de l"))) and not re.search(r">Articles? supprimé", line):
+        elif (re.match(r"(<i>)?<b>", line) or
+                re_art_uni.match(cl_line) or
+                re.match(r"^Articles? ", line)
+              ) and not re.search(r">Articles? supprimé", line):
 
             line = cl_line.strip()
             # Read a new article
-            if re_mat_art.match(line) or (read != 2 and line.startswith("Est autorisée l'approbation de l")):
+            if re_mat_art.match(line) or (read != READ_ALINEAS and re_approb.match(line)):
                 if article is not None:
                     texte = save_text(texte)
                     pr_js(article)
-                read = 2 # Activate alineas lecture
+                read = READ_ALINEAS # Activate alineas lecture
                 expose = False
                 art_num += 1
                 ali_num = 0
@@ -621,7 +641,7 @@ def parse(url, resp=None, DEBUG=False):
                 if srclst:
                     article["source_text"] = srclst[curtext]
                 m = re_mat_art.match(clean_article_name(text))
-                article["titre"] = normalize_1(m.group(1) if m else "1er", "1er")
+                article["titre"] = normalize_1(m.group(1), "1er")
 
                 assert article["titre"]  # avoid empty titles
                 assert not texte['definitif'] or ' bis' not in article["titre"]  # detect invalid article names
@@ -631,28 +651,28 @@ def parse(url, resp=None, DEBUG=False):
                 if section["id"] != "":
                     article["section"] = section["id"]
             # Read a section's title
-            elif read == 1 and line:
+            elif read == READ_TITLE and line:
                 texte = save_text(texte)
                 section["titre"] = lower_but_first(line)
                 if article is not None:
                     pr_js(article)
                     article = None
                 pr_js(section)
-                read = 0
+                read = READ_TEXT
 
         # detect dots, used as hints for later completion
-        if read != -1 and len(all_articles) > 0:
+        if read != READ_DISABLED and len(all_articles) > 0:
             if re_mat_dots.match(line):
                 if article is not None:
                     texte = save_text(texte)
                     pr_js(article)
                     article = None
                 pr_js({"type": "dots"})
-                read = 0
+                read = READ_TEXT # ignore alineas after the dots
                 continue
 
         # Read articles with alineas
-        if read == 2 and not m:
+        if read == READ_ALINEAS and not m:
             line = re_clean_coord.sub('', line)
             # if the line was only "Pour coordination", ignore it
             if not line:
