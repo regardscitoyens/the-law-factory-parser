@@ -80,8 +80,9 @@ Finally, serve the data directory however you like. For instance, you can serve 
 
 ## Generate git version for a bill
 
-(coming back soon)
+*Work In Progress*
 
+You can export all your bills as git repositories: `python tlfp/tools/make_git_repos.py git_export`
 
 ## Other things you can do
 
@@ -89,7 +90,7 @@ Finally, serve the data directory however you like. For instance, you can serve 
  - parse all the sénat doslegs: `senapy-cli doslegs_urls | senapy-cli parse_many senat_doslegs/`
  - parse all the AN doslegs `anpy-cli doslegs_urls | anpy-cli parse_many_doslegs an_doslegs/`
  - parse an AN dosleg: `anpy-cli show_dossier_like_senapy http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp`
- - generate a graph of the steps: `python tools/steps_as_dot.py data/ | dot -Tsvg > steps.svg`
+ - generate a graph of the steps: `python tlfp/tools/steps_as_dot.py data/ | dot -Tsvg > steps.svg`
 
 
 ## Tests

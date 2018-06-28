@@ -8,6 +8,7 @@
 *.pyc
 /dist/
 the-law-factory-parser-test-cases/
+/git_export/
 
 .coverage
 /htmlcov/
