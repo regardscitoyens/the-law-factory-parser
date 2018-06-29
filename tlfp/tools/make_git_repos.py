@@ -1,5 +1,9 @@
 """
 Make one Git repo per bill and optionally upload it to gitlab
+
+TODO: ajouter acteurs manquants sur le gitlab
+TODO: date
+TODO: source_url
 """
 
 """
@@ -19,6 +23,8 @@ import shutil
 import shlex
 from pathlib import Path
 
+import gitlab
+
 from tlfp.tools.common import open_json
 
 
@@ -31,7 +37,7 @@ def read_text(path):
 
     texte = ""
     for art in articles:
-        texte += "# Article " + art["titre"] + "\n\n"
+        texte += "# Article " + art["titre"] + "\n\n"
         for key in sorted(art["alineas"].keys()):
             if art["alineas"][key] != "":
                 texte += art["alineas"][key] + "\n"
@@ -51,8 +57,26 @@ def call_bash(cmd):
 
 GIT_REPOS_DIRECTORY = sys.argv[1]
 
-for procedure_file in glob.glob("data/**/procedure.json", recursive=True):
+
+GITLAB_TOKEN = sys.argv[2] if len(sys.argv) == 3 else None
+if GITLAB_TOKEN:
+    gl = gitlab.Gitlab('https://git.regardscitoyens.org/', private_token=GITLAB_TOKEN)
+    group = gl.groups.list(search='parlement')[0]
+
+    # delete existing bills
+    projects = group.projects.list()
+    for project in projects:
+        print('delete', project.id)
+        gl.projects.delete(project.id)
+
+for procedure_file in sorted(glob.glob("data/**/procedure.json", recursive=True)):
     procedure = open_json(procedure_file)
+
+    if len(procedure["steps"]) < 5:
+        continue
+    if procedure["stats"]["total_amendements"] < 5:
+        continue
+
     project_dir = os.path.dirname(os.path.dirname(procedure_file))
 
     git_dir = Path(GIT_REPOS_DIRECTORY) / procedure["id"]
@@ -60,15 +84,16 @@ for procedure_file in glob.glob("data/**/procedure.json", recursive=True):
     shutil.rmtree(str(git_dir), ignore_errors=True)
     os.makedirs(str(git_dir))
 
-    remote_url = "http://git.regardscitoyens.org/parlement/{bill}.git)".format(
+    remote_url = "git@git.regardscitoyens.org:/parlement/{bill}.git".format(
         bill=procedure["id"]
     )
     call_bash(
         "(cd %s;" % git_dir.absolute()
-        + "; git init"
-        + "; git remote add origin %s" % shlex.quote(remote_url)
+        + "git init;"
+        + "git remote add origin %s)" % shlex.quote(remote_url)
     )
 
+    prev_text = None
     for step in procedure["steps"]:
         # MSG=$(echo $line | awk -F ';' '{if ($8 == 1) print "Dépot du texte"; if ($8 != 1 && $11 != "depot" && $7 != "XX") print "Travaux en "$11", "$9;}');
         if step.get("step") == "depot":
@@ -120,7 +145,7 @@ for procedure_file in glob.glob("data/**/procedure.json", recursive=True):
         #  DATE=$(date --date="$DATE" -R);
         date = step.get("date")
 
-        if "directory" not in step or "debats_order" not in step:
+        if "directory" not in step or not step.get("debats_order"):
             continue
 
         texte_path = os.path.join(
@@ -129,7 +154,8 @@ for procedure_file in glob.glob("data/**/procedure.json", recursive=True):
         texte = read_text(texte_path)
         if texte:
             text_dest = git_dir / "texte"
-            open(str(text_dest), "w").write(texte)
+            with open(str(text_dest), "w") as f:
+                f.write(texte)
 
             #  echo $line | awk -F ';' '{print $2}' > texte/titre.txt
 
@@ -141,24 +167,44 @@ for procedure_file in glob.glob("data/**/procedure.json", recursive=True):
             find texte -size 0 -exec rm '{}' ';'
             """
 
+            if prev_text == texte:
+                msg += ' (aucun changement)'
+
             GIT_AUTHOR_NAME = GIT_COMMITER_NAME = author
             GIT_AUTHOR_EMAIL = GIT_COMMITER_EMAIL = author_email
 
             call_bash(
                 "(cd %s" % git_dir.absolute()
-                + "; git add -A .;"
+                + "; git add *;"
+                + "git status;"
                 + "git config --local user.name %s;" % shlex.quote(GIT_AUTHOR_NAME)
                 + "git config --local user.email %s;" % shlex.quote(GIT_AUTHOR_EMAIL)
-                + " git commit --date=format:short:{} --author={} -m {} --allow-empty -q )".format(
+                + " git commit --date=format:short:{} --author={} -m {} --allow-empty )".format(
                     shlex.quote(date),
                     shlex.quote(author + " <" + author_email + ">"),
                     shlex.quote(msg),
                 )
             )
+            prev_text = texte
 
-# TODO: GitLab API calls
+    if GITLAB_TOKEN:
+        try:
+            gl.projects.create({
+                'description': procedure['long_title'],
+                'name': procedure['id'], # TODO: remove old AN projects
+                'namespace_id': group.id,
+                'visibility': 'public',
+            })
+        except gitlab.exceptions.GitlabCreateError:
+            pass
 
-# Upload to GitLab as a second step
+        call_bash(
+            "(cd %s;" % git_dir
+            + "git push -f origin master )"
+        )
+
+
+# fetch gitlab group
 # GITLAB_GROUP=$($GITLAB group list | grep -B 1 parlement | head -n 1 | sed 's/.* //')
+
 # echo $GITLAB project create $(head -n 1 .procedure/procedure.csv  | awk -F ';' '{print " --description=\""$2"\" --name='$BILL'"}') --namespace-id=$GITLAB_GROUP --public=true | sh
-# git push -u origin master
