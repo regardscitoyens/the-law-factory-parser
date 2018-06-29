@@ -418,6 +418,8 @@ def parse(url, resp=None, DEBUG=False):
         if '/textes/'in url:
             resp.encoding = 'utf-8'
         string = resp.text
+    elif url == '-':
+        string = sys.stdin.read()
     else:
         string = open(url).read()
 
