@@ -2,11 +2,34 @@
 
 # Add links in texte
 
-import os, sys, re
-import urllib.parse
+import sys, re
 import metslesliens
 
 from .common import open_json, print_json
+
+STATS_BLACKLIST = [
+    'loi',
+    'ordonnance',
+    'décret',
+    'arrété',
+    'circulaire',
+    'directive',
+    'réglement'
+]
+
+
+def get_code(candidat):
+    code = candidat['texte']['nom'].lower()
+    for prefix in STATS_BLACKLIST:
+        if code.startswith(prefix):
+            return None
+
+    if 'numero' in candidat['texte']:
+        code += ' ' + candidat['texte']['numero']
+    elif 'date' in candidat['texte']:
+        code += ' du ' + candidat['texte']['date']
+
+    return code
 
 
 def process(dos):
@@ -14,7 +37,7 @@ def process(dos):
         articles = step.get('articles_completed', step.get('articles'))
         if not articles:
             continue
-
+        dos["textes_cites"] = [] # only keep the latest version
         for data in articles:
             if data["type"] == "article":
                 data['liens'] = []
@@ -22,6 +45,10 @@ def process(dos):
                     text = data["alineas"]["%03d" % (i+1)]
                     for candidat in metslesliens.donnelescandidats(text, 'structuré'):
                         if 'texte' in candidat and 'relatif' not in candidat['texte']:
+                            code = get_code(candidat)
+                            if code and code not in dos["textes_cites"]:
+                                dos["textes_cites"].append(code)
+
                             link_text = text[candidat['index'][0]:candidat['index'][1]]
                             link_text = re.sub(r'^(aux?|les?|la|du|des)(dite?s?)? ', '', link_text, 0, re.I)
                             link_text = re.sub(r"^l'", '', link_text, 0, re.I)
