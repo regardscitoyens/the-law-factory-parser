@@ -494,8 +494,13 @@ def parse(url, resp=None, DEBUG=False):
         if x.name not in ('p', 'table', 'h1', 'h2', 'h4'):
             return False
         # hack: we don't want to parse the table containing the conclusion from the senat
-        # ex: https://www.senat.fr/leg/tas12-040.html
+        #       ex: https://www.senat.fr/leg/tas12-040.html
         if x.name == "table" and re.search("SESSION (EXTRA)?ORDINAIRE DE", str(x)):
+            return False
+        # hack: senate can copy paste the /textes/ output from the AN
+        #       ex: https://www.senat.fr/leg/ppl17-545.html
+        # TODO: they also mess up the encoding by doing that
+        if x.name == "table" and re.search("<!-- Col de controle de taille -->", str(x)):
             return False
         return True
 
