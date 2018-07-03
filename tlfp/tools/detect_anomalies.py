@@ -3,7 +3,7 @@ import sys, os
 from .common import open_json
 
 
-procedure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'doc', 'valid_procedure.json')
+procedure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'docs', 'valid_procedure.json')
 procedure = open_json(procedure_file)
 
 def find_anomalies(dossiers, verbose=True):
