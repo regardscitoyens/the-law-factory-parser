@@ -1,0 +1,18 @@
+[better to do this in a screen]
+
+sudo su - lafabrique
+pyenv activate lafabrique
+cd the-law-factory-parser/
+git pull
+pip install --process-dependency-links --no-cache-dir -Ue .
+time ./reparse_all.sh
+[stats regressions à verifier]
+mv data data.$DATE.old
+mv data.$DATE data
+
+[stop: Ctrl-C many times]
+[data in data.$DATE/]
+
+cd the-law-factory
+git pull
+make install
