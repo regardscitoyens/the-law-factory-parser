@@ -5,6 +5,7 @@ pyenv activate lafabrique
 cd the-law-factory-parser/
 git pull
 pip install --process-dependency-links --no-cache-dir -Ue .
+pip install -Ur requirements.txt
 time ./reparse_all.sh
 [stats regressions à verifier]
 mv data data.$DATE.old
