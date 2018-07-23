@@ -68,13 +68,17 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
     debug_file(dos, 'debug_before_stats.json')
     procedure['stats'] = compute_stats.process(output_dir, procedure)
 
-    # remove intermediate data
+    # remove temporary data
     for step in procedure['steps']:
         for key in 'articles_completed', 'articles', 'texte.json':
             try:
                 step.pop(key)
             except KeyError:
                 pass
+
+    # remove temporary interventions files
+    for step in procedure['steps']:
+        shutil.rmtree(os.path.join(output_dir, 'procedure', step['directory'], 'interventions'), ignore_errors=True)
 
     # avoid duplicate titles
     if " de loi organique" in procedure['long_title']:

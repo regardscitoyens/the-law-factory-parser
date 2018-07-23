@@ -3,7 +3,7 @@
 
 import os, sys, re
 
-from .common import *
+from tlfp.tools.common import *
 
 re_short_orga = re.compile(r'(,| et) (à |aux |d).*$')
 def clean_orga(orga):
