@@ -78,7 +78,11 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
 
     # remove temporary interventions files
     for step in procedure['steps']:
-        shutil.rmtree(os.path.join(output_dir, 'procedure', step['directory'], 'interventions'), ignore_errors=True)
+        step_directory = os.path.join(output_dir, 'procedure', step['directory'])
+        shutil.rmtree(os.path.join(step_directory, 'interventions'), ignore_errors=True)
+        # remove empty step directory
+        if os.path.exists(step_directory) and not os.listdir(step_directory):
+            os.rmdir(step_directory)
 
     # avoid duplicate titles
     if " de loi organique" in procedure['long_title']:
