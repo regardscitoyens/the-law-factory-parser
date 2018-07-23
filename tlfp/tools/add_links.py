@@ -14,7 +14,7 @@ STATS_BLACKLIST = [
     'arrété',
     'circulaire',
     'directive',
-    'réglement'
+    'règlement'
 ]
 
 
