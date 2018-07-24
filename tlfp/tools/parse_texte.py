@@ -423,6 +423,8 @@ def parse(url, resp=None, DEBUG=False):
         resp = download(url) if resp is None else resp
         if '/textes/'in url:
             resp.encoding = 'utf-8'
+        if 'assemblee-nationale.fr' in url:
+            resp.encoding = 'Windows-1252'
         string = resp.text
     elif url == '-':
         string = sys.stdin.read()

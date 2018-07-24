@@ -12,6 +12,9 @@ def test_status(url):
     resp = download(url)
     if resp.status_code != 200:
         return False
+    # TODO: do this in download()
+    if 'assemblee-nationale.fr' in url:
+        resp.encoding = 'Windows-1252'
     return resp
 
 
