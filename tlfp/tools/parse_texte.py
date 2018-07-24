@@ -233,6 +233,12 @@ def add_to_articles(dic, all_articles):
     if not dic:
         return
     if 'alineas' in dic:
+        # check for duplicates
+        for article in all_articles:
+            if dic.get('titre') and dic.get('titre') == article.get('titre') and 'source_text' not in article:
+                print('WARNING: Duplicate article title found:', article.get('titre'))
+                break
+
         if len(dic['alineas']) == 1 and dic['alineas']['001'].startswith("(Supprimé)"):
             dic['statut'] = "supprimé"
             dic['alineas'] = {'001': ''}
