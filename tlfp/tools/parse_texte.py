@@ -729,7 +729,7 @@ def parse(url, resp=None, DEBUG=False):
         save_text(texte)
         pr_js(article)
 
-    if indextext != -1 and curtext != indextext:
-        print("WARNING: multiple texts announced but %d/%d found" % (curtext + 1, indextext + 1))
+    if indextext != -1 and curtext + 1 != len(srclst):
+        print("WARNING: multiple texts announced but %d/%d found %s" % (curtext + 1, len(srclst), srclst))
 
     return all_articles
