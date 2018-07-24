@@ -438,6 +438,7 @@ def parse(url, resp=None, DEBUG=False):
         for reg, res in clean_texte_regexps:
             string = reg.sub(res, string)
 
+    srclst = []
     source_avenants = False
     if "NB : le texte des avenants et de l&#8217;accord figure en annexe aux projets de loi (n°<sup>s </sup>" in string:
         source_avenants = True
@@ -492,7 +493,6 @@ def parse(url, resp=None, DEBUG=False):
     article = None
     indextext = -1
     curtext = -1
-    srclst = []
     section = {"type": "section", "id": ""}
 
     def should_be_parsed(x):
