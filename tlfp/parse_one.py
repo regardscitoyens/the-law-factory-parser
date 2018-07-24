@@ -2,7 +2,7 @@ import sys, contextlib, io, os, traceback
 
 from senapy.dosleg.parser import parse as senapy_parse
 from anpy.dossier_like_senapy import parse as anpy_parse
-from lawfactory_utils.urls import download, enable_requests_cache
+from lawfactory_utils.urls import download, enable_requests_cache, parse_national_assembly_url
 
 from . import format_data_for_frontend
 from . import parse_doslegs_texts
@@ -130,8 +130,7 @@ def dump_error_log(url, exception, api_dir, log):
 
     url_id = url.replace('/', '')
     if 'assemblee-nationale' in url:
-        legi = url.split('.fr/')[1].split('/')[0]
-        url_id = legi + url.split('/')[-1].replace('.asp', '')
+        url_id = "%s-%s" % parse_national_assembly_url(url)
     elif 'senat.fr' in url:
         url_id = url.split('/')[-1].replace('.html', '')
 

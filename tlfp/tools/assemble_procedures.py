@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os, sys
 
-from tlfp.tools.common import *
+from tlfp.tools.common import format_date, datize, print_json, open_json, open_csv
 
 sourcedir = sys.argv[1]
 if not sourcedir:
@@ -48,6 +48,7 @@ def save_json_page(tosave, done):
             "dossiers": tosave}
     if done < total:
         data["next_page"] = namefile(npage+1)
+    print('[assemble_procedure] >', namefile(npage))
     print_json(data, os.path.join(sourcedir, namefile(npage)))
 
 done = 0
@@ -64,7 +65,6 @@ for d in dossiers:
     tosave.append(proc)
     done += 1
     if done % pagesize == 0:
-        print('dossiers.json dumping:', done, 'doslegs')
         save_json_page(tosave, done)
         tosave = []
 
