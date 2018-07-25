@@ -479,7 +479,7 @@ def parse(url, resp=None, DEBUG=False):
             texte["id"] += "%03d" % numero
             texte["nossenateurs_id"] = get_text_id(url)
 
-    texte["titre"] = re_clean_title_legif.sub('', soup.title.string.strip()) if soup.title else ""
+    texte["titre"] = clean_html(re_clean_title_legif.sub('', soup.title.string.strip())) if soup.title else ""
     texte["expose"] = ""
     expose = False
 
