@@ -17,7 +17,7 @@ dossiers = [(open_json(path), path) for path \
 dossiers = [(dos, path) for dos, path in dossiers if "_tmp" not in path]
 
 
-csvfile = csv.writer(open(os.path.join(API_DIRECTORY, 'dossiers_promulgues.csv'), 'w'), delimiter=';')
+csvfile = csv.writer(open(os.path.join(API_DIRECTORY, 'dossiers.csv'), 'w'), delimiter=';')
 csvfile.writerow(('id;Titre;Type de dossier;Date initiale;URL du dossier;État du dossier;Décision du CC;'
     'Date de la décision;Date de promulgation;Numéro de la loi;Thèmes;total_amendements;total_mots;'
     'short_title;loi_dite;assemblee_id').split(';'))

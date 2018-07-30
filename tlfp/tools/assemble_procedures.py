@@ -17,7 +17,7 @@ if len(sys.argv) > 2:
         sys.stderr.write('ERROR: pagesize given as input should be an integer: %s\n' % sys.argv[2])
         exit(1)
 
-dossiers = open_csv(sourcedir, 'dossiers_promulgues.csv')
+dossiers = open_csv(sourcedir, 'dossiers.csv')
 total = len(dossiers)
 
 
