@@ -139,7 +139,7 @@ def process(OUTPUT_DIR, procedure):
             if typeparl == "senateur" and i["intervenant_slug"]:
                 try:
                     i["intervenant_groupe"] = context.get_senateur_groupe(i["intervenant_slug"], i["date"], urlapi)
-                except SenatorGroupNotFoundException as:
+                except SenatorGroupNotFoundException as e:
                     pass
 
             # Consider as separate groups cases such as: personnalités, présidents and rapporteurs
