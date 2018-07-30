@@ -137,9 +137,10 @@ def process(OUTPUT_DIR, procedure):
 
             # Fix groupes not historicized in NosSénateurs
             if typeparl == "senateur" and i["intervenant_slug"]:
-                gpe = context.get_senateur_groupe(i["intervenant_slug"], i["date"], urlapi)
-                if gpe:
-                    i["intervenant_groupe"] = gpe
+                try:
+                    i["intervenant_groupe"] = context.get_senateur_groupe(i["intervenant_slug"], i["date"], urlapi)
+                except SenatorGroupNotFoundException as:
+                    pass
 
             # Consider as separate groups cases such as: personnalités, présidents and rapporteurs
             gpe = i['intervenant_groupe']
