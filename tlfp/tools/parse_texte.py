@@ -459,7 +459,8 @@ def parse(url, resp=None, DEBUG=False):
     if url.startswith('http'):
         if "legifrance.gouv.fr" in url:
             m = re.search(r"cidTexte=(JORFTEXT\d+)(\D|$)", url, re.I)
-            texte["id"] = m.group(1)
+            if m:
+                texte["id"] = m.group(1)
         elif re.search(r"assemblee-?nationale", url, re.I):
             m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
             numero = int(m.group(3))
