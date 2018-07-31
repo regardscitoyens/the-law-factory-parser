@@ -42,6 +42,7 @@ def process(dos, OUTPUT_DIR):
 
         mkdirs(step_dir)
         for data in articles:
+            textid = None
             if not data or not "type" in data:
                 log_err("JSON badly formatted, missing field type: %s" % data)
                 sys.exit(1)
@@ -50,7 +51,7 @@ def process(dos, OUTPUT_DIR):
                 alldata = dict(data)
                 alldata['sections'] = []
                 alldata['articles'] = []
-            elif textid == "":
+            elif not textid:
                 log_err("JSON missing first line with text infos")
                 sys.exit(1)
             elif data["type"] == "section":

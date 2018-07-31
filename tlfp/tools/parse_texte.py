@@ -461,6 +461,8 @@ def parse(url, resp=None, DEBUG=False):
             m = re.search(r"cidTexte=(JORFTEXT\d+)(\D|$)", url, re.I)
             if m:
                 texte["id"] = m.group(1)
+            elif "/jo/texte" in url:
+                texte["id"] = url.split('/')[-3]
         elif re.search(r"assemblee-?nationale", url, re.I):
             m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
             numero = int(m.group(3))
