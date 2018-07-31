@@ -28,15 +28,11 @@ def last_known_activity(d):
 
 # Compute dates and length
 maxdays = 0
-mindate = "9999"
-maxdate = ""
 for d in dossiers:
     d0 = format_date(d["Date initiale"])
     d1 = format_date(last_known_activity(d))
     days = (datize(d1) - datize(d0)).days + 1
     maxdays = max(maxdays, (datize(d1) - datize(d0)).days + 1)
-    mindate = min(mindate, d0)
-    maxdate = max(maxdate, d1)
 
 dossiers.sort(key=lambda k: format_date(last_known_activity(k)), reverse=True)
 
@@ -44,8 +40,6 @@ namefile = lambda npage: "dossiers_%s.json" % npage
 def save_json_page(tosave, done):
     npage = (done - 1) // pagesize
     data = {"total": total,
-            "min_date": mindate,
-            "max_date": maxdate,
             "max_days": maxdays,
             "count": len(tosave),
             "page": npage,
