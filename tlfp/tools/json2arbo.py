@@ -28,8 +28,8 @@ def get_step_id(nstep, step):
 
 
 def process(dos, OUTPUT_DIR):
-    def log_err(txt, arg=None):
-        raise Exception()
+    def log_err(txt):
+        raise Exception(txt)
 
     for step_i, step in enumerate(dos['steps']):
 
@@ -41,8 +41,8 @@ def process(dos, OUTPUT_DIR):
             continue
 
         mkdirs(step_dir)
+        textid = None
         for data in articles:
-            textid = None
             if not data or not "type" in data:
                 log_err("JSON badly formatted, missing field type: %s" % data)
                 sys.exit(1)
