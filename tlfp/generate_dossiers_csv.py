@@ -88,11 +88,8 @@ total_encours = total_doslegs - total_promulgues
 maximum = total_promulgues + erreurs  # assume qu'aucun en cours n'echoue
 
 print(total_doslegs, 'doslegs in csv')
-print(total_promulgues, 'promulgués')
-print(total_encours, 'en cours')
-print(erreurs, 'parsings échoués')
-print('%.1f%s OK' % (100*total_promulgues/(total_promulgues + erreurs), '%'), 'de promulgués qui passent')
-print('%.1f%s OK' % (100*total_encours/(total_encours + erreurs_encours), '%'), 'de textes en cours qui passent')
+print('%.1f%s (%d/%d)' % (100*total_promulgues/(total_promulgues + erreurs), '%', total_promulgues, total_promulgues + erreurs), 'de promulgués qui passent')
+print('%.1f%s (%d/%d)' % (100*total_encours/(total_encours + erreurs_encours), '%', total_encours, total_encours + erreurs_encours), 'de textes en cours qui passent')
 
 home_json_final = {
     "total": total_promulgues,
