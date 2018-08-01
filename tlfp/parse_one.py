@@ -160,8 +160,6 @@ def process(API_DIRECTORY, url):
             if not dos:
                 return
 
-            if verbose:
-                print('        title:', dos.get('long_title'))
             find_anomalies([dos], verbose=verbose)
 
             if not dos.get('url_jo') and only_promulgated:
@@ -173,6 +171,7 @@ def process(API_DIRECTORY, url):
                 print()
                 print('======')
                 print(url)
+            print('        title:', dos.get('long_title'))
 
             debug_file(dos, 'debug_dos.json')
 
