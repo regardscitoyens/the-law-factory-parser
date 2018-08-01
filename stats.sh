@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DATADIR=$1
-if [ -z "$DATADIR"]; then
+if [ -z "$DATADIR" ]; then
   DATADIR=data
 fi
 
