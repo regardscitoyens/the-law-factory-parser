@@ -212,10 +212,6 @@ def slug_groupe(g):
     return g
 
 
-class SenatorGroupNotFoundException(Exception):
-    pass
-
-
 class Context(object):
 
     def __init__(self, sourcedir, load_parls=False):
@@ -312,8 +308,7 @@ class Context(object):
             print('WARNING - cannot find groupe of %s in OpenData Sénat for date %s' % (slug, object_date))
             for period in self.groupes_senateurs[senid]:
                 print(' > ', period['debut'], period['fin'], period['groupe'])
-            return
-        raise SenatorGroupNotFoundException()
+        return None
 
     def add_groupe(self, groupes, gpe, urlapi):
         gpid = upper_first(gpe.lower())
