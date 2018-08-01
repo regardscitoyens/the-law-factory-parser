@@ -46,17 +46,19 @@ def word_to_number(word):
         return str(words[word])
 
 
-def non_recursive_find_all(node, test):
+def non_recursive_find_all(node, should_be_parsed, should_be_ignored):
     """
     if there's a <p> inside a <p>, we don't want to process both
     so we stop at the first top-level <p> we find
     and ignore the children
     """
-    if test(node):
+    if should_be_parsed(node):
         yield node
+    elif should_be_ignored(node):
+        return
     elif hasattr(node, 'children'):
         for child in node.children:
-            yield from non_recursive_find_all(child, test)
+            yield from non_recursive_find_all(child, should_be_parsed, should_be_ignored)
 
 
 def clean_extra_expose_des_motifs(html):
@@ -514,7 +516,14 @@ def parse(url, resp=None, DEBUG=False):
             return False
         return True
 
-    for text in non_recursive_find_all(soup, should_be_parsed):
+
+    def should_be_ignored(x):
+        if hasattr(x, 'attrs') and 'display: none' in x.attrs.get('style', ''):
+            return True
+        return False
+
+
+    for text in non_recursive_find_all(soup, should_be_parsed, should_be_ignored):
         line = clean_html(str(text))
         if DEBUG:
             print(read, line, file=sys.stderr)
