@@ -196,7 +196,7 @@ def process(API_DIRECTORY, url):
             # dump log for each failed doslegs in logs/
             logdir = os.path.join(API_DIRECTORY, 'logs')
             if dos and not dos.get('url_jo'):
-                logdir = 'logs-encours'
+                logdir = os.path.join(API_DIRECTORY, 'logs-encours')
             dump_error_log(url, e, logdir, log)
             raise e
 
