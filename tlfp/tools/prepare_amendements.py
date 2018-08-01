@@ -8,8 +8,7 @@ from lawfactory_utils.urls import download
 
 from .common import Context, open_json, get_text_id, \
     identify_room, print_json, amdapi_link, \
-    national_assembly_text_legislature, \
-    SenatorGroupNotFoundException
+    national_assembly_text_legislature
 from .sort_articles import compare_articles
 from ._step_logic import get_previous_step
 
@@ -40,10 +39,7 @@ def process(OUTPUT_DIR, procedure):
 
         # Fix groupes not historicized in NosSénateurs
         if typeparl == "senateur" and amd["parlementaires"]:
-            try:
-                return context.get_senateur_groupe(amd["parlementaires"][0]["parlementaire"], amd["date"], urlapi)
-            except SenatorGroupNotFoundException as e:
-                pass
+            return context.get_senateur_groupe(amd["parlementaires"][0]["parlementaire"], amd["date"], urlapi)
 
         return amd['auteur_groupe_acronyme']
 

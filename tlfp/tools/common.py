@@ -309,12 +309,10 @@ class Context(object):
             for period in self.groupes_senateurs[senid]:
                 if period["debut"] <= object_date <= period["fin"]:
                     return period["groupe"]
-            # mandat fini ?
-            if period["fin"] < object_date:
-                return
             print('WARNING - cannot find groupe of %s in OpenData Sénat for date %s' % (slug, object_date))
             for period in self.groupes_senateurs[senid]:
                 print(' > ', period['debut'], period['fin'], period['groupe'])
+            return
         raise SenatorGroupNotFoundException()
 
     def add_groupe(self, groupes, gpe, urlapi):
