@@ -9,7 +9,7 @@ from tlfp.tools.sort_articles import bister, article_is_lower
 from tlfp.tools.common import clean_text_for_diff, compute_similarity, open_json, print_json
 
 
-def complete(current, previous, step, table_concordance, anteprevious=None, debug=False):
+def complete(current, previous, step, previous_step_metas, table_concordance, anteprevious=None, debug=False):
     current = copy.deepcopy(current)
     previous = copy.deepcopy(previous)
     table_concordance = CaseInsensitiveDict(table_concordance)
@@ -49,8 +49,18 @@ def complete(current, previous, step, table_concordance, anteprevious=None, debu
                 oldsects.append(line)
     except Exception as e:
         print(type(e), e, file=sys.stderr)
-        print("Incorrect previous step: %s" % previous)
+        print("Incorrect previous text: %s" % previous)
         exit()
+
+    if previous_step_metas:
+        try:
+            assert(previous_step_metas["type"] == "texte")
+            oldnum = int(find_num.search(previous_step_metas['id']).group(1))
+            olddepot = previous_step_metas['depot']
+        except Exception as e:
+            print(type(e), e, file=sys.stderr)
+            print("Incorrect previous step: %s" % previous_step)
+            exit()
 
     gdoldstep = None
     if anteprevious:

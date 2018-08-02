@@ -240,6 +240,12 @@ def complete_texts(dos):
                             )
 
                     prev_step = steps[prev_step_index]
+                    real_prev_step = steps[step_index-1]
+                    real_prev_step_arts = real_prev_step.get(
+                        'articles_completed',
+                        real_prev_step.get('articles', [])
+                    )
+                    real_prev_step_metas = real_prev_step_arts[0] if real_prev_step_arts else {}
                     complete_args = {
                         'current': step.get('articles', []),
                         'previous': prev_step.get(
@@ -247,6 +253,7 @@ def complete_texts(dos):
                             prev_step.get('articles', [])
                         ),
                         'step': step,
+                        'previous_step_metas': real_prev_step_metas,
                         'table_concordance': dos.get('table_concordance', {}),
                         'anteprevious': anteprevious,
                     }
