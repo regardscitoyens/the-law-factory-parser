@@ -56,10 +56,9 @@ def complete(current, previous, step, previous_step_metas, table_concordance, an
         try:
             assert(previous_step_metas["type"] == "texte")
             oldnum = int(find_num.search(previous_step_metas['id']).group(1))
-            olddepot = previous_step_metas['depot']
         except Exception as e:
             print(type(e), e, file=sys.stderr)
-            print("Incorrect previous step: %s" % previous_step)
+            print("Incorrect previous step: %s" % previous_step_metas)
             exit()
 
     gdoldstep = None
