@@ -685,7 +685,7 @@ def parse(url, resp=None, DEBUG=False):
                 read = READ_TEXT
 
         # detect dots, used as hints for later completion
-        if read != READ_DISABLED and len(all_articles) > 0:
+        if read != READ_DISABLED:
             if re_mat_dots.match(line):
                 if article is not None:
                     pr_js(article)
