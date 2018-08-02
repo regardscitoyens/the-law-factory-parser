@@ -313,8 +313,8 @@ re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
 re_mat_art = re.compile(r"articles?\s*([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"((<(b|h[12])>)?\s*pro.* (loi|résolution)|<h2>\s*pro.* (loi|résolution)\s*</\3>)", re.I)
 re_mat_tco = re.compile(r"\s*<(b|h[12])>\s*(ANNEXE[^:]*:\s*|\d+\)\s+|[IVX]+\.\s+|<a name[^>]*>\s*</a>\s*)*TEXTES?\s*(([ÉE]LABOR|ADOPT)[EÉ]S?\s*PAR|DE)\s*LA\s*COMMISSION.*(</\1>\s*$|\(.*\))")
-re_mat_exp = re.compile(r"(<b|strong>)?\s*(expos[eéÉ]|table des matières)", re.I)
-re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|États législatifs annexés|Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|La présente loi sera exécutée comme loi de l'Etat|<a>\*</a>\s*(<i>)?1)", re.I)
+re_mat_exp = re.compile(r"(<(b|strong)>)?\s*(expos[eéÉ]|table des matières)", re.I)
+re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|(<b>)?États législatifs annexés|(<(i|t\w+)>\s*)*Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|La présente loi sera exécutée comme loi de l'Etat|<a>\*</a>\s*(<i>)?1)", re.I)
 re_mat_ann = re.compile(r"\s*<b>\s*ANNEXES?[\s<]+")
 re_mat_dots = re.compile(r"^(<i>)?([.…_]\s?)+(</i>)?$")
 re_mat_st = re.compile(r"(<i>\s?|\(|\[)+(texte)?\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,30}$", re.I)
@@ -495,7 +495,7 @@ def parse(url, resp=None, DEBUG=False):
 
     read = READ_TEXT
     art_num = ali_num = 0
-    article = None
+    article = {}
     indextext = -1
     curtext = -1
     section = {"type": "section", "id": ""}
@@ -525,7 +525,7 @@ def parse(url, resp=None, DEBUG=False):
     for text in non_recursive_find_all(soup, should_be_parsed, should_be_ignored):
         line = clean_html(str(text))
         if DEBUG:
-            print(read, art_num, ali_num, line, file=sys.stderr)
+            print(read, article.get('titre') or art_num, ali_num, line, file=sys.stderr)
 
         # limit h2/h4 matches to PPL headers or Article unique
         if text.name not in ('p', 'table') and not re_mat_ppl.match(line) and not re_mat_tco.match(line) and 'Article unique' not in line:
@@ -559,7 +559,7 @@ def parse(url, resp=None, DEBUG=False):
             read = READ_TEXT
             if len(all_articles):
                 all_articles = []
-                article = None
+                article = {}
                 art_num = 0
         elif re_mat_exp.match(line):
             read = READ_DISABLED # Deactivate description lecture
@@ -642,12 +642,17 @@ def parse(url, resp=None, DEBUG=False):
                 section['titre'] = titre
                 if article is not None:
                     pr_js(article)
-                    article = None
+                    article = {}
                 pr_js(section)
                 read = READ_TEXT
-        # Identify titles and new article zones
-        elif (not expose and re_mat_end.match(line)) or (read == READ_ALINEAS and re_mat_ann.match(line)):
+        elif re_mat_end.match(line):
+            if not expose:
+                break
+            expose = False
+            continue
+        elif read == READ_ALINEAS and re_mat_ann.match(line):
             break
+        # Identify titles and new article zones
         elif (re.match(r"(<i>)?<b>", line) or
                 re_art_uni.match(cl_line) or
                 re.match(r"^Articles? ", line)
@@ -680,7 +685,7 @@ def parse(url, resp=None, DEBUG=False):
                 section["titre"] = lower_but_first(line)
                 if article is not None:
                     pr_js(article)
-                    article = None
+                    article = {}
                 pr_js(section)
                 read = READ_TEXT
 
@@ -689,7 +694,7 @@ def parse(url, resp=None, DEBUG=False):
             if re_mat_dots.match(line):
                 if article is not None:
                     pr_js(article)
-                    article = None
+                    article = {}
                 pr_js({"type": "dots"})
                 read = READ_TEXT # ignore alineas after the dots
                 continue
