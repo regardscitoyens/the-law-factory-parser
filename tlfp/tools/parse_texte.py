@@ -407,7 +407,7 @@ def parse(url, resp=None, DEBUG=False):
         add_to_articles(article, all_articles)
 
     def save_text(txt):
-        if "done" not in txt:
+        if not txt.get("done"):
             pr_js(txt)
         txt["done"] = True
         return txt
@@ -559,9 +559,14 @@ def parse(url, resp=None, DEBUG=False):
                 read == READ_DISABLED and line == "<b>Article 1er</b>"):
             read = READ_TEXT
             texte = save_text(texte)
-        elif re_mat_exp.match(line):
+        elif re_mat_exp.match(line) or (
+                read == READ_ALINEAS and art_num == 1 and not ali_num and line.startswith("Cet article ")): # Deactivate reading exposés with article titles miscaught in previous if
             read = READ_DISABLED # Deactivate description lecture
             expose = True
+            texte["done"] = False
+            all_articles = []
+            article = None
+            art_num = 0
         elif read == READ_TEXT and definitif_before_congres in line or definitif_after_congres in line:
             texte['definitif'] = True
             if all_articles:
@@ -739,7 +744,7 @@ def parse(url, resp=None, DEBUG=False):
             continue
 
     if article is not None:
-        save_text(texte)
+        texte = save_text(texte)
         pr_js(article)
 
     if indextext != -1 and curtext + 1 != len(srclst):
