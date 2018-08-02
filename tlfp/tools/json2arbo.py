@@ -45,15 +45,13 @@ def process(dos, OUTPUT_DIR):
         for data in articles:
             if not data or not "type" in data:
                 log_err("JSON badly formatted, missing field type: %s" % data)
-                sys.exit(1)
             if data["type"] == "texte":
                 textid = data["id"]
                 alldata = dict(data)
                 alldata['sections'] = []
                 alldata['articles'] = []
             elif not textid:
-                log_err("JSON missing first line with text infos")
-                sys.exit(1)
+                log_err("JSON missing first line with text infos for step %s" % step_dir)
             elif data["type"] == "section":
                 alldata['sections'].append(data)
             elif data["type"] == "article":

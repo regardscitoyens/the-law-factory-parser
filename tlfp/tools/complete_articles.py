@@ -49,7 +49,7 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                 oldsects.append(line)
     except Exception as e:
         print(type(e), e, file=sys.stderr)
-        log("No previous step found at %s" % sys.argv[2])
+        print("Incorrect previous step: %s" % previous)
         exit()
 
     gdoldstep = None
