@@ -43,6 +43,7 @@ def find_good_url_resp(url):
                 text = resp.text.replace('<br>', '\n')
                 # look for the "TEXTE ÉLABORÉ PAR .."" TITLE
                 if re.match(r'.*TEXTE\s+&Eacute;LABOR&Eacute;\s+PAR.*', text, re.M | re.DOTALL) \
+                    or re.search(r'>PROJET DE LOI ', text) \
                     or re.match(r'.*EXAMEN\s+EN\s+COMMISSION.*', text, re.M | re.DOTALL):
                     # if the previous page was valid also, then the text is multi-page
                     if clean_url_resp:
