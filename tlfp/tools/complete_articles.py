@@ -5,16 +5,16 @@ import sys, re, copy
 
 from requests.structures import CaseInsensitiveDict
 
-from .sort_articles import bister, article_is_lower
-from .common import clean_text_for_diff, compute_similarity, open_json, print_json
+from tlfp.tools.sort_articles import bister, article_is_lower
+from tlfp.tools.common import clean_text_for_diff, compute_similarity, open_json, print_json
 
 
-def complete(current, previous, step, table_concordance, anteprevious=None):
+def complete(current, previous, step, table_concordance, anteprevious=None, debug=False):
     current = copy.deepcopy(current)
     previous = copy.deepcopy(previous)
     table_concordance = CaseInsensitiveDict(table_concordance)
 
-    DEBUG = '--debug' in sys.argv
+    DEBUG = debug or '--debug' in sys.argv
     def log(text):
         if DEBUG:
             print(text, file=sys.stderr)
@@ -222,8 +222,8 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
                                 write_json(a)
                         else:
                             break
-                except:
-                    print("ERROR: Problem while renumbering articles", line, "\n", oldart, file=sys.stderr)
+                except Exception as e:
+                    print("ERROR: Problem while renumbering articles", line, "\n", oldart, "\n", type(e), e, file=sys.stderr)
                     exit()
 
                 # detect matching errors
@@ -441,5 +441,6 @@ def complete(current, previous, step, table_concordance, anteprevious=None):
 
 if __name__ == '__main__':
     serialized = open_json(sys.argv[1])
+    serialized["debug"] = True
     result = complete(**serialized)
-    # print_json(result)
+    print_json(result)
