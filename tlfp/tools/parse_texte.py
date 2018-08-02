@@ -526,7 +526,7 @@ def parse(url, resp=None, DEBUG=False):
     for text in non_recursive_find_all(soup, should_be_parsed, should_be_ignored):
         line = clean_html(str(text))
         if DEBUG:
-            print(read, line, file=sys.stderr)
+            print(read, art_num, ali_num, line, file=sys.stderr)
 
         # limit h2/h4 matches to PPL headers or Article unique
         if text.name not in ('p', 'table') and not re_mat_ppl.match(line) and not re_mat_tco.match(line) and 'Article unique' not in line:
