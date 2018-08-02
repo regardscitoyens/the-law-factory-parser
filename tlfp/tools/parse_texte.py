@@ -403,14 +403,10 @@ def parse(url, resp=None, DEBUG=False):
     """
     all_articles = []
     def pr_js(article):
-        nonlocal all_articles
+        nonlocal all_articles, texte
+        if not len(all_articles):
+            add_to_articles(texte, all_articles)
         add_to_articles(article, all_articles)
-
-    def save_text(txt):
-        if not txt.get("done"):
-            pr_js(txt)
-        txt["done"] = True
-        return txt
 
     if url.endswith('.pdf'):
         print("WARNING: text url is a pdf: %s skipping it..." % url)
@@ -559,19 +555,12 @@ def parse(url, resp=None, DEBUG=False):
                 read == READ_DISABLED and line == "<b>Article 1er</b>"):
             read = READ_TEXT
             if len(all_articles):
-                texte["done"] = False
                 all_articles = []
                 article = None
                 art_num = 0
-            texte = save_text(texte)
-        elif re_mat_exp.match(line) or (
-                read == READ_ALINEAS and art_num == 1 and not ali_num and line.startswith("Cet article ")): # Deactivate reading exposés with article titles miscaught in previous if
+        elif re_mat_exp.match(line):
             read = READ_DISABLED # Deactivate description lecture
             expose = True
-            texte["done"] = False
-            all_articles = []
-            article = None
-            art_num = 0
         elif read == READ_TEXT and definitif_before_congres in line or definitif_after_congres in line:
             texte['definitif'] = True
             if all_articles:
@@ -588,7 +577,6 @@ def parse(url, resp=None, DEBUG=False):
                 or re_echec_hemi2.search(cl_line)
                 or re_echec_hemi3.search(cl_line)
             ) and 'dont la teneur suit' not in cl_line:
-            texte = save_text(texte)
             pr_js({"type": "echec", "texte": cl_line})
             break
         elif read == READ_DISABLED or (indextext != -1 and curtext != indextext):
@@ -648,7 +636,6 @@ def parse(url, resp=None, DEBUG=False):
 
             titre = blank_none(m.group('titre')).strip()
             if titre:
-                texte = save_text(texte)
                 section['titre'] = titre
                 if article is not None:
                     pr_js(article)
@@ -667,7 +654,6 @@ def parse(url, resp=None, DEBUG=False):
             # Read a new article
             if re_mat_art.match(line):
                 if article is not None:
-                    texte = save_text(texte)
                     pr_js(article)
                 read = READ_ALINEAS # Activate alineas lecture
                 expose = False
@@ -688,7 +674,6 @@ def parse(url, resp=None, DEBUG=False):
                     article["section"] = section["id"]
             # Read a section's title
             elif read == READ_TITLE and line:
-                texte = save_text(texte)
                 section["titre"] = lower_but_first(line)
                 if article is not None:
                     pr_js(article)
@@ -700,7 +685,6 @@ def parse(url, resp=None, DEBUG=False):
         if read != READ_DISABLED and len(all_articles) > 0:
             if re_mat_dots.match(line):
                 if article is not None:
-                    texte = save_text(texte)
                     pr_js(article)
                     article = None
                 pr_js({"type": "dots"})
@@ -749,7 +733,6 @@ def parse(url, resp=None, DEBUG=False):
             continue
 
     if article is not None:
-        texte = save_text(texte)
         pr_js(article)
 
     if indextext != -1 and curtext + 1 != len(srclst):
