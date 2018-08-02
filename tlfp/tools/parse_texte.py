@@ -558,6 +558,11 @@ def parse(url, resp=None, DEBUG=False):
         elif re_mat_ppl.match(line) or re_mat_tco.match(line) or (
                 read == READ_DISABLED and line == "<b>Article 1er</b>"):
             read = READ_TEXT
+            if len(all_articles):
+                texte["done"] = False
+                all_articles = []
+                article = None
+                art_num = 0
             texte = save_text(texte)
         elif re_mat_exp.match(line) or (
                 read == READ_ALINEAS and art_num == 1 and not ali_num and line.startswith("Cet article ")): # Deactivate reading exposés with article titles miscaught in previous if
