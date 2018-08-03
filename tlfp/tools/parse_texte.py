@@ -448,10 +448,12 @@ def parse(url, resp=None, DEBUG=False):
 
     srclst = []
     source_avenants = False
-    if "NB : le texte des avenants et de l&#8217;accord figure en annexe aux projets de loi (n°<sup>s </sup>" in string:
+    m = re.search(r"NB\s+:\s+le texte des a(venants et de l&#8217;a)?ccords? figure (respectivement )?en annexe aux projets de loi \(n°", re.sub(r'</?span[^>]*>', '', string), re.I)
+    if m:
         source_avenants = True
         srclst = [int(s.strip()) for s in (
-                    string.split('figure en annexe aux projets de loi (n°<sup>s </sup>')[1]
+                    string.replace('<sup>', '').replace('</sup>', '').replace('n°s', 'n°')
+                    .split(' en annexe aux projets de loi (n° ')[1]
                     .strip()
                     .split(')')[0]
                     .strip()
@@ -750,6 +752,6 @@ def parse(url, resp=None, DEBUG=False):
         pr_js(article)
 
     if indextext != -1 and curtext + 1 != len(srclst):
-        print("WARNING: multiple texts announced but %d/%d found %s" % (curtext + 1, len(srclst), srclst))
+        print("WARNING: multiple texts announced but %d/%d found %s" % (curtext + 1, len(srclst), srclst), indextext)
 
     return all_articles
