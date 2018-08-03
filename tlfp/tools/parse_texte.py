@@ -209,7 +209,7 @@ html_replace = [
     (re_liminaire, ' préliminaire'),
     (re.compile(r'<strike>[^<]*</strike>', re.I), ''),
     (re.compile(r'^<a>(\w)', re.I), r"\1"),
-    (re.compile(r'^[.…]{5,}\s*(((suppr|conforme).{0,10}?)+)\s*[.…]{5,}\s*$', re.I), r"\1"),  # clean "......Conforme....." to "Conforme"
+    (re.compile(r'^[.…\s]+(((suppr|conforme)[^\.…]{0,10})+)[.…\s]+$', re.I), r"\1"),  # clean "......Conforme....." to "Conforme"
     (re.compile(r'(\w\s*(?:\</[^>]*>)*\s*)\.{10,}(\s*;)?(</i>)?$', re.I), r"\1\2\3"),  # clean "III. - <i>Conform[e</i>.......]" to "III. - <i>Conform[e</i>]"
     (re_clean_spaces, " ")
 ]
