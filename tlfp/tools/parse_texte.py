@@ -116,7 +116,7 @@ clean_texte_regexps = [
     (re.compile(r'(\w)<br/?>(\w)'),  r'\1 \2'), # a <br/> should be transformed as a ' ' only if there's text around it (visual break)
     (re.compile(r'<(em|s)> </(em|s)>'),  r' '), # remove empty tags with only one space inside
     (re.compile(r'(<p[^>]*><(b|strong)>Article[^<]*</(b|strong)></p>) \1'), r'\1'), # duplicate article title i.e. https://www.senat.fr/leg/tas10-156.html art 26
-    (re.compile(r'(<a name=[\'"])[^\'"]+([\'"]>)'), r'\1\2'),        # we use '<a name=' to recognize titles but we never use the anchor value so we can remove it to handle the following duplicates
+    (re.compile(r'(<a name=[\'"])[^\'"]+([\'"]>)', re.I), r'\1\2'),        # we use '<a name=' to recognize titles but we never use the anchor value so we can remove it to handle the following duplicates
     (re.compile(r'((<p style="text-align: center">(<[^>]+>)*[^<]+(<[^>]+>)*</p> ){2,})\1'), r'\1'), # duplicate group of title lines i.e. http://www.assemblee-nationale.fr/14/ta-commission/r3909-a0.asp art 10 A
 ]
 
@@ -439,6 +439,11 @@ def parse(url, resp=None, DEBUG=False):
     else:
         for reg, res in clean_texte_regexps:
             string = reg.sub(res, string)
+
+    #fix weird Sénat formatting with single cells tables around pieces of text sometimes multiline... ex: https://www.senat.fr/leg/ppl15-246.html
+    for match in re.findall(r'(<table[^>]*>\s*(?:<t(?:body|r|d|h)[^>]*>\s*)+)(.*?)((?:\s*</t(?:body|r|d|h)[^>]*>)+\s*</table>)', string, re.I):
+        if not re.search(r'<t(r|d|h)[^>]*>', match[1], re.I):
+            string = string.replace(''.join(match), match[1])
 
     srclst = []
     source_avenants = False
