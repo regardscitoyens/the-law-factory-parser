@@ -123,7 +123,7 @@ def parse_url_for_step(url, step, step_index):
         articles = parse_texte.parse(fixed_url, resp=fixed_url_resp)
         debug_file(articles, 'debug_parsed_text_step_%d.json' % step_index)
 
-        if not articles or len(articles) < 2 and 'ta-commission' in fixed_url:
+        if (not articles or len(articles) < 2) and 'ta-commission' in fixed_url:
             fixed_url = fixed_url.replace('ta-commission', 'rapports').replace('-a0', '')
             print('        ^ empty parsing, trying url rapport :', fixed_url)
             return parse_url_for_step(fixed_url, step, step_index)
