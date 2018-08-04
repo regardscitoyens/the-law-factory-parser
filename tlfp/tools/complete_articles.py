@@ -22,7 +22,7 @@ def complete(current, previous, step, previous_step_metas, table_concordance, an
     def exit():
         raise Exception('[complete_articles] Fatal error')
 
-    find_num = re.compile(r'-?[a-z]*(\d+)\D?$')
+    find_num = re.compile(r'-?[a-z]*(\d+)(-[ta][\dIV]+|\D)?$')
     oldnum = 0
     oldstep = {}
     oldjson = []
@@ -52,7 +52,7 @@ def complete(current, previous, step, previous_step_metas, table_concordance, an
         print("Incorrect previous text: %s" % previous)
         exit()
 
-    if previous_step_metas and not previous_step_metas.get("echec"):
+    if previous_step_metas and not previous_step_metas.get("skip"):
         try:
             assert(previous_step_metas["type"] == "texte")
             oldnum = int(find_num.search(previous_step_metas['id']).group(1))

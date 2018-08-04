@@ -224,7 +224,8 @@ def complete_texts(dos):
         print('    ^ complete text: ', step.get('source_url'))
 
         if 'articles' in step:
-            prev_step_index = get_previous_step(steps, step_index, use_old_procedure(step, dos))
+            old_proc = use_old_procedure(step, dos)
+            prev_step_index = get_previous_step(steps, step_index, old_proc)
             if prev_step_index is not None and not step.get('echec'):
                 if is_one_of_the_initial_depots(steps, step_index):
                     step['articles_completed'] = step['articles']
@@ -233,7 +234,7 @@ def complete_texts(dos):
                     # can reference the depot step instead of the commission text
                     anteprevious = None
                     if step.get('step') == 'hemicycle' and steps[prev_step_index].get('step') == 'commission':
-                        antestep_index = get_previous_step(steps, prev_step_index, use_old_procedure(step, dos), get_depot_step=True)
+                        antestep_index = get_previous_step(steps, prev_step_index, old_proc, get_depot_step=True)
                         if antestep_index is not None and steps[antestep_index].get('step') == 'depot':
                             anteprevious = steps[antestep_index].get(
                                 'articles_completed',
@@ -247,7 +248,7 @@ def complete_texts(dos):
                         real_prev_step.get('articles',
                             [{"type": "texte",
                              "id": real_prev_step.get("source_url", "").replace('.asp', '').replace('.html', ''),
-                             "echec": real_prev_step.get("echec")}]
+                             "skip": old_proc or real_prev_step.get("echec")}]
                         )
                     )
                     real_prev_step_metas = real_prev_step_arts[0] if real_prev_step_arts else {}
