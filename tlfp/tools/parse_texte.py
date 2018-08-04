@@ -450,15 +450,20 @@ def parse(url, resp=None, DEBUG=False):
     source_avenants = False
     m = re.search(r"NB\s+:\s+le texte des a(venants et de l&#8217;a)?ccords? figure (respectivement )?en annexe aux projets de loi \(n°", re.sub(r'</?span[^>]*>', '', string), re.I)
     if m:
-        source_avenants = True
-        srclst = [int(s.strip()) for s in (
-                    string.replace('<sup>', '').replace('</sup>', '').replace('n°s', 'n°')
+        try:
+            srclst = [int(s.strip('n° ')) for s in (
+                    string.replace('<sup>', '').replace('</sup>', '')
+                    .replace('n°s', 'n°').replace('&nbsp;', ' ')
                     .split(' en annexe aux projets de loi (n° ')[1]
                     .strip()
                     .split(')')[0]
                     .strip()
                     .replace(' et ', ', ')
                     .split(', '))]
+            source_avenants = True
+        except Exception as e:
+            if DEBUG:
+                print("WARNING, multi-reports detected with NB method crashing (%s: %s), trying regular method..." % (type(e), e))
 
     definitif = re_definitif.search(string) is not None or 'legifrance.gouv.fr' in url
     soup = BeautifulSoup(string, "html5lib")
@@ -590,8 +595,9 @@ def parse(url, resp=None, DEBUG=False):
             ) and 'dont la teneur suit' not in cl_line:
             pr_js({"type": "echec", "texte": cl_line})
             break
-        elif read == READ_DISABLED or (indextext != -1 and curtext != indextext):
+        elif read == READ_DISABLED:
             continue
+        # or (indextext != -1 and curtext != indextext): #keep all texts resulting from multireport now it's selected then in complete
 
         # crazy edge case: "(Conforme)Article 24 bis A (nouveau)" on one line
         # http://www.assemblee-nationale.fr/13/projets/pl3324.asp
