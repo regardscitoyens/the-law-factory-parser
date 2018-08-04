@@ -52,7 +52,7 @@ def complete(current, previous, step, previous_step_metas, table_concordance, an
         print("Incorrect previous text: %s" % previous)
         exit()
 
-    if previous_step_metas:
+    if previous_step_metas and not previous_step_metas.get("echec"):
         try:
             assert(previous_step_metas["type"] == "texte")
             oldnum = int(find_num.search(previous_step_metas['id']).group(1))
