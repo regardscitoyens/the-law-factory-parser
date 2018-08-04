@@ -339,7 +339,7 @@ re_echec_com5 = re.compile(r"(la|votre) commission (n'a pas élaboré|a décidé
 re_echec_com6 = re.compile(r"[dleau\s]*(projet|proposition|texte) est (considéré comme )?rejetée? par la commission", re.I)
 re_echec_cmp = re.compile(r" (a conclu à l'échec de ses travaux|(ne|pas) .*parven(u[es]?|ir) à (élaborer )?un texte commun)", re.I)
 re_rap_mult = re.compile(r'[\s<>/ai]*N[°\s]*\d+\s*(,|et)\s*[N°\s]*\d+', re.I)
-re_src_mult = re.compile(r'^- L(?:A PROPOSITION|E PROJET) DE LOI n°\s*(\d+)\D')
+re_src_mult = re.compile(r'^[\-\s]*L(?:A PROPOSITION|E PROJET) DE LOI (?:ADOPTÉ PAR LE SÉNAT )?[Nn]°\s*(\d+)\D')
 re_clean_mult_1 = re.compile(r'\s*et\s*', re.I)
 re_clean_mult_2 = re.compile(r'[^,\d]', re.I)
 re_clean_footer_notes = re.compile(r"[\.\s]*\(*\d*\([\d\*]+[\)\d\*\.\s]*$")
@@ -448,13 +448,14 @@ def parse(url, resp=None, DEBUG=False):
 
     srclst = []
     source_avenants = False
-    m = re.search(r"NB\s+:\s+le texte des a(venants et de l&#8217;a)?ccords? figure (respectivement )?en annexe aux projets de loi \(n°", re.sub(r'</?span[^>]*>', '', string), re.I)
+    m = re.search(r"NB(\s|&nbsp;)+:(\s|&nbsp;)+[lL]es? textes? d(u |es |e la |e l&#8217;)((convention|traité|avenant)s? et de(s| l&#8217;))?(accord|convention)s?(-cadres?)? figuren?t? (respectivement )?en annexe aux (deux |trois )?projets de loi \(n", re.sub(r'</?span[^>]*>', '', string), re.I)
     if m:
         try:
-            srclst = [int(s.strip('n° ')) for s in (
-                    string.replace('<sup>', '').replace('</sup>', '')
-                    .replace('n°s', 'n°').replace('&nbsp;', ' ')
-                    .split(' en annexe aux projets de loi (n° ')[1]
+            srclst = [int(s.strip('no ')) for s in (
+                    string.replace('<sup>', '').replace('</sup>', '').replace('&nbsp;', ' ')
+                    .replace('aux deux projets', 'aux projets').replace('aux trois projets', 'aux projets')
+                    .replace('°', 'o').replace('nos ', 'no ').replace('ns ', 'no ').replace('(n ', '(no ')
+                    .split(' en annexe aux projets de loi (no ')[1]
                     .strip()
                     .split(')')[0]
                     .strip()
@@ -554,10 +555,10 @@ def parse(url, resp=None, DEBUG=False):
             curtext += 1
             art_num = 0
         srcl = re_src_mult.search(line)
-        cl_line = re_cl_html.sub("", line).strip()
         if not source_avenants and srcl and read in (READ_DISABLED, READ_TEXT):
             srclst.append(int(srcl.group(1)))
             continue
+        cl_line = re_cl_html.sub("", line).strip()
         if re_rap_mult.match(line):
             line = cl_line
             line = re_clean_mult_1.sub(",", line)
