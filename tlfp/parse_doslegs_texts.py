@@ -244,7 +244,10 @@ def complete_texts(dos):
                     real_prev_step = steps[step_index-1]
                     real_prev_step_arts = real_prev_step.get(
                         'articles_completed',
-                        real_prev_step.get('articles', [])
+                        real_prev_step.get('articles',
+                            [{"type": "texte",
+                             "id": real_prev_step["source_url"].split('.asp')[0]}]
+                        )
                     )
                     real_prev_step_metas = real_prev_step_arts[0] if real_prev_step_arts else {}
                     complete_args = {

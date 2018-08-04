@@ -22,7 +22,7 @@ def complete(current, previous, step, previous_step_metas, table_concordance, an
     def exit():
         raise Exception('[complete_articles] Fatal error')
 
-    find_num = re.compile(r'-[a-z]*(\d+)\D?$')
+    find_num = re.compile(r'-?[a-z]*(\d+)\D?$')
     oldnum = 0
     oldstep = {}
     oldjson = []
