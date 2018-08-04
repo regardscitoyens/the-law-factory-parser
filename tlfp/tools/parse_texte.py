@@ -468,7 +468,7 @@ def parse(url, resp=None, DEBUG=False):
     if not source_avenants and "/rapports/r" in url and "TEXTES ADOPTÉS PAR LA COMMISSION" in string and string.count(">Article unique<") == 2:
         m = re.search(r'<i>Assemblée nationale&nbsp;:&nbsp;</i><b>(\d+) </b>et<b> (\d+)</b>', string)
         if m:
-            srclst = [m.group(1), m.group(2)]
+            srclst = [int(m.group(1)), int(m.group(2))]
             source_avenants = True
 
     definitif = re_definitif.search(string) is not None or 'legifrance.gouv.fr' in url
