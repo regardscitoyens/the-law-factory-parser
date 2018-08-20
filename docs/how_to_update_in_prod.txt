@@ -1,4 +1,7 @@
-[better to do this in a screen]
+There's a tmux session open with the user "lafabrique" with
+everything configured, you can access it with the "tmux a" command
+
+# Backend / Parser
 
 sudo su - lafabrique
 pyenv activate lafabrique
@@ -13,6 +16,8 @@ mv data.$DATE data
 
 [stop: Ctrl-C many times]
 [data in data.$DATE/]
+
+# Frontend
 
 cd the-law-factory
 git pull
