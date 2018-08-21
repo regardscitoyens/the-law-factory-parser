@@ -87,11 +87,12 @@ You can export all your bills as git repositories: `python tlfp/tools/make_git_r
 ## Other things you can do
 
  - parse a sénat dosleg: `senapy-cli parse pjl15-610`
+ - parse an AN dosleg: `anpy-cli parse http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp`
  - parse all the sénat doslegs: `senapy-cli doslegs_urls | senapy-cli parse_many senat_doslegs/`
- - parse all the AN doslegs `anpy-cli doslegs_urls | anpy-cli parse_many_doslegs an_doslegs/`
- - parse an AN dosleg: `anpy-cli show_dossier_like_senapy http://www.assemblee-nationale.fr/13/dossiers/deuxieme_collectif_2009.asp`
+ - parse all the AN doslegs `anpy-cli doslegs_urls | anpy-cli parse_many an_doslegs/`
  - generate a graph of the steps: `python tlfp/tools/steps_as_dot.py data/ | dot -Tsvg > steps.svg`
 
+You can explore the related projects [here](https://github.com/search?q=topic%3Aparliamentary-data+org%3Aregardscitoyens)
 
 ## Tests
 
