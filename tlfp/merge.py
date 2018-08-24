@@ -41,6 +41,7 @@ def merge_senat_with_an(senat, an):
         return a.get('stage') == b.get('stage') and a.get('step') == b.get('step') \
             and a.get('institution') == b.get('institution')
 
+    empty_last_step = False
     an_offset = 0
     for i, step in enumerate(senat['steps']):
         steps_to_add = []
@@ -120,6 +121,15 @@ def merge_senat_with_an(senat, an):
             an_step_promulgation = [s for s in an['steps'] if s.get('stage') == 'promulgation']
             if an_step_promulgation and an_step_promulgation[0]['source_url']:
                 step['source_url'] = an_step_promulgation[0]['source_url']
+
+        # Only keep first empty consecutive step as next one to come
+        if not dos.get('url_jo'):
+            if step.get('source_url'):
+                empty_last_step = False
+            elif empty_last_step:
+                break
+            else:
+                empty_last_step = True
 
         if len(steps_to_add) == 0:
             steps_to_add = [step]
