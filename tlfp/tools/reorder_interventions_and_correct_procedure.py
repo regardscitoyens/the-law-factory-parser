@@ -35,7 +35,7 @@ def process(OUTPUT_DIR, procedure):
             # if enddate is earlier than end of interventions, use interventions date
             if step['enddate'] and step['enddate'] < date:
                 # check that next step start_date is later than this intervention date
-                if not next_step or next_step['date'] >= date:
+                if not next_step or next_step.get('in_discussion') or next_step['date'] >= date:
                     step['enddate'] = date
                     print('INFO: change end date of', step_i, 'thanks to', interv_file)
                 else:
@@ -54,7 +54,7 @@ def process(OUTPUT_DIR, procedure):
                         #  => then move the intervention to the current step
                         # + check if we are still in the same chamber
                         if (not test_prev_step or test_prev_step['enddate'] <= date) \
-                                and (not test_next_step or date <= test_next_step['date']) \
+                                and (not test_next_step or test_next_step.get('in_discussion') or date <= test_next_step['date']) \
                                 and test_step['institution'] == step['institution']:
                             interventions_files_moved.append(interv_file)
                             print('INFO: moves ', interv_file,' from step', step_i, 'to step', test_step_i)

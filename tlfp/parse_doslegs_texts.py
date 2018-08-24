@@ -194,8 +194,9 @@ def parse_texts(dos):
                 continue
 
             step_in_discussion = not dos.get('url_jo') and \
-                not any([1 for step in steps[step_index+1:] if 'source_url' in step and step.get('step') in ('hemicycle', 'commission')])
+                not any([1 for s in steps[step_index+1:] if 'source_url' in s and s.get('step') in ('hemicycle', 'commission')])
             if step_in_discussion:
+                step['in_discussion'] = True
                 print('     * ignore step in discussion')
                 break
 

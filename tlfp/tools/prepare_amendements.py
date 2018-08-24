@@ -120,6 +120,10 @@ def process(OUTPUT_DIR, procedure):
         ]
         texte_url = last_step_with_good_text_number.get('source_url')
 
+        if last_step.get('in_discussion'):
+            print('WARNING: ignoring future steps further than current discussion', file=sys.stderr)
+            break
+
         if step.get('stage') != 'CMP' and last_step_with_good_text_number.get('institution') != step.get('institution'):
             print('ERROR - last step is from another institution', file=sys.stderr)
             continue
