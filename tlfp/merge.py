@@ -112,6 +112,9 @@ def merge_senat_with_an(senat, an):
                             step['cmp_commission_other_url'] = an_step['source_url']
                     else:
                         step['source_url'] = an_step['source_url']
+            if dos.get('url_jo') and not step.get('source_url'):
+                print('WARNING EMPTY CMP STEP ANNOUNCED IN SENATE BUT MISSING IN AN ALTHOUGH JO PUBLISHED', dos['url_dossier_assemblee'])
+                continue
 
         if step.get('stage') == 'promulgation' and (not step.get('source_url') or 'jo_pdf' in step['source_url']):
             an_step_promulgation = [s for s in an['steps'] if s.get('stage') == 'promulgation']
