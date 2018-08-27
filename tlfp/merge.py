@@ -114,7 +114,7 @@ def merge_senat_with_an(senat, an):
                     else:
                         step['source_url'] = an_step['source_url']
             if dos.get('url_jo') and not step.get('source_url'):
-                print('WARNING EMPTY CMP STEP ANNOUNCED IN SENATE BUT MISSING IN AN ALTHOUGH JO PUBLISHED', dos['url_dossier_assemblee'])
+                print('[warning] [merge] empty CMP steps announced in Senate in a promulgated text but missing in the AN-side', dos['url_dossier_assemblee'])
                 continue
 
         if step.get('stage') == 'promulgation' and (not step.get('source_url') or 'jo_pdf' in step['source_url']):
@@ -138,10 +138,22 @@ def merge_senat_with_an(senat, an):
 
     dos = fix_an_cmp_step_url(dos, an)
 
+    # ## SANITY CHECKS ## #
+
+    # compare the number of anomalies before and after merging
     if find_anomalies([senat], verbose=False) < find_anomalies([dos], verbose=False) or \
-        find_anomalies([an], verbose=False) < find_anomalies([dos], verbose=False):
-        print('REGRESSION DURING MERGE (ANOMALIES NUMBER):', dos['url_dossier_senat'])
-    if len([1 for step in dos['steps'] if step.get('stage') == 'CMP']) \
-        != len([1 for step in senat['steps'] if step.get('stage') == 'CMP']):
-        print('REGRESSION DURING MERGE (MORE CMP STEPS):', dos['url_dossier_senat'])
+       find_anomalies([an], verbose=False) < find_anomalies([dos], verbose=False):
+        print('[warning] [merge] more anomalies in the steps after the merge:', dos['url_dossier_senat'])
+
+    # verify number of the CMP steps didn't move while merging
+    if dos.get('url_jo'):
+        cmp_steps_in_merged_dos = len([1 for step in dos['steps'] if step.get('stage') == 'CMP'])
+        cmp_steps_in_senat_dos = len([1 for step in senat['steps'] if step.get('stage') == 'CMP'])
+
+        if cmp_steps_in_merged_dos != cmp_steps_in_senat_dos:
+            # since we remove the Senate predicted CMP steps, ignore texts in discussion
+            if not dos.get('url_jo') or cmp_steps_in_merged_dos > cmp_steps_in_senat_dos:
+                print('[warning] [merge] number of CMP steps changed', dos['url_dossier_senat'],
+                      '(before:', cmp_steps_in_senat_dos, ', after:', cmp_steps_in_merged_dos, ')')
+
     return dos
