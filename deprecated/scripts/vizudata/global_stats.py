@@ -143,7 +143,7 @@ class Stats(object):
         print "Texte ayant plus de 50%% de modification : %f" %(float(self.countModifSup50)/self.countDossiersAmende)
         print "Texte ayant plus de 50%% d'inflation : %f" %(float(self.countInflaSup50)/self.countDossiersAmende)
         print "Texte ayant plus de 100%% d'inflation : %f" %(float(self.countInflaSup100)/self.countDossiersAmende)
-
+        print "Nb Texte ayant plus de 100%% d'inflation : %d" %(self.countInflaSup100)
 
         #print self.textValues
 

@@ -92,6 +92,7 @@ def process(procedure):
     depots = len(steps)
     steps += latersteps
 
+    # TODO : check whether it should be reintegrated or not
     # skip step presently happening
     # if not steps[-1].get('enddate'):
     #   steps.pop(-1)

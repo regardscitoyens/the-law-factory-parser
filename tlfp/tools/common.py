@@ -26,7 +26,7 @@ def open_csv(dirpath, filename, delimiter=";"):
             return data
     except Exception as e:
         print(type(e), e, file=sys.stderr)
-        sys.stderr.write("ERROR: Could not open file %s in dir %s" % (filename, dirpath))
+        sys.stderr.write("ERROR: Could not open file %s in dir %s\n" % (filename, dirpath))
         raise e
 
 
