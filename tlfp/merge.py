@@ -3,6 +3,8 @@ import copy
 from tlfp.tools.detect_anomalies import find_anomalies
 from tlfp.tools._step_logic import should_ignore_commission_text
 
+from lawfactory_utils.urls import validate_link_CC_decision
+
 
 def fix_an_cmp_step_url(senat, an):
     # detect missing AN CMP step in senat data
@@ -117,6 +119,13 @@ def merge_senat_with_an(senat, an):
                 print('[warning] [merge] empty CMP steps announced in Senate in a promulgated text but missing in the AN-side', dos['url_dossier_assemblee'])
                 continue
 
+        # Choose best CC url available
+        if step.get('stage') == 'constitutionnalité' and not validate_link_CC_decision(step.get('source_url')):
+            cc_an = [s.get('source_url') for s in an['steps'] if s.get('stage') == 'constitutionnalité']
+            if validate_link_CC_decision(cc_an[0]):
+                step['source_url'] = cc_an[0]
+
+        # Choose best JO url available
         if step.get('stage') == 'promulgation' and (not step.get('source_url') or 'jo_pdf' in step['source_url']):
             an_step_promulgation = [s for s in an['steps'] if s.get('stage') == 'promulgation']
             if an_step_promulgation and an_step_promulgation[0]['source_url']:
