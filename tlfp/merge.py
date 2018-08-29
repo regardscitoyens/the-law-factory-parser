@@ -24,6 +24,16 @@ def fix_an_cmp_step_url(senat, an):
     return dos
 
 
+def merge_promulgation_steps(senat_step, an_step):
+    step = {**senat_step}
+    senat_url = senat_step.get('source_url')
+    if not senat_url or 'jo_pdf' in senat_url and an_step.get('source_url'):
+        step['source_url'] = an_step['source_url']
+    if not senat_step.get('date') and an_step.get('date'):
+        step['date'] = an_step['date']
+    return step
+
+
 def merge_senat_with_an(senat, an):
     """Takes a senat dosleg and an AN dosleg and returns a merged version"""
     dos = copy.deepcopy(senat)
@@ -35,6 +45,8 @@ def merge_senat_with_an(senat, an):
 
     if ('url_jo' not in dos or 'jo_pdf' in dos['url_jo']) and 'url_jo' in an:
         dos['url_jo'] = an['url_jo']
+        if not dos.get('end') and an.get('end'):
+            dos['end'] = an['end']
 
     dos['steps'] = []
     an['steps'] = [s for s in an['steps'] if not should_ignore_commission_text(s, an)]
@@ -126,10 +138,12 @@ def merge_senat_with_an(senat, an):
                 step['source_url'] = cc_an[0]
 
         # Choose best JO url available
-        if step.get('stage') == 'promulgation' and (not step.get('source_url') or 'jo_pdf' in step['source_url']):
-            an_step_promulgation = [s for s in an['steps'] if s.get('stage') == 'promulgation']
-            if an_step_promulgation and an_step_promulgation[0]['source_url']:
-                step['source_url'] = an_step_promulgation[0]['source_url']
+        if step.get('stage') == 'promulgation':
+            an_step_promulgation = [(i, s) for i, s in enumerate(an['steps']) if s.get('stage') == 'promulgation']
+            if an_step_promulgation:
+                an_index, an_step = an_step_promulgation[0]
+                an_offset = an_index - i
+                step = merge_promulgation_steps(step, an_step)
 
         # Only keep first empty consecutive step as next one to come
         if not dos.get('url_jo'):
@@ -148,6 +162,11 @@ def merge_senat_with_an(senat, an):
     dos = fix_an_cmp_step_url(dos, an)
 
     # ## SANITY CHECKS ## #
+
+    # detect AN leftovers we didn't merge
+    if len(an['steps']) > i + an_offset + 1:
+        leftovers = an['steps'][an_index:]
+        print('[warning] [merge] some AN steps didn\'t get merged ( the last', len(leftovers), ')')
 
     # compare the number of anomalies before and after merging
     if find_anomalies([senat], verbose=False) < find_anomalies([dos], verbose=False) or \
