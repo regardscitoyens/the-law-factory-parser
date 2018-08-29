@@ -29,6 +29,7 @@ install:
 script:
     - set -e # exit on first fail: see https://github.com/travis-ci/travis-ci/issues/1066
     - flake8 --ignore=E501,F405,F403,F401,F841 --select=F,E999 --exclude=deprecated . # mainly detect undefined variables and syntax errors
+    - python tlfp/tools/update_procedure.py
     - python tlfp/tools/sort_articles.py
     - python tests/test_parse_texte.py
     - python tests/test_steps.py
