@@ -1,7 +1,11 @@
 #!/bin/bash
 
-TODAY=$(date +%Y%m%d)
-DATADIR=data.$TODAY
+if [ -z "$1" ]; then
+  TODAY=$(date +%Y%m%d)
+  DATADIR=data.$TODAY
+else
+  DATADIR=$1
+fi
 mkdir -p $DATADIR
 
 senapy-cli doslegs_urls | tlfp-parse-many $DATADIR --only-promulgated
@@ -39,3 +43,5 @@ echo
 echo
 echo "Deploy built data with:"
 echo "mv data data.$TODAY.old && mv $DATADIR data"
+
+./stats.sh $DATADIR
