@@ -44,4 +44,3 @@ echo
 echo "Deploy built data with:"
 echo "mv data data.$TODAY.old && mv $DATADIR data"
 
-./stats.sh $DATADIR
