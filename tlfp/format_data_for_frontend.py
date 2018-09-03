@@ -22,9 +22,11 @@ def dump_success_log(output_dir, log):
         f.write(log)
     textid = output_dir.split('/')[-1]
     api_dir = output_dir.replace('/' + textid, '')
-    err_log = os.path.join(api_dir, 'logs', textid)
-    if os.path.exists(err_log):
-        os.remove(err_log)
+
+    for err_dir in ('logs', 'logs-encours'):
+        err_log = os.path.join(api_dir, err_dir, textid)
+        if os.path.exists(err_log):
+            os.remove(err_log)
 
 
 def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):

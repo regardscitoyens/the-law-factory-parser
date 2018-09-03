@@ -125,7 +125,7 @@ def log_print(file):
     sys.stderr = _stderr
 
 
-def dump_error_log(url, exception, api_dir, log):
+def dump_error_log(url, exception, logdir, log):
     log = log.getvalue() + '\n' + ''.join(traceback.format_tb(exception.__traceback__))
 
     url_id = url.replace('/', '')
@@ -134,8 +134,8 @@ def dump_error_log(url, exception, api_dir, log):
     elif 'senat.fr' in url:
         url_id = url.split('/')[-1].replace('.html', '')
 
-    mkdirs(os.path.join(api_dir, 'logs'))
-    logfile = os.path.join(api_dir, 'logs', url_id)
+    mkdirs(logdir)
+    logfile = os.path.join(logdir, url_id)
 
     print('[error] parsing', url, 'failed. Details in', logfile)
     open(logfile, 'w').write(log)
@@ -147,6 +147,7 @@ def process(API_DIRECTORY, url):
     verbose = '--quiet' not in sys.argv
     if not disable_cache:
         enable_requests_cache()
+    dos = None
     with log_print(io.StringIO()) as log:
         try:
             if verbose:
@@ -192,7 +193,10 @@ def process(API_DIRECTORY, url):
             raise e
         except Exception as e:
             # dump log for each failed doslegs in logs/
-            dump_error_log(url, e, API_DIRECTORY, log)
+            logdir = os.path.join(API_DIRECTORY, 'logs')
+            if dos and not dos.get('url_jo'):
+                logdir = os.path.join(API_DIRECTORY, 'logs-encours')
+            dump_error_log(url, e, logdir, log)
             raise e
 
 
