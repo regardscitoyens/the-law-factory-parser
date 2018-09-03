@@ -17,7 +17,11 @@ from .merge import merge_senat_with_an
 
 def download_senat(url, log=sys.stderr, verbose=True):
     if verbose: print('  [] download SENAT version')
-    html = download(url).text
+    resp = download(url)
+    if resp.status_code != 200:
+        print('WARNING: Invalid response -', resp.status_code)
+        return
+    html = resp.text
     if verbose: print('  [] parse SENAT version')
     senat_dos = senapy_parse(html, url, logfile=log)
     debug_file(senat_dos, 'debug_senat_dos.json')
@@ -90,7 +94,8 @@ def download_merged_dos(url, cached_opendata_an, log=sys.stderr, verbose=True):
         # Add senat version if there's one
         if 'url_dossier_senat' in an_dos:
             senat_dos = download_senat(an_dos['url_dossier_senat'], log=log)
-            dos = merge_senat_with_an(senat_dos, an_dos)
+            if senat_dos:
+                dos = merge_senat_with_an(senat_dos, an_dos)
         else:
             dos = an_dos
     else:
