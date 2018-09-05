@@ -1,12 +1,16 @@
 #!/bin/bash
 
+trap ctrl_c INT
+function ctrl_c() {
+    exit 1;
+}
+
 if [ -z "$1" ]; then
   TODAY=$(date +%Y%m%d)
   DATADIR=data.$TODAY
 else
   DATADIR=$1
 fi
-mkdir -p $DATADIR
 
 senapy-cli doslegs_urls | tlfp-parse-many $DATADIR --only-promulgated
 
