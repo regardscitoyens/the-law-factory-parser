@@ -79,7 +79,7 @@ def _is_same_helper(dircmp):
             right_file = os.path.join(dircmp.right, name)
             print('>>> Two files are different:', left_file, 'AND', right_file)
             diff = list(difflib.unified_diff(open(left_file).readlines(),
-                open(right_file).readlines()))
+                        open(right_file).readlines()))
             for line in diff[:20]:
                 print(line, end='')
             if len(diff) > 20:
@@ -90,9 +90,10 @@ def _is_same_helper(dircmp):
             dircmp.report_full_closure()
         return False
     for sub_dircmp in dircmp.subdirs.values():
-       if not _is_same_helper(sub_dircmp):
-           return False
+        if not _is_same_helper(sub_dircmp):
+            return False
     return True
+
 
 for directory in sorted(glob.glob(TEST_DIR + '/p*')):
     if '_tmp' in directory:
@@ -100,14 +101,17 @@ for directory in sorted(glob.glob(TEST_DIR + '/p*')):
     senat_id = directory.split('/')[-1]
     print('  - test regressions for', senat_id)
 
-    with log_print(only_log=True):
+    with log_print(only_log=True) as log:
         parse_one.process(OUTPUT_DIR, senat_id)
     comp = filecmp.dircmp(directory, OUTPUT_DIR + '/' + senat_id)
     if _is_same_helper(comp):
         print('     > OK')
     else:
-        print('     > NOK, details in tests_tmp')
-        raise Exception()
+        print(log.getvalue().replace('\n', '\nlog: '))
+        print('     > Output different to the verified output: '
+              'https://github.com/regardscitoyens/'
+              'the-law-factory-parser-test-cases/tree/master/%s' % senat_id)
+        sys.exit(1)
 
 if not REGEN_TESTS:
     shutil.rmtree(OUTPUT_DIR)
