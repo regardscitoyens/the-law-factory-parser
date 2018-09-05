@@ -1,20 +1,56 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, os, time, re, requests
+import sys, os, time, re, requests, io
 from datetime import date, datetime
 from html.entities import name2codepoint
 from csv import DictReader
 from difflib import SequenceMatcher
-from diff_match_patch import diff_match_patch
 import json
 import locale
+import contextlib
+
+from diff_match_patch import diff_match_patch
+
 
 locale.setlocale(locale.LC_TIME, 'fr_FR.utf-8')
 
 from .sort_articles import bister
 
 from lawfactory_utils.urls import download
+
+
+@contextlib.contextmanager
+def log_print(file=None, only_log=False):
+    """capture all outputs to a log file while still printing it"""
+    class Logger:
+        def __init__(self, file):
+            self.terminal = sys.stdout
+            self.log = file
+            self.only_log = only_log
+
+        def write(self, message):
+            if not self.only_log:
+                self.terminal.write(message)
+            self.log.write(message)
+
+        def __getattr__(self, attr):
+            return getattr(self.terminal, attr)
+
+    if file is None:
+        file = io.StringIO()
+
+    logger = Logger(file)
+
+    _stdout = sys.stdout
+    _stderr = sys.stderr
+    sys.stdout = logger
+    sys.stderr = logger
+    try:
+        yield logger.log
+    finally:
+        sys.stdout = _stdout
+        sys.stderr = _stderr
 
 
 def open_csv(dirpath, filename, delimiter=";"):

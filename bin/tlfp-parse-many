@@ -2,7 +2,6 @@
 import os
 import sys
 import glob
-import traceback
 
 from tlfp.tools.common import open_json
 from tlfp import parse_one
@@ -28,8 +27,13 @@ for url in sys.stdin:
             print('  + passed, already done:', url)
         continue
     try:
-        parse_one.process(API_DIRECTORY, url)
+        dos = parse_one.process(API_DIRECTORY, url)
+        if dos:
+            print('SUCCESS:', url)
+            print("       > https://www.lafabriquedelaloi.fr/articles.html?loi=%s" % dos.get('id'))
     except KeyboardInterrupt:
         break
     except Exception as e:
-        traceback.print_exc()
+        print('FAILED:', url)
+        print('     > ', e)
+        print('     > ', "https://www.lafabriquedelaloi.fr/api/logs/%s" % dos.get('id'))

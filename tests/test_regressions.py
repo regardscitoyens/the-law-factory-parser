@@ -16,6 +16,7 @@ from tlfp import parse_one
 from tlfp.parse_one import download_merged_dos
 from tlfp.parse_doslegs_texts import find_good_url_resp
 from tlfp.tools.detect_anomalies import find_anomalies
+from tlfp.tools.common import log_print
 from tlfp.tools import parse_texte, download_groupes, download_lois_dites, download_AN_opendata
 
 REGEN_TESTS = '--regen' in sys.argv
@@ -28,7 +29,7 @@ if '--enable-cache' in sys.argv:
     from lawfactory_utils.urls import enable_requests_cache
     enable_requests_cache()
 
-print('****** testing url fixing... ******')
+print('> testing url fixing')
 # AN .pdf
 assert find_good_url_resp('http://www.assemblee-nationale.fr/13/pdf/pion1895.pdf').url == 'http://www.assemblee-nationale.fr/13/propositions/pion1895.asp'
 # senat simple
@@ -41,13 +42,11 @@ assert find_good_url_resp('http://www.senat.fr/rap/l09-654/l09-654.html').url ==
 assert find_good_url_resp('https://www.senat.fr/rap/l08-584/l08-584.html').url == 'https://www.senat.fr/rap/l08-584/l08-584_mono.html'
 # senat multipage examen en commission
 assert find_good_url_resp('https://www.senat.fr/rap/l09-535/l09-535.html').url == 'https://www.senat.fr/rap/l09-535/l09-5358.html'
-print('****** => url fixing OK ******')
-
-print()
-print('*** testing parse_texte ****')
+print('     > OK ')
+print('> testing parse_texte')
 assert len(parse_texte.parse('http://www.assemblee-nationale.fr/13/rapports/r2568.asp')) == 5
 assert len(parse_texte.parse('https://www.senat.fr/leg/ppl08-039.html')) == 2
-print('****** => parse_texte OK ******')
+print('     > OK')
 
 
 if not os.path.exists(OUTPUT_DIR):
@@ -57,19 +56,19 @@ download_groupes.process(OUTPUT_DIR)
 download_lois_dites.process(OUTPUT_DIR)
 opendata_an = download_AN_opendata.process(OUTPUT_DIR)
 
-print()
-print('*** testing merge ****')
+print('> testing merge')
 # complete AN urls
-dos, *_ = download_merged_dos('pjl11-497', opendata_an, verbose=False)
-assert find_anomalies([dos], verbose=False) == 0
-for step in dos['steps']:
-    if step.get('institution') == 'assemblee':
-        assert step['source_url']
-print('****** => merge OK ******')
+with log_print(only_log=True) as log:
+    print('wtf', file=sys.stderr)
+    dos, *_ = download_merged_dos('pjl11-497', opendata_an, log=log)
+    anomalies = find_anomalies([dos])
+    assert anomalies == 0
+    for step in dos['steps']:
+        if step.get('institution') == 'assemblee':
+            assert step['source_url']
+print('     > OK')
 
-print()
-""" test full data generation """
-
+print('> test full data generation')
 # https://stackoverflow.com/questions/4187564/recursive-dircmp-compare-two-directories-to-ensure-they-have-the-same-files-and
 filecmp.cmpfiles.__defaults__ = (False,)
 def _is_same_helper(dircmp):
@@ -78,14 +77,16 @@ def _is_same_helper(dircmp):
         for name in dircmp.diff_files:
             left_file = os.path.join(dircmp.left, name)
             right_file = os.path.join(dircmp.right, name)
-            print('TWO FILES ARES DIFFERENT:', left_file, 'AND', right_file)
+            print('>>> Two files are different:', left_file, 'AND', right_file)
             diff = list(difflib.unified_diff(open(left_file).readlines(),
                 open(right_file).readlines()))
             for line in diff[:20]:
                 print(line, end='')
             if len(diff) > 20:
                 print('-- diff too long, it was truncated')
+            print()
         else:
+            print('>>> Full file-tree diff:')
             dircmp.report_full_closure()
         return False
     for sub_dircmp in dircmp.subdirs.values():
@@ -97,21 +98,18 @@ for directory in sorted(glob.glob(TEST_DIR + '/p*')):
     if '_tmp' in directory:
         continue
     senat_id = directory.split('/')[-1]
-    print()
-    print('****** testing', senat_id, '*******')
-    print()
+    print('  - test regressions for', senat_id)
 
-    parse_one.process(OUTPUT_DIR, senat_id)
+    with log_print(only_log=True):
+        parse_one.process(OUTPUT_DIR, senat_id)
     comp = filecmp.dircmp(directory, OUTPUT_DIR + '/' + senat_id)
     if _is_same_helper(comp):
-        print()
-        print('  -> test passed')
+        print('     > OK')
     else:
-        print()
-        print('   -> test failed, details in tests_tmp')
+        print('     > NOK, details in tests_tmp')
         raise Exception()
 
 if not REGEN_TESTS:
     shutil.rmtree(OUTPUT_DIR)
 else:
-    print('TESTS REGEN OK')
+    print('>> the regressions cases have been correctly re-generated')
