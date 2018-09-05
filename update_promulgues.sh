@@ -1,5 +1,11 @@
 #!/bin/bash
 
+
+trap ctrl_c INT
+function ctrl_c() {
+    exit 1;
+}
+
 cd $(dirname $0)
 source ~/.bash_profile
 pyenv activate lafabrique
@@ -10,7 +16,7 @@ senapy-cli doslegs_urls --min-year=$((`date +%Y`)) | tlfp-parse-many $DATADIR --
 
 echo
 python tlfp/generate_dossiers_csv.py $DATADIR
-python tlfp/tools/assemble_procedures.py $DATADIR
+python tlfp/tools/assemble_procedures.py $DATADIR > /dev/null
 
 echo
 #python tools/make_metrics_csv.py $DATADIR --quiet
