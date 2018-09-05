@@ -26,6 +26,7 @@ for url in sys.stdin:
             print(url)
             print('  + passed, already done:', url)
         continue
+    dos = None
     try:
         dos = parse_one.process(API_DIRECTORY, url)
         if dos:
@@ -36,4 +37,5 @@ for url in sys.stdin:
     except Exception as e:
         print('FAILED:', url)
         print('     > ', e)
-        print('     > ', "https://www.lafabriquedelaloi.fr/api/logs/%s" % dos.get('id'))
+        if dos:
+            print('     > ', "https://www.lafabriquedelaloi.fr/api/logs/%s" % dos.get('id'))
