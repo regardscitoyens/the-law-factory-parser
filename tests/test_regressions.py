@@ -52,9 +52,10 @@ print('     > OK')
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
-download_groupes.process(OUTPUT_DIR)
-download_lois_dites.process(OUTPUT_DIR)
-opendata_an = download_AN_opendata.process(OUTPUT_DIR)
+with log_print(only_log=True):
+    download_groupes.process(OUTPUT_DIR)
+    download_lois_dites.process(OUTPUT_DIR)
+    opendata_an = download_AN_opendata.process(OUTPUT_DIR)
 
 print('> testing merge')
 # complete AN urls
