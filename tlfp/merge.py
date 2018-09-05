@@ -174,11 +174,11 @@ def merge_senat_with_an(senat, an):
         print('[warning] [merge] more anomalies in the steps after the merge:', dos['url_dossier_senat'])
 
     # verify number of the CMP steps didn't move while merging
-    cmp_steps_in_merged_dos = len([1 for step in dos['steps'] if step.get('stage') == 'CMP'])
-    cmp_steps_in_senat_dos = len([1 for step in senat['steps'] if step.get('stage') == 'CMP'])
-    if cmp_steps_in_merged_dos != cmp_steps_in_senat_dos:
+    if dos.get('url_jo'):
+        cmp_steps_in_merged_dos = len([1 for step in dos['steps'] if step.get('stage') == 'CMP'])
+        cmp_steps_in_senat_dos = len([1 for step in senat['steps'] if step.get('stage') == 'CMP'])
         # since we remove the Senate predicted CMP steps, CMP steps can disappear for live texts
-        if dos.get('url_jo') or cmp_steps_in_merged_dos > cmp_steps_in_senat_dos:
+        if cmp_steps_in_merged_dos > cmp_steps_in_senat_dos:
             print('[warning] [merge] number of CMP steps changed', dos['url_dossier_senat'],
                   '(before:', cmp_steps_in_senat_dos, ', after:', cmp_steps_in_merged_dos, ')')
 
