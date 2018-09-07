@@ -4,6 +4,7 @@ Make one Git repo per bill and optionally upload it to gitlab
 TODO: ajouter acteurs manquants sur le gitlab
 TODO: date
 TODO: source_url
+TODO: url gitlab as configurable option
 """
 
 """
