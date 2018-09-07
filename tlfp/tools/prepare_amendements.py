@@ -99,7 +99,7 @@ def process(OUTPUT_DIR, procedure):
 
     CACHE_BUSTING = 'cache=%d' % time()
     if 'url_jo' in procedure:
-        CACHE_BUSTING = 'cache=5feb2018' # fixed cache busting for promulgated laws
+        CACHE_BUSTING = 'cache=lfdll-prod' # fixed cache busting for promulgated laws
     steps = {}
     last_text_id, last_text_typeparl = None, None
     steps = procedure['steps']
