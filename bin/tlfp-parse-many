@@ -34,8 +34,7 @@ for url in sys.stdin:
             print("       > https://www.lafabriquedelaloi.fr/articles.html?loi=%s" % dos.get('id'))
     except KeyboardInterrupt:
         break
-    except Exception as e:
+    except parse_one.ParsingFailedException as e:
         print('FAILED:', url)
-        print('     > ', e)
-        if dos:
-            print('     > ', "https://www.lafabriquedelaloi.fr/api/logs/%s" % dos.get('id'))
+        print('     > ', e.root_exception)
+        print('     > ', "https://www.lafabriquedelaloi.fr/api/logs/%s" % e.logfile)

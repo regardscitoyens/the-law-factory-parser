@@ -15,6 +15,13 @@ from .tools.common import debug_file, log_print
 from .merge import merge_senat_with_an
 
 
+class ParsingFailedException(Exception):
+    def __init__(self, exception, logfile):
+        super().__init__()
+        self.root_exception = exception
+        self.logfile = logfile
+
+
 def download_senat(url, log=sys.stderr):
     print('  [] download SENAT version')
     resp = download(url)
@@ -116,6 +123,8 @@ def dump_error_log(url, exception, api_dir, log):
 
     print('[error] parsing of', url, 'failed. Details in', logfile)
 
+    raise ParsingFailedException(exception, logfile)
+
 
 def process(API_DIRECTORY, url):
     only_promulgated = '--only-promulgated' in sys.argv
@@ -162,10 +171,9 @@ def process(API_DIRECTORY, url):
         except KeyboardInterrupt as e:
             raise e
         except Exception as e:
-            print(*traceback.format_tb(e.__traceback__), e, sep='')
+            print(*traceback.format_tb(e.__traceback__), e, sep='', file=log)
             # dump log for each failed doslegs in logs/
             dump_error_log(url, e, API_DIRECTORY, log)
-            raise e
 
 
 if __name__ == '__main__':
