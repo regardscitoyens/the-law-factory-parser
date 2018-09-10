@@ -173,7 +173,7 @@ re_clean_subsec_space2 = re.compile(r'^("?[IVX0-9]{1,4})\s*([a-z]*)\s*([A-H]{1,4
 re_clean_punc_space = re.compile(r'([°«»:;,\.!\?\]\)%€&\$])([^\s\)\.,\d"])')
 re_clean_spaces = re.compile(r'\s+')
 re_clean_coord = re.compile(r'^(<i>)?([\["\(\s]+|pour)*coordination[\]\)\s\.]*(</i>)?', re.I)
-re_liminaire = re.compile(r' pr..?liminaire', re.I)
+re_préliminaire = re.compile(r' pr..?liminaire', re.I)
 # Clean html and special chars
 lower_inner_title = lambda x: x.group(1)+lower_but_first(x.group(3))+" "
 html_replace = [
@@ -206,7 +206,7 @@ html_replace = [
     (re.compile(r"œ([A-Z])"), r"OE\1"),
     (re.compile(r"œ\s*", re.I), "oe"),
     (re.compile(r'^((<[^>]*>)*")%s ' % section_titles, re.I), lower_inner_title),
-    (re_liminaire, ' préliminaire'),
+    (re_préliminaire, ' préliminaire'),
     (re.compile(r'<strike>[^<]*</strike>', re.I), ''),
     (re.compile(r'^<a>(\w)', re.I), r"\1"),
     (re.compile(r'^[.…\s]+(((suppr|conforme)[^\.…]{0,10})+)[.…\s]+$', re.I), r"\1"),  # clean "......Conforme....." to "Conforme"
@@ -638,7 +638,7 @@ def parse(url, resp=None, DEBUG=False):
             if m.group(3) is not None:
                 section_typ += "S"
 
-            if re.search(re_liminaire, line):
+            if re.search(re_préliminaire, line) or " LIMINAIRE" in line.upper():
                 section_num = "L"
             else:
                 section_num = re_cl_html.sub('', m.group(5).strip())
@@ -651,9 +651,10 @@ def parse(url, resp=None, DEBUG=False):
                 if m2:
                     rest = section_num.replace(m2.group(0), '')
                     section_num = romans(m2.group(0))
-                    if rest: section_num = str(section_num) + rest
+                    if rest:
+                        section_num = str(section_num) + rest
             # Get parent section id to build current section id
-            section_par = re.sub(r""+section_typ+"[\dL].*$", "", section["id"])
+            section_par = re.sub(r"" + section_typ + r"[\dL].*$", "", section["id"])
             section["id"] = section_par + section_typ + str(section_num)
             # check_section_is_not_a_duplicate(section["id"])
 
