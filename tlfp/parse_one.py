@@ -111,7 +111,9 @@ def dump_error_log(url, exception, api_dir, log):
     mkdirs(os.path.join(api_dir, 'logs'))
     logfile = os.path.join(api_dir, 'logs', url_id)
 
-    open(logfile, 'w').write(log.getvalue())
+    with open(logfile, 'w') as f:
+        f.write(log.getvalue())
+
     print('[error] parsing of', url, 'failed. Details in', logfile)
 
 

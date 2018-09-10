@@ -60,7 +60,6 @@ with log_print(only_log=True):
 print('> testing merge')
 # complete AN urls
 with log_print(only_log=True) as log:
-    print('wtf', file=sys.stderr)
     dos, *_ = download_merged_dos('pjl11-497', opendata_an, log=log)
     anomalies = find_anomalies([dos])
     assert anomalies == 0
@@ -104,15 +103,15 @@ for directory in sorted(glob.glob(TEST_DIR + '/p*')):
 
     with log_print(only_log=True) as log:
         parse_one.process(OUTPUT_DIR, senat_id)
-    comp = filecmp.dircmp(directory, OUTPUT_DIR + '/' + senat_id)
-    if _is_same_helper(comp):
-        print('     > OK')
-    else:
-        print(log.getvalue().replace('\n', '\nlog: '))
-        print('     > Output different to the verified output: '
-              'https://github.com/regardscitoyens/'
-              'the-law-factory-parser-test-cases/tree/master/%s' % senat_id)
-        sys.exit(1)
+        comp = filecmp.dircmp(directory, OUTPUT_DIR + '/' + senat_id)
+        if _is_same_helper(comp):
+            print('     > OK')
+        else:
+            print(log.getvalue().replace('\n', '\nlog: '))
+            print('     > Output different to the verified output: '
+                  'https://github.com/regardscitoyens/'
+                  'the-law-factory-parser-test-cases/tree/master/%s' % senat_id)
+            sys.exit(1)
 
 if not REGEN_TESTS:
     shutil.rmtree(OUTPUT_DIR)
