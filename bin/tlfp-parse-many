@@ -7,9 +7,10 @@ from tlfp.tools.common import open_json
 from tlfp import parse_one
 
 
-verbose = "--quiet" not in sys.argv
+args = [arg for arg in sys.argv[1:] if '--' not in arg]
+API_DIRECTORY = args[0] if len(args) > 0 else 'data'
 
-API_DIRECTORY = sys.argv[1]
+verbose = "--quiet" not in sys.argv
 
 already_done = {}
 for jsondos in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json')):

@@ -168,7 +168,7 @@ def process(API_DIRECTORY, url):
             print('  [] format data for the frontend')
             format_data_for_frontend.process(dos_with_texts, API_DIRECTORY, log=log)
             return dos
-        except KeyboardInterrupt as e:
+        except KeyboardInterrupt as e:  # bypass the error log dump when doing Ctrl-C
             raise e
         except Exception as e:
             print(*traceback.format_tb(e.__traceback__), e, sep='', file=log)
