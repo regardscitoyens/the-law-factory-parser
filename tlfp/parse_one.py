@@ -1,4 +1,4 @@
-import sys, contextlib, io, os, traceback
+import sys, io, os, traceback
 
 from senapy.dosleg.parser import parse as senapy_parse
 from anpy.dossier_like_senapy import parse as anpy_parse
@@ -11,26 +11,37 @@ from .tools.json2arbo import mkdirs
 from .tools.download_groupes import process as download_groupes
 from .tools.download_lois_dites import process as download_lois_dites
 from .tools.download_AN_opendata import process as download_AN_opendata
-from .tools.common import debug_file
+from .tools.common import debug_file, log_print
 from .merge import merge_senat_with_an
 
 
-def download_senat(url, log=sys.stderr, verbose=True):
-    if verbose: print('  [] download SENAT version')
-    html = download(url).text
-    if verbose: print('  [] parse SENAT version')
+class ParsingFailedException(Exception):
+    def __init__(self, exception, logfile):
+        super().__init__()
+        self.root_exception = exception
+        self.logfile = logfile
+
+
+def download_senat(url, log=sys.stderr):
+    print('  [] download SENAT version')
+    resp = download(url)
+    if resp.status_code != 200:
+        print('WARNING: Invalid response -', resp.status_code)
+        return
+    html = resp.text
+    print('  [] parse SENAT version')
     senat_dos = senapy_parse(html, url, logfile=log)
     debug_file(senat_dos, 'debug_senat_dos.json')
     return senat_dos
 
 
-def download_an(url, cached_opendata_an, url_senat=False, log=sys.stderr, verbose=True):
-    if verbose: print('  [] download AN version')
-    if verbose: print('  [] parse AN version')
+def download_an(url, cached_opendata_an, url_senat=False, log=sys.stderr):
+    print('  [] download AN version')
+    print('  [] parse AN version')
     # TODO: do both instead of first
-    results = anpy_parse(url, logfile=log, verbose=verbose, cached_opendata_an=cached_opendata_an)
+    results = anpy_parse(url, logfile=log, cached_opendata_an=cached_opendata_an)
     if not results:
-        if verbose: print('     WARNING: AN DOS NOT FOUND', url)
+        print('     WARNING: AN DOS NOT FOUND', url)
         return
     an_dos = results[0]
     if len(results) > 1:
@@ -39,7 +50,7 @@ def download_an(url, cached_opendata_an, url_senat=False, log=sys.stderr, verbos
                 if result.get('url_dossier_senat') == url_senat:
                     an_dos = result
                     break
-        if verbose: print('     WARNING: TOOK FIRST DOSLEG BUT THERE ARE %d OF THEM' % len(results))
+        print('     WARNING: TOOK FIRST DOSLEG BUT THERE ARE %d OF THEM' % len(results))
 
     debug_file(an_dos, 'debug_an_dos.json')
     return an_dos
@@ -59,25 +70,25 @@ def are_same_doslegs(senat_dos, an_dos):
     return False
 
 
-def download_merged_dos(url, cached_opendata_an, log=sys.stderr, verbose=True):
+def download_merged_dos(url, cached_opendata_an, log=sys.stderr):
     """find dossier from url and returns (the_merged_dosleg, AN_dosleg, SENAT_dosleg)"""
     if not url.startswith('http') and ('pjl' in url or 'ppl' in url or 'plfss' in url):
         url = "http://www.senat.fr/dossier-legislatif/%s.html" % url
 
-    if verbose: print(' -= DOSLEG URL:', url, '=-')
+    print(' -= DOSLEG URL:', url, '=-')
 
     dos = None
     an_dos = None
     senat_dos = None
 
     if 'senat.fr' in url:
-        senat_dos = download_senat(url, verbose=verbose, log=log)
+        senat_dos = download_senat(url, log=log)
         if not senat_dos:
-            if verbose: print('  /!\ INVALID SENAT DOS')
+            print('  /!\ INVALID SENAT DOS')
             return None, None, None
         # Add AN version if there's one
         if 'url_dossier_assemblee' in senat_dos:
-            an_dos = download_an(senat_dos['url_dossier_assemblee'], cached_opendata_an, senat_dos['url_dossier_senat'], verbose=verbose, log=log)
+            an_dos = download_an(senat_dos['url_dossier_assemblee'], cached_opendata_an, senat_dos['url_dossier_senat'], log=log)
             if not an_dos:
                 return senat_dos, None, senat_dos
             if 'url_dossier_senat' in an_dos:
@@ -86,48 +97,18 @@ def download_merged_dos(url, cached_opendata_an, log=sys.stderr, verbose=True):
         else:
             dos = senat_dos
     elif 'assemblee-nationale.fr' in url:
-        an_dos = download_an(url, cached_opendata_an, verbose=verbose, log=log)
+        dos = an_dos = download_an(url, cached_opendata_an, log=log)
         # Add senat version if there's one
         if 'url_dossier_senat' in an_dos:
             senat_dos = download_senat(an_dos['url_dossier_senat'], log=log)
-            dos = merge_senat_with_an(senat_dos, an_dos)
-        else:
-            dos = an_dos
+            if senat_dos:
+                dos = merge_senat_with_an(senat_dos, an_dos)
     else:
-        if verbose: print(' INVALID URL:', url)
+        print(' INVALID URL:', url)
     return dos, an_dos, senat_dos
 
 
-@contextlib.contextmanager
-def log_print(file):
-    # capture all outputs to a log file while still printing it
-    class Logger:
-        def __init__(self, file):
-            self.terminal = sys.stdout
-            self.log = file
-            self.only_log = False
-
-        def write(self, message):
-            self.terminal.write(message)
-            self.log.write(message)
-
-        def __getattr__(self, attr):
-            return getattr(self.terminal, attr)
-
-    logger = Logger(file)
-
-    _stdout = sys.stdout
-    _stderr = sys.stderr
-    sys.stdout = logger
-    sys.stderr = logger
-    yield logger.log
-    sys.stdout = _stdout
-    sys.stderr = _stderr
-
-
 def dump_error_log(url, exception, logdir, log):
-    log = log.getvalue() + '\n' + ''.join(traceback.format_tb(exception.__traceback__))
-
     url_id = url.replace('/', '')
     if 'assemblee-nationale' in url:
         url_id = "%s-%s" % parse_national_assembly_url(url)
@@ -137,43 +118,39 @@ def dump_error_log(url, exception, logdir, log):
     mkdirs(logdir)
     logfile = os.path.join(logdir, url_id)
 
-    print('[error] parsing', url, 'failed. Details in', logfile)
-    open(logfile, 'w').write(log)
+    with open(logfile, 'w') as f:
+        f.write(log.getvalue())
+
+    print('[error] parsing of', url, 'failed. Details in', logfile)
+
+    raise ParsingFailedException(exception, logfile)
 
 
 def process(API_DIRECTORY, url):
-    disable_cache = '--enable-cache' not in sys.argv
     only_promulgated = '--only-promulgated' in sys.argv
-    verbose = '--quiet' not in sys.argv
-    if not disable_cache:
+    quiet = '--quiet' in sys.argv
+    if '--enable-cache' in sys.argv:
         enable_requests_cache()
-    dos = None
-    with log_print(io.StringIO()) as log:
+
+    with log_print(only_log=quiet) as log:
         try:
-            if verbose:
-                print('======')
-                print(url)
+            print('======')
+            print(url)
 
             # download the AN open data or just retrieve the last stored version
             opendata_an = download_AN_opendata(API_DIRECTORY)
 
-            dos, an_dos, senat_dos = download_merged_dos(url, opendata_an, log=log, verbose=verbose)
+            dos, an_dos, senat_dos = download_merged_dos(url, opendata_an, log=log)
             if not dos:
-                return
+                raise Exception('Nothing found at %s' % url)
 
-            if verbose:
-                print('        title:', dos.get('long_title'))
-            find_anomalies([dos], verbose=verbose)
+            find_anomalies([dos])
 
             if not dos.get('url_jo') and only_promulgated:
-                if verbose:
-                    print('    ----- passed: no JO link')
+                print('    ----- passed: no JO link')
                 return
 
-            if not verbose:
-                print()
-                print('======')
-                print(url)
+            print('        title:', dos.get('long_title'))
 
             debug_file(dos, 'debug_dos.json')
 
@@ -190,15 +167,16 @@ def process(API_DIRECTORY, url):
 
             print('  [] format data for the frontend')
             format_data_for_frontend.process(dos_with_texts, API_DIRECTORY, log=log)
-        except KeyboardInterrupt as e:
+            return dos
+        except KeyboardInterrupt as e:  # bypass the error log dump when doing Ctrl-C
             raise e
         except Exception as e:
+            print(*traceback.format_tb(e.__traceback__), e, sep='', file=log)
             # dump log for each failed doslegs in logs/
             logdir = os.path.join(API_DIRECTORY, 'logs')
             if dos and not dos.get('url_jo'):
                 logdir = os.path.join(API_DIRECTORY, 'logs-encours')
             dump_error_log(url, e, logdir, log)
-            raise e
 
 
 if __name__ == '__main__':
