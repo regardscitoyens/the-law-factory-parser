@@ -1,0 +1,55 @@
+{
+  "current": [
+    {
+      "definitif": false,
+      "depot": false,
+      "expose": "",
+      "id": "S11-ta064",
+      "nossenateurs_id": "20112012-064",
+      "source": "https://www.senat.fr/leg/tas11-064.html",
+      "titre": "proposition de loi portant diverses dispositions d'ordre cynégétique",
+      "type": "texte"
+    },
+    {
+      "alineas": {
+        "001": "L'article L. 424-3 du code de l'environnement est ainsi modifié :",
+        "002": "1° et 1° bis (Non modifié)",
+        "003": "2° Le second alinéa du II est ainsi rédigé :",
+        "004": "\"Dans ces établissements, les dates d'ouverture et de fermeture de la chasse des perdrix grises, perdrix rouges et faisans de chasse, issus d'élevage sont les dates d'ouverture générale et de clôture générale de la chasse dans le département.\""
+      },
+      "order": 9,
+      "statut": "none",
+      "titre": "6",
+      "type": "article"
+    }
+  ],
+  "previous": [
+    {
+      "definitif": false,
+      "depot": false,
+      "expose": "",
+      "id": "S11-l298",
+      "source": "https://www.senat.fr/leg/ppl11-298.html",
+      "titre": "proposition de loi portant diverses dispositions d'ordre cynégétique",
+      "type": "texte"
+    },
+    {
+      "alineas": {
+        "001": "L'article L. 424-3 du même code est ainsi modifié :",
+        "002": "1° Au second alinéa du I, la référence : \"L. 425-14\" est remplacée par la référence : \"L. 425-15\" et, après le mot : \"applicables\", sont insérés les mots : \"au gibier à poil\" ;",
+        "003": "1° bis Le premier alinéa du II est complété par une phrase ainsi rédigée :",
+        "004": "\"L'article L. 425-15 ne s'applique pas à la pratique de la chasse d'oiseaux issus de lâchers dans les établissements de chasse à caractère commercial.\" ;",
+        "005": "2° Le second alinéa du II est ainsi rédigé :",
+        "006": "\"Dans ces établissements, les dates d'ouverture et de fermeture de la chasse des oiseaux d'élevage sont les dates d'ouverture générale et de clôture générale de la chasse dans le département.\""
+      },
+      "order": 8,
+      "statut": "none",
+      "titre": "6",
+      "type": "article"
+    }
+  ],
+  "previous_step_metas": {
+  },
+  "step": {
+  }
+}

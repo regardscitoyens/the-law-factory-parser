@@ -9,10 +9,10 @@ from tlfp.tools.sort_articles import bister, article_is_lower
 from tlfp.tools.common import clean_text_for_diff, compute_similarity, open_json, print_json
 
 
-def complete(current, previous, step, previous_step_metas, table_concordance, anteprevious=None, debug=False):
+def complete(current, previous, step, previous_step_metas, table_concordance=None, anteprevious=None, debug=False):
     current = copy.deepcopy(current)
     previous = copy.deepcopy(previous)
-    table_concordance = CaseInsensitiveDict(table_concordance)
+    table_concordance = CaseInsensitiveDict(table_concordance or dict())
 
     DEBUG = debug or '--debug' in sys.argv
     def log(text):
@@ -121,7 +121,7 @@ def complete(current, previous, step, previous_step_metas, table_concordance, an
                 if n == 0:
                     i = "%s%s %s" % (s, ". -" if re_mat_simple.match(s) else sep, i)
             if record:
-                log("     copy alinea")
+                log("     copy alinea: " + i[:10])
                 res.append(i)
         # retry and get everything as I before II added if not found
         if not res:

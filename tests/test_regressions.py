@@ -101,17 +101,16 @@ for directory in sorted(glob.glob(TEST_DIR + '/p*')):
     senat_id = directory.split('/')[-1]
     print('  - test regressions for', senat_id)
 
-    with log_print(only_log=True) as log:
-        parse_one.process(OUTPUT_DIR, senat_id)
-        comp = filecmp.dircmp(directory, OUTPUT_DIR + '/' + senat_id)
-        if _is_same_helper(comp):
-            print('     > OK')
-        else:
-            print(log.getvalue().replace('\n', '\nlog: '))
-            print('     > Output different to the verified output: '
-                  'https://github.com/regardscitoyens/'
-                  'the-law-factory-parser-test-cases/tree/master/%s' % senat_id)
-            sys.exit(1)
+    parse_one.process(OUTPUT_DIR, senat_id)
+    comp = filecmp.dircmp(directory, OUTPUT_DIR + '/' + senat_id)
+    if _is_same_helper(comp):
+        print('     > OK')
+    else:
+        print()
+        print('     > Output different to the verified output: '
+              'https://github.com/regardscitoyens/'
+              'the-law-factory-parser-test-cases/tree/master/%s' % senat_id)
+        sys.exit(1)
 
 if not REGEN_TESTS:
     shutil.rmtree(OUTPUT_DIR)

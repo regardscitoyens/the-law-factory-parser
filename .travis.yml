@@ -32,6 +32,7 @@ script:
     - python tlfp/tools/update_procedure.py
     - python tlfp/tools/sort_articles.py
     - python tests/test_parse_texte.py
+    - # python tests/test_complete_articles.py # not yet passing
     - python tests/test_steps.py
     - git clone https://github.com/regardscitoyens/the-law-factory-parser-test-cases.git tests_cases
     - python tests/test_regressions.py tests_cases
