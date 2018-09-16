@@ -11,6 +11,8 @@ args = [arg for arg in sys.argv[1:] if '--' not in arg]
 API_DIRECTORY = args[0] if len(args) > 0 else 'data'
 
 verbose = "--quiet" not in sys.argv
+include_motions = '--include-motions' in sys.argv
+include_resolutions = '--include-resolutions' in sys.argv
 
 already_done = {}
 for jsondos in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json')):
@@ -20,6 +22,9 @@ for jsondos in glob.glob(os.path.join(API_DIRECTORY, '*/viz/procedure.json')):
 
 for url in sys.stdin:
     url = url.strip()
+    if (("dossier-legislatif/ppr" in url and not include_resolutions) or
+        ("dossier-legislatif/motionpjl" in url and not include_motions)):
+        continue
     if url in already_done:
         if verbose:
             print()
