@@ -108,15 +108,15 @@ def download_merged_dos(url, cached_opendata_an, log=sys.stderr):
     return dos, an_dos, senat_dos
 
 
-def dump_error_log(url, exception, api_dir, log):
+def dump_error_log(url, exception, logdir, log):
     url_id = url.replace('/', '')
     if 'assemblee-nationale' in url:
         url_id = "%s-%s" % parse_national_assembly_url(url)
     elif 'senat.fr' in url:
         url_id = url.split('/')[-1].replace('.html', '')
 
-    mkdirs(os.path.join(api_dir, 'logs'))
-    logfile = os.path.join(api_dir, 'logs', url_id)
+    mkdirs(logdir)
+    logfile = os.path.join(logdir, url_id)
 
     with open(logfile, 'w') as f:
         f.write(log.getvalue())
@@ -173,7 +173,10 @@ def process(API_DIRECTORY, url):
         except Exception as e:
             print(*traceback.format_tb(e.__traceback__), e, sep='', file=log)
             # dump log for each failed doslegs in logs/
-            dump_error_log(url, e, API_DIRECTORY, log)
+            logdir = os.path.join(API_DIRECTORY, 'logs')
+            if dos and not dos.get('url_jo'):
+                logdir = os.path.join(API_DIRECTORY, 'logs-encours')
+            dump_error_log(url, e, logdir, log)
 
 
 if __name__ == '__main__':

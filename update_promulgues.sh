@@ -12,7 +12,16 @@ pyenv activate lafabrique
 
 DATADIR=data
 
+echo "Parsing new promulgated texts..."
 senapy-cli doslegs_urls --min-year=$((`date +%Y`)) | tlfp-parse-many $DATADIR --only-promulgated --quiet
+
+echo
+echo "Parsing texts in discussion in the Senate..."
+senapy-cli doslegs_urls --in-discussion | tlfp-parse-many $DATADIR --quiet
+
+echo
+echo "Parsing texts in discussion in the National Assembly..."
+anpy-cli doslegs_urls --in-discussion | tlfp-parse-many $DATADIR --quiet
 
 echo
 python tlfp/generate_dossiers_csv.py $DATADIR

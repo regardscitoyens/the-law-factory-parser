@@ -81,17 +81,23 @@ for dos, path in dossiers:
     if dos.get('url_jo'):
         total_promulgues += 1
 
+total_encours = total_doslegs - total_promulgues
+
 erreurs = len(glob.glob(os.path.join(API_DIRECTORY, 'logs/*')))
+erreurs_encours = len(glob.glob(os.path.join(API_DIRECTORY, 'logs-encours/*')))
+
+max_promulgues = total_promulgues + erreurs
+max_encours = total_encours + erreurs_encours
+maximum = max_promulgues + max_encours
 
 print(total_doslegs, 'doslegs in csv')
-print(total_promulgues, 'promulgués')
-print(erreurs, 'parsings échoués')
-print('%.1f%s OK' % (100*total_promulgues/(total_promulgues + erreurs), '%'))
+print('%.1f%s (%d/%d)' % (100*total_promulgues/max_promulgues, '%', total_promulgues, max_promulgues), 'de promulgués qui passent')
+print('%.1f%s (%d/%d)' % (100*total_encours/max_encours, '%', total_encours, max_encours), 'de textes en cours qui passent')
 
 home_json_final = {
     "total": total_promulgues,
-    "encours": total_doslegs - total_promulgues,
-    "maximum": total_promulgues + erreurs
+    "encours": total_encours,
+    "maximum": max_promulgues,
 }
 home_json_data.sort(key=lambda x: -x['total_amendements'])
 home_json_final["focus"] = {
