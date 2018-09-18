@@ -166,7 +166,10 @@ def merge_senat_with_an(senat, an):
     # detect AN leftovers we didn't merge
     if len(an['steps']) > i + an_offset + 1:
         leftovers = an['steps'][an_index:]
-        print('[warning] [merge] some AN steps didn\'t get merged ( the last', len(leftovers), ')')
+        if not dos.get('url_jo'):
+            dos['steps'] += leftovers
+        else:
+            print('[warning] [merge] some AN steps didn\'t get merged ( the last', len(leftovers), ')')
 
     # compare the number of anomalies before and after merging
     if find_anomalies([senat], verbose=False) < find_anomalies([dos], verbose=False) or \
