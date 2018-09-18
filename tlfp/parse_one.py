@@ -108,17 +108,17 @@ def download_merged_dos(url, cached_opendata_an, log=sys.stderr):
     return dos, an_dos, senat_dos
 
 
-def dump_error_log(url, exception, logdir, log):
+def dump_error_log(url, exception, api_dir, logdir, log):
     url_id = url.replace('/', '')
     if 'assemblee-nationale' in url:
         url_id = "%s-%s" % parse_national_assembly_url(url)
     elif 'senat.fr' in url:
         url_id = url.split('/')[-1].replace('.html', '')
 
-    mkdirs(logdir)
+    mkdirs(os.path.join(api_dir, logdir))
     logfile = os.path.join(logdir, url_id)
 
-    with open(logfile, 'w') as f:
+    with open(os.path.join(api_dir, logdir, url_id), 'w') as f:
         f.write(log.getvalue())
 
     print('[error] parsing of', url, 'failed. Details in', logfile)
@@ -132,6 +132,7 @@ def process(API_DIRECTORY, url):
     if '--enable-cache' in sys.argv:
         enable_requests_cache()
 
+    dos = None
     with log_print(only_log=quiet) as log:
         try:
             print('======')
@@ -173,10 +174,10 @@ def process(API_DIRECTORY, url):
         except Exception as e:
             print(*traceback.format_tb(e.__traceback__), e, sep='', file=log)
             # dump log for each failed doslegs in logs/
-            logdir = os.path.join(API_DIRECTORY, 'logs')
+            logdir = 'logs'
             if dos and not dos.get('url_jo'):
-                logdir = os.path.join(API_DIRECTORY, 'logs-encours')
-            dump_error_log(url, e, logdir, log)
+                logdir = 'logs-encours'
+            dump_error_log(url, e, API_DIRECTORY, logdir, log)
 
 
 if __name__ == '__main__':
