@@ -83,12 +83,13 @@ def merge_senat_with_an(senat, an):
 
                 # get data from AN even if there's data on the senat side
                 if same_stage_step_instit(an_step, step):
-                    # complete AN data with Senate data
-                    common_step = copy.deepcopy(an_step)
-                    if not an_step.get('date') and step.get('date'):
-                        common_step['date'] = step['date']
-                    if not an_step.get('source_url') and step.get('source_url'):
-                        common_step['source_url'] = step['source_url']
+                    # only take source_url from the AN, we've got better infos for now
+                    # from the senat
+                    common_step = copy.deepcopy(step)
+                    if an_step.get('source_url'):
+                        common_step['source_url'] = an_step.get('source_url')
+                    if 'date' not in common_step:
+                        common_step['date'] = an_step.get('date')
                     steps_to_add.append(common_step)
 
                     """
