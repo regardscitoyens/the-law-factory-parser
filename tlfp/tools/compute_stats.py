@@ -1,6 +1,6 @@
 import os, sys, glob
 
-from .common import strip_text, compute_similarity_by_articles, open_json, print_json, \
+from tlfp.tools.common import strip_text, compute_similarity_by_articles, open_json, print_json, \
     clean_text_for_diff, datize
 
 
@@ -30,7 +30,7 @@ def read_articles(step):
 def find_first_and_last_steps(dos):
     first_found = False
     for i, s in enumerate(dos['steps']):
-        if s['debats_order'] is None or s.get('echec'):
+        if s['debats_order'] is None or s.get('echec') or s.get('in_discussion'):
             continue
         if s.get('step') != "depot":
             first_found = True
@@ -88,18 +88,22 @@ def process(output_dir, dos):
 
     stats["echecs_procedure"] = len([step for step in dos['steps'] if step.get("echec")])
 
-    if 'end' in dos:
-        stats["total_days"] = (datize(dos["end"]) - datize(dos["beginning"])).days + 1
+    first_text, first_arts, last_text, last_arts = find_first_and_last_texts(dos)
 
-        first_text, first_arts, last_text, last_arts = find_first_and_last_texts(dos)
+    stats["total_input_articles"] = len(first_arts)
+    stats["total_output_articles"] = len(last_arts)
+    stats["ratio_articles_growth"] = len(last_arts) / len(first_arts)
 
-        stats["total_input_articles"] = len(first_arts)
-        stats["total_output_articles"] = len(last_arts)
-        stats["ratio_articles_growth"] = len(last_arts) / len(first_arts)
+    stats["ratio_texte_modif"] = 1 - compute_similarity_by_articles(first_arts, last_arts)
+    stats["input_text_length"] = len("\n".join(first_text))
+    stats["output_text_length"] = len("\n".join(last_text))
 
-        stats["ratio_texte_modif"] = 1 - compute_similarity_by_articles(first_arts, last_arts)
-        stats["input_text_length"] = len("\n".join(first_text))
-        stats["output_text_length"] = len("\n".join(last_text))
+    maxdate = dos.get('end')
+    if not maxdate:
+        for step in dos['steps']:
+            if step.get('date'):
+                maxdate = step.get('enddate') or step.get('date')
+    stats["total_days"] = (datize(maxdate) - datize(dos['beginning'])).days + 1
 
     return stats
 
