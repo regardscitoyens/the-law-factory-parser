@@ -18,6 +18,17 @@ def test_status(url):
     return resp
 
 
+def is_step_in_discussion(steps, step_index):
+    for s in steps[step_index + 1:]:
+        if 'source_url' in s and s.get('step') in (
+            'hemicycle',
+            'commission',
+            'constitutionnalité'
+        ):
+            return False
+    return True
+
+
 def find_good_url_resp(url):
     if 'senat.fr' in url:
         # Depot steps can sometime link a previous abandonned dosleg
@@ -193,9 +204,7 @@ def parse_texts(dos):
                 print('     * ignore missing intermediary depot', url)
                 continue
 
-            step_in_discussion = not dos.get('url_jo') and \
-                not any([1 for s in steps[step_index+1:] if 'source_url' in s and s.get('step') in ('hemicycle', 'commission')])
-            if step_in_discussion:
+            if not dos.get('url_jo') and is_step_in_discussion(steps, step_index):
                 step['in_discussion'] = True
                 print('     * ignore step in discussion')
                 break
