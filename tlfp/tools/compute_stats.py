@@ -28,15 +28,15 @@ def read_articles(step):
 
 
 def find_first_and_last_steps(dos):
-    first_found = False
+    first, last = None, None
     for i, s in enumerate(dos['steps']):
         if s['debats_order'] is None or s.get('echec') or s.get('in_discussion'):
             continue
         if s.get('step') != "depot":
-            first_found = True
             last = i
-        if not first_found and s.get('step') == "depot":
+        if first is None and s.get('step') == "depot":
             first = i
+            last = i
     return first, last
 
 
