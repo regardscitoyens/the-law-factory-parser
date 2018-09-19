@@ -115,15 +115,16 @@ def dump_error_log(url, exception, api_dir, logdir, log):
     elif 'senat.fr' in url:
         url_id = url.split('/')[-1].replace('.html', '')
 
-    mkdirs(os.path.join(api_dir, logdir))
-    logfile = os.path.join(logdir, url_id)
+    abs_dir = os.path.join(api_dir, logdir)
+    mkdirs(abs_dir)
+    abs_file = os.path.join(abs_dir, url_id)
 
-    with open(os.path.join(api_dir, logdir, url_id), 'w') as f:
+    with open(abs_file, 'w') as f:
         f.write(log.getvalue())
 
-    print('[error] parsing of', url, 'failed. Details in', logfile)
+    print('[error] parsing of', url, 'failed. Details in', abs_file)
 
-    raise ParsingFailedException(exception, logfile)
+    raise ParsingFailedException(exception, os.path.join(logdir, url_id))
 
 
 def process(API_DIRECTORY, url):
