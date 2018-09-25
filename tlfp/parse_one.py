@@ -99,7 +99,7 @@ def download_merged_dos(url, cached_opendata_an, log=sys.stderr):
     elif 'assemblee-nationale.fr' in url:
         dos = an_dos = download_an(url, cached_opendata_an, log=log)
         # Add senat version if there's one
-        if 'url_dossier_senat' in an_dos:
+        if an_dos and 'url_dossier_senat' in an_dos:
             senat_dos = download_senat(an_dos['url_dossier_senat'], log=log)
             if senat_dos:
                 dos = merge_senat_with_an(senat_dos, an_dos)
