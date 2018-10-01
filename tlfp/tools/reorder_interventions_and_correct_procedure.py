@@ -1,6 +1,6 @@
 import os, sys
 
-from .common import *
+from tlfp.tools.common import *
 
 
 def list_get_or_none(arr, i):
@@ -33,7 +33,7 @@ def process(OUTPUT_DIR, procedure):
                     print('ERROR: PB date of', interv_file, ', step begins', step['date'], 'and prev date ends', prev_step['enddate'])
 
             # if enddate is earlier than end of interventions, use interventions date
-            if step['enddate'] and step['enddate'] < date:
+            if step.get('enddate') and step['enddate'] < date:
                 # check that next step start_date is later than this intervention date
                 if not next_step or next_step.get('in_discussion') or next_step['date'] >= date:
                     step['enddate'] = date
