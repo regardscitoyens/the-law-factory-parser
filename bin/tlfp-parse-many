@@ -43,4 +43,4 @@ for url in sys.stdin:
     except parse_one.ParsingFailedException as e:
         print('FAILED:', url)
         print('     > ', e.root_exception)
-        print('     > ', "https://www.lafabriquedelaloi.fr/api/logs/%s" % e.logfile)
+        print('     > ', "https://www.lafabriquedelaloi.fr/api/%s" % e.logfile)
