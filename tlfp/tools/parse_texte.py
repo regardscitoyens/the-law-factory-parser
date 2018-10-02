@@ -577,6 +577,11 @@ def parse(url, resp=None, DEBUG=False):
                 read == READ_DISABLED and line == "<b>Article 1er</b>"):
             read = READ_TEXT
             if len(all_articles):
+                # ex: http://www.assemblee-nationale.fr/15/propositions/pion0965.asp
+                if ' présentée par ' in line:
+                    break
+                if DEBUG:
+                    print('WARNING: Found articles before the real text')
                 all_articles = []
                 article = {}
                 art_num = 0
