@@ -69,9 +69,16 @@ for dos, path in dossiers:
     if dos.get('loi_dite'):
         title = "%s (%s)" % (upper_first(dos.get('loi_dite')), title)
 
+    maxdate = dos.get('end')
+    if not maxdate:
+        for step in dos['steps']:
+            if step.get('date'):
+                maxdate = step.get('enddate') or step.get('date')
+
     home_json_data.append({
         'total_amendements': dos['stats']['total_amendements'],
         'end': dos.get('end'),
+        'maxdate': maxdate,
         'status': status,
         'loi': dos['id'],
         'titre': title
@@ -113,7 +120,7 @@ home_json_final["focus"] = {
     "textes": most_amended[:TEXTS_PER_COLUMN],
 }
 
-recent = [dos for dos in reversed(sorted(home_json_data, key=lambda x: x['end'])) if dos['end'] and dos['total_amendements']]
+recent = [dos for dos in reversed(sorted(home_json_data, key=lambda x: x['end'] or "0")) if dos['end'] and dos['total_amendements']]
 home_json_final["recent"] = {
     "titre": "Les derniers textes promulgués",
     "lien": "Explorer les textes récents",
@@ -121,7 +128,7 @@ home_json_final["recent"] = {
     "textes": recent[-TEXTS_PER_COLUMN:],
 }
 
-live = [dos for dos in reversed(sorted(home_json_data, key=lambda x: x['end'])) if not dos['end']]
+live = [dos for dos in reversed(sorted(home_json_data, key=lambda x: x['maxdate'])) if not dos['end']]
 home_json_final["live"] = {
     "titre": "Les textes en cours",
     "lien": "Explorer les textes en cours",
