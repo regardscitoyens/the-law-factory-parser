@@ -42,6 +42,14 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
 
     shutil.rmtree(output_dir, ignore_errors=True)
 
+    # avoid duplicate titles
+    if 'short_title' in dos:
+        if " de loi organique" in dos['long_title']:
+            dos['short_title'] += " (texte organique)"
+    # AN doslegs have no short_titles
+    else:
+        dos['short_title'] = dos['long_title']
+
     debug_file(dos, 'debug_before_add_links.json')
     dos = add_links.process(dos)
 
@@ -85,14 +93,6 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
         # remove empty step directory
         if os.path.exists(step_directory) and not os.listdir(step_directory):
             os.rmdir(step_directory)
-
-    # avoid duplicate titles
-    if " de loi organique" in procedure['long_title']:
-        procedure['short_title'] += " (texte organique)"
-
-    # AN doslegs have no short_titles
-    if 'short_title' not in procedure:
-        procedure['short_title'] = procedure['long_title']
 
     print_json(procedure, os.path.join(output_dir, 'viz', 'procedure.json'))
 
