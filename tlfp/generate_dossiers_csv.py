@@ -68,14 +68,14 @@ for dos, path in dossiers:
     title = dos.get('short_title')
     if dos.get('loi_dite'):
         title = "%s (%s)" % (upper_first(dos.get('loi_dite')), title)
-    if dos['stats']['total_amendements']:
-        home_json_data.append({
-            'total_amendements': dos['stats']['total_amendements'],
-            'end': dos.get('end'),
-            'status': status,
-            'loi': dos['id'],
-            'titre': title
-        })
+
+    home_json_data.append({
+        'total_amendements': dos['stats']['total_amendements'],
+        'end': dos.get('end'),
+        'status': status,
+        'loi': dos['id'],
+        'titre': title
+    })
 
     total_doslegs += 1
     if dos.get('url_jo'):
@@ -94,24 +94,41 @@ print(total_doslegs, 'doslegs in csv')
 print('%.1f%s (%d/%d)' % (100*total_promulgues/max_promulgues, '%', total_promulgues, max_promulgues), 'de promulgués qui passent')
 print('%.1f%s (%d/%d)' % (100*total_encours/max_encours, '%', total_encours, max_encours), 'de textes en cours qui passent')
 
+
+#### Make home.json
+
 home_json_final = {
     "total": total_promulgues,
     "encours": total_encours,
     "maximum": max_promulgues,
 }
-home_json_data.sort(key=lambda x: -x['total_amendements'])
+
+TEXTS_PER_COLUMN = 6
+
+most_amended = [dos for dos in sorted(home_json_data, key=lambda x: -x['total_amendements']) if dos['end']]
 home_json_final["focus"] = {
     "titre": "Les textes les plus amendés",
     "lien": "Explorer les textes les plus amendés",
     "url": "lois.html?action=quanti",
-    "textes": home_json_data[:6],
+    "textes": most_amended[:TEXTS_PER_COLUMN],
 }
-home_json_data.sort(key=lambda x: x['end'] or "0")
+
+recent = [dos for dos in reversed(sorted(home_json_data, key=lambda x: x['end'])) if dos['end'] and dos['total_amendements']]
 home_json_final["recent"] = {
     "titre": "Les derniers textes promulgués",
     "lien": "Explorer les textes récents",
     "url": "lois.html",
-    "textes": list(reversed(home_json_data[-6:])),
+    "textes": recent[-TEXTS_PER_COLUMN:],
 }
+
+live = [dos for dos in reversed(sorted(home_json_data, key=lambda x: x['end'])) if not dos['end']]
+home_json_final["live"] = {
+    "titre": "Les textes en cours",
+    "lien": "Explorer les textes en cours",
+    "url": "lois.html?encours",
+    "textes": live[-TEXTS_PER_COLUMN:],
+}
+
+print(home_json_final)
 print_json(home_json_final, os.path.join(API_DIRECTORY, 'home.json'))
 print('home.json OK')
