@@ -75,14 +75,15 @@ for dos, path in dossiers:
             if step.get('date'):
                 maxdate = step.get('enddate') or step.get('date')
 
-    home_json_data.append({
-        'total_amendements': dos['stats']['total_amendements'],
-        'end': dos.get('end'),
-        'maxdate': maxdate,
-        'status': status,
-        'loi': dos['id'],
-        'titre': title
-    })
+    if dos['stats']['total_amendements']:
+        home_json_data.append({
+            'total_amendements': dos['stats']['total_amendements'],
+            'end': dos.get('end'),
+            'maxdate': maxdate,
+            'status': status,
+            'loi': dos['id'],
+            'titre': title
+        })
 
     total_doslegs += 1
     if dos.get('url_jo'):
@@ -121,7 +122,7 @@ home_json_final["focus"] = {
 }
 
 recent = sorted(home_json_data, key=lambda x: x['end'] or "0")
-recent = [dos for dos in reversed(recent) if dos['end'] and dos['total_amendements']]
+recent = [dos for dos in reversed(recent) if dos['end']]
 recent = list(recent)
 home_json_final["recent"] = {
     "titre": "Les derniers textes promulgués",
