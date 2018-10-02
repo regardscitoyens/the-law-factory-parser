@@ -47,6 +47,16 @@ print('> testing parse_texte')
 assert len(parse_texte.parse('http://www.assemblee-nationale.fr/13/rapports/r2568.asp')) == 5
 assert len(parse_texte.parse('https://www.senat.fr/leg/ppl08-039.html')) == 2
 print('     > OK')
+print('> testing parse_texte annexes')
+result = parse_texte.parse('http://www.assemblee-nationale.fr/15/ta-commission/r1056-a0.asp')
+assert len(result) == 93, len(result)
+annexes = result[-1]
+assert annexes["type"] == "annexe"
+assert annexes["order"] == 82
+assert annexes["statut"] == "none"
+assert annexes["titre"] == "Stratégie nationale d'orientation de l'action publique"
+assert len(annexes["alineas"]) == 28, len(annexes["alineas"])
+print('     > OK')
 
 
 if not os.path.exists(OUTPUT_DIR):

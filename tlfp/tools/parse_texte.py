@@ -671,8 +671,18 @@ def parse(url, resp=None, DEBUG=False):
                 break
             expose = False
             continue
+        # Annexes.
         elif read == READ_ALINEAS and re_mat_ann.match(line):
-            break
+            titre = re_cl_html.sub("", re_mat_ann.sub("", line))
+            art_num += 1
+            article = {
+                "type": "annexe",
+                "order": art_num,
+                "alineas": {},
+                "statut": "none",
+                "titre": titre
+            }
+            ali_num = 0
         # Identify titles and new article zones
         elif (re.match(r"(<i>)?<b>", line) or
                 re_art_uni.match(cl_line) or
@@ -725,6 +735,8 @@ def parse(url, resp=None, DEBUG=False):
             line = re_clean_coord.sub('', line)
             # if the line was only "Pour coordination", ignore it
             if not line:
+                continue
+            if re_mat_ann.match(line):
                 continue
             # Find extra status information
             if ali_num == 0 and re_mat_st.match(line):
