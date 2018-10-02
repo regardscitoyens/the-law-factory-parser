@@ -136,6 +136,5 @@ home_json_final["live"] = {
     "textes": live[-TEXTS_PER_COLUMN:],
 }
 
-print(home_json_final)
 print_json(home_json_final, os.path.join(API_DIRECTORY, 'home.json'))
 print('home.json OK')
