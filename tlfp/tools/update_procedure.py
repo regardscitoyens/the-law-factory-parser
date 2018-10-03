@@ -57,6 +57,14 @@ def process(procedure, articles, intervs={}):
         remove_interventions_too_small(s, intervs)
         add_auteur_depot(s)
 
+    # remove predicted steps after the one in discussion
+    steps_to_keep = []
+    for s in procedure['steps']:
+        steps_to_keep.append(s)
+        if s.get('in_discussion'):
+            break
+    procedure['steps'] = steps_to_keep
+
     return procedure
 
 
