@@ -5,4 +5,6 @@ from tlfp.tools.common import print_json
 from tlfp.tools.parse_texte import parse
 
 url = sys.argv[1]
-print_json(parse(url, DEBUG='--debug' in sys.argv))
+debug = "--debug" in sys.argv
+include_annexes = "--include-annexes" in sys.argv
+print_json(parse(url, DEBUG=debug, include_annexes=include_annexes))
