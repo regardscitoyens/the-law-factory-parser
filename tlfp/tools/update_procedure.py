@@ -26,6 +26,7 @@ def process(procedure, articles, intervs={}):
         - detect the steps we want to display
             (add a `debats_order` to those steps)
         - add `auteur_depot`
+        - remove extra predicted steps
     """
     articles = articles['articles']
 
@@ -58,12 +59,15 @@ def process(procedure, articles, intervs={}):
         add_auteur_depot(s)
 
     # remove predicted steps after the one in discussion
-    steps_to_keep = []
-    for s in procedure['steps']:
-        steps_to_keep.append(s)
-        if s.get('in_discussion'):
-            break
-    procedure['steps'] = steps_to_keep
+    if not procedure.get('url_jo'):
+        steps_to_keep = []
+        for s in procedure['steps']:
+            if s.get('stage') == 'promulgation':
+                break
+            steps_to_keep.append(s)
+            if s.get('in_discussion'):
+                break
+        procedure['steps'] = steps_to_keep
 
     return procedure
 
