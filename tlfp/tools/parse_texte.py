@@ -519,6 +519,8 @@ def parse(url, resp=None, DEBUG=False):
     curtext = -1
     section = {"type": "section", "id": ""}
 
+    rejected_all_articles = [] # we only keep the last detected text by default, here are stored the previous texts
+
     def should_be_parsed(x):
         """returns True if x can contain useful information"""
         if x.name not in ('p', 'table', 'h1', 'h2', 'h4'):
@@ -577,11 +579,11 @@ def parse(url, resp=None, DEBUG=False):
                 read == READ_DISABLED and line == "<b>Article 1er</b>"):
             read = READ_TEXT
             if len(all_articles):
-                # ex: http://www.assemblee-nationale.fr/15/propositions/pion0965.asp
-                if ' présentée par ' in line:
-                    break
                 if DEBUG:
                     print('WARNING: Found articles before the real text')
+                if article is not None:
+                    pr_js(article)
+                rejected_all_articles.append(all_articles)
                 all_articles = []
                 article = {}
                 art_num = 0
@@ -765,6 +767,17 @@ def parse(url, resp=None, DEBUG=False):
         else:
             #metas
             continue
+
+    # sometimes we find multiple texts inside one text, by default we keep only the latest
+    # but if the latest is empty, try to find a good one from previously parsed texts
+    # ex: http://www.assemblee-nationale.fr/15/propositions/pion0965.asp
+    if not all_articles:
+        for rejected in rejected_all_articles:
+            articles_parsed = [art for art in rejected if art.get('type') == 'article']
+            if len(articles_parsed):
+                print('WARNING: retrieving parsed text from a previously rejected text')
+                all_articles = rejected
+                break
 
     if article is not None:
         pr_js(article)
