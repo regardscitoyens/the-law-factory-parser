@@ -136,15 +136,7 @@ if __name__ == "__main__":
                     "institution": "senat",
                     "stage": "1ère lecture",
                     "step": "hemicycle",
-                },
-                {
-                    "date": None,
-                    "debats_order": None,
-                    "directory": "03_",
-                    "enddate": None,
-                    "institution": "gouvernement",
-                    "stage": "promulgation",
-                },
+                }
             ],
             "url_jo": None,
         }
