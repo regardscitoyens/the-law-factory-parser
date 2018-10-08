@@ -112,6 +112,7 @@ home_json_final = {
 }
 
 TEXTS_PER_COLUMN = 6
+MIN_AMENDMENTS = 50
 
 most_amended = [dos for dos in sorted(home_json_data, key=lambda x: -x['total_amendements']) if dos['end']]
 home_json_final["focus"] = {
@@ -122,7 +123,7 @@ home_json_final["focus"] = {
 }
 
 recent = sorted(home_json_data, key=lambda x: x['end'] or "0")
-recent = [dos for dos in reversed(recent) if dos['end']]
+recent = [dos for dos in reversed(recent) if dos['end'] and dos['total_amendements'] >= 50]
 recent = list(recent)
 home_json_final["recent"] = {
     "titre": "Les derniers textes promulgués",
@@ -132,7 +133,7 @@ home_json_final["recent"] = {
 }
 
 live = sorted(home_json_data, key=lambda x: x['maxdate'])
-live = [dos for dos in reversed(live) if not dos['end']]
+live = [dos for dos in reversed(live) if not dos['end'] and dos['total_amendements'] >= 50]
 live = list(live)
 home_json_final["live"] = {
     "titre": "Les textes en cours",
