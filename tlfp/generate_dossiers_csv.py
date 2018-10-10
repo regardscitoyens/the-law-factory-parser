@@ -5,7 +5,7 @@ Output in <api_directory>:
 - dossiers_promulgues.csv with all the doslegs ready
 - home.json for the homepage informations
 """
-import glob, os, sys, csv, re
+import glob, os, sys, csv, re, copy
 
 from tlfp.tools.common import upper_first, open_json, print_json
 
@@ -21,6 +21,52 @@ csvfile = csv.writer(open(os.path.join(API_DIRECTORY, 'dossiers.csv'), 'w'), del
 csvfile.writerow(('id;Titre;Type de dossier;Date initiale;URL du dossier;État du dossier;Décision du CC;'
     'Date de la décision;Date de promulgation;Numéro de la loi;Thèmes;total_amendements;total_mots;'
     'short_title;loi_dite;assemblee_id').split(';'))
+
+
+def format_date_for_human(date):
+    if not date:
+        return ''
+    return '/'.join(reversed(date.split('-')))
+
+
+def format_statuses(dos):
+    status_amendements = ''
+    if dos['stats']['total_amendements'] == 0:
+        status_amendements = 'Aucun amendement'
+    elif dos['stats']['total_amendements'] == 1:
+        status_amendements = 'Un amendement'
+    else:
+        status_amendements = '%d amendements' % dos['stats']['total_amendements']
+
+    status_live = ''
+    in_discussion_step = [step for step in dos['steps'] if step.get('in_discussion')]
+    if in_discussion_step:
+        in_discussion_step = in_discussion_step[0]
+        if in_discussion_step.get('date'):
+            status_live = "à l'ordre du jour le %s" % (
+                format_date_for_human(in_discussion_step.get('date'))
+            )
+    
+    year = dos.get('end').split('-')[0] if dos.get('end') else ''
+
+    return {
+        'live': status_live,
+        'recent': 'promulgué le %s' % format_date_for_human(dos.get('end')),
+        'focus': status_amendements + ' (%s)' % year,
+    }
+
+
+def select_status(data, status_key):
+    """
+    We store the multiple possible statuses in the status attribute.
+    This fonction select the right one for each column of the homepage
+    """
+    final_data = []
+    for dos in copy.deepcopy(data):
+        dos['status'] = dos['status'][status_key]
+        final_data.append(dos)
+    return final_data
+
 
 home_json_data = []
 
@@ -58,29 +104,23 @@ for dos, path in dossiers:
         dos.get('assemblee_id'), # ex: 14-peche_et_chasse
     ])
 
-    if dos['stats']['total_amendements'] == 0:
-        status = 'Aucun amendement'
-    elif dos['stats']['total_amendements'] == 1:
-        status = 'Un amendement'
-    else:
-        status = '%d amendements' % dos['stats']['total_amendements']
-
-    title = dos.get('short_title')
-    if dos.get('loi_dite'):
-        title = "%s (%s)" % (upper_first(dos.get('loi_dite')), title)
-
-    maxdate = dos.get('end')
-    if not maxdate:
-        for step in dos['steps']:
-            if step.get('date'):
-                maxdate = step.get('enddate') or step.get('date')
-
+    # format data for home.json
     if dos['stats']['total_amendements']:
+        title = dos.get('short_title')
+        if dos.get('loi_dite'):
+            title = "%s (%s)" % (upper_first(dos.get('loi_dite')), title)
+
+        maxdate = dos.get('end')
+        if not maxdate:
+            for step in dos['steps']:
+                if step.get('date'):
+                    maxdate = step.get('enddate') or step.get('date')
+
         home_json_data.append({
             'total_amendements': dos['stats']['total_amendements'],
             'end': dos.get('end'),
             'maxdate': maxdate,
-            'status': status,
+            'status': format_statuses(dos),
             'loi': dos['id'],
             'titre': title
         })
@@ -119,7 +159,7 @@ home_json_final["focus"] = {
     "titre": "Les textes les plus amendés",
     "lien": "Explorer les textes les plus amendés",
     "url": "lois.html?action=quanti",
-    "textes": most_amended[:TEXTS_PER_COLUMN],
+    "textes": select_status(most_amended[:TEXTS_PER_COLUMN], "focus"),
 }
 
 recent = sorted(home_json_data, key=lambda x: x['end'] or "0")
@@ -129,7 +169,7 @@ home_json_final["recent"] = {
     "titre": "Les derniers textes promulgués",
     "lien": "Explorer les textes récents",
     "url": "lois.html",
-    "textes": recent[:TEXTS_PER_COLUMN],
+    "textes": select_status(recent[:TEXTS_PER_COLUMN], "recent"),
 }
 
 live = sorted(home_json_data, key=lambda x: x['maxdate'])
@@ -139,7 +179,7 @@ home_json_final["live"] = {
     "titre": "Les textes en cours",
     "lien": "Explorer les textes en cours",
     "url": "lois.html?encours",
-    "textes": live[:TEXTS_PER_COLUMN],
+    "textes": select_status(live[:TEXTS_PER_COLUMN], "live"),
 }
 
 print_json(home_json_final, os.path.join(API_DIRECTORY, 'home.json'))
