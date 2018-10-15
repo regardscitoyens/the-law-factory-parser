@@ -25,7 +25,7 @@ def process(OUTPUT_DIR, procedure):
             next_step = list_get_or_none(steps, step_i+1)
 
             # if step date is later than intervention date, use intervention date
-            if step['date'] > date:
+            if step.get('date') and step['date'] > date:
                 if not prev_step or prev_step['date'] <= date:
                     step['date'] = date
                     print('INFO: change beginning date of', step_i, 'thanks to', interv_file)
