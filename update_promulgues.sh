@@ -28,7 +28,8 @@ python tlfp/generate_dossiers_csv.py $DATADIR
 python tlfp/tools/assemble_procedures.py $DATADIR > /dev/null
 
 echo
-#python tools/make_metrics_csv.py $DATADIR --quiet
+echo "Make metrics.csv..."
+python tools/make_metrics_csv.py $DATADIR --quiet
 
 python tlfp/tools/steps_as_dot.py $DATADIR | dot -Tsvg > $DATADIR/steps.svg
 python tlfp/tools/steps_as_dot.py $DATADIR | dot -Tpng > $DATADIR/steps.png

@@ -102,8 +102,8 @@ def add_metrics(dos, parsed_dos):
     dos['Taille initiale'] = parsed_dos['stats']['input_text_length']
 
 
-def add_metrics_via_adhoc_parsing(dos, verbose=True):
-    senat_dos = download_senat(dos['URL du dossier'], verbose=verbose)
+def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
+    senat_dos = download_senat(dos['URL du dossier'], log=log)
     if not senat_dos:
         print('  /!\ INVALID SENAT DOS')
         return
@@ -111,7 +111,7 @@ def add_metrics_via_adhoc_parsing(dos, verbose=True):
     # Add AN version if there's one
     parsed_dos = senat_dos
     if 'url_dossier_assemblee' in senat_dos:
-        an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'], verbose=verbose)
+        an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'], log=log)
         if 'url_dossier_senat' in an_dos and are_same_doslegs(senat_dos, an_dos):
             parsed_dos = merge_senat_with_an(senat_dos, an_dos)
     dos['Titre court'] = parsed_dos['short_title']
@@ -256,59 +256,61 @@ if __name__ == '__main__':
     senat_csv = parse_senat_open_data(run_old=run_old)
     dossiers_json = find_parsed_doslegs(sys.argv[1])
 
-    random.shuffle(senat_csv)
+    # random.shuffle(senat_csv)
 
-    c = 0
-    fixed = 0
-    for dos in senat_csv:
-        if verbose:
-            print()
-            print(dos['URL du dossier'])
-
-        dos['Année initiale'] = annee(dos['Date initiale'])
-        dos['Date initiale'] = format_date(dos['Date initiale'])
-        dos['Date de promulgation'] = format_date(dos['Date de promulgation'])
-        dos["Durée d'adoption"] = (datize(dos["Date de promulgation"]) - datize(dos["Date initiale"])).days + 1
-
-        dos['Initiative du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
-        dos['Type de texte'] = clean_type_dossier(dos)
-
-        senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
-        if senat_id in dossiers_json:
+    # silence the output if we use the --quiet flag
+    with log_print(only_log=not verbose) as log:
+        c = 0
+        fixed = 0
+        for dos in senat_csv:
             if verbose:
-                print(' - matched')
-            c += 1
-            parsed_dos = dossiers_json[senat_id]
-            try:
-                add_metrics(dos, parsed_dos)
-                dos['Source données'] = 'LaFabrique'
-            except KeyboardInterrupt:
-                break
-        else:
-            # do a custom parsing when the parsed dos is missing
-            try:
-                dos['Source données'] = 'parsing ad-hoc'
-                add_metrics_via_adhoc_parsing(dos, verbose=verbose)
-                fixed += 1
-            except KeyboardInterrupt:
-                break
-            except Exception as e:
-                traceback.print_tb(e.__traceback__)
-                print('- adhoc parsing failed for', dos['URL du dossier'], e)
-                continue
+                print()
+                print(dos['URL du dossier'])
 
-        if not dos["Décision du CC"]:
-            if dos.get("URL CC"):
-                dos["Décision du CC"] = "conforme"
+            dos['Année initiale'] = annee(dos['Date initiale'])
+            dos['Date initiale'] = format_date(dos['Date initiale'])
+            dos['Date de promulgation'] = format_date(dos['Date de promulgation'])
+            dos["Durée d'adoption"] = (datize(dos["Date de promulgation"]) - datize(dos["Date initiale"])).days + 1
+
+            dos['Initiative du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
+            dos['Type de texte'] = clean_type_dossier(dos)
+
+            senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
+            if senat_id in dossiers_json:
+                if verbose:
+                    print(' - matched')
+                c += 1
+                parsed_dos = dossiers_json[senat_id]
+                try:
+                    add_metrics(dos, parsed_dos)
+                    dos['Source données'] = 'LaFabrique'
+                except KeyboardInterrupt:
+                    break
             else:
+                # do a custom parsing when the parsed dos is missing
+                try:
+                    dos['Source données'] = 'parsing ad-hoc'
+                    add_metrics_via_adhoc_parsing(dos, log=log)
+                    fixed += 1
+                except KeyboardInterrupt:
+                    break
+                except Exception as e:
+                    traceback.print_tb(e.__traceback__)
+                    print('- adhoc parsing failed for', dos['URL du dossier'], e)
+                    continue
+
+            if not dos["Décision du CC"]:
+                if dos.get("URL CC"):
+                    dos["Décision du CC"] = "conforme"
+                else:
+                    dos["Décision du CC"] = "pas de saisine"
+            elif not dos.get("URL CC"):
                 dos["Décision du CC"] = "pas de saisine"
-        elif not dos.get("URL CC"):
-            dos["Décision du CC"] = "pas de saisine"
-        dos["Date de la décision du CC"] = format_date(dos["Date de la décision"])
-        if dos.get('Taille de la décision du CC') == -1:
-            dos['Taille de la décision du CC'] = ''
-        if dos.get('Signataires au JO') == -1:
-            dos['Signataires au JO'] = ''
+            dos["Date de la décision du CC"] = format_date(dos["Date de la décision"])
+            if dos.get('Taille de la décision du CC') == -1:
+                dos['Taille de la décision du CC'] = ''
+            if dos.get('Signataires au JO') == -1:
+                dos['Signataires au JO'] = ''
 
     print(len(senat_csv), 'dos')
     print(c, 'matched')
