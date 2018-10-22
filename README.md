@@ -106,6 +106,8 @@ If you modify something, best is to regenerate the test-cases with the `--regen`
     python tests/test_regressions.py the-law-factory-parser-test-cases --regen
 
 To make the tests faster, you can also use the `--enable-cache` flag.
+To clear the cache, you can remove the directory returned by `lawfactory_where_is_my_cache`.
+To update the meta-infos (ex: a new political group was added), you need to clear the test-cases directory of all the root `.json` files.
 
 You can also watch for parts of the code not yet covered by the tests:
 
