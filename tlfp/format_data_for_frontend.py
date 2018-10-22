@@ -50,16 +50,16 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
     else:
         dos['short_title'] = dos['long_title']
 
-    debug_file(dos, 'debug_before_add_links.json')
+    debug_file(dos, 'before_add_links.json')
     dos = add_links.process(dos)
 
     # add texte.json and write all the text files tree
-    debug_file(dos, 'debug_before_json2arbo.json')
+    debug_file(dos, 'before_json2arbo.json')
     dos = json2arbo.process(dos, output_dir + '/procedure')
 
     print(' - process article versions')
     json2arbo.mkdirs(os.path.join(output_dir, 'viz'))
-    debug_file(dos, 'debug_before_prepare_articles.json')
+    debug_file(dos, 'before_prepare_articles.json')
     articles_etapes = prepare_articles.process(dos)
     print_json(articles_etapes, os.path.join(output_dir, 'viz', 'articles_etapes.json'))
 
@@ -75,7 +75,7 @@ def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
     prepare_interventions.process(output_dir, procedure)
 
     print(' - compute stats')
-    debug_file(dos, 'debug_before_stats.json')
+    debug_file(dos, 'before_stats.json')
     procedure['stats'] = compute_stats.process(output_dir, procedure)
 
     # remove temporary data

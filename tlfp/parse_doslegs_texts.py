@@ -132,7 +132,7 @@ def parse_url_for_step(url, step, step_index):
             step['source_url'] = fixed_url
 
         articles = parse_texte.parse(fixed_url, resp=fixed_url_resp)
-        debug_file(articles, 'debug_parsed_text_step_%d.json' % step_index)
+        debug_file(articles, 'parsed_text_step_%d.json' % step_index)
 
         if (not articles or len(articles) < 2) and 'ta-commission' in fixed_url:
             fixed_url = fixed_url.replace('ta-commission', 'rapports').replace('-a0', '')
@@ -273,9 +273,9 @@ def complete_texts(dos):
                         'table_concordance': dos.get('table_concordance', {}),
                         'anteprevious': anteprevious,
                     }
-                    debug_file(complete_args, 'debug_complete_args_step_%d.json' % step_index)
+                    debug_file(complete_args, 'complete_args_step_%d.json' % step_index)
                     step['articles_completed'] = complete_articles.complete(**complete_args)
-                    debug_file(step.get('articles_completed'), 'debug_completed_text_step_%d.json' % step_index)
+                    debug_file(step.get('articles_completed'), 'completed_text_step_%d.json' % step_index)
 
 
 def process(dos):

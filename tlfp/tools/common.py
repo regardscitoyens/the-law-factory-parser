@@ -100,6 +100,7 @@ def download_daily(url_or_collecter, filename, output_directory):
 def print_json(dico, filename=None):
     jdump = json.dumps(dico, ensure_ascii=False, sort_keys=True, indent=2)
     if filename:
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
         try:
             with open("%s.tmp" % filename, 'w') as f:
                 f.write(jdump)
@@ -116,8 +117,9 @@ def print_json(dico, filename=None):
 
 def debug_file(data, filename):
     if '--debug' in sys.argv:
-        print_json(data, filename)
-        print('   DEBUG - dumped', filename)
+        path = os.path.join('debug', filename)
+        print_json(data, path)
+        print('   DEBUG - dumped', path)
 
 
 datize = lambda d: date(*tuple([int(a) for a in d.split('-')]))

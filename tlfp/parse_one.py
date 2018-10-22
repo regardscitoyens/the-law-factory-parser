@@ -31,7 +31,7 @@ def download_senat(url, log=sys.stderr):
     html = resp.text
     print('  [] parse SENAT version')
     senat_dos = senapy_parse(html, url, logfile=log)
-    debug_file(senat_dos, 'debug_senat_dos.json')
+    debug_file(senat_dos, 'senat_dos.json')
     return senat_dos
 
 
@@ -52,7 +52,7 @@ def download_an(url, cached_opendata_an, url_senat=False, log=sys.stderr):
                     break
         print('     WARNING: TOOK FIRST DOSLEG BUT THERE ARE %d OF THEM' % len(results))
 
-    debug_file(an_dos, 'debug_an_dos.json')
+    debug_file(an_dos, 'an_dos.json')
     return an_dos
 
 
@@ -154,7 +154,7 @@ def process(API_DIRECTORY, url):
 
             print('        title:', dos.get('long_title'))
 
-            debug_file(dos, 'debug_dos.json')
+            debug_file(dos, 'dos.json')
 
             # download the groupes in case they are not there yet
             download_groupes(API_DIRECTORY)

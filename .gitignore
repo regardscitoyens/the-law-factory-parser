@@ -3,7 +3,7 @@
 /data.*/
 *.log
 /lafabrique/
-/debug_*.json
+/debug/*.json
 *.sqlite
 *.pyc
 /dist/
