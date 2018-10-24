@@ -401,7 +401,7 @@ def clean_article_name(text):
 
     return cl_line
 
-def parse(url, resp=None, DEBUG=False):
+def parse(url, resp=None, DEBUG=False, include_annexes=False):
     """
     parse the text of an url, an already cached  to`resp` can be passed to avoid an extra network request
     """
@@ -673,13 +673,28 @@ def parse(url, resp=None, DEBUG=False):
                     article = {}
                 pr_js(section)
                 read = READ_TEXT
-        elif re_mat_end.match(line):
+        elif re_mat_end.match(line) and not include_annexes:
             if not expose:
                 break
             expose = False
             continue
+        # Annexes.
         elif read == READ_ALINEAS and re_mat_ann.match(line):
-            break
+            if include_annexes:
+                if article is not None:
+                    pr_js(article)
+                titre = re_cl_html.sub("", re_mat_ann.sub("", line))
+                art_num += 1
+                article = {
+                    "type": "annexe",
+                    "order": art_num,
+                    "alineas": {},
+                    "statut": "none",
+                    "titre": titre
+                }
+                ali_num = 0
+            else:
+                break
         # Identify titles and new article zones
         elif (re.match(r"(<i>)?<b>", line) or
                 re_art_uni.match(cl_line) or
