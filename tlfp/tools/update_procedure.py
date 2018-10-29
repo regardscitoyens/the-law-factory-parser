@@ -67,6 +67,8 @@ def process(procedure, articles, intervs={}):
             steps_to_keep.append(s)
             if s.get('in_discussion'):
                 break
+        else:
+            print("[warning] [update_procedure] no step in discussion")
         procedure['steps'] = steps_to_keep
 
     return procedure
