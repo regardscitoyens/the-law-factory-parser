@@ -169,7 +169,10 @@ def process(OUTPUT_DIR, procedure):
 
         print('      * downloading amendments:', amdt_url, 'for', texte_url)
 
-        amendements_src = download(amdt_url).json().get('amendements', [])
+        try:
+            amendements_src = download(amdt_url).json().get('amendements', [])
+        except:
+            raise Exception("ERROR: amendements JSON at %s is badly formatted, it should probably be hardcached on ND/NS" % amdt_url)
 
         # TA texts can be zero-paded or not (TA0XXX or TAXXX), we try both
         if 'amendements/TA' in amdt_url:
@@ -179,7 +182,10 @@ def process(OUTPUT_DIR, procedure):
             else:
                 alternative_url = amdt_url.replace(textid, 'TA' + textid.replace('TA', '').zfill(4))
             print(' WARNING: TA - trying alternative url too', alternative_url)
-            amendements_src += download(alternative_url).json().get('amendements', [])
+            try:
+                amendements_src += download(alternative_url).json().get('amendements', [])
+            except:
+                raise Exception("ERROR: amendements JSON at %s is badly formatted, it should probably be hardcached on ND/NS" % alternative_url)
 
         print('        parsing amendments:', len(amendements_src))
 
