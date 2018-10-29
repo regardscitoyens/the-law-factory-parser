@@ -542,14 +542,25 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             return True
         return False
 
+    def innerHTML(element):
+        """Returns the inner HTML of an element as a UTF-8 encoded bytestring"""
+        return element.encode_contents().decode('utf-8')
 
-    for text in non_recursive_find_all(soup, should_be_parsed, should_be_ignored):
-        line = clean_html(str(text))
+    def split_lines(paragraphs):
+        for text in paragraphs:
+            html = str(text)
+            for i, line in enumerate(html.split('<br/>')):
+                if i > 0:
+                    line = '<p>' + line
+                yield innerHTML(BeautifulSoup(line, 'html5lib').find('body'))
+
+    for text in split_lines(non_recursive_find_all(soup, should_be_parsed, should_be_ignored)):
+        line = clean_html(text)
         if DEBUG:
             print(read, article.get('titre') or art_num, ali_num, line, file=sys.stderr)
 
         # limit h2/h4 matches to PPL headers or Article unique
-        if text.name not in ('p', 'table') and not re_mat_ppl.match(line) and not re_mat_tco.match(line) and 'Article unique' not in line:
+        if not (text.startswith('<p') or text.startswith('<table')) and not re_mat_ppl.match(line) and not re_mat_tco.match(line) and 'Article unique' not in line:
             if DEBUG:
                 print(" -> IGNORING LINE", file=sys.stderr)
             continue
