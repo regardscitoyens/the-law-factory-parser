@@ -49,7 +49,7 @@ def format_statuses(dos):
                 if date > today_date:
                     status_live = "à l'ordre du jour le %s" % format_date_for_human(date)
                 else:
-                    status_live = "derniére discussion le %s" % format_date_for_human(date)
+                    status_live = "dernière discussion le %s" % format_date_for_human(date)
 
         if not status_live:
             last_step = [step for step in dos['steps'] if step.get('date') and step.get('debats_order') is not None]
@@ -59,7 +59,7 @@ def format_statuses(dos):
                 if last_step.get('step') == 'depot':
                     status_live = "déposé le %s" % date
                 elif last_step.get('step') in ('commission', 'hemicycle'):
-                    status_live = "derniére discussion le %s" % date
+                    status_live = "dernière discussion le %s" % date
 
     year = dos.get('end').split('-')[0] if dos.get('end') else ''
 
