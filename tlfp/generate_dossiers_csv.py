@@ -96,7 +96,6 @@ for dos, path in dossiers:
     csvfile.writerow([
         dos['id'], # id
         dos.get('long_title'), # Titre
-        # TODO: detect propo/pjl in AN doslegs
         'proposition de loi' if dos.get('proposal_type') == 'PPL' else 'projet de loi', # Type de dossier
         dos.get('beginning'), # Date initiale
         dos.get('url_dossier_senat', dos.get('url_dossier_assemblee')), # URL du dossier
