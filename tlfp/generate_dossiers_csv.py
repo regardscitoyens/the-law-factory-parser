@@ -5,7 +5,7 @@ Output in <api_directory>:
 - dossiers_promulgues.csv with all the doslegs ready
 - home.json for the homepage informations
 """
-import glob, os, sys, csv, re, copy
+import glob, os, sys, csv, re, copy, datetime
 
 from tlfp.tools.common import upper_first, open_json, print_json
 
@@ -44,17 +44,22 @@ def format_statuses(dos):
         if in_discussion_step:
             in_discussion_step = in_discussion_step[0]
             if in_discussion_step.get('step') in ('commission', 'hemicycle') and in_discussion_step.get('date'):
-                status_live = "à l'ordre du jour le %s" % (
-                    format_date_for_human(in_discussion_step.get('date'))
-                )
+                today_date = datetime.date.today().strftime(r'%Y-%m-%d')
+                date = in_discussion_step.get('date')
+                if date > today_date:
+                    status_live = "à l'ordre du jour le %s" % format_date_for_human(date)
+                else:
+                    status_live = "derniére discussion le %s" % format_date_for_human(date)
+
         if not status_live:
-            last_step = [step for step in dos['steps'] if step.get('date') and step.get('debats_order')]
-            if last_step and last_step[0].get('date'):
-                last_step = last_step[0]
+            last_step = [step for step in dos['steps'] if step.get('date') and step.get('debats_order') is not None]
+            if last_step and last_step[-1].get('date'):
+                last_step = last_step[-1]
+                date = format_date_for_human(last_step.get('enddate') or last_step.get('date'))
                 if last_step.get('step') == 'depot':
-                    status_live = "déposé le %s" % format_date_for_human(last_step.get('date'))
+                    status_live = "déposé le %s" % date
                 elif last_step.get('step') in ('commission', 'hemicycle'):
-                    status_live = "derniére discussion le %s" % format_date_for_human(last_step.get('date'))
+                    status_live = "derniére discussion le %s" % date
 
     year = dos.get('end').split('-')[0] if dos.get('end') else ''
 
@@ -121,7 +126,7 @@ for dos, path in dossiers:
         maxdate = dos.get('end')
         if not maxdate:
             for step in dos['steps']:
-                if step.get('date') and step.get('step') != 'depot':
+                if step.get('date') and step.get('debats_order') is not None:
                     maxdate = step.get('enddate') or step.get('date')
 
         home_json_data.append({
