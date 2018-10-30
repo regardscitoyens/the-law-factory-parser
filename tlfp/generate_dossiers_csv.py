@@ -121,7 +121,7 @@ for dos, path in dossiers:
         maxdate = dos.get('end')
         if not maxdate:
             for step in dos['steps']:
-                if step.get('date'):
+                if step.get('date') and step.get('step') != 'depot':
                     maxdate = step.get('enddate') or step.get('date')
 
         home_json_data.append({
