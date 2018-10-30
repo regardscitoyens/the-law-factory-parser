@@ -39,14 +39,23 @@ def format_statuses(dos):
         status_amendements = '%d amendements' % dos['stats']['total_amendements']
 
     status_live = ''
-    in_discussion_step = [step for step in dos['steps'] if step.get('in_discussion')]
-    if in_discussion_step:
-        in_discussion_step = in_discussion_step[0]
-        if in_discussion_step.get('date'):
-            status_live = "à l'ordre du jour le %s" % (
-                format_date_for_human(in_discussion_step.get('date'))
-            )
-    
+    if not dos.get('url_jo'):
+        in_discussion_step = [step for step in dos['steps'] if step.get('in_discussion')]
+        if in_discussion_step:
+            in_discussion_step = in_discussion_step[0]
+            if in_discussion_step.get('step') in ('commission', 'hemicycle') and in_discussion_step.get('date'):
+                status_live = "à l'ordre du jour le %s" % (
+                    format_date_for_human(in_discussion_step.get('date'))
+                )
+        if not status_live:
+            last_step = [step for step in dos['steps'] if step.get('date') and step.get('debats_order')]
+            if last_step and last_step[0].get('date'):
+                last_step = last_step[0]
+                if last_step.get('step') == 'depot':
+                    status_live = "déposé le %s" % format_date_for_human(last_step.get('date'))
+                elif last_step.get('step') in ('commission', 'hemicycle'):
+                    status_live = "derniére discussion le %s" % format_date_for_human(last_step.get('date'))
+
     year = dos.get('end').split('-')[0] if dos.get('end') else ''
 
     return {
