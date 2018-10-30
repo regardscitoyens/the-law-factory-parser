@@ -38,7 +38,7 @@ def process(procedure, articles, intervs={}):
                 good_steps[stepid] = int(s['directory'].split('_')[0])
 
     if not good_steps:
-        print('[warning] [update_procedure] no steps to display, parsing must have failed')
+        raise Exception('[update_procedure] no steps to display, parsing must have failed')
 
     currently_debated_step = None
     for s in procedure['steps']:
@@ -68,7 +68,7 @@ def process(procedure, articles, intervs={}):
             if s.get('in_discussion'):
                 break
         else:
-            print("[warning] [update_procedure] no step in discussion")
+            raise Exception("[update_procedure] no step in discussion for live text")
         procedure['steps'] = steps_to_keep
 
     return procedure
