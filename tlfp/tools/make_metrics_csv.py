@@ -94,8 +94,16 @@ def add_metrics(dos, parsed_dos, fast=False):
         dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
         dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
+
     dos['Taille finale'] = parsed_dos['stats']['output_text_length']
     dos['Taille initiale'] = parsed_dos['stats']['input_text_length']
+    dos['Proportion de texte modifié'] = parsed_dos['stats']['ratio_texte_modif']
+    dos["Nombre initial d'articles"] = parsed_dos['stats']['total_input_articles']
+    dos["Nombre final d'articles"] = parsed_dos['stats']['total_output_articles']
+    dos["Croissance du nombre d'articles"] = parsed_dos['stats']['ratio_articles_growth']
+    dos["Nombre de mots prononcés"] = parsed_dos['stats']['total_mots']
+    dos["Nombre d'interventions"] = parsed_dos['stats']['total_interventions']
+
 
     dos['Textes cités'] = ';'.join(parsed_dos['textes_cites'])
     dos['Nombre de textes cités'] = len(parsed_dos['textes_cites'])
@@ -149,6 +157,12 @@ def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
             dos['Taille initiale'] = input_text_length
     except:
         print("WARNING: Taille initiale impossible to evaluate")
+
+    # TODO
+    # dos['Proportion de texte modifié'] = ...
+    # dos["Nombre initial d'articles"] = ...
+    # dos["Nombre final d'articles"] = ...
+    # dos["Croissance du nombre d'articles"] = ...
 
 
 def clean_type_dossier(dos):
@@ -211,18 +225,19 @@ HEADERS = [
     "Taille initiale",
     "Taille finale",
 #   "Proportion de texte allongé"
-#   "Proportion de texte modifié"
-#   "Nombre initial d'articles",
-#   "Nombre final d'articles",
+    "Proportion de texte modifié",
+    "Nombre initial d'articles",
+    "Nombre final d'articles",
+    "Croissance du nombre d'articles",
 #   "Nombre d'articles inchangés",
 #   "Proportion d'articles inchangés",
 #   "Nombre initial d'alinéas",
 #   "Nombre final d'alinéas",
 #   "Nombre d'amendements déposés (+ ventilation Gouv/AN/Sénat)",
 #   "Nombre d'amendements adoptés (+ ventilation Gouv/AN/Sénat)",
-#   "Nombre de mots prononcés (+ ventilation Gouv/AN/Sénat)",
-#   "Nombre d'intervenants (+ ventilation Gouv/AN/Sénat)",
-#   "Derniére étape", # exemple d'application: si lecture déf., alors il y a beaucoup de chance que le Sénat se soit fait écrasé/bypassé
+    "Nombre de mots prononcés", # (+ ventilation Gouv/AN/Sénat)
+    "Nombre d'intervenants", # (+ ventilation Gouv/AN/Sénat)
+    # Nombre de séances, # + ventilation AN/Sénat
     "Type de texte",
     "Type de procédure",
     "Étapes de la procédure",
