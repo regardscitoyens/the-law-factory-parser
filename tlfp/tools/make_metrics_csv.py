@@ -97,6 +97,9 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['Taille finale'] = parsed_dos['stats']['output_text_length']
     dos['Taille initiale'] = parsed_dos['stats']['input_text_length']
 
+    dos['Textes cités'] = ';'.join(parsed_dos['textes_cites'])
+    dos['Nombre de textes cités'] = len(parsed_dos['textes_cites'])
+
 
 def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
     senat_dos = download_senat(dos['URL du dossier'], log=log)
@@ -228,6 +231,8 @@ HEADERS = [
     "Décision du CC",
     "Date de la décision du CC",
     "Taille de la décision du CC",
+    "Textes cités",
+    "Nombre de textes cités",
     "Signataires au JO",
     "Thèmes",
     "URL du dossier",
