@@ -94,11 +94,6 @@ def add_metrics(dos, parsed_dos):
     dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
     dos['Taille finale'] = parsed_dos['stats']['output_text_length']
-
-    # skip budget law text initial length if from AN since our parsing is not working for now
-    last_depot = find_last_depot(parsed_dos['steps'])
-    if dos['Type de texte'] == 'budgétaire' and 'assemblee-nationale.fr' in last_depot['source_url']:
-        return
     dos['Taille initiale'] = parsed_dos['stats']['input_text_length']
 
 
@@ -145,9 +140,6 @@ def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
             print("WARNING: Taille finale impossible to evaluate")
 
     try:
-    # skip budget law text initial length if from AN since our parsing is not working for now
-        if dos['Type de texte'] == 'budgétaire' and 'assemblee-nationale.fr' in last_depot['source_url']:
-            return
         input_text_length = read_text(parse_texte.parse(last_depot['source_url']))
         if input_text_length > 0:
             dos['Taille initiale'] = input_text_length
