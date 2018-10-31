@@ -103,7 +103,9 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos["Croissance du nombre d'articles"] = parsed_dos['stats']['ratio_articles_growth']
     dos["Nombre de mots prononcés"] = parsed_dos['stats']['total_mots']
     dos["Nombre d'interventions"] = parsed_dos['stats']['total_interventions']
-
+    dos["Nombre de séances"] = parsed_dos['stats']['total_seances']
+    dos["Nombre de séances à l'Assemblée"] = parsed_dos['stats']['total_seances_assemblee']
+    dos["Nombre de séances au Sénat"] = parsed_dos['stats']['total_seances_senat']
 
     dos['Textes cités'] = ';'.join(parsed_dos['textes_cites'])
     dos['Nombre de textes cités'] = len(parsed_dos['textes_cites'])

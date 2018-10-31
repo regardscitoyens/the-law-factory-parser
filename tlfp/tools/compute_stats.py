@@ -64,6 +64,10 @@ def process(output_dir, dos):
     stats["total_intervenants"] = len({orat for step in intervs.values() for orat in step['orateurs'].keys()})
     stats["total_interventions"] = sum({division['total_intervs'] for step in intervs.values() for division in step['divisions'].values()})
 
+    stats["total_seances"] = sum([step['total_seances'] for step in intervs.values()])
+    stats["total_seances_assemblee"] = sum([step['total_seances'] for dir, step in intervs.items() if '_assemblee' in dir])
+    stats["total_seances_senat"] = sum([step['total_seances'] for dir, step in intervs.items() if '_senat' in dir])
+
     stats['total_amendements'] \
         = stats['total_amendements'] \
         = stats["total_amendements_adoptes"] \

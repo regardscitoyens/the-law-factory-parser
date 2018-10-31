@@ -219,7 +219,12 @@ def process(OUTPUT_DIR, procedure):
                 del(sections[s])
 
         if sections:
-            steps[step['directory']] = {'groupes': groupes, 'orateurs': orateurs, 'divisions': sections}
+            steps[step['directory']] = {
+                'groupes': groupes,
+                'orateurs': orateurs,
+                'divisions': sections,
+                'total_seances': len(seances),
+            }
 
     print_json(steps, os.path.join(context.sourcedir, 'viz/interventions.json'))
 
