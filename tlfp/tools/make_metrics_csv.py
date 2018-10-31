@@ -81,7 +81,7 @@ def read_text(articles):
     return len("\n".join(texte))
 
 
-def add_metrics(dos, parsed_dos):
+def add_metrics(dos, parsed_dos, fast=False):
     parsed_dos = dossiers_json[senat_id]
     dos['Titre court'] = parsed_dos['short_title']
     dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
@@ -89,9 +89,10 @@ def add_metrics(dos, parsed_dos):
     dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
-    dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
     dos['URL CC'] = cc_step[0] if cc_step else ''
-    dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+    if not fast:
+        dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
+        dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
     dos['Taille finale'] = parsed_dos['stats']['output_text_length']
     dos['Taille initiale'] = parsed_dos['stats']['input_text_length']
@@ -241,12 +242,14 @@ HEADERS = [
 
 if __name__ == '__main__':
     verbose = "--quiet" not in sys.argv
+    fast_mode = "--fast" in sys.argv # no network requests
     if not verbose:
         sys.argv.remove("--quiet")
-    run_old = len(sys.argv) > 2
+    args = [arg for arg in sys.argv[1:] if '--' not in arg]
+    run_old = len(args) > 1
     enable_requests_cache()
     senat_csv = parse_senat_open_data(run_old=run_old)
-    dossiers_json = find_parsed_doslegs(sys.argv[1])
+    dossiers_json = find_parsed_doslegs(args[0])
 
     # random.shuffle(senat_csv)
 
@@ -274,11 +277,11 @@ if __name__ == '__main__':
                 c += 1
                 parsed_dos = dossiers_json[senat_id]
                 try:
-                    add_metrics(dos, parsed_dos)
+                    add_metrics(dos, parsed_dos, fast=fast_mode)
                     dos['Source données'] = 'LaFabrique'
                 except KeyboardInterrupt:
                     break
-            else:
+            elif not fast_mode:
                 # do a custom parsing when the parsed dos is missing
                 try:
                     dos['Source données'] = 'parsing ad-hoc'
