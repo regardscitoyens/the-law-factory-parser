@@ -99,6 +99,9 @@ def process(output_dir, dos):
     stats["input_text_length"] = len("\n".join(first_text))
     stats["output_text_length"] = len("\n".join(last_text))
 
+    last_step_in_parliament = [step for step in dos['steps'] if step.get('stage') not in ('constitutionnalité', 'promulgation')][-1]
+    stats['last_stage'] = last_step_in_parliament.get('stage')
+
     maxdate = dos.get('end')
     if not maxdate:
         for step in dos['steps']:

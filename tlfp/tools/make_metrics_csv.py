@@ -238,6 +238,7 @@ HEADERS = [
     "Nombre de mots prononcés", # (+ ventilation Gouv/AN/Sénat)
     "Nombre d'intervenants", # (+ ventilation Gouv/AN/Sénat)
     # Nombre de séances, # + ventilation AN/Sénat
+    "Dernière lecture", # exemple d'application: si lecture déf., alors il y a beaucoup de chance que le Sénat se soit fait écrasé/bypassé
     "Type de texte",
     "Type de procédure",
     "Étapes de la procédure",
