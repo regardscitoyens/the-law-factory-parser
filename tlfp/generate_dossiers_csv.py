@@ -57,7 +57,8 @@ def format_statuses(dos):
                 last_step = last_step[-1]
                 date = format_date_for_human(last_step.get('enddate') or last_step.get('date'))
                 if last_step.get('step') == 'depot':
-                    status_live = "déposé le %s" % date
+                    room = "au Sénat" if last_step.get('institution') == "senat" else "à l'Assemblée"
+                    status_live = "déposé %s le %s" % (room, date)
                 elif last_step.get('step') in ('commission', 'hemicycle'):
                     status_live = "dernière discussion le %s" % date
 
