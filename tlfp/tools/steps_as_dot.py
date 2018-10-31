@@ -1,5 +1,5 @@
 # quick script to produce a DOT file of the steps from a list of dosleg
-# use "python steps_as_dot.py <data_directory>| dot -Tpng > steps.png" to produce the diagram
+# use "python steps_as_dot.py <data_directory> | dot -Tpng > steps.png" to produce the diagram
 
 # the XKCD font is available here: https://github.com/ipython/xkcd-font/tree/master/xkcd/build
 import sys, os, random, glob
@@ -7,7 +7,7 @@ import sys, os, random, glob
 from tlfp.tools.common import open_json, print_json
 
 if len(sys.argv) < 2:
-    print('USAGE: `steps_as_dot.py <path_to_json>`')
+    print('USAGE: "python steps_as_dot.py <data_directory> | dot -Tpng > steps.png"')
     sys.exit()
 
 mode = "detailed" if len(sys.argv) == 3 else "simple"

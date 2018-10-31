@@ -100,7 +100,12 @@ def download_daily(url_or_collecter, filename, output_directory):
 def print_json(dico, filename=None):
     jdump = json.dumps(dico, ensure_ascii=False, sort_keys=True, indent=2)
     if filename:
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+        try:
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+        except FileNotFoundError as e:
+            pass
+
         try:
             with open("%s.tmp" % filename, 'w') as f:
                 f.write(jdump)
