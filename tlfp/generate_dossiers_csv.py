@@ -28,6 +28,10 @@ def format_date_for_human(date):
         return ''
     return '/'.join(reversed(date.split('-')))
 
+def in_room(step):
+    if step.get('institution') == "senat":
+        return "au Sénat"
+    return "à l'Assemblée"
 
 def format_statuses(dos):
     status_amendements = ''
@@ -46,21 +50,22 @@ def format_statuses(dos):
             if in_discussion_step.get('step') in ('commission', 'hemicycle') and in_discussion_step.get('date'):
                 today_date = datetime.date.today().strftime(r'%Y-%m-%d')
                 date = in_discussion_step.get('date')
+                room = in_room(in_discussion_step)
                 if date > today_date:
-                    status_live = "à l'ordre du jour le %s" % format_date_for_human(date)
+                    status_live = "à l'ordre du jour %s le %s" % (room, format_date_for_human(date))
                 else:
-                    status_live = "dernière discussion le %s" % format_date_for_human(date)
+                    status_live = "dernière discussion %s le %s" % (room, format_date_for_human(date))
 
         if not status_live:
             last_step = [step for step in dos['steps'] if step.get('date') and step.get('debats_order') is not None]
             if last_step and last_step[-1].get('date'):
                 last_step = last_step[-1]
                 date = format_date_for_human(last_step.get('enddate') or last_step.get('date'))
+                room = in_room(last_step)
                 if last_step.get('step') == 'depot':
-                    room = "au Sénat" if last_step.get('institution') == "senat" else "à l'Assemblée"
                     status_live = "déposé %s le %s" % (room, date)
                 elif last_step.get('step') in ('commission', 'hemicycle'):
-                    status_live = "dernière discussion le %s" % date
+                    status_live = "dernière discussion %s le %s" % (room, date)
 
     year = dos.get('end').split('-')[0] if dos.get('end') else ''
 
