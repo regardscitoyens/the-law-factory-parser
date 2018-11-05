@@ -102,6 +102,7 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos["Nombre final d'articles"] = parsed_dos['stats']['total_output_articles']
     dos["Croissance du nombre d'articles"] = parsed_dos['stats']['ratio_articles_growth']
     dos["Nombre de mots prononcés"] = parsed_dos['stats']['total_mots']
+    dos["Nombre d'intervenants"] = parsed_dos['stats']['total_intervenants']
     dos["Nombre d'interventions"] = parsed_dos['stats']['total_interventions']
     dos["Nombre de séances"] = parsed_dos['stats']['total_seances']
     dos["Nombre de séances à l'Assemblée"] = parsed_dos['stats']['total_seances_assemblee']
@@ -110,6 +111,8 @@ def add_metrics(dos, parsed_dos, fast=False):
 
     dos['Textes cités'] = ';'.join(parsed_dos['textes_cites'])
     dos['Nombre de textes cités'] = len(parsed_dos['textes_cites'])
+
+    dos['URL OpenData La Fabrique'] = 'https://www.lafabriquedelaloi.fr/api/%s/' % parsed_dos['id']
 
 
 def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
@@ -242,7 +245,7 @@ HEADERS = [
     "Nombre d'interventions",
     "Nombre d'intervenants",
     "Nombre de séances",
-    "Nombre de séances à l'Assemblée"
+    "Nombre de séances à l'Assemblée",
     "Nombre de séances au Sénat",
     "Dernière lecture", # exemple d'application: si lecture déf., alors il y a beaucoup de chance que le Sénat se soit fait écrasé/bypassé
     "Type de texte",
@@ -260,7 +263,8 @@ HEADERS = [
     "URL du dossier",
     "URL JO",
     "URL CC",
-    "Source données"
+    "URL OpenData La Fabrique",
+    "Source données",
 ]
 
 
