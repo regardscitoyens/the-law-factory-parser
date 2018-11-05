@@ -106,6 +106,7 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos["Nombre de séances"] = parsed_dos['stats']['total_seances']
     dos["Nombre de séances à l'Assemblée"] = parsed_dos['stats']['total_seances_assemblee']
     dos["Nombre de séances au Sénat"] = parsed_dos['stats']['total_seances_senat']
+    dos["Dernière lecture"] = parsed_dos['stats']['last_stage']
 
     dos['Textes cités'] = ';'.join(parsed_dos['textes_cites'])
     dos['Nombre de textes cités'] = len(parsed_dos['textes_cites'])
@@ -238,8 +239,11 @@ HEADERS = [
 #   "Nombre d'amendements déposés (+ ventilation Gouv/AN/Sénat)",
 #   "Nombre d'amendements adoptés (+ ventilation Gouv/AN/Sénat)",
     "Nombre de mots prononcés", # (+ ventilation Gouv/AN/Sénat)
-    "Nombre d'intervenants", # (+ ventilation Gouv/AN/Sénat)
-    # Nombre de séances, # + ventilation AN/Sénat
+    "Nombre d'interventions",
+    "Nombre d'intervenants",
+    "Nombre de séances",
+    "Nombre de séances à l'Assemblée"
+    "Nombre de séances au Sénat",
     "Dernière lecture", # exemple d'application: si lecture déf., alors il y a beaucoup de chance que le Sénat se soit fait écrasé/bypassé
     "Type de texte",
     "Type de procédure",
