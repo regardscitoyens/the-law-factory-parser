@@ -31,8 +31,8 @@ echo
 echo "Make metrics.csv..."
 python tlfp/tools/make_metrics_csv.py $DATADIR --quiet
 
-python tlfp/tools/steps_as_dot.py $DATADIR | dot -Tsvg > $DATADIR/steps.svg
-python tlfp/tools/steps_as_dot.py $DATADIR | dot -Tpng > $DATADIR/steps.png
-python tlfp/tools/steps_as_dot.py $DATADIR 1 | dot -Tsvg > $DATADIR/steps-detailed.svg
-python tlfp/tools/steps_as_dot.py $DATADIR 1 | dot -Tpng > $DATADIR/steps-detailed.png
+python tlfp/tools/steps_as_dot.py $DATADIR | dot -Tsvg > $DATADIR/stats/steps.svg
+python tlfp/tools/steps_as_dot.py $DATADIR | dot -Tpng > $DATADIR/stats/steps.png
+python tlfp/tools/steps_as_dot.py $DATADIR 1 | dot -Tsvg > $DATADIR/stats/steps-detailed.svg
+python tlfp/tools/steps_as_dot.py $DATADIR 1 | dot -Tpng > $DATADIR/stats/steps-detailed.png
 

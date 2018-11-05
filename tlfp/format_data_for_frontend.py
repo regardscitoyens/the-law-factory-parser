@@ -11,7 +11,7 @@ def project_header_template(procedure):
 <h1>Les données pour: "{long_title}"</h1>
 <p>Les données mises à disposition dans ces répertoires sont celles utilisées par <a href="https://lafabriquedelaloi.fr/">La Fabrique de la Loi</a> pour visualiser "<a href="https://lafabriquedelaloi.fr/lois.html?loi={dos_id}">{long_title}</a>".</p>
 <p>Elles ont été constituées par <a href="https://regardscitoyens.org">Regards Citoyens</a> à partir de <a href="https://nosdeputes.Fr/">NosDéputés.fr</a>, <a href="https://NosSénateurs.fr">NosSénateurs.fr<a/> et les sites du <a href="https://www.senat.fr/">Sénat</a> et de l'<a href="http://www.assemblee-nationale.fr">Assemblée nationale</a>. Elles sont réutilisables librement en <img src="https://www.nosdeputes.fr/images/opendata.png" alt="Open Data"/> sous la licence <a href="https://opendatacommons.org/licenses/odbl/">ODBL</a>.</p>
-<p>Le répertoire <a href="procedure/"><img src="https://www.lafabriquedelaloi.fr/icons/folder.gif"/>&nbsp;procedure/</a> contient les données brutes au format JSON sur les textes, les interventions et les amendements à chaque étape de la procédure. Le répertoire <a href="viz/"><img src="https://www.lafabriquedelaloi.fr/icons/folder.gif"/>&nbsp;viz/</a> contient les fichiers utilisés par l'application.</p>
+<p>Le répertoire <a href="procedure/"><img src="/icons/folder.gif"/>&nbsp;procedure/</a> contient un dossier par étape de la procédure parlementaire pour ce projet, avec pour chacun lorsqu'elle existe la version finale du texte de loi à cette étape. Le répertoire <a href="viz/"><img src="/icons/folder.gif"/>&nbsp;viz/</a> contient les fichiers utilisés par l'application.</p>
 """.format(long_title=procedure.get('long_title'), dos_id=procedure['id'])
 
 

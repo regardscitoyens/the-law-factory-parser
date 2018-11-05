@@ -191,7 +191,9 @@ dot_result += '\n}'
 
 details = "_detailed" if mode == "detailed" else ""
 open('_steps%s.log' % details, 'w').write(steps_logs)
-print_json(step_trans, 'steps%s_transitions.json' % details)
+filename = os.path.join(API_DIRECTORY, 'stats',
+                        'steps%s_transitions.json' % details)
+print_json(step_trans, filename)
 
 print(dot_result)
 # open('steps.dot','w').write(dot_result)

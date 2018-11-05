@@ -27,4 +27,4 @@ SetEnvIfNoCase Request_URI \
 Header append Vary User-Agent env=!dont-vary
 # ---------------------------
 
-IndexIgnore *nosdeputes-groupes.json *nossenateurs-groupes.json dossiers_*json dossiers_promulgues.csv* HEADER.html
+IndexIgnore historique-groupes-senat.json lois_dites.json opendata_AN_dossiers_*.json *-groupes.json *.parlementaires.json dossiers_*json home.json HEADER.html
