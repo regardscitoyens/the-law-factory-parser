@@ -84,6 +84,7 @@ def read_text(articles):
 def add_metrics(dos, parsed_dos, fast=False):
     parsed_dos = dossiers_json[senat_id]
     dos['Titre court'] = parsed_dos['short_title']
+    dos["URL du dossier Assemblée"] = parsed_dos.get('url_dossier_assemblee', '')
     dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
     dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
     dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
@@ -109,7 +110,20 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos["Nombre de séances au Sénat"] = parsed_dos['stats']['total_seances_senat']
     dos["Dernière lecture"] = parsed_dos['stats']['last_stage']
 
-    dos['Textes cités'] = ';'.join(parsed_dos['textes_cites'])
+    dos["Nombre d'amendements"] = parsed_dos['stats']['total_amendements']
+    dos["Nombre d'amendements adoptés"] = parsed_dos['stats']['total_amendements_adoptes']
+    dos["Nombre d'amendements du Gouvernement"] = parsed_dos['stats']['total_amendements_gouvernement']
+    dos["Nombre d'amendements du Gouvernement adoptés"] = parsed_dos['stats']['total_amendements_gouvernement_adoptes']
+    dos["Nombre d'amendements des sénateurs"] = parsed_dos['stats']['total_amendements_senateurs']
+    dos["Nombre d'amendements des sénateurs adoptés"] = parsed_dos['stats']['total_amendements_senateurs_adoptes']
+    dos["Nombre d'amendements du Gouvernement au Sénat"] = parsed_dos['stats']['total_amendements_gouvernement_senat']
+    dos["Nombre d'amendements du Gouvernement au Sénat adoptés"] = parsed_dos['stats']['total_amendements_gouvernement_senat_adoptes']
+    dos["Nombre d'amendements des députés"] = parsed_dos['stats']['total_amendements_deputes']
+    dos["Nombre d'amendements des députés adoptés"] = parsed_dos['stats']['total_amendements_deputes_adoptes']
+    dos["Nombre d'amendements du Gouvernement à l'Assemblée"] = parsed_dos['stats']['total_amendements_gouvernement_assemblee']
+    dos["Nombre d'amendements du Gouvernement à l'Assemblée adoptés"] = parsed_dos['stats']['total_amendements_gouvernement_assemblee_adoptes']
+
+    dos['Textes cités'] = '|'.join(parsed_dos['textes_cites'])
     dos['Nombre de textes cités'] = len(parsed_dos['textes_cites'])
 
     dos['URL OpenData La Fabrique'] = 'https://www.lafabriquedelaloi.fr/api/%s/' % parsed_dos['id']
@@ -124,6 +138,7 @@ def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
     # Add AN version if there's one
     parsed_dos = senat_dos
     if 'url_dossier_assemblee' in senat_dos:
+        dos['URL du dossier Assemblée'] = senat_dos.get('url_dossier_assemblee')
         an_dos = download_an(senat_dos['url_dossier_assemblee'], senat_dos['url_dossier_senat'], log=log)
         if 'url_dossier_senat' in an_dos and are_same_doslegs(senat_dos, an_dos):
             parsed_dos = merge_senat_with_an(senat_dos, an_dos)
@@ -226,7 +241,7 @@ HEADERS = [
     "Année initiale",
     "Date initiale",
     "Date de promulgation",
-    "Durée d'adoption",
+    "Durée d'adoption (jours)",
     "Initiative du texte",
     "Taille initiale",
     "Taille finale",
@@ -239,14 +254,28 @@ HEADERS = [
 #   "Proportion d'articles inchangés",
 #   "Nombre initial d'alinéas",
 #   "Nombre final d'alinéas",
-#   "Nombre d'amendements déposés (+ ventilation Gouv/AN/Sénat)",
-#   "Nombre d'amendements adoptés (+ ventilation Gouv/AN/Sénat)",
+
+    "Nombre d'amendements",
+    "Nombre d'amendements adoptés",
+    "Nombre d'amendements du Gouvernement",
+    "Nombre d'amendements du Gouvernement adoptés",
+    "Nombre d'amendements des sénateurs",
+    "Nombre d'amendements des sénateurs adoptés",
+    "Nombre d'amendements du Gouvernement au Sénat",
+    "Nombre d'amendements du Gouvernement au Sénat adoptés",
+    "Nombre d'amendements des députés",
+    "Nombre d'amendements des députés adoptés",
+    "Nombre d'amendements du Gouvernement à l'Assemblée",
+    "Nombre d'amendements du Gouvernement à l'Assemblée adoptés",
+
+    # warning: qualité moyenne des interventions
     "Nombre de mots prononcés", # (+ ventilation Gouv/AN/Sénat)
     "Nombre d'interventions",
     "Nombre d'intervenants",
     "Nombre de séances",
     "Nombre de séances à l'Assemblée",
     "Nombre de séances au Sénat",
+
     "Dernière lecture", # exemple d'application: si lecture déf., alors il y a beaucoup de chance que le Sénat se soit fait écrasé/bypassé
     "Type de texte",
     "Type de procédure",
@@ -260,7 +289,8 @@ HEADERS = [
     "Nombre de textes cités",
     "Signataires au JO",
     "Thèmes",
-    "URL du dossier",
+    "URL du dossier Sénat",
+    "URL du dossier Assemblée",
     "URL JO",
     "URL CC",
     "URL OpenData La Fabrique",
@@ -296,7 +326,10 @@ if __name__ == '__main__':
             dos['Année initiale'] = annee(dos['Date initiale'])
             dos['Date initiale'] = format_date(dos['Date initiale'])
             dos['Date de promulgation'] = format_date(dos['Date de promulgation'])
-            dos["Durée d'adoption"] = (datize(dos["Date de promulgation"]) - datize(dos["Date initiale"])).days + 1
+            dos["Durée d'adoption (jours)"] = (datize(dos["Date de promulgation"]) - datize(dos["Date initiale"])).days + 1
+
+            dos["URL du dossier Sénat"] = dos["URL du dossier"]
+            dos["Thèmes"] = dos["Thèmes"].replace(',', '|')
 
             dos['Initiative du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
             dos['Type de texte'] = clean_type_dossier(dos)
