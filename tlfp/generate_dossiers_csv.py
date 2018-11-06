@@ -53,6 +53,8 @@ def format_statuses(dos):
                 room = in_room(in_discussion_step)
                 if date > today_date:
                     status_live = "à l'ordre du jour %s le %s" % (room, format_date_for_human(date))
+                elif date == today_date:
+                    status_live = "à l'ordre du jour %s aujourd'hui" % (room, )
                 else:
                     status_live = "dernière discussion %s le %s" % (room, format_date_for_human(date))
 
