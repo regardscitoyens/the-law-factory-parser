@@ -1,4 +1,4 @@
-import glob, os, sys, csv, random, traceback
+import glob, os, sys, csv, traceback
 
 from lawfactory_utils.urls import enable_requests_cache
 from senapy.dosleg import opendata
@@ -308,11 +308,12 @@ if __name__ == '__main__':
         sys.argv.remove("--quiet")
     args = [arg for arg in sys.argv[1:] if '--' not in arg]
     run_old = len(args) > 1
-    enable_requests_cache()
-    senat_csv = parse_senat_open_data(run_old=run_old)
-    dossiers_json = find_parsed_doslegs(args[0])
 
-    # random.shuffle(senat_csv)
+    senat_csv = parse_senat_open_data(run_old=run_old)
+
+    enable_requests_cache()
+
+    dossiers_json = find_parsed_doslegs(args[0])
 
     # silence the output if we use the --quiet flag
     with log_print(only_log=not verbose) as log:
