@@ -783,8 +783,9 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             #metas
             continue
 
-    # sometimes we find multiple texts inside one text, by default we keep only the latest
-    # but if the latest is empty, try to find a good one from previously parsed texts
+    # sometimes we find multiple text starts inside one (mainly due to annotations),
+    # by default we normally keep only the latest one, but if it is empty,
+    # try to find a good one from previously parsed articles
     # ex: http://www.assemblee-nationale.fr/15/propositions/pion0965.asp
     if not all_articles:
         for rejected in rejected_all_articles:
