@@ -91,6 +91,7 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
     dos['URL CC'] = cc_step[0] if cc_step else ''
+    dos["Taille du texte avant censure du CC"] = dos.get('output_text_length_before_CC', '')
     if not fast:
         dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
         dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
@@ -285,6 +286,7 @@ HEADERS = [
     "Décision du CC",
     "Date de la décision du CC",
     "Taille de la décision du CC",
+    "Taille du texte avant censure du CC",
     "Textes cités",
     "Nombre de textes cités",
     "Signataires au JO",

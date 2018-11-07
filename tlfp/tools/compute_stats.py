@@ -4,6 +4,12 @@ from tlfp.tools.common import strip_text, compute_similarity_by_articles, open_j
     clean_text_for_diff, datize
 
 
+def has_been_censored(dos):
+    cc_step = [step for step in dos['steps'] if step.get('stage') == 'constitutionnalité']
+    if cc_step:
+        return cc_step[0].get('decision') == 'partiellement conforme'
+
+
 def find_amendements(path):
     for amdts_file in glob.glob(os.path.join(path, '**/amendements_*'), recursive=True):
         institution = None
@@ -33,12 +39,14 @@ def read_articles(step):
     return {art['titre']: clean_text_for_diff([art['alineas'][al] for al in sorted(art['alineas'].keys())]) for art in articles}
 
 
-def find_first_and_last_steps(dos):
+def find_first_and_last_steps(dos, include_CC=True):
     first, last = None, None
     first_found = False
     for i, s in enumerate(dos['steps']):
         if s['debats_order'] is None or s.get('echec') or s.get('in_discussion'):
             continue
+        if s.get('stage') == 'constitutionnalité' and not include_CC:
+            break
         if s.get('step') != "depot":
             first_found = True
             last = i
@@ -128,8 +136,14 @@ def process(output_dir, dos):
     stats["input_text_length"] = len("\n".join(first_text))
     stats["output_text_length"] = len("\n".join(last_text))
 
-    last_step_in_parliament = [step for step in dos['steps'] if step.get('stage') not in ('constitutionnalité', 'promulgation')][-1]
-    stats['last_stage'] = last_step_in_parliament.get('stage')
+    _, adopted_step_i = find_first_and_last_steps(dos, include_CC=False)
+    adopted_step = dos['steps'][adopted_step_i]
+    if has_been_censored(dos):
+        adopted_text = read_text(adopted_step) # TODO: clean "(Censuré)"
+        # stats["total_output_articles_before_CC"] = ...
+        stats["output_text_length_before_CC"] = len("\n".join(adopted_text))
+
+    stats['last_stage'] = adopted_step.get('stage')
 
     maxdate = dos.get('end')
     if not maxdate:
