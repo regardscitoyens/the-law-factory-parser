@@ -92,9 +92,11 @@ def add_metrics(dos, parsed_dos, fast=False):
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
     dos['URL CC'] = cc_step[0] if cc_step else ''
     dos["Taille du texte avant censure du CC"] = dos.get('output_text_length_before_CC', '')
+    """
     if not fast:
         dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
         dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+    """
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
 
     dos['Taille finale'] = parsed_dos['stats']['output_text_length']
@@ -149,9 +151,9 @@ def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
     dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
-    dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
+    # dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
     dos['URL CC'] = cc_step[0] if cc_step else ''
-    dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+    # dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
 
     last_depot = find_last_depot(parsed_dos['steps'])
@@ -285,11 +287,11 @@ HEADERS = [
     "CMP",
     "Décision du CC",
     "Date de la décision du CC",
-    "Taille de la décision du CC",
+    # "Taille de la décision du CC",
     "Taille du texte avant censure du CC",
     "Textes cités",
     "Nombre de textes cités",
-    "Signataires au JO",
+    # "Signataires au JO",
     "Thèmes",
     "URL du dossier Sénat",
     "URL du dossier Assemblée",
@@ -369,10 +371,13 @@ if __name__ == '__main__':
             elif not dos.get("URL CC"):
                 dos["Décision du CC"] = "pas de saisine"
             dos["Date de la décision du CC"] = format_date(dos["Date de la décision"])
+
+            """
             if dos.get('Taille de la décision du CC') == -1:
                 dos['Taille de la décision du CC'] = ''
             if dos.get('Signataires au JO') == -1:
                 dos['Signataires au JO'] = ''
+            """
 
     print(len(senat_csv), 'dos')
     print(c, 'matched')
