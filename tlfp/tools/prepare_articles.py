@@ -199,7 +199,6 @@ def process(procedure):
                     s['status'] = 'new'
                 else:
                     s['status'] = 'depot'
-                txt = clean_text_for_diff(s['text'])
             if s['status'] == 'sup':
                 s['length'] = 0
                 s['n_diff'] = 0
