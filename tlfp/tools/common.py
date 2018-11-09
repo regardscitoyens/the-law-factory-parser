@@ -166,7 +166,7 @@ def clean_accents(text):
         text = text.replace(a, case_noaccents[locase_accents.find(a)])
     return text
 
-re_clean_alin = re.compile(r'^"?(([IVXCDLM]+|\d+|[a-z])[°)\-\.\s]+)+\s*((%s|[A-Z]+)[°)\-\.\s]+)*' % bister)
+re_clean_alin = re.compile(r'^"?(([IVXCDLM]+|\d+|[a-z])[°)\-\.\s]+)+\s*((%s|[A-Z%s]+)[°)\-\.\s]+)*' % (bister, upcase_accents))
 re_alin_sup = re.compile(r'\s*\((censur|supprim)és?\)$', re.I)
 
 def clean_text_for_diff(text):
