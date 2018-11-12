@@ -245,7 +245,8 @@ HEADERS = [
     "Date initiale",
     "Date de promulgation",
     "Durée d'adoption (jours)",
-    "Initiative du texte",
+    "Nature du texte",
+#   "Initiative du texte",
     "Taille initiale",
     "Taille finale",
 #   "Proportion de texte allongé"
@@ -336,7 +337,8 @@ if __name__ == '__main__':
             dos["URL du dossier Sénat"] = dos["URL du dossier"]
             dos["Thèmes"] = dos["Thèmes"].replace(',', '|')
 
-            dos['Initiative du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
+            dos['Nature du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
+            # dos['Initiative du texte'] = Assemblée Nationale / Sénat / Gouvernement
             dos['Type de texte'] = clean_type_dossier(dos)
 
             senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
