@@ -91,7 +91,7 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
     dos['URL CC'] = cc_step[0] if cc_step else ''
-    dos["Taille du texte avant censure du CC"] = dos.get('output_text_length_before_CC', '')
+    dos["Taille du texte avant censure du CC"] = parsed_dos['stats'].get('output_text_length_before_CC', '')
     """
     if not fast:
         dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
