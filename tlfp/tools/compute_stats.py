@@ -133,15 +133,15 @@ def process(output_dir, dos):
     stats["ratio_articles_growth"] = len(last_arts) / len(first_arts)
 
     stats["ratio_texte_modif"] = 1 - compute_similarity_by_articles(first_arts, last_arts)
-    stats["input_text_length"] = len("\n".join(first_text))
-    stats["output_text_length"] = len("\n".join(last_text))
+    stats["input_text_length"] = len(first_text)
+    stats["output_text_length"] = len(last_text)
 
     _, adopted_step_i = find_first_and_last_steps(dos, include_CC=False)
     adopted_step = dos['steps'][adopted_step_i]
     if has_been_censored(dos):
         adopted_text = read_text(adopted_step) # TODO: clean "(Censuré)"
         # stats["total_output_articles_before_CC"] = ...
-        stats["output_text_length_before_CC"] = len("\n".join(adopted_text))
+        stats["output_text_length_before_CC"] = len(adopted_text)
 
     stats['last_stage'] = adopted_step.get('stage')
 
