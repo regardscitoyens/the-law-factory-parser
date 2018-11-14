@@ -29,16 +29,12 @@ def dump_success_log(output_dir, log):
             os.remove(err_log)
 
 
-def process(dos, OUTPUT_DIR, log=io.StringIO(), skip_already_done=False):
+def process(dos, OUTPUT_DIR, log=io.StringIO()):
     dos['id'] = dos.get('senat_id', dos.get('assemblee_id'))
 
     output_dir = os.path.join(OUTPUT_DIR, dos['id'] + '_tmp')
     final_output_dir = os.path.join(OUTPUT_DIR, dos['id'])
     print('     writing to:', dos['id'] + '_tmp')
-
-    if skip_already_done and os.path.exists(final_output_dir):
-        print(' - already done')
-        return
 
     shutil.rmtree(output_dir, ignore_errors=True)
 
