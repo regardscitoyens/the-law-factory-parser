@@ -139,7 +139,7 @@ def process(output_dir, dos):
     _, adopted_step_i = find_first_and_last_steps(dos, include_CC=False)
     adopted_step = dos['steps'][adopted_step_i]
     if has_been_censored(dos):
-        adopted_text = read_text(adopted_step) # TODO: clean "(Censuré)"
+        adopted_text = read_text(adopted_step)
         # stats["total_output_articles_before_CC"] = ...
         stats["output_text_length_before_CC"] = len(adopted_text)
 

@@ -147,7 +147,9 @@ clean_spaces = lambda x: re_clean_spaces.sub(" ", x)
 re_clean_balises = re.compile(r"<\/?[!a-z][^>]*>", re.I)
 clean_balises = lambda x: re_clean_balises.sub("", x)
 
-strip_text = lambda x: clean_spaces(clean_balises(x)).strip()
+clean_statuses = lambda x: re_alin_sup.sub("", x)
+
+strip_text = lambda x: clean_spaces(clean_statuses(clean_balises(x))).strip()
 
 re_non_alphanum = re.compile(r"[^a-z0-9]+")
 
@@ -171,10 +173,10 @@ re_alin_sup = re.compile(r'\s*\((censur|supprim)és?\)$', re.I)
 
 def clean_text_for_diff(text):
     if type(text) == list:
-        text = [re_alin_sup.sub('', re_clean_alin.sub('', t)) for t in text]
+        text = [clean_statuses(re_clean_alin.sub('', t)) for t in text]
         text = "\n".join([t for t in text if t])
     else:
-        text = re_alin_sup.sub('', re_clean_alin.sub('', text))
+        text = clean_statuses(re_clean_alin.sub('', text))
     text = clean_balises(text)
     text = clean_accents(text)
     text = re_non_alphanum.sub('', text)
