@@ -128,7 +128,7 @@ clean_legifrance_regexps = [
     (re.compile(r'<a/?[^>]*>', re.I), ''),
     (re.compile(r'\s*<br/>\s*', re.I), '</p><p>'),
     (re.compile(r'<div[^>]*class="titreSection[^>]*>\s*(%s\s+[\dIVXLCDM]+e?r?)\s*:\s*([^<]*?)\s*</div>' % section_titles, re.I), r'<p>\1</p><p><b>\5</b></p>'),
-    (re.compile(r'<div[^>]*class="titreArt[^>]*>(.*?)\s*</div>', re.I), r'<p><b>\1</b></p>'),
+    (re.compile(r'<div[^>]*class="titre(?:Art|Section)[^>]*>([^<]*?)\s*</div>', re.I), r'<p><b>\1</b></p>'),
     (re.compile(r'\[Dispositions déclarées non conformes à la Constitution( à compter du .{0,30})? par la (<a[^>]*?>)?décision( du Conseil constitutionnel)? n° \d+-\d+ ?(<\/a>)? ?DC du .{0,30}\]', re.I), "(Censuré)"),
     (re.compile(r'―'), '-'),
     (re.compile(r'([\.\s]+)-([^\s\-]+)'), r'\1 - \2'),
@@ -316,7 +316,7 @@ re_mat_ppl = re.compile(r"((<(b|h[12])>)?\s*pro.* (loi|résolution)|<h2>\s*pro.*
 re_mat_tco = re.compile(r"\s*<(b|h[12])>\s*(ANNEXE[^:]*:\s*|\d+\)\s+|[IVX]+\.\s+|<a name[^>]*>\s*</a>\s*)*TEXTES?\s*(([ÉE]LABOR|ADOPT)[EÉ]S?\s*PAR|DE)\s*LA\s*COMMISSION.*(</\1>\s*$|\(.*\))")
 re_mat_exp = re.compile(r"(<(b|strong)>)?\s*(expos[eéÉ]|table des matières)", re.I)
 re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|(<b>)?États législatifs annexés|(<(i|t\w+)>\s*)*Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|La présente loi sera exécutée comme loi de l'Etat|<a>\*</a>\s*(<i>)?1)", re.I)
-re_mat_ann = re.compile(r"\s*<b>\s*ANNEXES?[\s<]+")
+re_mat_ann = re.compile(r"\s*<b>\s*ANNEXES?[\s<]+", re.I)
 re_mat_dots = re.compile(r"^(<i>)?([.…_]\s?)+(</i>)?$")
 re_mat_st = re.compile(r"(<i>\s?|\(|\[)+(texte)?\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,30}$", re.I)
 re_mat_new = re.compile(r"\s*\(\s*nouveau\s*\)\s*", re.I)

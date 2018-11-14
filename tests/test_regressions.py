@@ -46,6 +46,9 @@ print('     > OK ')
 print('> testing parse_texte')
 assert len(parse_texte.parse('http://www.assemblee-nationale.fr/13/rapports/r2568.asp')) == 5
 assert len(parse_texte.parse('https://www.senat.fr/leg/ppl08-039.html')) == 2
+# do not catch annexe as part of last article in legifrance texts
+assert len(parse_texte.parse('https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000025005833'
+                             '&categorieLien=id#JORFSCTA000025005850')[-1]['alineas']) == 2
 print('     > OK')
 
 
