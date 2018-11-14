@@ -2,14 +2,17 @@
 # -*- coding: utf-8 -*-
 
 
+def detect_auteur_depot_from_url(url):
+    if '/propositions/' in url:
+        return "Députés"
+    elif '/leg/ppl' in url:
+        return "Sénateurs"
+    return "Gouvernement"
+
+
 def add_auteur_depot(step):
     if step.get('step', '') == 'depot' and step['debats_order'] is not None:
-        if '/propositions/' in step.get('source_url', ''):
-            step['auteur_depot'] = "Députés"
-        elif '/leg/ppl' in step.get('source_url', ''):
-            step['auteur_depot'] = "Sénateurs"
-        else:
-            step['auteur_depot'] = "Gouvernement"
+        step['auteur_depot'] = detect_auteur_depot_from_url(step.get('source_url', ''))
 
 
 def remove_interventions_too_small(step, intervs):

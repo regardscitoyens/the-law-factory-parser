@@ -8,6 +8,7 @@ from tlfp.tools import parse_texte
 from tlfp.tools.common import upper_first, format_date, datize, strip_text, open_json
 from tlfp.tools.process_conscons import get_decision_length
 from tlfp.tools.process_jo import count_signataires, get_texte_length
+from tlfp.tools.update_procedure import detect_auteur_depot_from_url
 
 
 def annee(date):
@@ -71,6 +72,15 @@ def get_CMP_type(steps):
     return 'échec'
 
 
+def get_initiative(steps):
+    real_depot = None
+    for step in steps:
+        if step.get('step') != 'depot':
+            break
+        real_depot = step
+    return detect_auteur_depot_from_url(real_depot.get('source_url', ''))
+
+
 def read_text(articles):
     texte = []
     for art in articles:
@@ -86,6 +96,7 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['Titre court'] = parsed_dos['short_title']
     dos["URL du dossier Assemblée"] = parsed_dos.get('url_dossier_assemblee', '')
     dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
+    dos['Initiative du texte'] = get_initiative(parsed_dos['steps'])
     dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
     dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
@@ -147,6 +158,7 @@ def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
             parsed_dos = merge_senat_with_an(senat_dos, an_dos)
     dos['Titre court'] = parsed_dos['short_title']
     dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
+    dos['Initiative du texte'] = get_initiative(parsed_dos['steps'])
     dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
     dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
@@ -246,7 +258,7 @@ HEADERS = [
     "Date de promulgation",
     "Durée d'adoption (jours)",
     "Nature du texte",
-#   "Initiative du texte",
+    "Initiative du texte",
     "Taille initiale",
     "Taille finale",
 #   "Proportion de texte allongé"
@@ -338,7 +350,6 @@ if __name__ == '__main__':
             dos["Thèmes"] = dos["Thèmes"].replace(',', '|')
 
             dos['Nature du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
-            # dos['Initiative du texte'] = Assemblée Nationale / Sénat / Gouvernement
             dos['Type de texte'] = clean_type_dossier(dos)
 
             senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
