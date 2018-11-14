@@ -26,8 +26,8 @@ def find_last_depot(steps):
 
 def parse_senat_open_data(run_old=False):
     senat_csv = opendata.fetch_csv()
-    # filter non-promulgués
-    senat_csv = [dos for dos in senat_csv if dos['Date de promulgation']]
+    senat_csv = [dos for dos in senat_csv if dos['Date initiale']]
+
     # filter before 2008
     if run_old:
         senat_csv = [dos for dos in senat_csv if annee(dos['Date initiale']) < 2008]
@@ -341,6 +341,19 @@ if __name__ == '__main__':
                 print()
                 print(dos['URL du dossier'])
 
+            senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
+
+            # sometimes the Senate forget to mark the dosleg as promulgated, let's fix it
+            if not dos['Date de promulgation']:
+                if senat_id in dossiers_json and dossiers_json[senat_id].get('url_jo'):
+                    parsed_dos = dossiers_json[senat_id]
+                    yy, mm, dd = parsed_dos.get('end').split('-')
+                    dos['Date de promulgation'] = '%s/%s/%s' % (dd, mm, yy)
+                    dos['État du dossier'] = 'promulgué'
+                    # dos['Numéro de la loi'] # TODO: law_name not yet parsed in anpy
+                else:
+                    continue
+
             dos['Année initiale'] = annee(dos['Date initiale'])
             dos['Date initiale'] = format_date(dos['Date initiale'])
             dos['Date de promulgation'] = format_date(dos['Date de promulgation'])
@@ -352,7 +365,6 @@ if __name__ == '__main__':
             dos['Nature du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
             dos['Type de texte'] = clean_type_dossier(dos)
 
-            senat_id = dos['URL du dossier'].split('/')[-1].replace('.html', '')
             if senat_id in dossiers_json:
                 if verbose:
                     print(' - matched')
@@ -391,6 +403,9 @@ if __name__ == '__main__':
             if dos.get('Signataires au JO') == -1:
                 dos['Signataires au JO'] = ''
             """
+
+    # filter non-promulgués after the data has been fixed
+    senat_csv = [dos for dos in senat_csv if dos['Date de promulgation']]
 
     print(len(senat_csv), 'dos')
     print(c, 'matched')
