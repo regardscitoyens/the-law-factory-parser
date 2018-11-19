@@ -24,19 +24,35 @@ def find_amendements(path):
                 yield amdt, institution
 
 
+def read_alineas(art):
+    return [art['alineas'][al] for al in sorted(art['alineas'].keys())]
+
+
 def read_text(step):
     articles = step['texte.json']['articles']
     texte = ''
     for art in articles:
-        for key in sorted(art['alineas'].keys()):
-            if art['alineas'][key] != '':
-                texte += strip_text(art['alineas'][key])
+        for al in read_alineas(art):
+            texte += strip_text(al)
     return texte
 
 
 def read_articles(step):
     articles = step['texte.json']['articles']
-    return {art['titre']: clean_text_for_diff([art['alineas'][al] for al in sorted(art['alineas'].keys())]) for art in articles}
+    return {art['titre']: clean_text_for_diff(read_alineas(art)) for art in articles}
+
+
+def count_censored_articles(step):
+    articles = step['texte.json']['articles']
+    censored_articles = 0
+    partially_censored_articles = 0
+    for art in articles:
+        txt = ''.join(read_alineas(art))
+        if '(Censuré)' in txt:
+            partially_censored_articles += 1
+        if txt == '(Censuré)':
+            censored_articles += 1
+    return censored_articles, partially_censored_articles
 
 
 def find_first_and_last_steps(dos, include_CC=True):
@@ -140,7 +156,8 @@ def process(output_dir, dos):
     adopted_step = dos['steps'][adopted_step_i]
     if has_been_censored(dos):
         adopted_text = read_text(adopted_step)
-        # stats["total_output_articles_before_CC"] = ...
+        last_step = find_first_and_last_steps(dos)[1]
+        stats["censored_articles"], stats["partially_censored_articles"] = count_censored_articles(dos['steps'][last_step])
         stats["output_text_length_before_CC"] = len(adopted_text)
 
     stats['last_stage'] = adopted_step.get('stage')
