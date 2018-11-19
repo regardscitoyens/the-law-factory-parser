@@ -129,7 +129,7 @@ clean_legifrance_regexps = [
     (re.compile(r'\s*<br/>\s*', re.I), '</p><p>'),
     (re.compile(r'<div[^>]*class="titreSection[^>]*>\s*(%s\s+[\dIVXLCDM]+e?r?)\s*:\s*([^<]*?)\s*</div>' % section_titles, re.I), r'<p>\1</p><p><b>\5</b></p>'),
     (re.compile(r'<div[^>]*class="titre(?:Art|Section)[^>]*>([^<]*?)\s*</div>', re.I), r'<p><b>\1</b></p>'),
-    (re.compile(r'\[Dispositions déclarées non conformes à la Constitution( à compter du .{0,30})? par la (<a[^>]*?>)?décision( du Conseil constitutionnel)? n° \d+-\d+ ?(<\/a>)? ?DC du .{0,30}\]', re.I), "(Censuré)"),
+    (re.compile(r'\[Dispositions (déclarées non conformes à la Constitution( à compter du .{0,30})? par|résultant de) la (<a[^>]*?>)?décision( du Conseil constitutionnel)? n° \d+-\d+ ?(<\/a>)? ?DC du .{0,30}\]', re.I), "(Censuré)"),
     (re.compile(r'―'), '-'),
     (re.compile(r'([\.\s]+)-([^\s\-]+)'), r'\1 - \2'),
 ]
