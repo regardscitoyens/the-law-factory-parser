@@ -103,8 +103,8 @@ def add_metrics(dos, parsed_dos, fast=False):
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
     dos['URL CC'] = cc_step[0] if cc_step else ''
     dos["Taille du texte avant censure du CC"] = parsed_dos['stats'].get('output_text_length_before_CC', '')
-    dos["Nombre d'articles partiellement censurés"] = parsed_dos['stats'].get('censored_articles', '')
-    dos["Nombre d'articles totalement censurés"] = parsed_dos['stats'].get('partially_censored_articles', '')
+    dos["Nombre d'articles censurés"] = parsed_dos['stats'].get('censored_articles', '')
+    dos["Nombre d'articles totalement censurés"] = parsed_dos['stats'].get('fully_censored_articles', '')
     """
     if not fast:
         dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
@@ -304,7 +304,7 @@ HEADERS = [
     "Date de la décision du CC",
     # "Taille de la décision du CC",
     "Taille du texte avant censure du CC",
-    "Nombre d'articles partiellement censurés",
+    "Nombre d'articles censurés",
     "Nombre d'articles totalement censurés",
     "Textes cités",
     "Nombre de textes cités",
