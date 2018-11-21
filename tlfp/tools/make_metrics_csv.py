@@ -257,6 +257,7 @@ HEADERS = [
     "Titre court",
     "Année initiale",
     "Date initiale",
+    "Année de promulgation",
     "Date de promulgation",
     "Durée d'adoption (jours)",
     "Nature du texte",
@@ -360,11 +361,12 @@ if __name__ == '__main__':
 
             dos['Année initiale'] = annee(dos['Date initiale'])
             dos['Date initiale'] = format_date(dos['Date initiale'])
+            dos['Année de promulgation'] = annee(dos['Date de promulgation'])
             dos['Date de promulgation'] = format_date(dos['Date de promulgation'])
             dos["Durée d'adoption (jours)"] = (datize(dos["Date de promulgation"]) - datize(dos["Date initiale"])).days + 1
 
             dos["URL du dossier Sénat"] = dos["URL du dossier"]
-            dos["Thèmes"] = dos["Thèmes"].replace(',', '|')
+            dos["Thèmes"] = dos["Thèmes"].replace(', ', '|')
 
             dos['Nature du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
             dos['Type de texte'] = clean_type_dossier(dos)
