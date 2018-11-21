@@ -102,7 +102,6 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
     dos['URL CC'] = cc_step[0] if cc_step else ''
-    dos["Taille du texte avant censure du CC"] = parsed_dos['stats'].get('output_text_length_before_CC', '')
     dos["Nombre d'articles censurés"] = parsed_dos['stats'].get('censored_articles', '')
     dos["Nombre d'articles totalement censurés"] = parsed_dos['stats'].get('fully_censored_articles', '')
     """
@@ -112,8 +111,9 @@ def add_metrics(dos, parsed_dos, fast=False):
     """
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
 
-    dos['Taille finale'] = parsed_dos['stats']['output_text_length']
-    dos['Taille initiale'] = parsed_dos['stats']['input_text_length']
+    dos['Nombre final de caractères'] = parsed_dos['stats']['output_text_length']
+    dos["Nombre de caractères avant saisine"] = parsed_dos['stats'].get('output_text_length_before_CC', parsed_dos['stats']['output_text_length'])
+    dos['Nombre initial de caractères'] = parsed_dos['stats']['input_text_length']
     dos['Proportion de texte modifié'] = parsed_dos['stats']['ratio_texte_modif']
     dos["Nombre initial d'articles"] = parsed_dos['stats']['total_input_articles']
     dos["Nombre final d'articles"] = parsed_dos['stats']['total_output_articles']
@@ -183,18 +183,18 @@ def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
         try:
             articles = parse_texte.parse(last_text['source_url'])
             if articles and articles[0].get('definitif'):
-                dos['Taille finale'] = read_text(parse_texte.parse(last_text['source_url']))
+                dos['Nombre final de caractères'] = read_text(parse_texte.parse(last_text['source_url']))
             else:
-                dos['Taille finale'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+                dos['Nombre final de caractères'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
         except:
-            print("WARNING: Taille finale impossible to evaluate")
+            print("WARNING: Nombre final de caractères impossible to evaluate")
 
     try:
         input_text_length = read_text(parse_texte.parse(last_depot['source_url']))
         if input_text_length > 0:
-            dos['Taille initiale'] = input_text_length
+            dos['Nombre initial de caractères'] = input_text_length
     except:
-        print("WARNING: Taille initiale impossible to evaluate")
+        print("WARNING: Nombre initial de caractères impossible to evaluate")
 
     # TODO
     # dos['Proportion de texte modifié'] = ...
@@ -262,8 +262,9 @@ HEADERS = [
     "Durée d'adoption (jours)",
     "Nature du texte",
     "Initiative du texte",
-    "Taille initiale",
-    "Taille finale",
+    "Nombre initial de caractères",
+    "Nombre de caractères avant saisine",
+    "Nombre final de caractères",
 #   "Proportion de texte allongé"
     "Proportion de texte modifié",
     "Nombre initial d'articles",
@@ -304,7 +305,6 @@ HEADERS = [
     "Décision du CC",
     "Date de la décision du CC",
     # "Taille de la décision du CC",
-    "Taille du texte avant censure du CC",
     "Nombre d'articles censurés",
     "Nombre d'articles totalement censurés",
     "Textes cités",
