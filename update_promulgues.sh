@@ -20,6 +20,7 @@ echo "Parsing texts in discussion..."
 TMPDIR=$(mktemp -d)
 anpy-cli doslegs_urls --in-discussion --senate-urls > $TMPDIR/urls_AN
 senapy-cli doslegs_urls --in-discussion > $TMPDIR/urls_SENATE
+head -n 2 data/logs-encours/* | grep '^http' > $TMPDIR/urls_ERRORS
 sort -u $TMPDIR/* | tlfp-parse-many $DATADIR --quiet
 rm -rf $TMPDIR
 
