@@ -4,6 +4,7 @@ DATADIR=$1
 if [ -z "$DATADIR" ]; then
   DATADIR=data
 fi
+mkdir -p $DATADIR/logs{,-encours}
 
 
 echo PARSED: $(ls $DATADIR/p*/viz/procedure.json | wc -l) "/ "$(ls data/p*/viz/procedure.json | wc -l)
