@@ -171,6 +171,10 @@ def process(output_dir, dos):
         stats["output_text_length_before_CC"] = len(adopted_text)
 
     stats['last_stage'] = adopted_step.get('stage')
+    if stats['last_stage'] == 'CMP':
+        stats['last_institution'] = 'CMP'
+    else:
+        stats['last_institution'] = adopted_step.get('institution')
 
     maxdate = dos.get('end')
     if not maxdate:
