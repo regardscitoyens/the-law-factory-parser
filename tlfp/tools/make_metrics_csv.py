@@ -102,8 +102,8 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
     dos['URL CC'] = cc_step[0] if cc_step else ''
-    dos["Nombre d'articles censurés"] = parsed_dos['stats'].get('censored_articles', '')
-    dos["Nombre d'articles totalement censurés"] = parsed_dos['stats'].get('fully_censored_articles', '')
+    dos["Nombre d'articles censurés"] = parsed_dos['stats'].get('censored_articles', 0)
+    dos["Nombre d'articles totalement censurés"] = parsed_dos['stats'].get('fully_censored_articles', 0)
     """
     if not fast:
         dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
@@ -117,6 +117,7 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['Proportion de texte modifié'] = parsed_dos['stats']['ratio_texte_modif']
     dos["Nombre initial d'articles"] = parsed_dos['stats']['total_input_articles']
     dos["Nombre final d'articles"] = parsed_dos['stats']['total_output_articles']
+    dos["Nombre d'articles avant saisine"] = dos["Nombre final d'articles"] - dos["Nombre d'articles censurés"]
     dos["Croissance du nombre d'articles"] = parsed_dos['stats']['ratio_articles_growth']
     dos["Nombre de mots prononcés"] = parsed_dos['stats']['total_mots']
     dos["Nombre d'intervenants"] = parsed_dos['stats']['total_intervenants']
@@ -268,6 +269,7 @@ HEADERS = [
 #   "Proportion de texte allongé"
     "Proportion de texte modifié",
     "Nombre initial d'articles",
+    "Nombre d'articles avant saisine",
     "Nombre final d'articles",
     "Croissance du nombre d'articles",
 #   "Nombre d'articles inchangés",
