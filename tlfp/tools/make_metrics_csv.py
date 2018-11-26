@@ -104,6 +104,7 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['URL CC'] = cc_step[0] if cc_step else ''
     dos["Nombre d'articles censurés"] = parsed_dos['stats'].get('censored_articles', 0)
     dos["Nombre d'articles totalement censurés"] = parsed_dos['stats'].get('fully_censored_articles', 0)
+    dos["Législature de promulgation"] = parsed_dos['assemblee_legislature']
     """
     if not fast:
         dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
@@ -170,6 +171,7 @@ def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
     dos['URL CC'] = cc_step[0] if cc_step else ''
     # dos['Signataires au JO'] = count_signataires(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
+    dos["Législature de promulgation"] = parsed_dos.get('assemblee_legislature', '')
 
     last_depot = find_last_depot(parsed_dos['steps'])
     last_text = None
@@ -260,6 +262,7 @@ HEADERS = [
     "Date initiale",
     "Année de promulgation",
     "Date de promulgation",
+    "Législature de promulgation",
     "Durée d'adoption (jours)",
     "Nature du texte",
     "Initiative du texte",
