@@ -106,6 +106,7 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos["Nombre d'articles censurés"] = stats.get('censored_articles', 0)
     dos["Nombre d'articles totalement censurés"] = stats.get('fully_censored_articles', 0)
     dos["Législature de promulgation"] = parsed_dos['assemblee_legislature']
+    dos["Nombre de propositions de loi rattachées"] = stats['attached_law_proposals']
     """
     if not fast:
         dos['Taille de la décision du CC'] = get_decision_length(cc_step[0]) if cc_step else ''
@@ -267,6 +268,7 @@ HEADERS = [
     "Durée d'adoption (jours)",
     "Nature du texte",
     "Initiative du texte",
+    "Nombre de propositions de loi rattachées",
     "Nombre de caractères initial",
     "Nombre de caractères avant saisine",
     "Nombre de caractères final",

@@ -37,6 +37,16 @@ def read_text(step):
     return texte
 
 
+def count_initial_depots(steps):
+    count = 0
+    for step in steps:
+        if step.get('step') == 'depot':
+            count += 1
+        else:
+            break
+    return count
+
+
 def read_articles(step):
     articles = step['texte.json']['articles']
     return {art['titre']: clean_text_for_diff(read_alineas(art)) for art in articles}
@@ -168,6 +178,8 @@ def process(output_dir, dos):
             if step.get('date'):
                 maxdate = step.get('enddate') or step.get('date')
     stats["total_days"] = (datize(maxdate) - datize(dos['beginning'])).days + 1
+
+    stats["attached_law_proposals"] = count_initial_depots(dos['steps']) - 1
 
     return stats
 
