@@ -132,7 +132,7 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos["Nombre de séances à l'Assemblée"] = stats['total_seances_assemblee']
     dos["Nombre de séances au Sénat"] = stats['total_seances_senat']
     dos["Dernière lecture"] = stats['last_stage']
-    dos["Dernière chambre"] = stats['last_institution']
+    dos["Dernière institution"] = stats['last_institution']
 
     dos["Nombre d'amendements"] = stats['total_amendements']
     dos["Nombre d'amendements adoptés"] = stats['total_amendements_adoptes']
@@ -312,7 +312,7 @@ HEADERS = [
     "Nombre de séances au Sénat",
 
     "Dernière lecture", # exemple d'application: si lecture déf., alors il y a beaucoup de chance que le Sénat se soit fait écrasé/bypassé
-    "Dernière chambre",
+    "Dernière institution",
     "Type de texte",
     "Type de procédure",
     "Étapes de la procédure",
