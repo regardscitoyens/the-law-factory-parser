@@ -47,6 +47,25 @@ def count_initial_depots(steps):
     return count
 
 
+def count_navettes(steps):
+    count = 0
+    last_step = None
+    for step in steps:
+        if step.get('step') == 'depot':
+            if not last_step or last_step.get('step') != 'depot':
+                count += 1
+        elif step.get('stage') == 'CMP' and step.get('step') == 'commission':
+            count += 1
+        elif step.get('stage') in ('congrès', 'constitutionnalité'):
+            count += 1
+        last_step = step
+    return count
+
+
+def count_texts(steps):
+    return len([step for step in steps if step.get('debats_order') is not None])
+
+
 def read_articles(step):
     articles = step['texte.json']['articles']
     return {art['titre']: clean_text_for_diff(read_alineas(art)) for art in articles}
@@ -184,6 +203,8 @@ def process(output_dir, dos):
     stats["total_days"] = (datize(maxdate) - datize(dos['beginning'])).days + 1
 
     stats["attached_law_proposals"] = count_initial_depots(dos['steps']) - 1
+    stats["depots_in_institutions"] = count_navettes(dos['steps'])
+    stats["texts_produced"] = count_texts(dos['steps'])
 
     return stats
 
