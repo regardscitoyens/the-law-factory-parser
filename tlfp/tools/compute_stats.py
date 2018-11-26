@@ -115,6 +115,9 @@ def process(output_dir, dos):
     stats = {}
 
     intervs = open_json(os.path.join(output_dir, 'viz/interventions.json'))
+    # only keep seances in hemicycle
+    intervs = {step_name: step for step_name, step in intervs.items() if '_hemicycle' in step_name}
+
     stats['total_mots'] = sum([
         sum(i['total_mots'] for i in step['divisions'].values())
             for step in intervs.values()
