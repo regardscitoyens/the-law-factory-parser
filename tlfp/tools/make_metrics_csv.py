@@ -93,6 +93,7 @@ def read_text(articles):
 
 def add_metrics(dos, parsed_dos, fast=False):
     parsed_dos = dossiers_json[senat_id]
+    stats = parsed_dos['stats']
     dos['Titre court'] = parsed_dos['short_title']
     dos["URL du dossier Assemblée"] = parsed_dos.get('url_dossier_assemblee', '')
     dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
@@ -102,8 +103,8 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
     dos['URL CC'] = cc_step[0] if cc_step else ''
-    dos["Nombre d'articles censurés"] = parsed_dos['stats'].get('censored_articles', 0)
-    dos["Nombre d'articles totalement censurés"] = parsed_dos['stats'].get('fully_censored_articles', 0)
+    dos["Nombre d'articles censurés"] = stats.get('censored_articles', 0)
+    dos["Nombre d'articles totalement censurés"] = stats.get('fully_censored_articles', 0)
     dos["Législature de promulgation"] = parsed_dos['assemblee_legislature']
     """
     if not fast:
@@ -112,34 +113,34 @@ def add_metrics(dos, parsed_dos, fast=False):
     """
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
 
-    dos['Nombre final de caractères'] = parsed_dos['stats']['output_text_length']
-    dos["Nombre de caractères avant saisine"] = parsed_dos['stats'].get('output_text_length_before_CC', parsed_dos['stats']['output_text_length'])
-    dos['Nombre initial de caractères'] = parsed_dos['stats']['input_text_length']
-    dos['Proportion de texte modifié'] = parsed_dos['stats']['ratio_texte_modif']
-    dos["Nombre initial d'articles"] = parsed_dos['stats']['total_input_articles']
-    dos["Nombre final d'articles"] = parsed_dos['stats']['total_output_articles']
-    dos["Nombre d'articles avant saisine"] = dos["Nombre final d'articles"] - dos["Nombre d'articles censurés"]
-    dos["Croissance du nombre d'articles"] = parsed_dos['stats']['ratio_articles_growth']
-    dos["Nombre de mots prononcés"] = parsed_dos['stats']['total_mots']
-    dos["Nombre d'intervenants"] = parsed_dos['stats']['total_intervenants']
-    dos["Nombre d'interventions"] = parsed_dos['stats']['total_interventions']
-    dos["Nombre de séances"] = parsed_dos['stats']['total_seances']
-    dos["Nombre de séances à l'Assemblée"] = parsed_dos['stats']['total_seances_assemblee']
-    dos["Nombre de séances au Sénat"] = parsed_dos['stats']['total_seances_senat']
-    dos["Dernière lecture"] = parsed_dos['stats']['last_stage']
+    dos['Nombre de caractères final'] = stats['output_text_length']
+    dos["Nombre de caractères avant saisine"] = stats.get('output_text_length_before_CC', stats['output_text_length'])
+    dos['Nombre de caractères initial'] = stats['input_text_length']
+    dos['Proportion de texte modifié'] = stats['ratio_texte_modif']
+    dos["Nombre d'articles initial"] = stats['total_input_articles']
+    dos["Nombre d'articles final"] = stats['total_output_articles']
+    dos["Nombre d'articles avant saisine"] = dos["Nombre d'articles final"] - dos["Nombre d'articles censurés"]
+    dos["Croissance du nombre d'articles"] = stats['ratio_articles_growth']
+    dos["Nombre de mots prononcés"] = stats['total_mots']
+    dos["Nombre d'intervenants"] = stats['total_intervenants']
+    dos["Nombre d'interventions"] = stats['total_interventions']
+    dos["Nombre de séances"] = stats['total_seances']
+    dos["Nombre de séances à l'Assemblée"] = stats['total_seances_assemblee']
+    dos["Nombre de séances au Sénat"] = stats['total_seances_senat']
+    dos["Dernière lecture"] = stats['last_stage']
 
-    dos["Nombre d'amendements"] = parsed_dos['stats']['total_amendements']
-    dos["Nombre d'amendements adoptés"] = parsed_dos['stats']['total_amendements_adoptes']
-    dos["Nombre d'amendements du Gouvernement"] = parsed_dos['stats']['total_amendements_gouvernement']
-    dos["Nombre d'amendements du Gouvernement adoptés"] = parsed_dos['stats']['total_amendements_gouvernement_adoptes']
-    dos["Nombre d'amendements des sénateurs"] = parsed_dos['stats']['total_amendements_senateurs']
-    dos["Nombre d'amendements des sénateurs adoptés"] = parsed_dos['stats']['total_amendements_senateurs_adoptes']
-    dos["Nombre d'amendements du Gouvernement au Sénat"] = parsed_dos['stats']['total_amendements_gouvernement_senat']
-    dos["Nombre d'amendements du Gouvernement au Sénat adoptés"] = parsed_dos['stats']['total_amendements_gouvernement_senat_adoptes']
-    dos["Nombre d'amendements des députés"] = parsed_dos['stats']['total_amendements_deputes']
-    dos["Nombre d'amendements des députés adoptés"] = parsed_dos['stats']['total_amendements_deputes_adoptes']
-    dos["Nombre d'amendements du Gouvernement à l'Assemblée"] = parsed_dos['stats']['total_amendements_gouvernement_assemblee']
-    dos["Nombre d'amendements du Gouvernement à l'Assemblée adoptés"] = parsed_dos['stats']['total_amendements_gouvernement_assemblee_adoptes']
+    dos["Nombre d'amendements"] = stats['total_amendements']
+    dos["Nombre d'amendements adoptés"] = stats['total_amendements_adoptes']
+    dos["Nombre d'amendements du Gouvernement"] = stats['total_amendements_gouvernement']
+    dos["Nombre d'amendements du Gouvernement adoptés"] = stats['total_amendements_gouvernement_adoptes']
+    dos["Nombre d'amendements des sénateurs"] = stats['total_amendements_senateurs']
+    dos["Nombre d'amendements des sénateurs adoptés"] = stats['total_amendements_senateurs_adoptes']
+    dos["Nombre d'amendements du Gouvernement au Sénat"] = stats['total_amendements_gouvernement_senat']
+    dos["Nombre d'amendements du Gouvernement au Sénat adoptés"] = stats['total_amendements_gouvernement_senat_adoptes']
+    dos["Nombre d'amendements des députés"] = stats['total_amendements_deputes']
+    dos["Nombre d'amendements des députés adoptés"] = stats['total_amendements_deputes_adoptes']
+    dos["Nombre d'amendements du Gouvernement à l'Assemblée"] = stats['total_amendements_gouvernement_assemblee']
+    dos["Nombre d'amendements du Gouvernement à l'Assemblée adoptés"] = stats['total_amendements_gouvernement_assemblee_adoptes']
 
     dos['Textes cités'] = '|'.join(parsed_dos['textes_cites'])
     dos['Nombre de textes cités'] = len(parsed_dos['textes_cites'])
@@ -186,23 +187,23 @@ def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
         try:
             articles = parse_texte.parse(last_text['source_url'])
             if articles and articles[0].get('definitif'):
-                dos['Nombre final de caractères'] = read_text(parse_texte.parse(last_text['source_url']))
+                dos['Nombre de caractères final'] = read_text(parse_texte.parse(last_text['source_url']))
             else:
-                dos['Nombre final de caractères'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
+                dos['Nombre de caractères final'] = get_texte_length(parsed_dos['url_jo']) if 'url_jo' in parsed_dos else ''
         except:
-            print("WARNING: Nombre final de caractères impossible to evaluate")
+            print("WARNING: Nombre de caractères final impossible to evaluate")
 
     try:
         input_text_length = read_text(parse_texte.parse(last_depot['source_url']))
         if input_text_length > 0:
-            dos['Nombre initial de caractères'] = input_text_length
+            dos['Nombre de caractères initial'] = input_text_length
     except:
-        print("WARNING: Nombre initial de caractères impossible to evaluate")
+        print("WARNING: Nombre de caractères initial impossible to evaluate")
 
     # TODO
     # dos['Proportion de texte modifié'] = ...
-    # dos["Nombre initial d'articles"] = ...
-    # dos["Nombre final d'articles"] = ...
+    # dos["Nombre d'articles initial"] = ...
+    # dos["Nombre d'articles final"] = ...
     # dos["Croissance du nombre d'articles"] = ...
 
 
@@ -258,22 +259,22 @@ HEADERS = [
 #   "IDs internes/institutions"
     "Titre",
     "Titre court",
-    "Année initiale",
     "Date initiale",
-    "Année de promulgation",
+    "Année initiale",
     "Date de promulgation",
+    "Année de promulgation",
     "Législature de promulgation",
     "Durée d'adoption (jours)",
     "Nature du texte",
     "Initiative du texte",
-    "Nombre initial de caractères",
+    "Nombre de caractères initial",
     "Nombre de caractères avant saisine",
-    "Nombre final de caractères",
+    "Nombre de caractères final",
 #   "Proportion de texte allongé"
     "Proportion de texte modifié",
-    "Nombre initial d'articles",
+    "Nombre d'articles initial",
     "Nombre d'articles avant saisine",
-    "Nombre final d'articles",
+    "Nombre d'articles final",
     "Croissance du nombre d'articles",
 #   "Nombre d'articles inchangés",
 #   "Proportion d'articles inchangés",
