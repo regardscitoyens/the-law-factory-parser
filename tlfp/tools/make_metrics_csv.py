@@ -47,18 +47,6 @@ def find_parsed_doslegs(api_directory):
     return dossiers_json
 
 
-def custom_number_of_steps(steps):
-    # count the number of columns minus CMP hemicycle
-    c = 0
-    for step in steps:
-        if step.get('stage') == 'CMP':
-            if step['step'] == 'commission':
-                c += 1
-        elif step.get('step') == 'hemicycle':
-            c += 2
-    return c
-
-
 def count_echecs(steps):
     return len([s for s in steps if s.get('echec')])
 
@@ -98,7 +86,6 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos["URL du dossier Assemblée"] = parsed_dos.get('url_dossier_assemblee', '')
     dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
     dos['Initiative du texte'] = get_initiative(parsed_dos['steps'])
-    dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
     dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
@@ -169,7 +156,6 @@ def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
     dos['Titre court'] = parsed_dos['short_title']
     dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
     dos['Initiative du texte'] = get_initiative(parsed_dos['steps'])
-    dos['Étapes de la procédure'] = custom_number_of_steps(parsed_dos['steps'])
     dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
@@ -315,7 +301,6 @@ HEADERS = [
     "Dernière institution",
     "Type de texte",
     "Type de procédure",
-    "Étapes de la procédure",
     "Étapes échouées",
     "CMP",
     "Décision du CC",
