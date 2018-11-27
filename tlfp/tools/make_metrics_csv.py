@@ -134,6 +134,19 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos["Nombre d'amendements du Gouvernement à l'Assemblée"] = stats['total_amendements_gouvernement_assemblee']
     dos["Nombre d'amendements du Gouvernement à l'Assemblée adoptés"] = stats['total_amendements_gouvernement_assemblee_adoptes']
 
+    dos["Nombre d'amendements en hémicycle"] = stats['total_amendements_hemicycle']
+    dos["Nombre d'amendements en hémicycle adoptés"] = stats['total_amendements_hemicycle_adoptes']
+    dos["Nombre d'amendements en hémicycle du Gouvernement"] = stats['total_amendements_hemicycle_gouvernement']
+    dos["Nombre d'amendements en hémicycle du Gouvernement adoptés"] = stats['total_amendements_hemicycle_gouvernement_adoptes']
+    dos["Nombre d'amendements en hémicycle des sénateurs"] = stats['total_amendements_hemicycle_senateurs']
+    dos["Nombre d'amendements en hémicycle des sénateurs adoptés"] = stats['total_amendements_hemicycle_senateurs_adoptes']
+    dos["Nombre d'amendements en hémicycle du Gouvernement au Sénat"] = stats['total_amendements_hemicycle_gouvernement_senat']
+    dos["Nombre d'amendements en hémicycle du Gouvernement au Sénat adoptés"] = stats['total_amendements_hemicycle_gouvernement_senat_adoptes']
+    dos["Nombre d'amendements en hémicycle des députés"] = stats['total_amendements_hemicycle_deputes']
+    dos["Nombre d'amendements en hémicycle des députés adoptés"] = stats['total_amendements_hemicycle_deputes_adoptes']
+    dos["Nombre d'amendements en hémicycle du Gouvernement à l'Assemblée"] = stats['total_amendements_hemicycle_gouvernement_assemblee']
+    dos["Nombre d'amendements en hémicycle du Gouvernement à l'Assemblée adoptés"] = stats['total_amendements_hemicycle_gouvernement_assemblee_adoptes']
+
     dos['Textes cités'] = '|'.join(parsed_dos['textes_cites'])
     dos['Nombre de textes cités'] = len(parsed_dos['textes_cites'])
 
@@ -289,6 +302,19 @@ HEADERS = [
     "Nombre d'amendements du Gouvernement à l'Assemblée",
     "Nombre d'amendements du Gouvernement à l'Assemblée adoptés",
 
+    "Nombre d'amendements en hémicycle",
+    "Nombre d'amendements en hémicycle adoptés",
+    "Nombre d'amendements en hémicycle du Gouvernement",
+    "Nombre d'amendements en hémicycle du Gouvernement adoptés",
+    "Nombre d'amendements en hémicycle des sénateurs",
+    "Nombre d'amendements en hémicycle des sénateurs adoptés",
+    "Nombre d'amendements en hémicycle du Gouvernement au Sénat",
+    "Nombre d'amendements en hémicycle du Gouvernement au Sénat adoptés",
+    "Nombre d'amendements en hémicycle des députés",
+    "Nombre d'amendements en hémicycle des députés adoptés",
+    "Nombre d'amendements en hémicycle du Gouvernement à l'Assemblée",
+    "Nombre d'amendements en hémicycle du Gouvernement à l'Assemblée adoptés",
+
     # warning: qualité moyenne des interventions
     "Nombre de mots prononcés", # (+ ventilation Gouv/AN/Sénat)
     "Nombre d'interventions",
@@ -299,6 +325,10 @@ HEADERS = [
 
     "Dernière lecture", # exemple d'application: si lecture déf., alors il y a beaucoup de chance que le Sénat se soit fait écrasé/bypassé
     "Dernière institution",
+
+    # institution de dépôt pour étudier la corrélation du succés d'une CMP si le dépot commence au Sénat ou à l'AN
+    # on voit déja que toutes les PPL déposées au Sénat en accéléré on réussi leur CMP
+
     "Type de texte",
     "Type de procédure",
     "Étapes échouées",

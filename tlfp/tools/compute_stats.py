@@ -12,16 +12,10 @@ def has_been_censored(dos):
 
 def find_amendements(path):
     for amdts_file in glob.glob(os.path.join(path, '**/amendements_*'), recursive=True):
-        institution = None
-        if 'senat' in amdts_file:
-            institution = 'senat'
-        if 'assemblee' in amdts_file:
-            institution = 'assemblee'
-
         amendements = open_json(amdts_file)
         for subject in amendements.get('sujets', {}).values():
             for amdt in subject.get('amendements', []):
-                yield amdt, institution
+                yield amdt, amdts_file
 
 
 def read_alineas(art):
@@ -111,6 +105,106 @@ def find_first_and_last_texts(dos):
     return first_text, first_arts, last_text, last_arts
 
 
+def add_amendments_stats(stats, amendements):
+    stats['total_amendements'] \
+        = stats["total_amendements_adoptes"] \
+        = stats["total_amendements_senateurs"] \
+        = stats["total_amendements_senateurs_adoptes"] \
+        = stats["total_amendements_gouvernement"] \
+        = stats["total_amendements_gouvernement_adoptes"] \
+        = stats["total_amendements_gouvernement_senat"] \
+        = stats["total_amendements_gouvernement_senat_adoptes"] \
+        = stats["total_amendements_deputes"] \
+        = stats["total_amendements_deputes_adoptes"] \
+        = stats["total_amendements_gouvernement_assemblee"] \
+        = stats["total_amendements_gouvernement_assemblee_adoptes"] \
+        = stats['total_amendements_hemicycle'] \
+        = stats["total_amendements_hemicycle_adoptes"] \
+        = stats["total_amendements_hemicycle_senateurs"] \
+        = stats["total_amendements_hemicycle_senateurs_adoptes"] \
+        = stats["total_amendements_hemicycle_gouvernement"] \
+        = stats["total_amendements_hemicycle_gouvernement_adoptes"] \
+        = stats["total_amendements_hemicycle_gouvernement_senat"] \
+        = stats["total_amendements_hemicycle_gouvernement_senat_adoptes"] \
+        = stats["total_amendements_hemicycle_deputes"] \
+        = stats["total_amendements_hemicycle_deputes_adoptes"] \
+        = stats["total_amendements_hemicycle_gouvernement_assemblee"] \
+        = stats["total_amendements_hemicycle_gouvernement_assemblee_adoptes"] \
+        = 0
+
+    for amdt, amdts_file in amendements:
+        institution = None
+        if '_senat' in amdts_file:
+            institution = 'senat'
+        if '_assemblee' in amdts_file:
+            institution = 'assemblee'
+
+        hemicycle = False
+        if '_hemicycle' in amdts_file:
+            hemicycle = True
+
+        stats['total_amendements'] += 1
+        if hemicycle:
+            stats['total_amendements_hemicycle'] += 1
+
+        from_gouv = amdt["groupe"] == "Gouvernement"
+
+        if amdt["sort"] == "adopté":
+            stats["total_amendements_adoptes"] += 1
+            if hemicycle:
+                stats["total_amendements_hemicycle_adoptes"] += 1
+
+            if from_gouv:
+                stats["total_amendements_gouvernement_adoptes"] += 1
+                if hemicycle:
+                    stats["total_amendements_hemicycle_gouvernement_adoptes"] += 1
+
+            if institution == 'senat':
+                stats["total_amendements_senateurs_adoptes"] += 1
+                if hemicycle:
+                    stats["total_amendements_hemicycle_senateurs_adoptes"] += 1
+
+                if from_gouv:
+                    stats["total_amendements_gouvernement_senat_adoptes"] += 1
+                    if hemicycle:
+                        stats["total_amendements_hemicycle_gouvernement_senat_adoptes"] += 1
+
+            if institution == 'assemblee':
+                stats["total_amendements_deputes_adoptes"] += 1
+                if hemicycle:
+                    stats["total_amendements_hemicycle_deputes_adoptes"] += 1
+
+                if from_gouv:
+                    stats["total_amendements_gouvernement_assemblee_adoptes"] += 1
+                    if hemicycle:
+                        stats["total_amendements_hemicycle_gouvernement_assemblee_adoptes"] += 1
+
+        if from_gouv:
+            stats["total_amendements_gouvernement"] += 1
+            if hemicycle:
+                stats["total_amendements_hemicycle_gouvernement"] += 1
+
+        if institution == 'senat':
+            stats["total_amendements_senateurs"] += 1
+            if hemicycle:
+                stats["total_amendements_hemicycle_senateurs"] += 1
+
+            if from_gouv:
+                stats["total_amendements_gouvernement_senat"] += 1
+                if hemicycle:
+                    stats["total_amendements_hemicycle_gouvernement_senat"] += 1
+
+        if institution == 'assemblee':
+            stats["total_amendements_deputes"] += 1
+            if hemicycle:
+                stats["total_amendements_hemicycle_deputes"] += 1
+
+            if from_gouv:
+                stats["total_amendements_gouvernement_assemblee"] += 1
+                if hemicycle:
+                    stats["total_amendements_hemicycle_gouvernement_assemblee"] += 1
+
+
 def process(output_dir, dos):
     stats = {}
 
@@ -130,47 +224,7 @@ def process(output_dir, dos):
     stats["total_seances_assemblee"] = sum([step['total_seances'] for dir, step in intervs.items() if '_assemblee' in dir])
     stats["total_seances_senat"] = sum([step['total_seances'] for dir, step in intervs.items() if '_senat' in dir])
 
-    stats['total_amendements'] \
-        = stats["total_amendements_adoptes"] \
-        = stats["total_amendements_senateurs"] \
-        = stats["total_amendements_senateurs_adoptes"] \
-        = stats["total_amendements_gouvernement"] \
-        = stats["total_amendements_gouvernement_adoptes"] \
-        = stats["total_amendements_gouvernement_senat"] \
-        = stats["total_amendements_gouvernement_senat_adoptes"] \
-        = stats["total_amendements_deputes"] \
-        = stats["total_amendements_deputes_adoptes"] \
-        = stats["total_amendements_gouvernement_assemblee"] \
-        = stats["total_amendements_gouvernement_assemblee_adoptes"] \
-        = 0
-
-    for amdt, institution in find_amendements(output_dir):
-        stats['total_amendements'] += 1
-
-        from_gouv = amdt["groupe"] == "Gouvernement"
-
-        if amdt["sort"] == "adopté":
-            stats["total_amendements_adoptes"] += 1
-            if from_gouv:
-                stats["total_amendements_gouvernement_adoptes"] += 1
-            if institution == 'senat':
-                stats["total_amendements_senateurs_adoptes"] += 1
-                if from_gouv:
-                    stats["total_amendements_gouvernement_senat_adoptes"] += 1
-            if institution == 'assemblee':
-                stats["total_amendements_deputes_adoptes"] += 1
-                if from_gouv:
-                    stats["total_amendements_gouvernement_assemblee_adoptes"] += 1
-        if from_gouv:
-            stats["total_amendements_gouvernement"] += 1
-        if institution == 'senat':
-            stats["total_amendements_senateurs"] += 1
-            if from_gouv:
-                stats["total_amendements_gouvernement_senat"] += 1
-        if institution == 'assemblee':
-            stats["total_amendements_deputes"] += 1
-            if from_gouv:
-                stats["total_amendements_gouvernement_assemblee"] += 1
+    add_amendments_stats(stats, find_amendements(output_dir))
 
     stats["echecs_procedure"] = len([step for step in dos['steps'] if step.get("echec")])
 
