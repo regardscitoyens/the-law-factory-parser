@@ -347,7 +347,7 @@ HEADERS = [
     "URL JO",
     "URL CC",
     "URL OpenData La Fabrique",
-    "Source données",
+    "Texte manquant",
 ]
 
 
@@ -402,6 +402,8 @@ if __name__ == '__main__':
             dos['Nature du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
             dos['Type de texte'] = clean_type_dossier(dos)
 
+            dos['Texte manquant'] = 'oui'
+
             if senat_id in dossiers_json:
                 if verbose:
                     print(' - matched')
@@ -409,13 +411,12 @@ if __name__ == '__main__':
                 parsed_dos = dossiers_json[senat_id]
                 try:
                     add_metrics(dos, parsed_dos, fast=fast_mode)
-                    dos['Source données'] = 'LaFabrique'
+                    dos['Texte manquant'] = 'non'
                 except KeyboardInterrupt:
                     break
             elif not fast_mode:
                 # do a custom parsing when the parsed dos is missing
                 try:
-                    dos['Source données'] = 'parsing ad-hoc'
                     add_metrics_via_adhoc_parsing(dos, log=log)
                     fixed += 1
                 except KeyboardInterrupt:
