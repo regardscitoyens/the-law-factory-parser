@@ -67,7 +67,7 @@ def get_initiative(steps):
         if step.get('step') != 'depot':
             break
         real_depot = step
-    return detect_auteur_depot_from_url(real_depot.get('source_url', ''))
+    return detect_auteur_depot_from_url(real_depot.get('source_url', '')), real_depot.get('institution')
 
 
 def read_text(articles):
@@ -86,7 +86,7 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['Titre court'] = parsed_dos['short_title']
     dos["URL du dossier Assemblée"] = parsed_dos.get('url_dossier_assemblee', '')
     dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
-    dos['Initiative du texte'] = get_initiative(parsed_dos['steps'])
+    dos['Initiative du texte'], dos['Institution de dépôt'] = get_initiative(parsed_dos['steps'])
     dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
@@ -169,7 +169,7 @@ def add_metrics_via_adhoc_parsing(dos, log=sys.stderr):
             parsed_dos = merge_senat_with_an(senat_dos, an_dos)
     dos['Titre court'] = parsed_dos['short_title']
     dos['Type de procédure'] = "accélérée" if parsed_dos['urgence'] else "normale"
-    dos['Initiative du texte'] = get_initiative(parsed_dos['steps'])
+    dos['Initiative du texte'], dos['Institution de dépôt'] = get_initiative(parsed_dos['steps'])
     dos['Étapes échouées'] = count_echecs(parsed_dos['steps'])
     dos['CMP'] = get_CMP_type(parsed_dos['steps'])
     cc_step = [step['source_url'] for step in parsed_dos['steps'] if step.get('stage') == 'constitutionnalité']
@@ -271,8 +271,8 @@ HEADERS = [
     "Année de promulgation",
     "Législature de promulgation",
     "Durée d'adoption (jours)",
-    "Nature du texte",
-    "Initiative du texte", # TODO: Institution de dépôt
+    "Initiative du texte",
+    "Institution de dépôt",
     "Nombre de propositions de loi rattachées",
     "Nombre de textes produits",
     "Nombre de dépôts dans les institutions",
@@ -401,7 +401,6 @@ if __name__ == '__main__':
             dos["URL du dossier Sénat"] = dos["URL du dossier"]
             dos["Thèmes"] = dos["Thèmes"].replace(', ', '|')
 
-            dos['Nature du texte'] = upper_first(dos['Type de dossier'].split(' de loi')[0]) + ' de loi'
             dos['Type de texte'] = clean_type_dossier(dos)
 
             dos['Texte manquant'] = 'oui'
