@@ -108,11 +108,16 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['Nombre de caractères final'] = stats['output_text_length']
     dos["Nombre de caractères avant saisine"] = stats.get('output_text_before_CC_length', stats['output_text_length'])
     dos['Nombre de caractères initial'] = stats['input_text_length']
+    dos["Croissance du nombre de caractères"] = stats['ratio_text_length_growth']
     dos['Proportion de texte modifié'] = stats['ratio_texte_modif']
     dos["Nombre d'articles initial"] = stats['total_input_articles']
     dos["Nombre d'articles final"] = stats['total_output_articles']
     dos["Nombre d'articles avant saisine"] = dos["Nombre d'articles final"] - dos["Nombre d'articles censurés"]
     dos["Croissance du nombre d'articles"] = stats['ratio_articles_growth']
+    dos["Nombre de mots initial"] = stats['input_text_word_count']
+    dos["Nombre de mots avant saisine"] = stats.get('output_text_before_CC_word_count', stats['output_text_word_count'])
+    dos["Nombre de mots final"] = stats['output_text_word_count']
+    dos["Croissance du nombre de mots"] = stats['ratio_word_count_growth']
     dos["Nombre de mots prononcés"] = stats['total_mots']
     dos["Nombre d'intervenants"] = stats['total_intervenants']
     dos["Nombre d'interventions"] = stats['total_interventions']
@@ -279,12 +284,17 @@ HEADERS = [
     "Nombre de caractères initial",
     "Nombre de caractères avant saisine",
     "Nombre de caractères final",
+    "Croissance du nombre de caractères",
 #   "Proportion de texte allongé"
     "Proportion de texte modifié",
     "Nombre d'articles initial",
     "Nombre d'articles avant saisine",
     "Nombre d'articles final",
     "Croissance du nombre d'articles",
+    "Nombre de mots initial",
+    "Nombre de mots avant saisine",
+    "Nombre de mots final",
+    "Croissance du nombre de mots",
 #   "Nombre d'articles inchangés",
 #   "Proportion d'articles inchangés",
 #   "Nombre initial d'alinéas",
