@@ -133,21 +133,14 @@ def add_amendments_stats(stats, amendements):
         = 0
 
     for amdt, amdts_file in amendements:
-        institution = None
-        if '_senat' in amdts_file:
-            institution = 'senat'
-        if '_assemblee' in amdts_file:
-            institution = 'assemblee'
-
-        hemicycle = False
-        if '_hemicycle' in amdts_file:
-            hemicycle = True
+        senat = '_senat' in amdts_file
+        assemblee = '_assemblee' in amdts_file
+        hemicycle = '_hemicycle' in amdts_file
+        from_gouv = amdt["groupe"] == "Gouvernement"
 
         stats['total_amendements'] += 1
         if hemicycle:
             stats['total_amendements_hemicycle'] += 1
-
-        from_gouv = amdt["groupe"] == "Gouvernement"
 
         if amdt["sort"] == "adopté":
             stats["total_amendements_adoptes"] += 1
@@ -159,7 +152,7 @@ def add_amendments_stats(stats, amendements):
                 if hemicycle:
                     stats["total_amendements_hemicycle_gouvernement_adoptes"] += 1
 
-            if institution == 'senat':
+            if senat:
                 stats["total_amendements_senateurs_adoptes"] += 1
                 if hemicycle:
                     stats["total_amendements_hemicycle_senateurs_adoptes"] += 1
@@ -169,7 +162,7 @@ def add_amendments_stats(stats, amendements):
                     if hemicycle:
                         stats["total_amendements_hemicycle_gouvernement_senat_adoptes"] += 1
 
-            if institution == 'assemblee':
+            if assemblee:
                 stats["total_amendements_deputes_adoptes"] += 1
                 if hemicycle:
                     stats["total_amendements_hemicycle_deputes_adoptes"] += 1
@@ -184,7 +177,7 @@ def add_amendments_stats(stats, amendements):
             if hemicycle:
                 stats["total_amendements_hemicycle_gouvernement"] += 1
 
-        if institution == 'senat':
+        if senat:
             stats["total_amendements_senateurs"] += 1
             if hemicycle:
                 stats["total_amendements_hemicycle_senateurs"] += 1
@@ -194,7 +187,7 @@ def add_amendments_stats(stats, amendements):
                 if hemicycle:
                     stats["total_amendements_hemicycle_gouvernement_senat"] += 1
 
-        if institution == 'assemblee':
+        if assemblee:
             stats["total_amendements_deputes"] += 1
             if hemicycle:
                 stats["total_amendements_hemicycle_deputes"] += 1
