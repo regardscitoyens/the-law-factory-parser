@@ -106,7 +106,7 @@ def add_metrics(dos, parsed_dos, fast=False):
     dos['URL JO'] = parsed_dos['url_jo'] if 'url_jo' in parsed_dos else ''
 
     dos['Nombre de caractères final'] = stats['output_text_length']
-    dos["Nombre de caractères avant saisine"] = stats.get('output_text_length_before_CC', stats['output_text_length'])
+    dos["Nombre de caractères avant saisine"] = stats.get('output_text_before_CC_length', stats['output_text_length'])
     dos['Nombre de caractères initial'] = stats['input_text_length']
     dos['Proportion de texte modifié'] = stats['ratio_texte_modif']
     dos["Nombre d'articles initial"] = stats['total_input_articles']
@@ -272,7 +272,7 @@ HEADERS = [
     "Législature de promulgation",
     "Durée d'adoption (jours)",
     "Nature du texte",
-    "Initiative du texte",
+    "Initiative du texte", # TODO: Institution de dépôt
     "Nombre de propositions de loi rattachées",
     "Nombre de textes produits",
     "Nombre de dépôts dans les institutions",

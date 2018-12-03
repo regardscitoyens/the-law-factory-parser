@@ -1,7 +1,51 @@
-import os, sys, glob
+import os, sys, glob, re
 
 from tlfp.tools.common import strip_text, compute_similarity_by_articles, open_json, print_json, \
     clean_text_for_diff, datize
+
+
+def count_words(content):
+    """
+    Counts the number of words in the specified string.
+    Based on the regexes / logic from Countable.js:
+    https://github.com/RadLikeWhoa/Countable
+
+    Taken from: https://github.com/Jaza/word-count/blob/master/word_count.py
+    With fix from https://github.com/Jaza/word-count/issues/1
+    And updated regex from: https://github.com/RadLikeWhoa/Countable/blob/4d2812d7b53736d2bca4268b783997545d261c43/Countable.js#L149
+
+    Divergences with others applications:
+        ╔════════════════════════╦══════════════════════════════════════════╗
+        ║                        ║                # of words                ║
+        ╠════════════════════════╬═════════════╦══════════════╦═════════════╣
+        ║ Input                  ║ This script ║ Libre Office ║ Google Docs ║
+        ╠════════════════════════╬═════════════╬══════════════╬═════════════╣
+        ║ "L'article"            ║ 2           ║ 1            ║ 1           ║
+        ╠════════════════════════╬═════════════╬══════════════╬═════════════╣
+        ║ "Ceci :"               ║ 1           ║ 2            ║ 1           ║
+        ╠════════════════════════╬═════════════╬══════════════╬═════════════╣
+        ║ "321-32"               ║ 1           ║ 2            ║ 1           ║
+        ╠════════════════════════╬═════════════╬══════════════╬═════════════╣
+        ║ "L'article L.O. 321-3" ║ 3           ║ 3            ║ 4           ║
+        ╚════════════════════════╩═════════════╩══════════════╩═════════════╝
+
+    >>> word_count("L'article L.O. 321-3")
+    3
+    """
+
+    striptags_re = re.compile(r'<\/?[a-z][^>]*>', re.IGNORECASE)
+    stripsymbols_re = re.compile(r'[";:,.?¿\-!¡/]+')
+    splitsymbols_re = re.compile(r"'")
+    words_re = re.compile(r'\S+')
+
+    c = content.strip()
+    c = striptags_re.sub('', c)
+    c = stripsymbols_re.sub('', c)
+    c = splitsymbols_re.sub(' ', c)
+
+    match = words_re.findall(c)
+
+    return len(match) if match else 0
 
 
 def has_been_censored(dos):
@@ -24,11 +68,18 @@ def read_alineas(art):
 
 def read_text(step):
     articles = step['texte.json']['articles']
-    texte = ''
     for art in articles:
+        # yield art['titre']
         for al in read_alineas(art):
-            texte += strip_text(al)
-    return texte
+            yield al
+
+
+def step_word_count(step):
+    return count_words('\n'.join(strip_text(al) for al in read_text(step)))
+
+
+def step_text_length(step):
+    return len(''.join(strip_text(al) for al in read_text(step)))
 
 
 def count_initial_depots(steps):
@@ -62,7 +113,8 @@ def count_texts(steps):
 
 def read_articles(step):
     articles = step['texte.json']['articles']
-    return {art['titre']: clean_text_for_diff(read_alineas(art)) for art in articles}
+    arts = {art['titre']: clean_text_for_diff(read_alineas(art)) for art in articles}
+    return {titre: txt for titre, txt in arts.items() if txt}
 
 
 def count_censored_articles(step):
@@ -91,18 +143,7 @@ def find_first_and_last_steps(dos, include_CC=True):
             last = i
         if not first_found and s.get('step') == "depot":
             first = last = i
-    return first, last
-
-
-def find_first_and_last_texts(dos):
-    first, last = find_first_and_last_steps(dos)
-
-    first_text = read_text(dos['steps'][first])
-    first_arts = read_articles(dos['steps'][first])
-    last_text = read_text(dos['steps'][last])
-    last_arts = read_articles(dos['steps'][last])
-
-    return first_text, first_arts, last_text, last_arts
+    return dos['steps'][first], dos['steps'][last]
 
 
 def add_amendments_stats(stats, amendements):
@@ -201,6 +242,8 @@ def add_amendments_stats(stats, amendements):
 def process(output_dir, dos):
     stats = {}
 
+    # # # INTERVENTIONS # # #
+
     intervs = open_json(os.path.join(output_dir, 'viz/interventions.json'))
     # only keep seances in hemicycle
     intervs = {step_name: step for step_name, step in intervs.items() if '_hemicycle' in step_name}
@@ -217,28 +260,42 @@ def process(output_dir, dos):
     stats["total_seances_assemblee"] = sum([step['total_seances'] for dir, step in intervs.items() if '_assemblee' in dir])
     stats["total_seances_senat"] = sum([step['total_seances'] for dir, step in intervs.items() if '_senat' in dir])
 
+    # # # AMENDMENTS # # #
+
     add_amendments_stats(stats, find_amendements(output_dir))
 
-    stats["echecs_procedure"] = len([step for step in dos['steps'] if step.get("echec")])
+    # # # TEXTS # # #
 
-    first_text, first_arts, last_text, last_arts = find_first_and_last_texts(dos)
+    first_step, last_step = find_first_and_last_steps(dos)
+    first_arts = read_articles(first_step)
+    last_arts = read_articles(last_step)
 
     stats["total_input_articles"] = len(first_arts)
     stats["total_output_articles"] = len(last_arts)
-    stats["ratio_articles_growth"] = len(last_arts) / len(first_arts)
+    # (taille finale - taille initiale) / taille finale
+    stats["ratio_articles_growth"] = (stats["total_output_articles"] - stats["total_input_articles"]) / stats["total_output_articles"]
+
+    stats["input_text_length"] = step_text_length(first_step)
+    stats["output_text_length"] = step_text_length(last_step)
+    stats["ratio_text_length_growth"] = (stats["output_text_length"] - stats["input_text_length"]) / stats["output_text_length"]
+
+    stats["input_text_word_count"] = step_word_count(first_step)
+    stats["output_text_word_count"] = step_word_count(last_step)
+    stats["ratio_word_count_growth"] = (stats["output_text_length"] - stats["input_text_length"]) / stats["output_text_length"]
+
+    adopted_step = find_first_and_last_steps(dos, include_CC=False)[1]
+    if has_been_censored(dos):
+        stats["censored_articles"], stats["fully_censored_articles"] = count_censored_articles(last_step)
+        stats["output_text_before_CC_length"] = step_text_length(adopted_step)
+        stats["output_text_before_CC_word_count"] = step_word_count(adopted_step)
 
     stats["ratio_texte_modif"] = 1 - compute_similarity_by_articles(first_arts, last_arts)
-    stats["input_text_length"] = len(first_text)
-    stats["output_text_length"] = len(last_text)
 
-    _, adopted_step_i = find_first_and_last_steps(dos, include_CC=False)
-    adopted_step = dos['steps'][adopted_step_i]
-    if has_been_censored(dos):
-        adopted_text = read_text(adopted_step)
-        last_step = find_first_and_last_steps(dos)[1]
-        stats["censored_articles"], stats["fully_censored_articles"] = count_censored_articles(dos['steps'][last_step])
-        stats["output_text_length_before_CC"] = len(adopted_text)
+    # # # PROCEDURE # # #
 
+    stats["echecs_procedure"] = len([step for step in dos['steps'] if step.get("echec")])
+
+    # TODO: first institution
     stats['last_stage'] = adopted_step.get('stage')
     if stats['last_stage'] == 'CMP':
         stats['last_institution'] = 'CMP'
