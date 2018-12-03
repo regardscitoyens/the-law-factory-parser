@@ -2,6 +2,7 @@ import glob, os, sys, csv, traceback
 
 from lawfactory_utils.urls import enable_requests_cache
 from senapy.dosleg import opendata
+from senapy.dosleg.parser import guess_legislature
 
 from tlfp.parse_one import *
 from tlfp.tools import parse_texte
@@ -265,7 +266,7 @@ HEADERS = [
     "Titre court",
     "Date initiale",
     "Année initiale",
-#   "Législature initiale",
+    "Législature initiale",
     "Date de promulgation",
     "Année de promulgation",
     "Législature de promulgation",
@@ -392,6 +393,7 @@ if __name__ == '__main__':
 
             dos['Année initiale'] = annee(dos['Date initiale'])
             dos['Date initiale'] = format_date(dos['Date initiale'])
+            dos['Législature initiale'] = guess_legislature(dos['Date initiale'])
             dos['Année de promulgation'] = annee(dos['Date de promulgation'])
             dos['Date de promulgation'] = format_date(dos['Date de promulgation'])
             dos["Durée d'adoption (jours)"] = (datize(dos["Date de promulgation"]) - datize(dos["Date initiale"])).days + 1
