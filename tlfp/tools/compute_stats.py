@@ -1,7 +1,7 @@
 import os, sys, glob, re
 
 from tlfp.tools.common import strip_text, compute_similarity_by_articles, open_json, print_json, \
-    clean_text_for_diff, datize
+    clean_text_for_diff, datize, clean_statuses
 
 
 def count_words(content):
@@ -15,19 +15,21 @@ def count_words(content):
     And updated regex from: https://github.com/RadLikeWhoa/Countable/blob/4d2812d7b53736d2bca4268b783997545d261c43/Countable.js#L149
 
     Divergences with others applications:
-        ╔════════════════════════╦═══════════════════════════════════════════════════════════════════╗
-        ║                        ║                             # of words                            ║
-        ╠════════════════════════╬═════════════╦══════════════╦═════════════╦════════════════╦═══════╣
-        ║ Input                  ║ This script ║ Libre Office ║ Google Docs ║ Microsoft Word ║ Gedit ║
-        ╠════════════════════════╬═════════════╬══════════════╬═════════════╬════════════════╬═══════╣
-        ║ "L'article"            ║ 2           ║ 1            ║ 1           ║ 1              ║ 2     ║
-        ╠════════════════════════╬═════════════╬══════════════╬═════════════╬════════════════╬═══════╣
-        ║ "Ceci :"               ║ 1           ║ 2            ║ 1           ║ 2              ║ 1     ║
-        ╠════════════════════════╬═════════════╬══════════════╬═════════════╬════════════════╬═══════╣
-        ║ "321-32"               ║ 1           ║ 2            ║ 1           ║ 1              ║ 2     ║
-        ╠════════════════════════╬═════════════╬══════════════╬═════════════╬════════════════╬═══════╣
-        ║ "L'article L.O. 321-3" ║ 3           ║ 3            ║ 4           ║ 3              ║ 6     ║
-        ╚════════════════════════╩═════════════╩══════════════╩═════════════╩════════════════╩═══════╝
+        ╔════════════════════════╦═══════════════════════════════════════════════════════════════════════════╗
+        ║                        ║                               Number of words                             ║
+        ║ Input                  ╠═════════════╦══════════════╦═════════════╦════════════════╦═══════╦═══════╣
+        ║                        ║ This script ║ Libre Office ║ Google Docs ║ Microsoft Word ║ Gedit ║ wc -w ║
+        ╠════════════════════════╬═════════════╬══════════════╬═════════════╬════════════════╬═══════╬═══════╣
+        ║ "L'article"            ║ 2           ║ 1            ║ 1           ║ 1              ║ 2     ║ 1     ║
+        ╠════════════════════════╬═════════════╬══════════════╬═════════════╬════════════════╬═══════╬═══════╣
+        ║ "Ceci :"               ║ 1           ║ 2            ║ 1           ║ 2              ║ 1     ║ 2     ║
+        ╠════════════════════════╬═════════════╬══════════════╬═════════════╬════════════════╬═══════╬═══════╣
+        ║ "321-32"               ║ 1           ║ 2            ║ 1           ║ 1              ║ 2     ║ 1     ║
+        ╠════════════════════════╬═════════════╬══════════════╬═════════════╬════════════════╬═══════╬═══════╣
+        ║ "L'article L.O. 321-3" ║ 4           ║ 3            ║ 4           ║ 3              ║ 6     ║ 3     ║
+        ╚════════════════════════╩═════════════╩══════════════╩═════════════╩════════════════╩═══════╩═══════╝
+
+    NOTE: "wc -w" only count spaces-separated words
 
     >>> count_words("L'article L.O. 321-3")
     4
@@ -77,7 +79,7 @@ def read_text(step):
 
 
 def step_word_count(step):
-    return count_words('\n'.join(strip_text(al) for al in read_text(step)))
+    return count_words('\n'.join(clean_statuses(al) for al in read_text(step)))
 
 
 def step_text_length(step):
@@ -274,7 +276,6 @@ def process(output_dir, dos):
 
     stats["total_input_articles"] = len(first_arts)
     stats["total_output_articles"] = len(last_arts)
-    # (taille finale - taille initiale) / taille finale
     stats["ratio_articles_growth"] = (stats["total_output_articles"] - stats["total_input_articles"]) / stats["total_input_articles"]
 
     stats["input_text_length"] = step_text_length(first_step)
@@ -283,7 +284,7 @@ def process(output_dir, dos):
 
     stats["input_text_word_count"] = step_word_count(first_step)
     stats["output_text_word_count"] = step_word_count(last_step)
-    stats["ratio_word_count_growth"] = (stats["output_text_length"] - stats["input_text_length"]) / stats["input_text_length"]
+    stats["ratio_word_count_growth"] = (stats["output_text_word_count"] - stats["input_text_word_count"]) / stats["input_text_word_count"]
 
     adopted_step = find_first_and_last_steps(dos, include_CC=False)[1]
     if has_been_censored(dos):
