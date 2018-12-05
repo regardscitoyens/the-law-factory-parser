@@ -130,6 +130,7 @@ clean_legifrance_regexps = [
     (re.compile(r'<div[^>]*class="titreSection[^>]*>\s*(%s\s+[\dIVXLCDM]+e?r?)\s*:\s*([^<]*?)\s*</div>' % section_titles, re.I), r'<p>\1</p><p><b>\5</b></p>'),
     (re.compile(r'<div[^>]*class="titre(?:Art|Section)[^>]*>([^<]*?)\s*</div>', re.I), r'<p><b>\1</b></p>'),
     (re.compile(r'\[Dispositions (déclarées non conformes à la Constitution( à compter du .{0,30})? par|résultant de) la (<a[^>]*?>)?décision( du Conseil constitutionnel)? n° \d+-\d+ ?(<\/a>)? ?DC du .{0,30}\]', re.I), "(Censuré)"),
+    (re.compile(r'\[Rédaction conforme .{0,100} la (<a[^>]*?>)?décision( du Conseil constitutionnel)? n° \d+-\d+ ?(<\/a>)? ?DC du .{0,30}\]\.?', re.I), ""),
     (re.compile(r'―'), '-'),
     (re.compile(r'([\.\s]+)-([^\s\-]+)'), r'\1 - \2'),
 ]
@@ -249,6 +250,7 @@ def add_to_articles(dic, all_articles):
             dic['alineas'] = {'001': ''}
         elif len(dic['alineas']) == 1 and dic['alineas']['001'].startswith("(Censuré)"):
             dic['statut'] = "supprimé"
+            dic['alineas'] = {'001': '(Censuré)'}
         elif dic['statut'].startswith('conforme') and not len(dic['alineas']):
             dic['alineas'] = {'001': '(Non modifié)'}
         # Assume an article is non-modifié if it's empty (but check if it's supprimé)
