@@ -1,7 +1,7 @@
 import copy
 
 from tlfp.tools.detect_anomalies import find_anomalies
-from tlfp.tools._step_logic import should_ignore_commission_text
+from tlfp.tools._step_logic import should_ignore_commission_text, use_old_procedure
 
 from lawfactory_utils.urls import validate_link_CC_decision
 
@@ -152,7 +152,8 @@ def merge_senat_with_an(senat, an):
             elif empty_last_step:
                 break
             else:
-                empty_last_step = True
+                if not step.get('step') == 'commission' and use_old_procedure(step, dos):
+                    empty_last_step = True
 
         if len(steps_to_add) == 0:
             steps_to_add = [step]
