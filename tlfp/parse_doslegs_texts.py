@@ -134,17 +134,17 @@ def parse_url_for_step(url, step, step_index, retry=True):
         articles = parse_texte.parse(fixed_url, resp=fixed_url_resp)
         debug_file(articles, 'parsed_text_step_%d.json' % step_index)
 
-        if (not articles or len(articles) < 2) and retry:
-            if 'ta-commission' in fixed_url:
-                fixed_url = fixed_url.replace('ta-commission', 'rapports').replace('-a0', '')
-                print('        ^ empty parsing, trying url rapport :', fixed_url)
-                return parse_url_for_step(fixed_url, step, step_index, retry=False)
-            if 'assemblee-nationale' in fixed_url and 'rapports' in fixed_url:
-                fixed_url = fixed_url.replace('rapports', 'ta-commission').replace('.asp', '-a0.asp')
-                print('        ^ empty parsing, trying url TA :', fixed_url)
-                return parse_url_for_step(fixed_url, step, step_index, retry=False)
+        if (not articles or len(articles) < 2):
+            if retry:
+                if 'ta-commission' in fixed_url:
+                    fixed_url = fixed_url.replace('ta-commission', 'rapports').replace('-a0', '')
+                    print('        ^ empty parsing, trying url rapport :', fixed_url)
+                    return parse_url_for_step(fixed_url, step, step_index, retry=False)
+                if 'assemblee-nationale' in fixed_url and 'rapports' in fixed_url:
+                    fixed_url = fixed_url.replace('rapports', 'ta-commission').replace('.asp', '-a0.asp')
+                    print('        ^ empty parsing, trying url TA :', fixed_url)
+                    return parse_url_for_step(fixed_url, step, step_index, retry=False)
 
-        if not articles:
             raise Exception('[parse_texts] Empty parsing %s' % url)
 
         step['articles'] = articles
