@@ -104,6 +104,7 @@ def clean_extra_expose_des_motifs(html):
 section_titles = "((chap|t)itre|partie|volume|livre|tome|(sous-)?section)"
 
 re_definitif = re.compile(r'<p([^>]*align[=:\s\-]*center"?)?>\(?<(b|strong)>\(?texte d[^f]*finitif\)?</(b|strong)>\)?</p>', re.I)
+re_definitif_new_format = re.compile(r'<span [^>]*font-weight: bold;[^>]*>\(Texte d[^f]*finitif\)</span>', re.I) # embedded HTML from AN /textes/
 definitif_before_congres = "<i>(Texte voté par les deux Assemblées du Parlement en termes identiques ; ce projet ne deviendra définitif, conformément à l'article 89 de la Constitution, qu'après avoir été approuvé par référendum ou par le Parlement réuni en Congrès)</i>"
 definitif_after_congres = "Le Parlement, réuni en Congrès, a approuvé dans les conditions prévues à l'article 89, alinéa 3, de la Constitution, le projet de loi constitutionnelle dont la teneur suit"
 
@@ -474,7 +475,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             srclst = [int(m.group(1)), int(m.group(2))]
             source_avenants = True
 
-    definitif = re_definitif.search(string) is not None or 'legifrance.gouv.fr' in url
+    definitif = re_definitif.search(string) is not None or re_definitif_new_format.search(string) is not None or 'legifrance.gouv.fr' in url
     soup = BeautifulSoup(string, "html5lib")
     texte = {"type": "texte", "source": url, "definitif": definitif}
 
