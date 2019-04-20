@@ -28,8 +28,9 @@ pyenv activate lafabrique
 Then with your choice of virtualenv activated, install the dependencies:
 
 ```bash
+sudo apt install libxml2-dev libxslt-dev # necessary for lxml
 pip install --upgrade setuptools pip # not necessary but always a good idea
-pip install --process-dependency-links -e .
+pip install -e .
 pip install -Ur requirements.txt # to get the latest version of those dependencies
 ```
 
