@@ -146,7 +146,7 @@ for procedure_file in sorted(glob.glob("data/**/procedure.json", recursive=True)
         #  DATE=$(date --date="$DATE" -R);
         date = step.get("date")
 
-        if "directory" not in step or not step.get("debats_order"):
+        if "directory" not in step or step.get("debats_order") is None:
             continue
 
         texte_path = os.path.join(
