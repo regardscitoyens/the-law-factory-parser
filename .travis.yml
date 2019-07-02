@@ -32,6 +32,8 @@ script:
     - python tlfp/tools/update_procedure.py
     - python tlfp/tools/sort_articles.py
     - python tests/test_parse_texte.py
+    - python tests/test_parse_texte_plf.py
+    - python tests/test_parse_annexes.py
     - python -m doctest tlfp/tools/compute_stats.py
     - # python tests/test_complete_articles.py # not yet passing
     - python tests/test_steps.py
