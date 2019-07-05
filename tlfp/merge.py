@@ -86,7 +86,9 @@ def merge_senat_with_an(senat, an):
                     # only take source_url from the AN, we've got better infos for now
                     # from the senat
                     common_step = copy.deepcopy(step)
-                    if an_step.get('source_url'):
+                    if an_step.get('source_url') and (
+                      # In lecture définitive's dépot, if one source_url is an AN TA, it is probably the good one and should be kept if the other one is a PL
+                      not (step.get('stage') == 'l. définitive' and step.get('step') == 'depot' and '/projets/pl' in an_step.get('source_url') and '/ta/ta' in step['source_url'])):
                         common_step['source_url'] = an_step.get('source_url')
                     if not common_step.get('date'):
                         common_step['date'] = an_step.get('date')
