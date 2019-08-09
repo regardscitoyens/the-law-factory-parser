@@ -718,7 +718,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
                 if srclst:
                     article["source_text"] = srclst[curtext]
                 m = re_mat_art.match(clean_article_name(text))
-                article["titre"] = normalize_1(m.group(1), "1er")
+                article["titre"] = normalize_1(m.group(1), "1er").replace(u"İ", "I")
 
                 assert article["titre"]  # avoid empty titles
                 assert not texte['definitif'] or ' bis' not in article["titre"]  # detect invalid article names
