@@ -16,6 +16,9 @@ from .common import get_text_id, upcase_accents, real_lower
 from .sort_articles import bister
 
 
+class TextParsingFailedException(Exception):
+    pass
+
 # inspired by duralex/alinea_parser.py
 def word_to_number(word):
     words = {
@@ -223,8 +226,7 @@ def clean_html(t):
         try:
             t = regex.sub(repl, t)
         except Exception as e:
-            print("Crashed while applying regexp", regex, "with replacement", repl, "to", t)
-            raise e
+            raise TextParsingFailedException("Crashed while applying regexp", regex, "with replacement", repl, "to", t, e)
     return t.strip()
 
 re_clean_et = re.compile(r'(,|\s+et)\s+', re.I)
@@ -245,7 +247,7 @@ def add_to_articles(dic, all_articles):
         # check for duplicates
         for article in all_articles:
             if dic.get('titre') and dic.get('titre') == article.get('titre') and 'source_text' not in article:
-                raise Exception('Duplicate article title found: %s', article.get('titre'))
+                raise TextParsingFailedException('Duplicate article title found: %s', article.get('titre'))
 
         if len(dic['alineas']) == 1 and dic['alineas']['001'].startswith("(Supprimé)"):
             dic['statut'] = "supprimé"
