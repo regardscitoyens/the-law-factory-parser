@@ -684,7 +684,10 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
                 read = READ_TEXT
         elif re_mat_end.match(line) and not include_annexes:
             if not expose:
-                break
+                if DEBUG:
+                    print("DEBUG: END OF TEXT OF DETECTED")
+                if len(all_articles) > 0:
+                    break
             expose = False
             continue
         # Annexes.
