@@ -62,13 +62,22 @@ def mark_missing_articles_as_deleted(articles, old_step_id, step_id, last_match_
                 articles[article_id]['steps'].append(def_s)
 
 
-def process(procedure):
-    title = procedure.get("long_title", "Missing title").replace(procedure.get("short_title", "").lower(), procedure.get("short_title", ""))
-    title = title[0].upper() + title[1:]
-    out = {'law_title': title, 'articles': {}, 'sections': {}, 'short_title': procedure.get("short_title", "")}
-    if 'loi_dite' in procedure:
-        out['loi_dite'] = procedure['loi_dite']
+def check_text_match_dosleg(url, senat_id):
+    # test if the text is the one 
+    if url.endswith('/%s.html' % senat_id):
+        return True
 
+
+    # test the short version: pjl2014-211 -> pjl14-211
+    if len(senat_id) > len('pjlYY-XXX') and senat_id.startswith('pjl20'): # TODO: update in one century :)
+        senat_id = senat_id.replace('pjl20', 'pjl') 
+        if url.endswith('/%s.html' % senat_id):
+            return True
+
+    return False
+
+
+def reordered_steps(procedure):
     # Handle reorder of repeated depots (typically a few PPL from Senat similar to a PJL added to its dossier)
     senat_id = procedure.get('senat_id')
     first = None
@@ -76,9 +85,9 @@ def process(procedure):
     latersteps = []
     for i, step in enumerate(procedure['steps']):
         if step.get('step', '') == 'depot':
-            if not first and (step.get('institution', '') == 'assemblee' or step.get('source_url', '').endswith("/%s.html" % senat_id)):
+            if not first and (step.get('institution', '') == 'assemblee' or check_text_match_dosleg(step.get('source_url', ''), senat_id)):
                 first = step
-            elif first and step.get('institution', '') == 'assemblee' and step.get('source_url', '').endswith("/%s.html" % senat_id):
+            elif first and step.get('institution', '') == 'assemblee' and check_text_match_dosleg(step.get('source_url', ''), senat_id):
                 continue
             elif step.get('institution', '') == 'senat' and "/ppl" in step.get('source_url', '') and step.get('stage', '') == '1ère lecture':
                 # check next step is a depot too
@@ -91,6 +100,17 @@ def process(procedure):
     steps.append(first)
     depots = len(steps)
     steps += latersteps
+    return depots, steps
+
+
+def process(procedure):
+    title = procedure.get("long_title", "Missing title").replace(procedure.get("short_title", "").lower(), procedure.get("short_title", ""))
+    title = title[0].upper() + title[1:]
+    out = {'law_title': title, 'articles': {}, 'sections': {}, 'short_title': procedure.get("short_title", "")}
+    if 'loi_dite' in procedure:
+        out['loi_dite'] = procedure['loi_dite']
+
+    depots, steps = reordered_steps(procedure)
 
     # TODO : check whether it should be reintegrated or not
     # skip step presently happening
