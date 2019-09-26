@@ -436,7 +436,10 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
     elif url == '-':
         string = sys.stdin.read()
     else:
-        string = open(url).read()
+        try:
+            string = open(url).read()
+        except:
+            string = open(url, encoding="Windows-1252").read()
 
     string, has_multiple_expose = clean_extra_expose_des_motifs(string)
 
