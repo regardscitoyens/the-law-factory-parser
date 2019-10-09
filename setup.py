@@ -6,7 +6,7 @@ import re
 
 here = path.abspath(path.dirname(__file__))
 
-__version__ = '0.0.1'
+__version__ = '0.0.2.1'
 
 with open(path.join(here, 'README.md')) as readme:
     LONG_DESC = readme.read()

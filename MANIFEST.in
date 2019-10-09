@@ -1,3 +1,3 @@
 include README.md
 include requirements.txt
-include doc/valid_procedure.json
+include tlfp/tools/valid_procedure.json
