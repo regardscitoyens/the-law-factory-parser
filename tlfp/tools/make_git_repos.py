@@ -41,8 +41,7 @@ def read_text(path):
         texte += "# Article " + art["titre"] + "\n\n"
         for key in sorted(art["alineas"].keys()):
             if art["alineas"][key] != "":
-                texte += art["alineas"][key] + "\n"
-        texte += "\n"
+                texte += art["alineas"][key] + "\n\n"
     return texte
 
 
