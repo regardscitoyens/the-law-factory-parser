@@ -430,7 +430,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
         resp = download(url) if resp is None else resp
         if '/textes/'in url:
             resp.encoding = 'utf-8'
-        if 'assemblee-nationale.fr' in url:
+        if 'assemblee-nationale.fr' in url and '/dyn/' not in url:
             resp.encoding = 'Windows-1252'
         string = resp.text
     elif url == '-':
@@ -493,13 +493,14 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             elif "/jo/texte" in url:
                 texte["id"] = url.split('/')[-3]
         elif re.search(r"assemblee-?nationale", url, re.I):
-            m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
-            numero = int(m.group(3))
-            texte["id"] = "A" + m.group(1) + "-"
-            if m.group(2) is not None:
-                texte["id"] += m.group(2)
-            texte["id"] += str(numero)
-            texte["nosdeputes_id"] = get_text_id(url)
+            if "/dyn/" not in url:
+                m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
+                numero = int(m.group(3))
+                texte["id"] = "A" + m.group(1) + "-"
+                if m.group(2) is not None:
+                    texte["id"] += m.group(2)
+                texte["id"] += str(numero)
+                texte["nosdeputes_id"] = get_text_id(url)
         else:
             m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})(rec)?\d?(_mono)?\.", url, re.I)
             if m is None:
@@ -708,7 +709,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             else:
                 break
         # Identify titles and new article zones
-        elif (re.match(r"(<i>)?<b>", line) or
+        elif (re.match(r"(<i>)?<[ba]>", line) or
                 re_art_uni.match(cl_line) or
                 re.match(r"^Articles? ", line)
               ) and not re.search(r">Articles? supprimé", line):
@@ -803,7 +804,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
         for rejected in rejected_all_articles:
             articles_parsed = [art for art in rejected if art.get('type') == 'article']
             if len(articles_parsed):
-                print('WARNING: retrieving parsed text from a previously rejected text')
+                print('WARNING: retrieving parsed text from a previously rejected text',)
                 all_articles = rejected
                 break
 
