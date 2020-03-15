@@ -804,7 +804,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
         for rejected in rejected_all_articles:
             articles_parsed = [art for art in rejected if art.get('type') == 'article']
             if len(articles_parsed):
-                print('WARNING: retrieving parsed text from a previously rejected text',)
+                print('WARNING: retrieving parsed text from a previously rejected text')
                 all_articles = rejected
                 break
 
