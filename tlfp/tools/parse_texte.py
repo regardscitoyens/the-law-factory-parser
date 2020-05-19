@@ -103,6 +103,33 @@ def clean_extra_expose_des_motifs(html):
     return html, False
 
 
+def clean_extra_expose_des_motifs_v2(html):
+    """
+    the budget related texts have an exposé des motifs per article
+    at the depot step, we remove all of them except the last one
+    to make the later parsing easier
+
+    this is for the new opendata rendering: http://www.assemblee-nationale.fr/dyn/opendata/PRJLANR5L15B0235.html
+    """
+    soup = BeautifulSoup(html, "lxml")
+
+    exposes = 0
+    for div in soup.select('div[class*="assnatSection"]'):
+        inside_expose = False
+        for p in div.select('p'):
+            if 'data:image/png;base64' in str(p):
+                if p.text.strip() == 'Exposé des motifs':
+                    exposes += 1
+                    inside_expose = True
+            if inside_expose:
+                p.string = 0
+
+    if exposes > 3:
+        return str(soup), True
+    return html, False
+
+
+
 # Warning changing parenthesis in this regexp has multiple consequences throughout the code
 section_titles = "((chap|t)itre|partie|volume|livre|tome|(sous-)?section)"
 
@@ -187,7 +214,8 @@ html_replace = [
     (re.compile(r" "), " "),
     (re.compile(r"<!--.*?-->", re.I), ""),
     (re.compile(r"<span[^>]*color: #(0070b9|006fb9)[^>]*>\(\d+\)\s*</span>", re.I), ""), # remove pastilles
-    (re.compile(r"<span[^>]*color: white[^>]*>.*?</span>", re.I), ""), # remove invisible text
+    (re.compile(r"<span[^>]*color:\s*white[^>]*>.*?</span>", re.I), ""), # remove invisible text
+    (re.compile(r"<span[^>]*color:\s*#ffffff[^>]*>.*?</span>", re.I), ""), # remove invisible text
     (re.compile(r"(<img[^>]*>\s*<br/>\s*)", re.I), ""), # remove <img><br/> before the next regex kills my precious '«'
     (re.compile(r"</?br/?>\s+", re.I), " "),
     (re.compile(r'(«\s+|\s+»)'), '"'),
@@ -445,6 +473,10 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             string = open(url, encoding="Windows-1252").read()
 
     string, has_multiple_expose = clean_extra_expose_des_motifs(string)
+    string, has_multiple_expose_v2 = clean_extra_expose_des_motifs_v2(string)
+    has_multiple_expose = has_multiple_expose or has_multiple_expose_v2
+    if has_multiple_expose and DEBUG:
+        print("WARNING: cleaned multiple éxposés des motifs")
 
     if 'legifrance.gouv.fr' in url:
         for reg, res in clean_legifrance_regexps:
