@@ -500,7 +500,9 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
                 if m.group(2) is not None:
                     texte["id"] += m.group(2)
                 texte["id"] += str(numero)
-                texte["nosdeputes_id"] = get_text_id(url)
+            else:
+                texte["id"] = get_text_id(url)
+            texte["nosdeputes_id"] = get_text_id(url)
         else:
             m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})(rec)?\d?(_mono)?\.", url, re.I)
             if m is None:
