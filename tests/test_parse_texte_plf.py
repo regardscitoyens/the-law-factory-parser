@@ -14,7 +14,7 @@ if "--enable-cache" in sys.argv:
     enable_requests_cache()
 
 print("> testing parse_texte.parse for PLF 2 (2018)")
-result = parse_texte.parse("http://www.assemblee-nationale.fr/15/projets/pl0235.asp" )#, DEBUG=True)
+result = parse_texte.parse("http://www.assemblee-nationale.fr/dyn/opendata/PRJLANR5L15B0235.html" )#, DEBUG=True)
 
 print("  > correct number of articles")
 assert len(result) == 67, len(result)

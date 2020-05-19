@@ -247,7 +247,7 @@ def add_to_articles(dic, all_articles):
         # check for duplicates
         for article in all_articles:
             if dic.get('titre') and dic.get('titre') == article.get('titre') and 'source_text' not in article:
-                raise TextParsingFailedException('Duplicate article title found: %s', article.get('titre'))
+                raise TextParsingFailedException('Duplicate article title found: %s' % article.get('titre'))
 
         if len(dic['alineas']) == 1 and dic['alineas']['001'].startswith("(Supprimé)"):
             dic['statut'] = "supprimé"
