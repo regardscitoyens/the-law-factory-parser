@@ -536,7 +536,8 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
                     texte["id"] += m.group(2)
                 texte["id"] += str(numero)
             else:
-                texte["id"] = get_text_id(url)
+                textid_match = re.search(r'.{4}[ANS]*R[0-9][LS]*([0-9]*)[BTACP]*\d*\.html', url)
+                texte["id"] = "A" + textid_match.group(1) + "-" + get_text_id(url).lower()
             texte["nosdeputes_id"] = get_text_id(url)
         else:
             m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})(rec)?\d?(_mono)?\.", url, re.I)
