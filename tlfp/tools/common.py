@@ -393,11 +393,9 @@ def get_text_id(texte_url):
         if '/dyn/' in texte_url:
             # regex adapted from anpy:dossier_from_opendata.py
             textid_match = re.search(r'.{4}[ANS]*R[0-9][LS]*[0-9]*([BTACP]*)(\d*)\.html', texte_url)
-            nosdeputes_id = textid_match.group(2)
+            nosdeputes_id = textid_match.group(2).lstrip('0')
             if textid_match.group(1) == 'BTA':
                 nosdeputes_id = 'TA' + nosdeputes_id
-            else:
-                nosdeputes_id = nosdeputes_id.lstrip('0')
             return nosdeputes_id
         textid_match = re.search(r'fr\/(\d+)\/.*[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$', texte_url, re.I)
         nosdeputes_id = textid_match.group(2)
