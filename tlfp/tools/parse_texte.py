@@ -144,7 +144,7 @@ clean_texte_regexps = [
     # (re.compile(r' ?</p> ?(</t[rdh]>)'), r'\1'),          #          conclusion of report can be in a table too
     (re.compile(r'(>%s\s*[\dIVXLCDM]+(<sup>[eE][rR]?</sup>)?)\s+-\s+([^<]*?)\s*</p>' % section_titles.upper()), r'\1</p><p><b>\6</b></p>'),
     (re.compile(r'(<sup>[eE][rR]?</sup>)(\w+)'), r'\1 \2'), # add missing space, ex: "1<sup>er</sup>A "
-    (re.compile(r'(\w)<br/?>(\w)'),  r'\1 \2'), # a <br/> should be transformed as a ' ' only if there's text around it (visual break)
+    (re.compile(r'(\w)<br\s+/?>(\w)'),  r'\1 \2'), # a <br/> should be transformed as a ' ' only if there's text around it (visual break)
     (re.compile(r'<(em|s)> </(em|s)>'),  r' '), # remove empty tags with only one space inside
     (re.compile(r'(<p[^>]*><(b|strong)>Article[^<]*</(b|strong)></p>) \1'), r'\1'), # duplicate article title i.e. https://www.senat.fr/leg/tas10-156.html art 26
     (re.compile(r'(<a name=[\'"])[^\'"]+([\'"]>)', re.I), r'\1\2'),        # we use '<a name=' to recognize titles but we never use the anchor value so we can remove it to handle the following duplicates
