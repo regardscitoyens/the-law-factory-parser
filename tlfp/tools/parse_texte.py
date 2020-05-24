@@ -122,7 +122,7 @@ def clean_extra_expose_des_motifs_v2(html):
                     exposes += 1
                     inside_expose = True
             if inside_expose:
-                p.string = 0
+                p.string = ""
 
     if exposes > 3:
         return str(soup), True
@@ -151,6 +151,7 @@ clean_texte_regexps = [
     (re.compile(r'((<p style="text-align: center">(<[^>]+>)*[^<]+(<[^>]+>)*</p> ){2,})\1'), r'\1'), # duplicate group of title lines i.e. http://www.assemblee-nationale.fr/14/ta-commission/r3909-a0.asp art 10 A
     (re.compile(r'((?:<(?:p|span)[^>]*>\s*)+[^<]+)(?:<(?:b|strong|br)>\s*)+(Article \d[^<]{0,10})(?:</(?:b|strong)>)?((?:</(?:p|span)>)+)', re.I), r'\1\3<p><b>\2</b></p>'), # article title in previous article text i.e. http://www.assemblee-nationale.fr/13/ta/ta0173.asp art 9
     (re.compile(r"<p data-pastille=.*?</p>"), ""), # remove pastilles coming from AN "/textes/" HTML sometimes copy-pasted into Senate pages
+    (re.compile(r"<span[^>]*color:\s*#006fb9[^>]*>.*?</span>", re.I), ""), # remove pastilles from /opendata/ PJLF textes
 ]
 
 re_clean_title_legif = re.compile(r"[\s|]*l[eé]gifrance(.gouv.fr)?$", re.I)
@@ -756,8 +757,12 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
              ) or ''.join(text.attrs.get('class', [])).endswith('Intit'):
 
             line = cl_line.strip()
+
+            # If there's a ':', what comes after is not related to the article name
+            art_line = cl_line.split(':')[0].strip()
+
             # Read a new article
-            if re_mat_art.match(line):
+            if re_mat_art.match(art_line):
                 if article is not None:
                     pr_js(article)
                 read = READ_ALINEAS # Activate alineas lecture

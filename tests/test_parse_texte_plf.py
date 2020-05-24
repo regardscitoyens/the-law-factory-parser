@@ -17,11 +17,12 @@ print("> testing parse_texte.parse for PLF 2 (2018)")
 result = parse_texte.parse("http://www.assemblee-nationale.fr/dyn/opendata/PRJLANR5L15B0235.html" )#, DEBUG=True)
 
 print("  > correct number of articles")
-assert len(result) == 67, len(result)
+articles = len([block for block in result if block["type"] == "article"])
+assert articles == 64, articles
 print("     > OK")
 
 print("  > correct content of article 19")
-article_19 = result[22]
+article_19 = [block for block in result if block["titre"] == "19"][0]
 assert article_19["type"] == "article", article_19["type"]
 assert article_19["titre"] == "19", article_19["titre"]
 print("     > OK")
