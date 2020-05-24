@@ -15,7 +15,7 @@ if "--enable-cache" in sys.argv:
 
 print("> testing parse_texte without annexes (default)")
 result = parse_texte.parse(
-    "http://www.assemblee-nationale.fr/15/ta-commission/r1056-a0.asp"
+    "https://web.archive.org/web/20191104051233/http://www.assemblee-nationale.fr/15/ta-commission/r1056-a0.asp"
 )
 article = result[-1]
 assert article["type"] == "article"
@@ -23,7 +23,7 @@ print("     > OK")
 
 print("> testing parse_texte annexes from AN")
 result = parse_texte.parse(
-    "http://www.assemblee-nationale.fr/15/ta-commission/r1056-a0.asp",
+    "https://web.archive.org/web/20191104051233/http://www.assemblee-nationale.fr/15/ta-commission/r1056-a0.asp",
     include_annexes=True,
 )
 assert len(result) == 94, len(result)
