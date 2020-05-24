@@ -103,11 +103,38 @@ def clean_extra_expose_des_motifs(html):
     return html, False
 
 
+def clean_extra_expose_des_motifs_v2(html):
+    """
+    the budget related texts have an exposé des motifs per article
+    at the depot step, we remove all of them except the last one
+    to make the later parsing easier
+
+    this is for the new opendata rendering: http://www.assemblee-nationale.fr/dyn/opendata/PRJLANR5L15B0235.html
+    """
+    soup = BeautifulSoup(html, "lxml")
+
+    exposes = 0
+    for div in soup.select('div[class*="assnatSection"]'):
+        inside_expose = False
+        for p in div.select('p'):
+            if 'data:image/png;base64' in str(p):
+                if p.text.strip() == 'Exposé des motifs':
+                    exposes += 1
+                    inside_expose = True
+            if inside_expose:
+                p.string = ""
+
+    if exposes > 3:
+        return str(soup), True
+    return html, False
+
+
+
 # Warning changing parenthesis in this regexp has multiple consequences throughout the code
 section_titles = "((chap|t)itre|partie|volume|livre|tome|(sous-)?section)"
 
 re_definitif = re.compile(r'<p([^>]*align[=:\s\-]*center"?)?>\(?<(b|strong)>\(?texte d[^f]*finitif\)?</(b|strong)>\)?</p>', re.I)
-re_definitif_new_format = re.compile(r'<span [^>]*font-weight: bold;[^>]*>\(Texte d[^f]*finitif\)</span>', re.I) # embedded HTML from AN /textes/
+re_definitif_new_format = re.compile(r'<span [^>]*font-weight:\s*bold;[^>]*>\(Texte d[^f]*finitif\)</span>', re.I) # embedded HTML from AN /textes/
 definitif_before_congres = "<i>(Texte voté par les deux Assemblées du Parlement en termes identiques ; ce projet ne deviendra définitif, conformément à l'article 89 de la Constitution, qu'après avoir été approuvé par référendum ou par le Parlement réuni en Congrès)</i>"
 definitif_after_congres = "Le Parlement, réuni en Congrès, a approuvé dans les conditions prévues à l'article 89, alinéa 3, de la Constitution, le projet de loi constitutionnelle dont la teneur suit"
 
@@ -117,13 +144,14 @@ clean_texte_regexps = [
     # (re.compile(r' ?</p> ?(</t[rdh]>)'), r'\1'),          #          conclusion of report can be in a table too
     (re.compile(r'(>%s\s*[\dIVXLCDM]+(<sup>[eE][rR]?</sup>)?)\s+-\s+([^<]*?)\s*</p>' % section_titles.upper()), r'\1</p><p><b>\6</b></p>'),
     (re.compile(r'(<sup>[eE][rR]?</sup>)(\w+)'), r'\1 \2'), # add missing space, ex: "1<sup>er</sup>A "
-    (re.compile(r'(\w)<br/?>(\w)'),  r'\1 \2'), # a <br/> should be transformed as a ' ' only if there's text around it (visual break)
+    (re.compile(r'(\w)<br\s*/?>(\w)'),  r'\1 \2'), # a <br/> should be transformed as a ' ' only if there's text around it (visual break)
     (re.compile(r'<(em|s)> </(em|s)>'),  r' '), # remove empty tags with only one space inside
     (re.compile(r'(<p[^>]*><(b|strong)>Article[^<]*</(b|strong)></p>) \1'), r'\1'), # duplicate article title i.e. https://www.senat.fr/leg/tas10-156.html art 26
     (re.compile(r'(<a name=[\'"])[^\'"]+([\'"]>)', re.I), r'\1\2'),        # we use '<a name=' to recognize titles but we never use the anchor value so we can remove it to handle the following duplicates
     (re.compile(r'((<p style="text-align: center">(<[^>]+>)*[^<]+(<[^>]+>)*</p> ){2,})\1'), r'\1'), # duplicate group of title lines i.e. http://www.assemblee-nationale.fr/14/ta-commission/r3909-a0.asp art 10 A
     (re.compile(r'((?:<(?:p|span)[^>]*>\s*)+[^<]+)(?:<(?:b|strong|br)>\s*)+(Article \d[^<]{0,10})(?:</(?:b|strong)>)?((?:</(?:p|span)>)+)', re.I), r'\1\3<p><b>\2</b></p>'), # article title in previous article text i.e. http://www.assemblee-nationale.fr/13/ta/ta0173.asp art 9
     (re.compile(r"<p data-pastille=.*?</p>"), ""), # remove pastilles coming from AN "/textes/" HTML sometimes copy-pasted into Senate pages
+    (re.compile(r"<span[^>]*color:\s*#006fb9[^>]*>.*?</span>", re.I), ""), # remove pastilles from /opendata/ PJLF textes
 ]
 
 re_clean_title_legif = re.compile(r"[\s|]*l[eé]gifrance(.gouv.fr)?$", re.I)
@@ -187,9 +215,11 @@ html_replace = [
     (re.compile(r" "), " "),
     (re.compile(r"<!--.*?-->", re.I), ""),
     (re.compile(r"<span[^>]*color: #(0070b9|006fb9)[^>]*>\(\d+\)\s*</span>", re.I), ""), # remove pastilles
-    (re.compile(r"<span[^>]*color: white[^>]*>.*?</span>", re.I), ""), # remove invisible text
+    (re.compile(r"<span[^>]*color:\s*white[^>]*>.*?</span>", re.I), ""), # remove invisible text
+    (re.compile(r"<span[^>]*color:\s*#ffffff[^>]*>.*?</span>", re.I), ""), # remove invisible text
     (re.compile(r"(<img[^>]*>\s*<br/>\s*)", re.I), ""), # remove <img><br/> before the next regex kills my precious '«'
     (re.compile(r"</?br/?>\s+", re.I), " "),
+    (re.compile(r"<span[^>]*letter-spacing:[^>]*>([^<]*)</span>", re.I), r"\1"), # cleaning useless span into normal characters
     (re.compile(r'(«\s+|\s+»)'), '"'),
     (re.compile(r'(«|»|“|”|„|‟|❝|❞|＂|〟|〞|〝)'), '"'),
     (re.compile(r"(’|＇|’|ߴ|՚|ʼ|❛|❜)"), "'"),
@@ -247,7 +277,7 @@ def add_to_articles(dic, all_articles):
         # check for duplicates
         for article in all_articles:
             if dic.get('titre') and dic.get('titre') == article.get('titre') and 'source_text' not in article:
-                raise TextParsingFailedException('Duplicate article title found: %s', article.get('titre'))
+                raise TextParsingFailedException('Duplicate article title found: %s' % article.get('titre'))
 
         if len(dic['alineas']) == 1 and dic['alineas']['001'].startswith("(Supprimé)"):
             dic['statut'] = "supprimé"
@@ -313,7 +343,7 @@ re_cl_par  = re.compile(r"[()\[\]]")
 re_cl_uno  = re.compile(r"(premie?r?|unique?)", re.I)
 re_cl_sec_uno = re.compile(r"^[Ii1][eE][rR]?")
 re_cl_uno_uno = re.compile(r"^1(\s|$)")
-re_mat_sec = re.compile(r"(?:<b>)?%s(\s+([^:-]+)e?r?)(?:[:-]\s+(?P<titre>[^<]*))?(?:</b>)?" % section_titles, re.I)
+re_mat_sec = re.compile(r"(?:<[ba]>)?%s(\s+([^:-]+)e?r?)(?:[:-]\s+(?P<titre>[^<]*))?(?:</b>)?" % section_titles, re.I)
 re_cl_sec_simple_num = re.compile(r"(?:<(?P<tag>i|b)>)?(?P<num>[A-Z]|[IVX]{,5})\. - (?P<titre>[^<]+)", re.I) # section name like "B. - XXX" or "<i>IV. - XXX"
 re_cl_sec_part = re.compile(r"^(?:<b>)?(?P<num>\w{,11})\s+partie\s*(?::(?P<titre>[^<]*))?(?:</b>)?$", re.I) # partie name like "cinquiéme partie : XXXX"
 re_mat_n = re.compile(r"((pr..?)?limin|unique|premier|[IVX\d]+)", re.I)
@@ -431,7 +461,10 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
         if '/textes/'in url:
             resp.encoding = 'utf-8'
         if 'assemblee-nationale.fr' in url:
-            resp.encoding = 'Windows-1252'
+            if '/dyn/' in url:
+                resp.encoding = 'utf-8'
+            else:
+                resp.encoding = 'Windows-1252'
         string = resp.text
     elif url == '-':
         string = sys.stdin.read()
@@ -442,6 +475,10 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             string = open(url, encoding="Windows-1252").read()
 
     string, has_multiple_expose = clean_extra_expose_des_motifs(string)
+    string, has_multiple_expose_v2 = clean_extra_expose_des_motifs_v2(string)
+    has_multiple_expose = has_multiple_expose or has_multiple_expose_v2
+    if has_multiple_expose and DEBUG:
+        print("WARNING: cleaned multiple éxposés des motifs")
 
     if 'legifrance.gouv.fr' in url:
         for reg, res in clean_legifrance_regexps:
@@ -493,12 +530,16 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             elif "/jo/texte" in url:
                 texte["id"] = url.split('/')[-3]
         elif re.search(r"assemblee-?nationale", url, re.I):
-            m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
-            numero = int(m.group(3))
-            texte["id"] = "A" + m.group(1) + "-"
-            if m.group(2) is not None:
-                texte["id"] += m.group(2)
-            texte["id"] += str(numero)
+            if "/dyn/" not in url:
+                m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
+                numero = int(m.group(3))
+                texte["id"] = "A" + m.group(1) + "-"
+                if m.group(2) is not None:
+                    texte["id"] += m.group(2)
+                texte["id"] += str(numero)
+            else:
+                textid_match = re.search(r'.{4}[ANS]*R[0-9][LS]*([0-9]*)[BTACP]*\d*\.html', url)
+                texte["id"] = "A" + textid_match.group(1) + "-" + get_text_id(url).lower()
             texte["nosdeputes_id"] = get_text_id(url)
         else:
             m = re.search(r"(ta|l)?s?(\d\d)-(\d{1,3})(rec)?\d?(_mono)?\.", url, re.I)
@@ -708,14 +749,21 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             else:
                 break
         # Identify titles and new article zones
-        elif (re.match(r"(<i>)?<b>", line) or
-                re_art_uni.match(cl_line) or
-                re.match(r"^Articles? ", line)
-              ) and not re.search(r">Articles? supprimé", line):
+        elif (
+                (
+                    re.match(r"(<i>)?<[ba]>", line) or
+                    re_art_uni.match(cl_line) or
+                    re.match(r"^Articles? ", line)
+                ) and not re.search(r">Articles? supprimé", line)
+             ) or ''.join(text.attrs.get('class', [])).endswith('Intit'):
 
             line = cl_line.strip()
+
+            # If there's a ':', what comes after is not related to the article name
+            art_line = cl_line.split(':')[0].strip()
+
             # Read a new article
-            if re_mat_art.match(line):
+            if re_mat_art.match(art_line):
                 if article is not None:
                     pr_js(article)
                 read = READ_ALINEAS # Activate alineas lecture

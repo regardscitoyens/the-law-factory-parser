@@ -229,6 +229,9 @@ def identify_room(url_or_institution, legislature):
 
 
 def national_assembly_text_legislature(url_text):
+    if '/dyn/' in url_text:
+        m = re.search(r"L(\d+)", url_text, re.I)
+        return int(m.group(1))
     return int(url_text.split('.fr/')[1].split('/')[0])
 
 
@@ -387,6 +390,13 @@ class Context(object):
 
 def get_text_id(texte_url):
     if "nationale.fr" in texte_url:
+        if '/dyn/' in texte_url:
+            # regex adapted from anpy:dossier_from_opendata.py
+            textid_match = re.search(r'.{4}[ANS]*R[0-9][LS]*[0-9]*([BTACP]*)(\d*)\.html', texte_url)
+            nosdeputes_id = textid_match.group(2).lstrip('0')
+            if textid_match.group(1) == 'BTA':
+                nosdeputes_id = 'TA' + nosdeputes_id
+            return nosdeputes_id
         textid_match = re.search(r'fr\/(\d+)\/.*[^0-9]0*([1-9][0-9]*)(-a\d)?\.asp$', texte_url, re.I)
         nosdeputes_id = textid_match.group(2)
         if '/ta/ta' in texte_url:

@@ -1,5 +1,5 @@
 lawfactory_utils
-anpy==0.1.22
+anpy==0.1.25
 legipy==0.1.2
 senapy==0.2.15
 metslesliens==1.3.0
