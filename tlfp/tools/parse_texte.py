@@ -219,6 +219,7 @@ html_replace = [
     (re.compile(r"<span[^>]*color:\s*#ffffff[^>]*>.*?</span>", re.I), ""), # remove invisible text
     (re.compile(r"(<img[^>]*>\s*<br/>\s*)", re.I), ""), # remove <img><br/> before the next regex kills my precious '«'
     (re.compile(r"</?br/?>\s+", re.I), " "),
+    (re.compile(r"\s+</?br/?>", re.I), " "),
     (re.compile(r"<span[^>]*letter-spacing:[^>]*>([^<]*)</span>", re.I), r"\1"), # cleaning useless span into normal characters
     (re.compile(r'(«\s+|\s+»)'), '"'),
     (re.compile(r'(«|»|“|”|„|‟|❝|❞|＂|〟|〞|〝)'), '"'),
