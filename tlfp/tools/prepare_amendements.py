@@ -1,7 +1,6 @@
 import os
 import sys
 import re
-import json
 from time import time
 from functools import cmp_to_key
 
@@ -12,12 +11,6 @@ from .common import Context, open_json, get_text_id, \
     national_assembly_text_legislature
 from .sort_articles import compare_articles
 from ._step_logic import get_previous_step
-
-
-def get_json(url):
-    resp = download(url)
-    text = '\n'.join(line for line in resp.text.split('\n') if not line.startswith('Warning:'))
-    return json.loads(text)
 
 
 def process(OUTPUT_DIR, procedure):
@@ -177,7 +170,7 @@ def process(OUTPUT_DIR, procedure):
         print('      * downloading amendments:', amdt_url, 'for', texte_url)
 
         try:
-            amendements_src = get_json(amdt_url).get('amendements', [])
+            amendements_src = download(amdt_url).json().get('amendements', [])
         except:
             raise Exception("ERROR: amendements JSON at %s is badly formatted, it should probably be hardcached on ND/NS" % amdt_url)
 
@@ -190,7 +183,7 @@ def process(OUTPUT_DIR, procedure):
                 alternative_url = amdt_url.replace(textid, 'TA' + textid.replace('TA', '').zfill(4))
             print(' WARNING: TA - trying alternative url too', alternative_url)
             try:
-                amendements_src += get_json(alternative_url).get('amendements', [])
+                amendements_src += download(alternative_url).json().get('amendements', [])
             except:
                 raise Exception("ERROR: amendements JSON at %s is badly formatted, it should probably be hardcached on ND/NS" % alternative_url)
 
