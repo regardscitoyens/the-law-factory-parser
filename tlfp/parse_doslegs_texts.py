@@ -1,4 +1,5 @@
 import re
+from bs4 import BeautifulSoup
 
 from lawfactory_utils.urls import download
 from senapy.dosleg.parser import parse as senapy_parse
@@ -113,6 +114,15 @@ def find_good_url_resp(url):
             or ">Cette division n'est pas encore distribuée<" in resp.text:
             return False
         else:
+            if '/textes/' in resp.url:
+                resp = download(resp.url)
+                soup = BeautifulSoup(resp.text, 'lxml')
+                link = soup.select_one('.docOpaqueLink').select('a')[-1]
+                url = 'http://www.assemblee-nationale.fr' + link.attrs['href']
+                resp = test_status(url)
+                if resp:
+                    return resp
+                return False
             return resp
 
     resp = test_status(url)
