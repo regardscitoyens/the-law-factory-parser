@@ -114,7 +114,7 @@ def find_good_url_resp(url):
             or ">Cette division n'est pas encore distribuée<" in resp.text:
             return False
         else:
-            if '/textes/' in resp.url:
+            if '/dyn/' in resp.url and ('/textes/' in resp.url or '/rapports/' in resp.url):
                 resp = download(resp.url)
                 soup = BeautifulSoup(resp.text, 'lxml')
                 link = soup.select_one('.docOpaqueLink').select('a')[-1]
