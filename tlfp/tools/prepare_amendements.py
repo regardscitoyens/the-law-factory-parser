@@ -172,7 +172,8 @@ def process(OUTPUT_DIR, procedure):
         try:
             amendements_src = download(amdt_url).json().get('amendements', [])
         except:
-            raise Exception("ERROR: amendements JSON at %s is badly formatted, it should probably be hardcached on ND/NS" % amdt_url)
+            print("ERROR: amendements JSON at %s is badly formatted, it should probably be hardcached on ND/NS" % amdt_url)
+            continue
 
         # TA texts can be zero-paded or not (TA0XXX or TAXXX), we try both
         if 'amendements/TA' in amdt_url:
