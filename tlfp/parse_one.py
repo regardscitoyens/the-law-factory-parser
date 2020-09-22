@@ -160,7 +160,11 @@ def process(API_DIRECTORY, url):
             download_groupes(API_DIRECTORY)
 
             # Add potential common name from Legifrance's "Lois dites"
-            common_laws = download_lois_dites(API_DIRECTORY)
+            try:
+                common_laws = download_lois_dites(API_DIRECTORY)
+            except:
+                print('WARNING: could not collect Lois Dites on Legifrance')
+                common_laws = {}
             if dos.get('legifrance_cidTexte') in common_laws and common_laws[dos['legifrance_cidTexte']].lower() not in dos['short_title'].lower():
                 dos['loi_dite'] = common_laws[dos['legifrance_cidTexte']]
 
