@@ -154,7 +154,7 @@ clean_texte_regexps = [
     (re.compile(r"<span[^>]*color:\s*#006fb9[^>]*>.*?</span>", re.I), ""), # remove pastilles from /opendata/ PJLF textes
 ]
 
-re_clean_title_legif = re.compile(r"[\s|]*l[eé]gifrance(.gouv.fr)?$", re.I)
+re_clean_title_legif = re.compile(r"(\(1\))?[\s-]*l[eé]gifrance(.gouv.fr)?$", re.I)
 clean_legifrance_regexps = [
     (re.compile(r'[\n\t\r\s]+'), ' '),
     (re.compile(r'<a[^>]*>\s*En savoir plus sur ce[^<]*</a>', re.I), ''),
@@ -728,7 +728,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
 
             titre = blank_none(m.group('titre')).strip()
             if titre:
-                section['titre'] = titre
+                section['titre'] = titre.capitalize()
                 if article is not None:
                     pr_js(article)
                     article = {}
