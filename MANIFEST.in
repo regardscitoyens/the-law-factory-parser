@@ -1,3 +1,4 @@
 include README.md
 include requirements.txt
-include tlfp/tools/valid_procedure.json
+include tlfp/data/valid_procedure.json
+include tlfp/data/lois_dites.json

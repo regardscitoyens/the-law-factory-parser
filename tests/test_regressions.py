@@ -17,7 +17,7 @@ from tlfp.parse_one import download_merged_dos
 from tlfp.parse_doslegs_texts import find_good_url_resp
 from tlfp.tools.detect_anomalies import find_anomalies
 from tlfp.tools.common import log_print
-from tlfp.tools import parse_texte, download_groupes, download_lois_dites, download_AN_opendata
+from tlfp.tools import parse_texte, download_groupes, download_AN_opendata
 
 REGEN_TESTS = '--regen' in sys.argv
 # directory with the test-cases
@@ -56,7 +56,6 @@ if not os.path.exists(OUTPUT_DIR):
 
 with log_print(only_log=True):
     download_groupes.process(OUTPUT_DIR)
-    download_lois_dites.process(OUTPUT_DIR)
     opendata_an = download_AN_opendata.process(OUTPUT_DIR)
 
 print('> testing merge')

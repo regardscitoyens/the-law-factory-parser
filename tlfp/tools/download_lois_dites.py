@@ -1,17 +1,7 @@
-import sys
-
-from legipy.services.law_service import LawService
-
-from tlfp.tools.common import download_daily
+import os
+from .tools.common import open_json
 
 
-def process(output_directory):
-    return download_daily(
-        lambda : {l.id_legi: l.common_name for l in LawService().common_laws()},
-        'lois_dites',
-        output_directory
-    )
-
-
-if __name__ == '__main__':
-    process(sys.argv[1])
+def get_lois_dites(output_directory):
+	file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)), 'data/lois_dites.json'))
+	return open_json(file)

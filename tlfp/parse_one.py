@@ -9,7 +9,7 @@ from . import parse_doslegs_texts
 from .tools.detect_anomalies import find_anomalies
 from .tools.json2arbo import mkdirs
 from .tools.download_groupes import process as download_groupes
-from .tools.download_lois_dites import process as download_lois_dites
+from .tools.get_lois_dites import get_lois_dites
 from .tools.download_AN_opendata import process as download_AN_opendata
 from .tools.common import debug_file, log_print
 from .merge import merge_senat_with_an
@@ -160,11 +160,7 @@ def process(API_DIRECTORY, url):
             download_groupes(API_DIRECTORY)
 
             # Add potential common name from Legifrance's "Lois dites"
-            try:
-                common_laws = download_lois_dites(API_DIRECTORY)
-            except:
-                print('WARNING: could not collect Lois Dites on Legifrance')
-                common_laws = {}
+            common_laws = get_lois_dites()
             if dos.get('legifrance_cidTexte') in common_laws and common_laws[dos['legifrance_cidTexte']].lower() not in dos['short_title'].lower():
                 dos['loi_dite'] = common_laws[dos['legifrance_cidTexte']]
 

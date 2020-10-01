@@ -166,7 +166,11 @@ clean_legifrance_regexps = [
     (re.compile(r'\[Rédaction conforme .{0,100} la (<a[^>]*?>)?décision( du Conseil constitutionnel)? n° \d+-\d+ ?(<\/a>)? ?DC du .{0,30}\]\.?', re.I), ""),
     (re.compile(r'―'), '-'),
     (re.compile(r'([\.\s]+)-([^\s\-]+)'), r'\1 - \2'),
-    (re.compile(r'<h4[^>]*>(.*?)</h4>', re.I), r'<p><b>\1</b></p>'),
+    (re.compile(r'\(Articles \d+ à \d+\)(</span></label>)', re.I), r'\1'),
+    (re.compile(r'\(Article \d+\)(</span></label>)', re.I), r'\1'),
+    (re.compile(r'<h[34][^>]*>(.*?)</h[34]>', re.I), r'<p><b>\1</b></p>'),
+    (re.compile(r'<label[^>]*>(.*?)</label>', re.I), r'\1'),
+
 ]
 
 
@@ -783,13 +787,17 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
                 m = re_mat_art.match(clean_article_name(text))
                 article["titre"] = normalize_1(m.group(1), "1er").replace(u"İ", "I")
 
-                assert article["titre"]  # avoid empty titles
-                assert not texte['definitif'] or ' bis' not in article["titre"]  # detect invalid article names
+                if not article["titre"]:
+                    print('WARNING: empty article title found', line)
+                    read = READ_TEXT
+                    article = {}
+                else:
+                    assert not texte['definitif'] or ' bis' not in article["titre"]  # detect invalid article names
 
-                if m.group(2) is not None:
-                    article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
-                if section["id"] != "":
-                    article["section"] = section["id"]
+                    if m.group(2) is not None:
+                        article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
+                    if section["id"] != "":
+                        article["section"] = section["id"]
             # Read a section's title
             elif read == READ_TITLE and line:
                 section["titre"] = lower_but_first(line)

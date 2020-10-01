@@ -12,7 +12,7 @@ if len(sys.argv) < 2:
 
 mode = "detailed" if len(sys.argv) == 3 else "simple"
 
-procedure_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'valid_procedure.json')
+procedure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data/valid_procedure.json')
 procedure = open_json(procedure_file)
 
 API_DIRECTORY = sys.argv[1]
