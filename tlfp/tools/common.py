@@ -20,6 +20,9 @@ from .sort_articles import bister
 from lawfactory_utils.urls import download
 
 
+LEGIFRANCE_PROXY = "http://cocolulu.regardscitoyens.org:8081/"
+
+
 @contextlib.contextmanager
 def log_print(file=None, only_log=False):
     """capture all outputs to a log file while still printing it"""

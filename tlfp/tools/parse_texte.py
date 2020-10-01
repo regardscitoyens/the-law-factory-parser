@@ -12,7 +12,7 @@ import sys
 from bs4 import BeautifulSoup
 from lawfactory_utils.urls import download
 
-from .common import get_text_id, upcase_accents, real_lower
+from .common import get_text_id, upcase_accents, real_lower, LEGIFRANCE_PROXY
 from .sort_articles import bister
 
 
@@ -166,6 +166,7 @@ clean_legifrance_regexps = [
     (re.compile(r'\[Rédaction conforme .{0,100} la (<a[^>]*?>)?décision( du Conseil constitutionnel)? n° \d+-\d+ ?(<\/a>)? ?DC du .{0,30}\]\.?', re.I), ""),
     (re.compile(r'―'), '-'),
     (re.compile(r'([\.\s]+)-([^\s\-]+)'), r'\1 - \2'),
+    (re.compile(r'<h4[^>]*>(.*?)</h4>', re.I), r'<p><b>\1<b></p>'),
 ]
 
 
@@ -352,7 +353,7 @@ re_mat_art = re.compile(r"articles?(?!\sL\.)\s*([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"((<(b|h[12])>)?\s*pro.* (loi|résolution)|<h2>\s*pro.* (loi|résolution)\s*</\3>)", re.I)
 re_mat_tco = re.compile(r"\s*<(b|h[12]|a)>\s*(ANNEXE[^:]*:\s*|\d+\)\s+|[IVX]+\.\s+|<a name[^>]*>\s*</a>\s*)*TEXTES?\s*(([ÉE]LABOR|ADOPT)[EÉ]S?\s*PAR|DE)\s*LA\s*COMMISSION.*(</\1>\s*$|\(.*\))", re.I)
 re_mat_exp = re.compile(r"(<(b|strong)>)?\s*(expos[eéÉ]|table des matières)", re.I)
-re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|(<b>)?États législatifs annexés|(<(i|t\w+)>\s*)*Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|La présente loi sera exécutée comme loi de l'Etat|<a>\*</a>\s*(<i>)?1)", re.I)
+re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|(<b>)?États législatifs annexés|(<(i|t\w+|br?)>\s*)*Fait (à|au) .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|La présente loi sera exécutée comme loi de l'Etat|<a>\*</a>\s*(<i>)?1)", re.I)
 re_mat_ann = re.compile(r"\s*<b>\s*ANNEXES?[\s<]+", re.I)
 re_mat_dots = re.compile(r"^(<i>)?([.…_]\s?)+(</i>)?$")
 re_mat_st = re.compile(r"(<i>\s?|\(|\[)+(texte)?\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,30}$", re.I)
@@ -458,14 +459,19 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
 
 
     if url.startswith('http'):
-        resp = download(url) if resp is None else resp
-        if '/textes/'in url:
-            resp.encoding = 'utf-8'
-        if 'assemblee-nationale.fr' in url:
-            if '/dyn/' in url:
+        if 'legifrance.gouv.fr' in url:
+            proxy_url = LEGIFRANCE_PROXY
+            url_with_proxy = proxy_url + url.split('legifrance.gouv.fr/')[1]
+            resp = download(url_with_proxy) if resp is None else resp
+        else:
+            resp = download(url) if resp is None else resp
+            if '/textes/'in url:
                 resp.encoding = 'utf-8'
-            else:
-                resp.encoding = 'Windows-1252'
+            if 'assemblee-nationale.fr' in url:
+                if '/dyn/' in url:
+                    resp.encoding = 'utf-8'
+                else:
+                    resp.encoding = 'Windows-1252'
         string = resp.text
     elif url == '-':
         string = sys.stdin.read()

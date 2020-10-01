@@ -6,7 +6,7 @@ from senapy.dosleg.parser import parse as senapy_parse
 
 from .tools import parse_texte, complete_articles
 from .tools._step_logic import get_previous_step, use_old_procedure, is_one_of_the_initial_depots, should_ignore_commission_text
-from .tools.common import debug_file
+from .tools.common import debug_file, LEGIFRANCE_PROXY
 
 
 def test_status(url):
@@ -123,6 +123,16 @@ def find_good_url_resp(url):
                 if resp:
                     return resp
                 return False
+            return resp
+
+    if 'legifrance.gouv.fr' in url:
+        url = url.replace("/UnTexteDeJorf.do", "/WAspad/UnTexteDeJorf.do")
+        proxy_url = LEGIFRANCE_PROXY
+        url_with_proxy = proxy_url + url.split('legifrance.gouv.fr/')[1]
+        print('        ^ text url with proxy:', url_with_proxy)
+        resp = test_status(url_with_proxy)
+        resp.url = url
+        if resp:
             return resp
 
     resp = test_status(url)
