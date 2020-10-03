@@ -168,7 +168,7 @@ clean_legifrance_regexps = [
     (re.compile(r'([\.\s]+)-([^\s\-]+)'), r'\1 - \2'),
     (re.compile(r'\(Articles \d+ à \d+\)(</span></label>)', re.I), r'\1'),
     (re.compile(r'\(Article \d+\)(</span></label>)', re.I), r'\1'),
-    (re.compile(r'<h[34][^>]*>(.*?)</h[34]>', re.I), r'<p><b>\1</b></p>'),
+    (re.compile(r'<h[234][^>]*>(.*?)</h[234]>', re.I), r'<p><b>\1</b></p>'),
     (re.compile(r'<label[^>]*>(.*?)</label>', re.I), r'\1'),
 
 ]
