@@ -484,7 +484,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
     string, has_multiple_expose_v2 = clean_extra_expose_des_motifs_v2(string)
     has_multiple_expose = has_multiple_expose or has_multiple_expose_v2
     if has_multiple_expose and DEBUG:
-        print("WARNING: cleaned multiple éxposés des motifs")
+        print("WARNING: cleaned multiple éxposés des motifs", file=sys.stderr)
 
     if 'legifrance.gouv.fr' in url:
         for reg, res in clean_legifrance_regexps:
@@ -516,7 +516,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             source_avenants = True
         except Exception as e:
             if DEBUG:
-                print("WARNING, multi-reports detected with NB method crashing (%s: %s), trying regular method..." % (type(e), e))
+                print("WARNING, multi-reports detected with NB method crashing (%s: %s), trying regular method..." % (type(e), e), file=sys.stderr)
     if not source_avenants and "/rapports/r" in url and "TEXTES ADOPTÉS PAR LA COMMISSION" in string and string.count(">Article unique<") == 2:
         m = re.search(r'<i>Assemblée nationale&nbsp;:&nbsp;</i><b>(\d+) </b>et<b> (\d+)</b>', string)
         if m:
@@ -642,7 +642,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             read = READ_TEXT
             if len(all_articles):
                 if DEBUG:
-                    print('WARNING: Found articles before the real text')
+                    print('WARNING: Found articles before the real text', file=sys.stderr)
                 if article is not None:
                     pr_js(article)
                 rejected_all_articles.append(all_articles)
@@ -738,7 +738,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
         elif re_mat_end.match(line) and not include_annexes:
             if not expose:
                 if DEBUG:
-                    print("DEBUG: END OF TEXT OF DETECTED")
+                    print("DEBUG: END OF TEXT OF DETECTED", file=sys.stderr)
                 if len(all_articles) > 0:
                     break
             expose = False
