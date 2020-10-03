@@ -535,6 +535,12 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
                 texte["id"] = m.group(1)
             elif "/jo/texte" in url:
                 texte["id"] = url.split('/')[-3]
+            else:
+                last_part = [part for part in url.split('/') if part][-1]
+                if last_part.startswith('JORFTEXT'):
+                    texte['id'] = last_part
+            if "id" not in texte:
+                raise Exception("Could not find the texte ID of " + url)
         elif re.search(r"assemblee-?nationale", url, re.I):
             if "/dyn/" not in url:
                 m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
