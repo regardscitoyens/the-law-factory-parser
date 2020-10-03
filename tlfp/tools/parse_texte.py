@@ -12,7 +12,7 @@ import sys
 from bs4 import BeautifulSoup
 from lawfactory_utils.urls import download
 
-from .common import get_text_id, upcase_accents, real_lower, LEGIFRANCE_PROXY
+from .common import get_text_id, upcase_accents, real_lower
 from .sort_articles import bister
 
 
@@ -463,19 +463,14 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
 
 
     if url.startswith('http'):
-        if 'legifrance.gouv.fr' in url:
-            proxy_url = LEGIFRANCE_PROXY
-            url_with_proxy = proxy_url + url.split('legifrance.gouv.fr/')[1]
-            resp = download(url_with_proxy) if resp is None else resp
-        else:
-            resp = download(url) if resp is None else resp
-            if '/textes/'in url:
+        resp = download(url) if resp is None else resp
+        if '/textes/'in url:
+            resp.encoding = 'utf-8'
+        if 'assemblee-nationale.fr' in url:
+            if '/dyn/' in url:
                 resp.encoding = 'utf-8'
-            if 'assemblee-nationale.fr' in url:
-                if '/dyn/' in url:
-                    resp.encoding = 'utf-8'
-                else:
-                    resp.encoding = 'Windows-1252'
+            else:
+                resp.encoding = 'Windows-1252'
         string = resp.text
     elif url == '-':
         string = sys.stdin.read()
