@@ -125,12 +125,6 @@ def find_good_url_resp(url):
                 return False
             return resp
 
-    if 'legifrance.gouv.fr' in url:
-        url = url.replace("/UnTexteDeJorf.do", "/WAspad/UnTexteDeJorf.do")
-        resp = test_status(url)
-        if resp:
-            return resp
-
     resp = test_status(url)
     if resp:
         return resp
