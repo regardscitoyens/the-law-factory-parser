@@ -17,7 +17,7 @@ from tlfp.parse_one import download_merged_dos
 from tlfp.parse_doslegs_texts import find_good_url_resp
 from tlfp.tools.detect_anomalies import find_anomalies
 from tlfp.tools.common import log_print
-from tlfp.tools import parse_texte, download_groupes, download_lois_dites, download_AN_opendata
+from tlfp.tools import parse_texte, download_groupes, download_AN_opendata
 
 REGEN_TESTS = '--regen' in sys.argv
 # directory with the test-cases
@@ -47,8 +47,7 @@ print('> testing parse_texte')
 assert len(parse_texte.parse('http://www.assemblee-nationale.fr/13/rapports/r2568.asp')) == 5
 assert len(parse_texte.parse('https://www.senat.fr/leg/ppl08-039.html')) == 2
 # do not catch annexe as part of last article in legifrance texts
-assert len(parse_texte.parse('https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000025005833'
-                             '&categorieLien=id#JORFSCTA000025005850')[-1]['alineas']) == 2
+assert len(parse_texte.parse("https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000025005833")[-1]['alineas']) == 2
 print('     > OK')
 
 
@@ -57,7 +56,6 @@ if not os.path.exists(OUTPUT_DIR):
 
 with log_print(only_log=True):
     download_groupes.process(OUTPUT_DIR)
-    download_lois_dites.process(OUTPUT_DIR)
     opendata_an = download_AN_opendata.process(OUTPUT_DIR)
 
 print('> testing merge')

@@ -154,18 +154,23 @@ clean_texte_regexps = [
     (re.compile(r"<span[^>]*color:\s*#006fb9[^>]*>.*?</span>", re.I), ""), # remove pastilles from /opendata/ PJLF textes
 ]
 
-re_clean_title_legif = re.compile(r"[\s|]*l[eé]gifrance(.gouv.fr)?$", re.I)
+re_clean_title_legif = re.compile(r"(\(1\))?[\s-]*l[eé]gifrance(.gouv.fr)?$", re.I)
 clean_legifrance_regexps = [
     (re.compile(r'[\n\t\r\s]+'), ' '),
     (re.compile(r'<a[^>]*>\s*En savoir plus sur ce[^<]*</a>', re.I), ''),
     (re.compile(r'<a/?[^>]*>', re.I), ''),
-    (re.compile(r'\s*<br/>\s*', re.I), '</p><p>'),
+    (re.compile(r'<br ?/?>', re.I), '</p><p>'),
     (re.compile(r'<div[^>]*class="titreSection[^>]*>\s*(%s\s+[\dIVXLCDM]+e?r?)\s*:\s*([^<]*?)\s*</div>' % section_titles, re.I), r'<p>\1</p><p><b>\5</b></p>'),
     (re.compile(r'<div[^>]*class="titre(?:Art|Section)[^>]*>([^<]*?)\s*</div>', re.I), r'<p><b>\1</b></p>'),
     (re.compile(r'\[Dispositions (déclarées non conformes à la Constitution( à compter du .{0,30})? par|résultant de) la (<a[^>]*?>)?décision( du Conseil constitutionnel)? n° \d+-\d+ ?(<\/a>)? ?DC du .{0,30}\]', re.I), "(Censuré)"),
     (re.compile(r'\[Rédaction conforme .{0,100} la (<a[^>]*?>)?décision( du Conseil constitutionnel)? n° \d+-\d+ ?(<\/a>)? ?DC du .{0,30}\]\.?', re.I), ""),
     (re.compile(r'―'), '-'),
     (re.compile(r'([\.\s]+)-([^\s\-]+)'), r'\1 - \2'),
+    (re.compile(r'\(Articles \d+ à \d+\)(</span></label>)', re.I), r'\1'),
+    (re.compile(r'\(Article \d+\)(</span></label>)', re.I), r'\1'),
+    (re.compile(r'<h[234][^>]*>(.*?)</h[234]>', re.I), r'<p><b>\1</b></p>'),
+    (re.compile(r'<label[^>]*>(.*?)</label>', re.I), r'\1'),
+
 ]
 
 
@@ -352,7 +357,7 @@ re_mat_art = re.compile(r"articles?(?!\sL\.)\s*([^(]*)(\([^)]*\))?$", re.I)
 re_mat_ppl = re.compile(r"((<(b|h[12])>)?\s*pro.* (loi|résolution)|<h2>\s*pro.* (loi|résolution)\s*</\3>)", re.I)
 re_mat_tco = re.compile(r"\s*<(b|h[12]|a)>\s*(ANNEXE[^:]*:\s*|\d+\)\s+|[IVX]+\.\s+|<a name[^>]*>\s*</a>\s*)*TEXTES?\s*(([ÉE]LABOR|ADOPT)[EÉ]S?\s*PAR|DE)\s*LA\s*COMMISSION.*(</\1>\s*$|\(.*\))", re.I)
 re_mat_exp = re.compile(r"(<(b|strong)>)?\s*(expos[eéÉ]|table des matières)", re.I)
-re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|(<b>)?États législatifs annexés|(<(i|t\w+)>\s*)*Fait à .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|La présente loi sera exécutée comme loi de l'Etat|<a>\*</a>\s*(<i>)?1)", re.I)
+re_mat_end = re.compile(r"((<i>)?Délibéré en|(<i>)?NB[\s:<]+|(<b>)?RAPPORT ANNEX|(<b>)?États législatifs annexés|(<(i|t\w+|br?)>\s*)*Fait (à|au) .*, le|\s*©|\s*N.?B.?\s*:|(</?i>)*<a>[1*]</a>\s*(</?i>)*\(\)(</?i>)*|<i>\(1\)\s*Nota[\s:]+|La présente loi sera exécutée comme loi de l'Etat|<a>\*</a>\s*(<i>)?1)", re.I)
 re_mat_ann = re.compile(r"\s*<b>\s*ANNEXES?[\s<]+", re.I)
 re_mat_dots = re.compile(r"^(<i>)?([.…_]\s?)+(</i>)?$")
 re_mat_st = re.compile(r"(<i>\s?|\(|\[)+(texte)?\s*(conform|non[\s\-]*modif|suppr|nouveau).{0,30}$", re.I)
@@ -479,7 +484,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
     string, has_multiple_expose_v2 = clean_extra_expose_des_motifs_v2(string)
     has_multiple_expose = has_multiple_expose or has_multiple_expose_v2
     if has_multiple_expose and DEBUG:
-        print("WARNING: cleaned multiple éxposés des motifs")
+        print("WARNING: cleaned multiple éxposés des motifs", file=sys.stderr)
 
     if 'legifrance.gouv.fr' in url:
         for reg, res in clean_legifrance_regexps:
@@ -511,7 +516,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             source_avenants = True
         except Exception as e:
             if DEBUG:
-                print("WARNING, multi-reports detected with NB method crashing (%s: %s), trying regular method..." % (type(e), e))
+                print("WARNING, multi-reports detected with NB method crashing (%s: %s), trying regular method..." % (type(e), e), file=sys.stderr)
     if not source_avenants and "/rapports/r" in url and "TEXTES ADOPTÉS PAR LA COMMISSION" in string and string.count(">Article unique<") == 2:
         m = re.search(r'<i>Assemblée nationale&nbsp;:&nbsp;</i><b>(\d+) </b>et<b> (\d+)</b>', string)
         if m:
@@ -530,6 +535,12 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
                 texte["id"] = m.group(1)
             elif "/jo/texte" in url:
                 texte["id"] = url.split('/')[-3]
+            else:
+                last_part = [part for part in url.split('/') if part][-1]
+                if last_part.startswith('JORFTEXT'):
+                    texte['id'] = last_part
+            if "id" not in texte:
+                raise Exception("Could not find the texte ID of " + url)
         elif re.search(r"assemblee-?nationale", url, re.I):
             if "/dyn/" not in url:
                 m = re.search(r"/(\d+)/.+/(ta)?[\w\-]*(\d{4})[\.\-]", url, re.I)
@@ -631,7 +642,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
             read = READ_TEXT
             if len(all_articles):
                 if DEBUG:
-                    print('WARNING: Found articles before the real text')
+                    print('WARNING: Found articles before the real text', file=sys.stderr)
                 if article is not None:
                     pr_js(article)
                 rejected_all_articles.append(all_articles)
@@ -718,7 +729,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
 
             titre = blank_none(m.group('titre')).strip()
             if titre:
-                section['titre'] = titre
+                section['titre'] = titre.capitalize()
                 if article is not None:
                     pr_js(article)
                     article = {}
@@ -727,7 +738,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
         elif re_mat_end.match(line) and not include_annexes:
             if not expose:
                 if DEBUG:
-                    print("DEBUG: END OF TEXT OF DETECTED")
+                    print("DEBUG: END OF TEXT OF DETECTED", file=sys.stderr)
                 if len(all_articles) > 0:
                     break
             expose = False
@@ -777,13 +788,17 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
                 m = re_mat_art.match(clean_article_name(text))
                 article["titre"] = normalize_1(m.group(1), "1er").replace(u"İ", "I")
 
-                assert article["titre"]  # avoid empty titles
-                assert not texte['definitif'] or ' bis' not in article["titre"]  # detect invalid article names
+                if not article["titre"]:
+                    print('WARNING: empty article title found', line)
+                    read = READ_TEXT
+                    article = {}
+                else:
+                    assert not texte['definitif'] or ' bis' not in article["titre"]  # detect invalid article names
 
-                if m.group(2) is not None:
-                    article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
-                if section["id"] != "":
-                    article["section"] = section["id"]
+                    if m.group(2) is not None:
+                        article["statut"] = re_cl_par.sub("", real_lower(m.group(2))).strip()
+                    if section["id"] != "":
+                        article["section"] = section["id"]
             # Read a section's title
             elif read == READ_TITLE and line:
                 section["titre"] = lower_but_first(line)
