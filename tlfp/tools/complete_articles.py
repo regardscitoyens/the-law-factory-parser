@@ -165,6 +165,8 @@ def complete(current, previous, step, previous_step_metas, table_concordance=Non
           if not done_titre:
             write_json(texte)
             done_titre = True
+          if line["type"] == "dots":
+            continue
           if line["type"] != "article":
             if texte['definitif']:
                 try:
@@ -230,7 +232,32 @@ def complete(current, previous, step, previous_step_metas, table_concordance=Non
                                 order += 1
                                 write_json(a)
                         else:
-                            break
+                            # very rare case: dots in a definitif text
+                            # if the last line of text was some dots, it means that we should keep
+                            # the articles as-is if they are not deleted
+                            # NOTE: this stops only thanks to the concordance table
+
+                            if oldart['titre'].lower() in table_concordance:
+                                new_art = table_concordance[oldart['titre']]
+                                if new_art.lower() == line['titre'].lower():
+                                    break
+
+                            last_block_was_dots_and_not_an_article = False
+                            for block in reversed(current[:line_i]):
+                                if block['type'] == 'dots':
+                                    last_block_was_dots_and_not_an_article = True
+                                    break
+                                if block['type'] == 'article':
+                                    break
+                            if last_block_was_dots_and_not_an_article:
+                                c, a = oldarts.pop(0)
+                                log("DEBUG: Recovering art as non-modifié via dots %s" % cur)
+                                a["statut"] = "non modifié"
+                                a["order"] = order
+                                order += 1
+                                write_json(a)
+                            else:
+                                break
                 except Exception as e:
                     print("ERROR: Problem while renumbering articles", line, "\n", oldart, "\n", type(e), e, file=sys.stderr)
                     exit()
@@ -445,6 +472,12 @@ def complete(current, previous, step, previous_step_metas, table_concordance=Non
                 a["order"] = order
                 order += 1
                 write_json(a)
+
+    # completed texts shouldn't have leftover dots
+    FILTERED_ALL_ARTICLES = [article for article in ALL_ARTICLES if article.get('type') != 'dots']
+    if len(FILTERED_ALL_ARTICLES) != len(ALL_ARTICLES):
+        print("WARNING: leftover dots found")
+    ALL_ARTICLES = FILTERED_ALL_ARTICLES
 
     return ALL_ARTICLES
 
