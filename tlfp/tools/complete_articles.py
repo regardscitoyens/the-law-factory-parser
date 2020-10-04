@@ -232,7 +232,7 @@ def complete(current, previous, step, previous_step_metas, table_concordance=Non
                                 order += 1
                                 write_json(a)
                         else:
-                            # very rare case: dots in a definitif text
+                            # handle dots at the start of a definitif text
                             # if the last line of text was some dots, it means that we should keep
                             # the articles as-is if they are not deleted
                             # NOTE: this stops only thanks to the concordance table
