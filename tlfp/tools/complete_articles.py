@@ -236,26 +236,28 @@ def complete(current, previous, step, previous_step_metas, table_concordance=Non
                             # if the last line of text was some dots, it means that we should keep
                             # the articles as-is if they are not deleted
                             # NOTE: this stops only thanks to the concordance table
+                            if table_concordance:
+                                if oldart['titre'].lower() in table_concordance:
+                                    new_art = table_concordance[oldart['titre']]
+                                    if new_art.lower() == line['titre'].lower():
+                                        break
 
-                            if oldart['titre'].lower() in table_concordance:
-                                new_art = table_concordance[oldart['titre']]
-                                if new_art.lower() == line['titre'].lower():
+                                last_block_was_dots_and_not_an_article = False
+                                for block in reversed(current[:line_i]):
+                                    if block['type'] == 'dots':
+                                        last_block_was_dots_and_not_an_article = True
+                                        break
+                                    if block['type'] == 'article':
+                                        break
+                                if last_block_was_dots_and_not_an_article:
+                                    c, a = oldarts.pop(0)
+                                    log("DEBUG: Recovering art as non-modifié via dots %s" % cur)
+                                    a["statut"] = "non modifié"
+                                    a["order"] = order
+                                    order += 1
+                                    write_json(a)
+                                else:
                                     break
-
-                            last_block_was_dots_and_not_an_article = False
-                            for block in reversed(current[:line_i]):
-                                if block['type'] == 'dots':
-                                    last_block_was_dots_and_not_an_article = True
-                                    break
-                                if block['type'] == 'article':
-                                    break
-                            if last_block_was_dots_and_not_an_article:
-                                c, a = oldarts.pop(0)
-                                log("DEBUG: Recovering art as non-modifié via dots %s" % cur)
-                                a["statut"] = "non modifié"
-                                a["order"] = order
-                                order += 1
-                                write_json(a)
                             else:
                                 break
                 except Exception as e:
