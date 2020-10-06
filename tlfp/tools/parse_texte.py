@@ -151,6 +151,7 @@ clean_texte_regexps = [
     (re.compile(r'((<p style="text-align: center">(<[^>]+>)*[^<]+(<[^>]+>)*</p> ){2,})\1'), r'\1'), # duplicate group of title lines i.e. http://www.assemblee-nationale.fr/14/ta-commission/r3909-a0.asp art 10 A
     (re.compile(r'((?:<(?:p|span)[^>]*>\s*)+[^<]+)(?:<(?:b|strong|br)>\s*)+(Article \d[^<]{0,10})(?:</(?:b|strong)>)?((?:</(?:p|span)>)+)', re.I), r'\1\3<p><b>\2</b></p>'), # article title in previous article text i.e. http://www.assemblee-nationale.fr/13/ta/ta0173.asp art 9
     (re.compile(r"<p data-pastille=.*?</p>"), ""), # remove pastilles coming from AN "/textes/" HTML sometimes copy-pasted into Senate pages
+    (re.compile(r"<span[^>]*class=\"aEloiPastille\"[^>]*>.*?</span>", re.I), ""), # remove /textes/ urls pastilles
     (re.compile(r"<span[^>]*color:\s*#006fb9[^>]*>.*?</span>", re.I), ""), # remove pastilles from /opendata/ PJLF textes
     (re.compile(r"<p[^>]*class=\"assnatFootnoteText\"[^>]*>.*?</p>", re.I), ""), # remove AN footnotes
     (re.compile(r"<p[^>]*class=\"note as-text\"[^>]*>.*?</p>", re.I), ""), # remove Senate footnotes
