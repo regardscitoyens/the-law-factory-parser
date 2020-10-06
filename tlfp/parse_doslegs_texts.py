@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 
 from lawfactory_utils.urls import download
 from senapy.dosleg.parser import parse as senapy_parse
+from anpy.dossier_from_opendata import OPENDATA_ID_REGEX     
 
 from .tools import parse_texte, complete_articles
 from .tools._step_logic import get_previous_step, use_old_procedure, is_one_of_the_initial_depots, should_ignore_commission_text
@@ -131,6 +132,15 @@ def find_good_url_resp(url):
     return False
 
 
+def find_textes_url(opendata_url):
+    # find the /textes/ url used by the amendments
+    open_data_id = opendata_url.split('opendata/')[1].replace('.html', '')
+    match = re.match(OPENDATA_ID_REGEX, open_data_id)
+    leg = match.group(5)
+    num = match.group(7)
+    return "http://www.assemblee-nationale.fr/%s/textes/%s.asp" % (leg, num)
+
+
 def parse_url_for_step(url, step, step_index, retry=True):
     fixed_url_resp = find_good_url_resp(url)
     if fixed_url_resp:
@@ -154,6 +164,10 @@ def parse_url_for_step(url, step, step_index, retry=True):
                     fixed_url = fixed_url.replace('rapports', 'ta-commission').replace('.asp', '-a0.asp')
                     print('        ^ empty parsing, trying url TA :', fixed_url)
                     return parse_url_for_step(fixed_url, step, step_index, retry=False)
+                if 'dyn/opendata/' in fixed_url:
+                    textes_url = find_textes_url(fixed_url)
+                    print('        ^ empty parsing, trying url /textes/ :', textes_url)
+                    return parse_url_for_step(textes_url, step, step_index, retry=False)
 
             raise Exception('[parse_texts] Empty parsing %s' % url)
 
