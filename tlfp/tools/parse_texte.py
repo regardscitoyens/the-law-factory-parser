@@ -469,7 +469,7 @@ def parse(url, resp=None, DEBUG=False, include_annexes=False):
         if '/textes/'in url:
             resp.encoding = 'utf-8'
         if 'assemblee-nationale.fr' in url:
-            if '/dyn/' in url:
+            if '/dyn/' in url or '/textes/' in url:
                 resp.encoding = 'utf-8'
             else:
                 resp.encoding = 'Windows-1252'
