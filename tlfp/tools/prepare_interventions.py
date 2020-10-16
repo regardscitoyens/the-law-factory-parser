@@ -225,6 +225,9 @@ def process(OUTPUT_DIR, procedure):
                 'divisions': sections,
                 'total_seances': len(seances),
             }
+        else:
+            step['has_interventions'] = False
+            del step['intervention_files']
 
     print_json(steps, os.path.join(context.sourcedir, 'viz/interventions.json'))
 
