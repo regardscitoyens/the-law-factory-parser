@@ -8,6 +8,7 @@ Output in <api_directory>:
 import glob, os, sys, csv, re, copy, datetime
 
 from tlfp.tools.common import upper_first, open_json, print_json
+from tlfp.tools.generate_sitemap import generate_sitemap
 
 API_DIRECTORY = sys.argv[1]
 
@@ -205,3 +206,6 @@ home_json_final["live"] = {
 
 print_json(home_json_final, os.path.join(API_DIRECTORY, 'home.json'))
 print('home.json OK')
+
+generate_sitemap(dossiers, API_DIRECTORY)
+print('sitemap.xml OK')
