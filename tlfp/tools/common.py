@@ -362,10 +362,8 @@ class Context(object):
         acro = slug_groupe(gpid)
         if acro in self.allgroupes[urlapi]:
             gpid = acro
-        elif len(gpid) < 5: # ex: LREM not found
-            gpid = gpe
         if gpid not in groupes:
-            groupes[gpid] = {'nom': upper_first(gpe) if len(gpe) >= 5 else gpe,
+            groupes[gpid] = {'nom': upper_first(gpe),
                              'link': ''}
             if gpid in self.allgroupes[urlapi]:
                 groupes[gpid]['nom'] = self.allgroupes[urlapi][gpid]['nom']
