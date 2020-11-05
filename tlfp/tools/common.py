@@ -253,6 +253,8 @@ def slug_groupe(g):
     # on the senat side, some senators have obsolete groups
     g = g.upper()
     g = g.replace("SOCV", "SOC")
+    g = g.replace("AUCUN", "NI")
+    g = g.replace("GEST", "EST")
     g = g.replace("CRC-SPG", "CRC")
     g = g.replace("ECOLO", "ECO")
     g = g.replace("ECO", "ECOLO")
