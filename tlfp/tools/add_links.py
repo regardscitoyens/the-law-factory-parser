@@ -72,7 +72,6 @@ def process(dos):
                                     data['liens'].append({
                                         'texte': link_text,
                                     })
-                                print(data['liens'][-1])
                                 prev_code = code
         dos["textes_cites"].sort()
     return dos
