@@ -63,7 +63,7 @@ def process(dos):
                                 if 'eli_alias' in candidat:
                                     link['url'] = "https://www.legifrance.gouv.fr/" + candidat['eli_alias']
                                 """
-                                if code not in link_text:
+                                if code not in link_text.lower():
                                     data['liens'].append({
                                         'texte': link_text,
                                         'texte_complet': link_text + ' ' + code,
