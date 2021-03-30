@@ -3,7 +3,7 @@
 
 
 def detect_auteur_depot_from_url(url):
-    if '/propositions/' in url:
+    if '/propositions/' in url or '/PIONAN' in url:
         return "Députés"
     elif '/leg/ppl' in url:
         return "Sénateurs"
