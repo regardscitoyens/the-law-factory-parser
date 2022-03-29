@@ -7,7 +7,12 @@ function ctrl_c() {
 }
 
 cd $(dirname $0)
-source ~/.bash_profile
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"    # if `pyenv` is not already on PATH
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 pyenv activate lafabrique
 
 DATADIR=data
